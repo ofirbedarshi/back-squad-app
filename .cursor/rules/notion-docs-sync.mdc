@@ -1,0 +1,30 @@
+---
+description: Sync docs/ files to Notion after every create or update
+alwaysApply: false
+---
+
+# Notion Docs Sync Rule
+
+Whenever a doc file is **created or updated** in the `docs/` folder, you must sync it to the Notion workspace using the `user-notion` MCP server.
+
+## Notion workspace
+
+- Main page: **"אפליקציית צוות אחורי"** (ID: `35669621-5b25-80d5-a4d2-d7331e0c4bb7`)
+- Every doc in `docs/` corresponds to a **child page** under that main page.
+- The child page title should match the doc's topic (e.g. `מסך עמדה נוכחית`, `מציינים`, `יומן תקיפות`).
+
+## How to sync
+
+1. Use `API-post-search` to find an existing child page with a matching title under the main page.
+2. **If found** → delete all existing blocks with `API-delete-a-block` and rewrite them with `API-patch-block-children`.
+3. **If not found** → create a new child page with `API-post-page` (parent: the main page ID above), then write blocks with `API-patch-block-children`.
+
+## Content format
+
+Convert the doc's bullet content into `bulleted_list_item` blocks and section headings into `heading_2` blocks. Keep all text in Hebrew exactly as written in the doc file.
+
+## When to sync
+
+- After creating a new doc in `docs/` → sync immediately.
+- After updating an existing doc in `docs/` → sync immediately.
+- Tell the user: "הדוקומנטציה סונכרנה ל-Notion."
