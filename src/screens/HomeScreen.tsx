@@ -10,6 +10,7 @@ function HomeScreen() {
       <div className="flex flex-col gap-3 p-4">
         <MenuButton label='סדפ"ים' to="/sadpam" />
         <MenuButton label="נדברים" to="/nidbarim" />
+        <MenuButton label="מאגרים" to="/maagarim" />
         <MenuButton label="עמדה נוכחית" to="/current-position" primary />
       </div>
     </div>
