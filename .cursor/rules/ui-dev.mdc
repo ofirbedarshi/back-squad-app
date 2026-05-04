@@ -1,0 +1,62 @@
+---
+alwaysApply: false
+---
+
+# UI rules
+
+## Purpose
+
+UI is responsible only for presentation and user interaction.
+
+## Responsibilities
+
+- Render data
+- Handle user input (clicks, typing)
+- Call use-cases
+
+## Strict rules
+
+- DO NOT implement business logic inside UI
+- DO NOT access storage (localStorage, DB) directly
+- DO NOT create or modify domain objects manually
+- DO NOT contain complex logic (if/else chains, calculations)
+
+## Allowed
+
+- Calling use-case functions
+- Managing local UI state (loading, error, input fields)
+
+## Component design
+
+- Components must be small and focused
+- Each component should have a single responsibility
+- Avoid large components
+
+## Data flow
+
+- UI receives data → renders it
+- User interacts → UI calls use-case
+- UI updates based on result
+
+## Naming
+
+- Components: PascalCase (CreateTaskForm)
+- Handlers: handleSubmit, handleClick
+
+## Layout and language
+
+- The app is mobile-first (designed primarily for small screens)
+- Layout must be optimized for vertical scrolling and touch interactions
+- Avoid complex multi-column layouts
+- Use large touch-friendly elements (buttons, inputs)
+
+## Hebrew support
+
+- The app is in Hebrew
+- All UI text must be in Hebrew
+- Layout must support RTL (right-to-left)
+- Components must be compatible with RTL direction (text alignment, spacing, flow)
+
+## When unsure
+
+Ask before adding logic that is not purely UI-related.

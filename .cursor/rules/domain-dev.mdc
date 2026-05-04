@@ -1,0 +1,50 @@
+---
+alwaysApply: false
+---
+
+# Domain rules
+
+## Purpose
+
+Domain contains the core business logic of the application.
+
+## Strict rules
+
+- Domain must contain pure functions only
+- No side effects (no storage, no API calls, no timers)
+- No access to UI
+- No access to external services
+
+## Function design
+
+- Functions must be small and focused
+- Each function should do one thing
+- Use descriptive names (createTask, validateUser)
+
+## Data handling
+
+- Do not mutate inputs
+- Always return new objects
+- Validate input before processing
+
+## Forbidden
+
+- localStorage
+- database access
+- fetch / network
+- UI logic
+
+-----------
+## Storage (Infra Layer)
+
+### Purpose
+Responsible for data persistence.
+
+### Rules
+- Can access localStorage
+- Must not contain business logic
+- Should be simple (save/load/update)
+
+## When unsure
+
+Ask before adding anything that is not pure logic.
