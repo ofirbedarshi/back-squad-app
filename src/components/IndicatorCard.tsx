@@ -13,9 +13,9 @@ function IndicatorCard({ indicator }: IndicatorCardProps) {
         <span>גובה: {indicator.altitude} מ'</span>
         <span>אמצעי: {indicator.means}</span>
         <span>קוד ציון: {indicator.markCode}</span>
-        <span>תחום מטרות: {indicator.targetDomain}</span>
-        <span>אזימוט: {indicator.azimuth}</span>
-        <span>טווח: {indicator.range}</span>
+        {indicator.targetDomain && <span>תחום מטרות: {indicator.targetDomain}</span>}
+        {indicator.azimuth !== undefined && <span>אזימוט: {indicator.azimuth}</span>}
+        {indicator.range !== undefined && <span>טווח: {indicator.range}</span>}
       </div>
     </div>
   )

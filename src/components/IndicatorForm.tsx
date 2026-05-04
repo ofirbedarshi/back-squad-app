@@ -13,9 +13,9 @@ const schema = z.object({
   altitude: numberField,
   means: z.string().min(1, 'שדה חובה'),
   markCode: numberField,
-  targetDomain: z.string().min(1, 'שדה חובה'),
-  azimuth: numberField,
-  range: numberField,
+  targetDomain: z.string().optional(),
+  azimuth: z.number({ error: 'יש להזין מספר' }).optional(),
+  range: z.number({ error: 'יש להזין מספר' }).optional(),
 })
 
 type IndicatorFormValues = z.infer<typeof schema>

@@ -4,9 +4,9 @@ export interface IndicatorInput {
   altitude: number
   means: string
   markCode: number
-  targetDomain: string
-  azimuth: number
-  range: number
+  targetDomain?: string
+  azimuth?: number
+  range?: number
 }
 
 export interface Indicator extends IndicatorInput {
