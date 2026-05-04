@@ -39,6 +39,9 @@ Do not add external API calls, cloud services, remote fetches, CDN dependencies,
 
 When you work mainly on **UI** or **domain** logic, include the matching rule in Agent chat: **`@ui-dev`** or **`@domain-dev`** (files under `.cursor/rules/`).
 
+## Cleanup rule
+After every change, verify that no unused files remain.
+
 ## When unsure
 
 Ask before changing architecture, data models, business logic, or storage decisions.
