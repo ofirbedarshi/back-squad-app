@@ -35,7 +35,19 @@ Domain contains the core business logic of the application.
 - UI logic
 
 -----------
-## Storage (Infra Layer)
+## Use-case Layer (src/useCases/)
+
+### Purpose
+Orchestrates domain logic and storage together. This is the single entry point for the UI.
+
+### Rules
+- May call domain functions and storage functions
+- Must not contain business logic — delegate to domain
+- Must not contain persistence logic — delegate to storage
+- UI must only call use-cases, never domain or storage directly
+
+-----------
+## Storage (Infra Layer) (src/storage/)
 
 ### Purpose
 Responsible for data persistence.
@@ -44,6 +56,7 @@ Responsible for data persistence.
 - Can access localStorage
 - Must not contain business logic
 - Should be simple (save/load/update)
+- Must not be imported by UI or domain directly
 
 ## When unsure
 

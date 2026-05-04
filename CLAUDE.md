@@ -21,6 +21,28 @@ Do not rush to code. First understand the architecture, then plan, then implemen
 - Do not invent new entities, fields, or flows without asking first.
 - Keep functions small, readable, and focused on one job.
 
+## Layer structure
+
+The app has four layers. Each layer may only call the layer(s) listed under it:
+
+```
+UI (screens, components)
+  └── calls: use-cases only
+
+Use-cases (src/useCases/)
+  └── calls: domain + storage
+
+Domain (src/domain/)
+  └── pure functions only — no calls to storage, UI, or use-cases
+
+Storage (src/storage/)
+  └── localStorage only — no calls to domain or use-cases
+```
+
+- UI must never import from `src/storage/` directly.
+- Domain must never import from `src/storage/` or `src/useCases/`.
+- Use-cases are the only place that combines domain logic with storage.
+
 ## Offline-first rule
 
 This webapp app runs inside an Android WebView.
@@ -34,6 +56,12 @@ Do not add external API calls, cloud services, remote fetches, CDN dependencies,
 - Avoid large files.
 - Avoid mixing responsibilities.
 - Add tests for business logic.
+
+## Type definitions rule
+
+- Types and interfaces must live in their own dedicated file, named `<feature>.types.ts`.
+- Logic files (domain, storage, components) import types from that file — never define types inline.
+- Example: `currentPosition.types.ts` holds the interfaces; `currentPosition.ts` holds the functions.
 
 ## Layer-specific rules (Cursor)
 
@@ -49,7 +77,8 @@ A `docs/` folder holds short Hebrew documentation files for screens, components,
 ### Doc file format
 - Each doc file starts with a YAML front-matter block listing `related_files` — the source files the doc covers.
 - Content is short, in Hebrew, and in bullet format.
-- Describe: what the screen/component/service does, its fields, validations, and behavioral rules.
+- Written for a non-technical reader — no code references, no technical terms, no function names or file paths.
+- Describe: what the screen/component/service does from the user's perspective, what fields exist, what rules apply, and how it behaves.
 
 ### When to create a doc
 - After implementing a new screen, component, or service with meaningful logic → **ask the user** if they want a doc created.

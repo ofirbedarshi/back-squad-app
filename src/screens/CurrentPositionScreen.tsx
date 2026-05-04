@@ -4,6 +4,7 @@ import { z } from 'zod'
 import FormField from '../components/FormField'
 import Input from '../components/Input'
 import SegmentedToggle from '../components/base/SegmentedToggle'
+import { saveCurrentPositionUseCase } from '../useCases/saveCurrentPosition'
 
 const numberField = z.number({ error: 'יש להזין מספר' })
 
@@ -47,8 +48,7 @@ function CurrentPositionScreen() {
   const isVehicle = launcherType === LAUNCHER_TYPES.VEHICLE
 
   function onSave(data: CurrentPositionForm) {
-    // TODO: call saveCurrentPosition use-case
-    console.log(data)
+    saveCurrentPositionUseCase(data)
   }
 
   return (
