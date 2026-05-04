@@ -1,11 +1,12 @@
 import { HashRouter, Route, Routes } from 'react-router-dom'
 import BottomNav from './components/BottomNav'
-import EmdotScreen from './screens/EmdotScreen'
+import PositionsScreen from './screens/PositionsScreen'
 import AttackLogScreen from './screens/AttackLogScreen'
 import CalculatorScreen from './screens/CalculatorScreen'
 import CurrentPositionScreen from './screens/CurrentPositionScreen'
 import HomeScreen from './screens/HomeScreen'
 import MaagarimScreen from './screens/MaagarimScreen'
+import IndicatorsScreen from './screens/IndicatorsScreen'
 import NidbarimScreen from './screens/NidbarimScreen'
 import SadpamScreen from './screens/SadpamScreen'
 import TargetBankScreen from './screens/TargetBankScreen'
@@ -24,7 +25,8 @@ function App() {
             <Route path="/attack-log" element={<AttackLogScreen />} />
             <Route path="/target-bank" element={<TargetBankScreen />} />
             <Route path="/maagarim" element={<MaagarimScreen />} />
-            <Route path="/maagarim/emdot" element={<EmdotScreen />} />
+            <Route path="/maagarim/positions" element={<PositionsScreen />} />
+            <Route path="/maagarim/indicators" element={<IndicatorsScreen />} />
           </Routes>
         </main>
         <BottomNav />

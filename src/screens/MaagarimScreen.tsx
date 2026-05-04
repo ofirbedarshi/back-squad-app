@@ -8,7 +8,8 @@ function MaagarimScreen() {
       </header>
 
       <div className="flex flex-col gap-3 p-4">
-        <MenuButton label="עמדות" to="/maagarim/emdot" />
+        <MenuButton label="עמדות" to="/maagarim/positions" />
+        <MenuButton label="מציינים" to="/maagarim/indicators" />
       </div>
     </div>
   )
