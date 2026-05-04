@@ -32,6 +32,8 @@ UI is responsible only for presentation and user interaction.
 - Each component should have a single responsibility
 - Avoid large components
 - **Never define a component inside another file** — every component gets its own file under `src/components/`
+- **This applies to ALL reusable UI pieces** — including helper functions that return JSX, class strings, or style logic (e.g. `inputClass`, `buttonClass`). If it controls how a UI element looks or behaves, it is a component and must live in its own file.
+- There are NO exceptions based on size, simplicity, or "tight coupling"
 
 ## Data flow
 

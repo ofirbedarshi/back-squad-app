@@ -18,7 +18,7 @@ function MenuButton({ label, to, primary = false }: MenuButtonProps) {
         'active:scale-[0.97] active:shadow-none',
         primary
           ? 'bg-gradient-to-l from-blue-400 to-blue-600 text-white border-transparent font-bold active:brightness-90'
-          : 'bg-neutral-50 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700 text-neutral-800 dark:text-neutral-100 active:bg-neutral-100 dark:active:bg-neutral-700',
+          : 'bg-neutral-50 border-neutral-200 text-neutral-800 active:bg-neutral-100',
       ].join(' ')}
     >
       {label}

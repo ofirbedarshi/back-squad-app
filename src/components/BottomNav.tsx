@@ -8,8 +8,8 @@ interface NavItem {
 
 function iconClass(active: boolean) {
   return active
-    ? 'w-7 h-7 stroke-green-600 dark:stroke-green-400'
-    : 'w-7 h-7 stroke-neutral-500 dark:stroke-neutral-400'
+    ? 'w-7 h-7 stroke-green-600'
+    : 'w-7 h-7 stroke-neutral-500'
 }
 
 function HomeIcon({ active }: { active: boolean }) {
@@ -42,12 +42,12 @@ function CalculatorIcon({ active }: { active: boolean }) {
     >
       <rect x="4" y="2" width="16" height="20" rx="2" />
       <rect x="7" y="5" width="10" height="3" rx="1" />
-      <circle cx="8" cy="13" r="1" fill="currentColor" className={active ? 'fill-green-600 dark:fill-green-400' : 'fill-neutral-500 dark:fill-neutral-400'} />
-      <circle cx="12" cy="13" r="1" fill="currentColor" className={active ? 'fill-green-600 dark:fill-green-400' : 'fill-neutral-500 dark:fill-neutral-400'} />
-      <circle cx="16" cy="13" r="1" fill="currentColor" className={active ? 'fill-green-600 dark:fill-green-400' : 'fill-neutral-500 dark:fill-neutral-400'} />
-      <circle cx="8" cy="17" r="1" fill="currentColor" className={active ? 'fill-green-600 dark:fill-green-400' : 'fill-neutral-500 dark:fill-neutral-400'} />
-      <circle cx="12" cy="17" r="1" fill="currentColor" className={active ? 'fill-green-600 dark:fill-green-400' : 'fill-neutral-500 dark:fill-neutral-400'} />
-      <circle cx="16" cy="17" r="1" fill="currentColor" className={active ? 'fill-green-600 dark:fill-green-400' : 'fill-neutral-500 dark:fill-neutral-400'} />
+      <circle cx="8" cy="13" r="1" fill="currentColor" className={active ? 'fill-green-600' : 'fill-neutral-500'} />
+      <circle cx="12" cy="13" r="1" fill="currentColor" className={active ? 'fill-green-600' : 'fill-neutral-500'} />
+      <circle cx="16" cy="13" r="1" fill="currentColor" className={active ? 'fill-green-600' : 'fill-neutral-500'} />
+      <circle cx="8" cy="17" r="1" fill="currentColor" className={active ? 'fill-green-600' : 'fill-neutral-500'} />
+      <circle cx="12" cy="17" r="1" fill="currentColor" className={active ? 'fill-green-600' : 'fill-neutral-500'} />
+      <circle cx="16" cy="17" r="1" fill="currentColor" className={active ? 'fill-green-600' : 'fill-neutral-500'} />
     </svg>
   )
 }
@@ -101,7 +101,7 @@ function BottomNav() {
   return (
     <nav
       dir="rtl"
-      className="fixed bottom-0 inset-x-0 z-50 flex items-stretch bg-white dark:bg-neutral-900 border-t border-neutral-200 dark:border-neutral-700"
+      className="fixed bottom-0 inset-x-0 z-50 flex items-stretch bg-white border-t border-neutral-200"
       style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
     >
       {navItems.map((item) => (
@@ -113,8 +113,8 @@ function BottomNav() {
             [
               'relative flex flex-col items-center justify-center gap-1 flex-1 py-2.5 min-h-[60px] text-[10px] font-semibold tracking-wide transition-colors touch-manipulation select-none',
               isActive
-                ? 'text-green-600 dark:text-green-400'
-                : 'text-neutral-500 dark:text-neutral-400',
+                ? 'text-green-600'
+                : 'text-neutral-500',
             ].join(' ')
           }
         >
@@ -123,7 +123,7 @@ function BottomNav() {
               {item.icon(isActive)}
               <span>{item.label}</span>
               {isActive && (
-                <span className="absolute top-0 inset-x-4 h-0.5 rounded-full bg-green-600 dark:bg-green-400" />
+                <span className="absolute top-0 inset-x-4 h-0.5 rounded-full bg-green-600" />
               )}
             </>
           )}
