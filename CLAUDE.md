@@ -42,6 +42,24 @@ When you work mainly on **UI** or **domain** logic, include the matching rule in
 ## Cleanup rule
 After every change, verify that no unused files remain.
 
+## Documentation rule
+
+A `docs/` folder holds short Hebrew documentation files for screens, components, and services that have meaningful logic or behavior.
+
+### Doc file format
+- Each doc file starts with a YAML front-matter block listing `related_files` — the source files the doc covers.
+- Content is short, in Hebrew, and in bullet format.
+- Describe: what the screen/component/service does, its fields, validations, and behavioral rules.
+
+### When to create a doc
+- After implementing a new screen, component, or service with meaningful logic → **ask the user** if they want a doc created.
+- If the user agrees → create the doc in `docs/` immediately.
+
+### When to update a doc
+- After changing behavior, fields, validations, or rules in a file → **check if any doc in `docs/` lists that file under `related_files`**.
+- If a matching doc exists → **automatically update it** and tell the user it was updated.
+- If no doc exists → ask the user if they want one created.
+
 ## When unsure
 
 Ask before changing architecture, data models, business logic, or storage decisions.
