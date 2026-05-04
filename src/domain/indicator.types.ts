@@ -1,8 +1,15 @@
 export interface IndicatorInput {
-  // Fields to be defined
+  indicatorName: string
+  coordinates: number
+  altitude: number
+  means: string
+  markCode: number
+  targetDomain: string
+  azimuth: number
+  range: number
 }
 
-export interface Indicator {
+export interface Indicator extends IndicatorInput {
   id: string
   savedAt: string
 }
