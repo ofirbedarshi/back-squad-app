@@ -31,6 +31,7 @@ UI is responsible only for presentation and user interaction.
 - Components must be small and focused
 - Each component should have a single responsibility
 - Avoid large components
+- **Never define a component inside another file** — every component gets its own file under `src/components/`
 
 ## Data flow
 
