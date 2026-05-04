@@ -9,6 +9,7 @@ import type { Position, PositionInput } from '../domain/position.types'
 function PositionsListScreen() {
   const [positions, setPositions] = useState<Position[]>([])
   const [showForm, setShowForm] = useState(false)
+  const [editingPosition, setEditingPosition] = useState<Position | null>(null)
 
   useEffect(() => {
     setPositions(loadPositionsUseCase())
@@ -18,6 +19,11 @@ function PositionsListScreen() {
     addPositionUseCase(data)
     setPositions(loadPositionsUseCase())
     setShowForm(false)
+  }
+
+  function handleEdit(data: PositionInput) {
+    console.log('עריכת עמדה:', { id: editingPosition?.id, ...data })
+    setEditingPosition(null)
   }
 
   return (
@@ -32,12 +38,18 @@ function PositionsListScreen() {
         )}
 
         {positions.map((position) => (
-          <PositionCard key={position.id} position={position} />
+          <PositionCard key={position.id} position={position} onClick={() => setEditingPosition(position)} />
         ))}
 
         {showForm && (
           <Modal title="הוסף עמדה" onClose={() => setShowForm(false)}>
             <PositionForm onSubmit={handleAdd} submitLabel="הוסף" />
+          </Modal>
+        )}
+
+        {editingPosition && (
+          <Modal title="עריכת עמדה" onClose={() => setEditingPosition(null)}>
+            <PositionForm onSubmit={handleEdit} submitLabel="שמור שינויים" initialValues={editingPosition} />
           </Modal>
         )}
 

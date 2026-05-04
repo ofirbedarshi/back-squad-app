@@ -9,6 +9,7 @@ import type { Indicator, IndicatorInput } from '../domain/indicator.types'
 function IndicatorsListScreen() {
   const [indicators, setIndicators] = useState<Indicator[]>([])
   const [showForm, setShowForm] = useState(false)
+  const [editingIndicator, setEditingIndicator] = useState<Indicator | null>(null)
 
   useEffect(() => {
     setIndicators(loadIndicatorsUseCase())
@@ -18,6 +19,11 @@ function IndicatorsListScreen() {
     addIndicatorUseCase(data)
     setIndicators(loadIndicatorsUseCase())
     setShowForm(false)
+  }
+
+  function handleEdit(data: IndicatorInput) {
+    console.log('עריכת מציין:', { id: editingIndicator?.id, ...data })
+    setEditingIndicator(null)
   }
 
   return (
@@ -32,12 +38,18 @@ function IndicatorsListScreen() {
         )}
 
         {indicators.map((indicator) => (
-          <IndicatorCard key={indicator.id} indicator={indicator} />
+          <IndicatorCard key={indicator.id} indicator={indicator} onClick={() => setEditingIndicator(indicator)} />
         ))}
 
         {showForm && (
           <Modal title="הוסף מציין" onClose={() => setShowForm(false)}>
             <IndicatorForm onSubmit={handleAdd} submitLabel="הוסף" />
+          </Modal>
+        )}
+
+        {editingIndicator && (
+          <Modal title="עריכת מציין" onClose={() => setEditingIndicator(null)}>
+            <IndicatorForm onSubmit={handleEdit} submitLabel="שמור שינויים" initialValues={editingIndicator} />
           </Modal>
         )}
 

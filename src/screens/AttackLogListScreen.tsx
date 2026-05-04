@@ -9,6 +9,7 @@ import type { AttackLog, AttackLogInput } from '../domain/attackLog.types'
 function AttackLogListScreen() {
   const [logs, setLogs] = useState<AttackLog[]>([])
   const [showForm, setShowForm] = useState(false)
+  const [editingLog, setEditingLog] = useState<AttackLog | null>(null)
 
   useEffect(() => {
     setLogs(loadAttackLogsUseCase())
@@ -18,6 +19,11 @@ function AttackLogListScreen() {
     addAttackLogUseCase(data)
     setLogs(loadAttackLogsUseCase())
     setShowForm(false)
+  }
+
+  function handleEdit(data: AttackLogInput) {
+    console.log('עריכת תקיפה:', { id: editingLog?.id, ...data })
+    setEditingLog(null)
   }
 
   return (
@@ -32,12 +38,18 @@ function AttackLogListScreen() {
         )}
 
         {logs.map((log) => (
-          <AttackLogCard key={log.id} log={log} />
+          <AttackLogCard key={log.id} log={log} onClick={() => setEditingLog(log)} />
         ))}
 
         {showForm && (
           <Modal title="הוסף תקיפה" onClose={() => setShowForm(false)}>
             <AttackLogForm onSubmit={handleAdd} submitLabel="שמור" />
+          </Modal>
+        )}
+
+        {editingLog && (
+          <Modal title="עריכת תקיפה" onClose={() => setEditingLog(null)}>
+            <AttackLogForm onSubmit={handleEdit} submitLabel="שמור שינויים" initialValues={editingLog} />
           </Modal>
         )}
 

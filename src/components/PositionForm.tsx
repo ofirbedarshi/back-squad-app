@@ -33,9 +33,10 @@ const LAUNCHER_OPTIONS: [{ label: string; value: string }, { label: string; valu
 interface PositionFormProps {
   onSubmit: (data: PositionInput) => void
   submitLabel?: string
+  initialValues?: PositionInput
 }
 
-function PositionForm({ onSubmit, submitLabel = 'שמור' }: PositionFormProps) {
+function PositionForm({ onSubmit, submitLabel = 'שמור', initialValues }: PositionFormProps) {
   const {
     register,
     handleSubmit,
@@ -46,6 +47,7 @@ function PositionForm({ onSubmit, submitLabel = 'שמור' }: PositionFormProps)
     resolver: zodResolver(schema),
     defaultValues: {
       launcherType: LAUNCHER_TYPES.VEHICLE,
+      ...initialValues,
     },
   })
 

@@ -23,15 +23,17 @@ type IndicatorFormValues = z.infer<typeof schema>
 interface IndicatorFormProps {
   onSubmit: (data: IndicatorInput) => void
   submitLabel?: string
+  initialValues?: IndicatorInput
 }
 
-function IndicatorForm({ onSubmit, submitLabel = 'שמור' }: IndicatorFormProps) {
+function IndicatorForm({ onSubmit, submitLabel = 'שמור', initialValues }: IndicatorFormProps) {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<IndicatorFormValues>({
     resolver: zodResolver(schema),
+    defaultValues: initialValues,
   })
 
   return (

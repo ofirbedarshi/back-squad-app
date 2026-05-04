@@ -65,9 +65,10 @@ const GENERATION_OPTIONS: [{ label: string; value: string }, { label: string; va
 interface AttackLogFormProps {
   onSubmit: (data: AttackLogInput) => void
   submitLabel?: string
+  initialValues?: AttackLogInput
 }
 
-function AttackLogForm({ onSubmit, submitLabel = 'שמור' }: AttackLogFormProps) {
+function AttackLogForm({ onSubmit, submitLabel = 'שמור', initialValues }: AttackLogFormProps) {
   const {
     register,
     handleSubmit,
@@ -80,6 +81,7 @@ function AttackLogForm({ onSubmit, submitLabel = 'שמור' }: AttackLogFormProp
       wasAttacked: 'no',
       hit: false,
       generation: 'a',
+      ...initialValues,
     },
   })
 
