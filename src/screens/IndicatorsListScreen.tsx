@@ -6,7 +6,7 @@ import { addIndicatorUseCase } from '../useCases/addIndicator'
 import { loadIndicatorsUseCase } from '../useCases/loadIndicators'
 import type { Indicator, IndicatorInput } from '../domain/indicator.types'
 
-function IndicatorsScreen() {
+function IndicatorsListScreen() {
   const [indicators, setIndicators] = useState<Indicator[]>([])
   const [showForm, setShowForm] = useState(false)
 
@@ -55,4 +55,4 @@ function IndicatorsScreen() {
   )
 }
 
-export default IndicatorsScreen
+export default IndicatorsListScreen

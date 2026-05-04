@@ -1,12 +1,12 @@
 import { HashRouter, Route, Routes } from 'react-router-dom'
 import BottomNav from './components/BottomNav'
-import PositionsScreen from './screens/PositionsScreen'
-import AttackLogScreen from './screens/AttackLogScreen'
+import PositionsListScreen from './screens/PositionsListScreen'
+import AttackLogListScreen from './screens/AttackLogListScreen'
 import CalculatorScreen from './screens/CalculatorScreen'
 import CurrentPositionScreen from './screens/CurrentPositionScreen'
 import HomeScreen from './screens/HomeScreen'
 import MaagarimScreen from './screens/MaagarimScreen'
-import IndicatorsScreen from './screens/IndicatorsScreen'
+import IndicatorsListScreen from './screens/IndicatorsListScreen'
 import NidbarimScreen from './screens/NidbarimScreen'
 import SadpamScreen from './screens/SadpamScreen'
 import TargetBankScreen from './screens/TargetBankScreen'
@@ -22,11 +22,11 @@ function App() {
             <Route path="/nidbarim" element={<NidbarimScreen />} />
             <Route path="/current-position" element={<CurrentPositionScreen />} />
             <Route path="/calculator" element={<CalculatorScreen />} />
-            <Route path="/attack-log" element={<AttackLogScreen />} />
+            <Route path="/attack-log" element={<AttackLogListScreen />} />
             <Route path="/target-bank" element={<TargetBankScreen />} />
             <Route path="/maagarim" element={<MaagarimScreen />} />
-            <Route path="/maagarim/positions" element={<PositionsScreen />} />
-            <Route path="/maagarim/indicators" element={<IndicatorsScreen />} />
+            <Route path="/maagarim/positions" element={<PositionsListScreen />} />
+            <Route path="/maagarim/indicators" element={<IndicatorsListScreen />} />
           </Routes>
         </main>
         <BottomNav />

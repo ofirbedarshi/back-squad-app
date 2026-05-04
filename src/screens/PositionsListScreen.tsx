@@ -6,7 +6,7 @@ import { addPositionUseCase } from '../useCases/addPosition'
 import { loadPositionsUseCase } from '../useCases/loadPositions'
 import type { Position, PositionInput } from '../domain/position.types'
 
-function PositionsScreen() {
+function PositionsListScreen() {
   const [positions, setPositions] = useState<Position[]>([])
   const [showForm, setShowForm] = useState(false)
 
@@ -55,4 +55,4 @@ function PositionsScreen() {
   )
 }
 
-export default PositionsScreen
+export default PositionsListScreen

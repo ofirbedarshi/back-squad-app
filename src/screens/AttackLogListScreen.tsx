@@ -6,7 +6,7 @@ import { addAttackLogUseCase } from '../useCases/addAttackLog'
 import { loadAttackLogsUseCase } from '../useCases/loadAttackLogs'
 import type { AttackLog, AttackLogInput } from '../domain/attackLog.types'
 
-function AttackLogScreen() {
+function AttackLogListScreen() {
   const [logs, setLogs] = useState<AttackLog[]>([])
   const [showForm, setShowForm] = useState(false)
 
@@ -55,4 +55,4 @@ function AttackLogScreen() {
   )
 }
 
-export default AttackLogScreen
+export default AttackLogListScreen
