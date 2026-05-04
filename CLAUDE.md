@@ -57,6 +57,13 @@ Do not add external API calls, cloud services, remote fetches, CDN dependencies,
 - Avoid mixing responsibilities.
 - Add tests for business logic.
 
+## Error handling rule
+
+No unexpected behavior is ever ignored.
+- **Domain / Storage**: throw on invalid input or impossible state.
+- **Use-cases**: catch and handle, or re-throw with context. Never swallow.
+- **UI**: catch at the boundary and surface feedback to the user.
+
 ## Type definitions rule
 
 - Types and interfaces must live in their own dedicated file, named `<feature>.types.ts`.
