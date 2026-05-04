@@ -22,6 +22,12 @@ export function addIndicator(indicator: Indicator): void {
   writeIndicators(indicators)
 }
 
+export function updateIndicator(updated: Indicator): void {
+  const indicators = readIndicators()
+  const next = indicators.map((ind) => (ind.id === updated.id ? updated : ind))
+  writeIndicators(next)
+}
+
 export function loadIndicators(): Indicator[] {
   return readIndicators()
 }

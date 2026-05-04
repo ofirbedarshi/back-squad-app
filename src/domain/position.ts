@@ -13,3 +13,11 @@ export function createPosition(input: PositionInput): Position {
     pitchAndRoll: input.pitchAndRoll,
   }
 }
+
+export function applyPositionUpdate(existing: Position, input: PositionInput): Position {
+  return {
+    ...input,
+    id: existing.id,
+    savedAt: existing.savedAt,
+  }
+}

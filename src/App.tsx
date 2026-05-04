@@ -1,4 +1,5 @@
 import { HashRouter, Route, Routes } from 'react-router-dom'
+import { ErrorProvider } from './context/ErrorContext'
 import BottomNav from './components/BottomNav'
 import PositionsListScreen from './screens/PositionsListScreen'
 import AttackLogListScreen from './screens/AttackLogListScreen'
@@ -13,6 +14,7 @@ import TargetBankScreen from './screens/TargetBankScreen'
 
 function App() {
   return (
+    <ErrorProvider>
     <HashRouter>
       <div className="flex flex-col min-h-svh bg-neutral-50">
         <main className="flex-1 pb-16">
@@ -32,6 +34,7 @@ function App() {
         <BottomNav />
       </div>
     </HashRouter>
+    </ErrorProvider>
   )
 }
 

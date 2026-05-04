@@ -80,6 +80,10 @@ UI is responsible only for presentation and user interaction.
 - Layout must support RTL (right-to-left)
 - Components must be compatible with RTL direction (text alignment, spacing, flow)
 
+## Error handling
+
+For use-case failures use `useDomainError` → `triggerError(msg)`. For impossible UI states (e.g. missing selected item) use `useUIError` → `reportUIError(msg)`. Both display a root-level alert via `ErrorProvider` — no JSX needed in the screen.
+
 ## When unsure
 
 Ask before adding logic that is not purely UI-related.

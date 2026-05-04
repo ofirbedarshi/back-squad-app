@@ -2,14 +2,19 @@ import { useState, useEffect } from 'react'
 import PositionCard from '../components/PositionCard'
 import PositionForm from '../components/PositionForm'
 import Modal from '../components/base/Modal'
+import { useDomainError } from '../hooks/useDomainError'
+import { useUIError } from '../hooks/useUIError'
 import { addPositionUseCase } from '../useCases/addPosition'
 import { loadPositionsUseCase } from '../useCases/loadPositions'
+import { updatePositionUseCase } from '../useCases/updatePosition'
 import type { Position, PositionInput } from '../domain/position.types'
 
 function PositionsListScreen() {
   const [positions, setPositions] = useState<Position[]>([])
   const [showForm, setShowForm] = useState(false)
-  const [editingPosition, setEditingPosition] = useState<Position | null>(null)
+  const [editingItem, setEditingItem] = useState<Position | null>(null)
+  const { triggerError } = useDomainError()
+  const { reportUIError } = useUIError()
 
   useEffect(() => {
     setPositions(loadPositionsUseCase())
@@ -22,8 +27,17 @@ function PositionsListScreen() {
   }
 
   function handleEdit(data: PositionInput) {
-    console.log('עריכת עמדה:', { id: editingPosition?.id, ...data })
-    setEditingPosition(null)
+    if (!editingItem) {
+      reportUIError('לא ניתן לערוך: אין פריט נבחר')
+      return
+    }
+    try {
+      updatePositionUseCase(editingItem.id, data)
+      setPositions(loadPositionsUseCase())
+      setEditingItem(null)
+    } catch {
+      triggerError('שמירת השינויים נכשלה. אנא נסה שנית.')
+    }
   }
 
   return (
@@ -38,7 +52,7 @@ function PositionsListScreen() {
         )}
 
         {positions.map((position) => (
-          <PositionCard key={position.id} position={position} onClick={() => setEditingPosition(position)} />
+          <PositionCard key={position.id} position={position} onClick={() => setEditingItem(position)} />
         ))}
 
         {showForm && (
@@ -47,9 +61,9 @@ function PositionsListScreen() {
           </Modal>
         )}
 
-        {editingPosition && (
-          <Modal title="עריכת עמדה" onClose={() => setEditingPosition(null)}>
-            <PositionForm onSubmit={handleEdit} submitLabel="שמור שינויים" initialValues={editingPosition} />
+        {editingItem && (
+          <Modal title="עריכת עמדה" onClose={() => setEditingItem(null)}>
+            <PositionForm onSubmit={handleEdit} submitLabel="שמור שינויים" initialValues={editingItem} />
           </Modal>
         )}
 

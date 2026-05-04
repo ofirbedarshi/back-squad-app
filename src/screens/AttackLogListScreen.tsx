@@ -2,14 +2,19 @@ import { useState, useEffect } from 'react'
 import AttackLogCard from '../components/AttackLogCard'
 import AttackLogForm from '../components/AttackLogForm'
 import Modal from '../components/base/Modal'
+import { useDomainError } from '../hooks/useDomainError'
+import { useUIError } from '../hooks/useUIError'
 import { addAttackLogUseCase } from '../useCases/addAttackLog'
 import { loadAttackLogsUseCase } from '../useCases/loadAttackLogs'
+import { updateAttackLogUseCase } from '../useCases/updateAttackLog'
 import type { AttackLog, AttackLogInput } from '../domain/attackLog.types'
 
 function AttackLogListScreen() {
   const [logs, setLogs] = useState<AttackLog[]>([])
   const [showForm, setShowForm] = useState(false)
-  const [editingLog, setEditingLog] = useState<AttackLog | null>(null)
+  const [editingItem, setEditingItem] = useState<AttackLog | null>(null)
+  const { triggerError } = useDomainError()
+  const { reportUIError } = useUIError()
 
   useEffect(() => {
     setLogs(loadAttackLogsUseCase())
@@ -22,8 +27,17 @@ function AttackLogListScreen() {
   }
 
   function handleEdit(data: AttackLogInput) {
-    console.log('עריכת תקיפה:', { id: editingLog?.id, ...data })
-    setEditingLog(null)
+    if (!editingItem) {
+      reportUIError('לא ניתן לערוך: אין פריט נבחר')
+      return
+    }
+    try {
+      updateAttackLogUseCase(editingItem.id, data)
+      setLogs(loadAttackLogsUseCase())
+      setEditingItem(null)
+    } catch {
+      triggerError('שמירת השינויים נכשלה. אנא נסה שנית.')
+    }
   }
 
   return (
@@ -38,7 +52,7 @@ function AttackLogListScreen() {
         )}
 
         {logs.map((log) => (
-          <AttackLogCard key={log.id} log={log} onClick={() => setEditingLog(log)} />
+          <AttackLogCard key={log.id} log={log} onClick={() => setEditingItem(log)} />
         ))}
 
         {showForm && (
@@ -47,9 +61,9 @@ function AttackLogListScreen() {
           </Modal>
         )}
 
-        {editingLog && (
-          <Modal title="עריכת תקיפה" onClose={() => setEditingLog(null)}>
-            <AttackLogForm onSubmit={handleEdit} submitLabel="שמור שינויים" initialValues={editingLog} />
+        {editingItem && (
+          <Modal title="עריכת תקיפה" onClose={() => setEditingItem(null)}>
+            <AttackLogForm onSubmit={handleEdit} submitLabel="שמור שינויים" initialValues={editingItem} />
           </Modal>
         )}
 

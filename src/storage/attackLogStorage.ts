@@ -22,6 +22,12 @@ export function addAttackLog(log: AttackLog): void {
   writeAttackLogs(logs)
 }
 
+export function updateAttackLog(updated: AttackLog): void {
+  const logs = readAttackLogs()
+  const next = logs.map((log) => (log.id === updated.id ? updated : log))
+  writeAttackLogs(next)
+}
+
 export function loadAttackLogs(): AttackLog[] {
   return readAttackLogs()
 }

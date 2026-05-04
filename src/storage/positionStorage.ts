@@ -33,6 +33,12 @@ export function loadCurrentPosition(): Position | null {
   return readPositions().find((p) => p.id === currentId) ?? null
 }
 
+export function updatePosition(updated: Position): void {
+  const positions = readPositions()
+  const next = positions.map((pos) => (pos.id === updated.id ? updated : pos))
+  writePositions(next)
+}
+
 export function loadPositions(): Position[] {
   return readPositions()
 }

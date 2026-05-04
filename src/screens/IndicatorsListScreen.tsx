@@ -2,14 +2,19 @@ import { useState, useEffect } from 'react'
 import IndicatorCard from '../components/IndicatorCard'
 import IndicatorForm from '../components/IndicatorForm'
 import Modal from '../components/base/Modal'
+import { useDomainError } from '../hooks/useDomainError'
+import { useUIError } from '../hooks/useUIError'
 import { addIndicatorUseCase } from '../useCases/addIndicator'
 import { loadIndicatorsUseCase } from '../useCases/loadIndicators'
+import { updateIndicatorUseCase } from '../useCases/updateIndicator'
 import type { Indicator, IndicatorInput } from '../domain/indicator.types'
 
 function IndicatorsListScreen() {
   const [indicators, setIndicators] = useState<Indicator[]>([])
   const [showForm, setShowForm] = useState(false)
-  const [editingIndicator, setEditingIndicator] = useState<Indicator | null>(null)
+  const [editingItem, setEditingItem] = useState<Indicator | null>(null)
+  const { triggerError } = useDomainError()
+  const { reportUIError } = useUIError()
 
   useEffect(() => {
     setIndicators(loadIndicatorsUseCase())
@@ -22,8 +27,17 @@ function IndicatorsListScreen() {
   }
 
   function handleEdit(data: IndicatorInput) {
-    console.log('עריכת מציין:', { id: editingIndicator?.id, ...data })
-    setEditingIndicator(null)
+    if (!editingItem) {
+      reportUIError('לא ניתן לערוך: אין פריט נבחר')
+      return
+    }
+    try {
+      updateIndicatorUseCase(editingItem.id, data)
+      setIndicators(loadIndicatorsUseCase())
+      setEditingItem(null)
+    } catch {
+      triggerError('שמירת השינויים נכשלה. אנא נסה שנית.')
+    }
   }
 
   return (
@@ -38,7 +52,7 @@ function IndicatorsListScreen() {
         )}
 
         {indicators.map((indicator) => (
-          <IndicatorCard key={indicator.id} indicator={indicator} onClick={() => setEditingIndicator(indicator)} />
+          <IndicatorCard key={indicator.id} indicator={indicator} onClick={() => setEditingItem(indicator)} />
         ))}
 
         {showForm && (
@@ -47,9 +61,9 @@ function IndicatorsListScreen() {
           </Modal>
         )}
 
-        {editingIndicator && (
-          <Modal title="עריכת מציין" onClose={() => setEditingIndicator(null)}>
-            <IndicatorForm onSubmit={handleEdit} submitLabel="שמור שינויים" initialValues={editingIndicator} />
+        {editingItem && (
+          <Modal title="עריכת מציין" onClose={() => setEditingItem(null)}>
+            <IndicatorForm onSubmit={handleEdit} submitLabel="שמור שינויים" initialValues={editingItem} />
           </Modal>
         )}
 
