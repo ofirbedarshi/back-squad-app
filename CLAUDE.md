@@ -96,9 +96,6 @@ A `docs/` folder holds short Hebrew documentation files for screens, components,
 - If a matching doc exists → **automatically update it** and tell the user it was updated.
 - If no doc exists → ask the user if they want one created.
 
-### Notion sync
-- Every doc create or update in `docs/` must be synced to the Notion workspace — see `.cursor/rules/notion-docs-sync.mdc` for full instructions.
-
 ## When unsure
 
 Ask before changing architecture, data models, business logic, or storage decisions.
