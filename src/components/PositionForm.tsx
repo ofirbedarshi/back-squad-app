@@ -3,6 +3,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import FormField from './FormField'
 import Input from './Input'
+import CoordinateInput from './base/CoordinateInput'
+import { coordinateValueSchema, normalizeCoordinateValue } from './base/coordinateInput.utils'
 import SegmentedToggle from './base/SegmentedToggle'
 import type { PositionInput } from '../domain/position.types'
 
@@ -15,7 +17,7 @@ const LAUNCHER_TYPES = {
 
 const schema = z.object({
   stationName: z.string().min(1, 'שדה חובה'),
-  coordinates: numberField,
+  coordinates: coordinateValueSchema,
   altitude: numberField,
   aka: numberField.max(359.9, 'ערך מקסימלי הוא 359.9'),
   launcherType: z.enum(['vehicle', 'infantry']),
@@ -49,6 +51,7 @@ function PositionForm({ onSubmit, submitLabel = 'שמור', initialValues }: Pos
     defaultValues: {
       launcherType: LAUNCHER_TYPES.VEHICLE,
       ...initialValues,
+      coordinates: normalizeCoordinateValue(initialValues?.coordinates),
     },
   })
 
@@ -61,8 +64,21 @@ function PositionForm({ onSubmit, submitLabel = 'שמור', initialValues }: Pos
         <Input type="text" placeholder="הכנס שם..." hasError={!!errors.stationName} {...register('stationName')} />
       </FormField>
 
-      <FormField label='נ"צ' error={errors.coordinates?.message}>
-        <Input type="number" hasError={!!errors.coordinates} {...register('coordinates', { valueAsNumber: true })} />
+      <FormField label='נ"צ' error={errors.coordinates?.east?.message || errors.coordinates?.north?.message}>
+        <Controller
+          name="coordinates"
+          control={control}
+          render={({ field }) => (
+            <CoordinateInput
+              value={{
+                east: field.value?.east ?? '',
+                north: field.value?.north ?? '3',
+              }}
+              onChange={field.onChange}
+              hasError={!!errors.coordinates}
+            />
+          )}
+        />
       </FormField>
 
       <FormField label="גובה עמדה" error={errors.altitude?.message}>

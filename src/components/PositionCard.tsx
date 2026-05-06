@@ -11,6 +11,9 @@ const LAUNCHER_LABEL: Record<string, string> = {
 }
 
 function PositionCard({ position, onClick }: PositionCardProps) {
+  const east = typeof position.coordinates === 'object' ? position.coordinates.east : String(position.coordinates ?? '')
+  const north = typeof position.coordinates === 'object' ? position.coordinates.north : ''
+
   return (
     <div
       className="bg-white rounded-2xl border border-neutral-200 shadow-sm p-4 flex flex-col gap-2 active:bg-neutral-50 transition-colors touch-manipulation select-none"
@@ -19,7 +22,7 @@ function PositionCard({ position, onClick }: PositionCardProps) {
     >
       <div className="font-bold text-neutral-800 text-base">{position.stationName}</div>
       <div className="flex flex-col gap-1 text-sm text-neutral-500">
-        <span>נ"צ: {position.coordinates}</span>
+        <span>נ"צ: {east}{north ? ` / ${north}` : ''}</span>
         <span>גובה: {position.altitude} מ'</span>
         <span>אק"א: {position.aka}</span>
         <span>{LAUNCHER_LABEL[position.launcherType]}</span>
