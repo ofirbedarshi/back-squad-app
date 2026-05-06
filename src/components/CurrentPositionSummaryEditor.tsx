@@ -22,9 +22,13 @@ function CurrentPositionSummaryEditor() {
   const east = currentPosition?.coordinates.east ?? ''
   const north = currentPosition?.coordinates.north ?? ''
   const summary = currentPosition ? (
-    <p className="line-clamp-2">
-      <span className="font-semibold text-neutral-800">עמדה נוכחית:</span> {currentPosition.stationName} | נ"צ {east} / {north} | גובה {currentPosition.altitude} מ'
-    </p>
+    <div className="flex flex-col gap-1">
+      <p className="font-semibold text-neutral-800">עמדה נוכחית:</p>
+      <p className="line-clamp-1">
+        <span className="font-medium text-neutral-800">{currentPosition.stationName}</span> | נ"צ {east} / {north}
+      </p>
+      <p className="line-clamp-1">גובה {currentPosition.altitude} מ'</p>
+    </div>
   ) : (
     <p className="truncate">לא נבחרה עמדה נוכחית</p>
   )

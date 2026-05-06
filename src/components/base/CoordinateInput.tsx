@@ -1,4 +1,5 @@
 import { useRef } from 'react'
+import type { FocusEvent, MouseEvent } from 'react'
 import type { CoordinateInputProps } from './coordinateInput.types'
 
 function CoordinateInput({ value, onChange, hasError = false }: CoordinateInputProps) {
@@ -21,22 +22,20 @@ function CoordinateInput({ value, onChange, hasError = false }: CoordinateInputP
   function handleEastChange(rawValue: string) {
     const nextEast = rawValue.replace(/\D/g, '').slice(0, 6)
     updateCoordinates(nextEast, northMain, checkDigit)
-    if (nextEast.length === 6) {
-      northMainInputRef.current?.focus()
-    }
   }
 
   function handleNorthMainChange(rawValue: string) {
     const nextNorthMain = rawValue.replace(/\D/g, '').slice(0, 6)
     updateCoordinates(east, nextNorthMain, checkDigit)
-    if (nextNorthMain.length === 6) {
-      checkDigitInputRef.current?.focus()
-    }
   }
 
   function handleCheckDigitChange(rawValue: string) {
     const nextCheckDigit = rawValue.replace(/\D/g, '').slice(0, 1) || '3'
     updateCoordinates(east, northMain, nextCheckDigit)
+  }
+
+  function handleSelectOnFocus(event: FocusEvent<HTMLInputElement> | MouseEvent<HTMLInputElement>) {
+    event.currentTarget.select()
   }
 
   return (
@@ -78,6 +77,8 @@ function CoordinateInput({ value, onChange, hasError = false }: CoordinateInputP
               maxLength={1}
               value={checkDigit}
               onChange={(event) => handleCheckDigitChange(event.target.value)}
+              onFocus={handleSelectOnFocus}
+              onClick={handleSelectOnFocus}
               className="w-10 bg-neutral-200 text-neutral-600 text-base font-semibold text-center outline-none rounded-l-xl"
               dir="ltr"
             />
