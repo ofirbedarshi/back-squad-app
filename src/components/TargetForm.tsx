@@ -19,7 +19,6 @@ const schema = z.object({
   targetDescription: optionalTextField,
   coordinates: coordinateValueSchema,
   altitude: optionalNumberField,
-  results: optionalTextField,
 })
 
 type TargetFormValues = z.infer<typeof schema>
@@ -116,8 +115,8 @@ function TargetForm({ onSubmit, submitLabel = 'שמור', initialValues }: Targe
         <Input type="number" value={displayAltitudeDiff} disabled />
       </FormField>
 
-      <FormField label="תוצאות" error={errors.results?.message}>
-        <Input type="text" hasError={!!errors.results} {...register('results')} />
+      <FormField label="תוצאות">
+        <p className="text-sm font-bold text-amber-700">TODO: שדה זה יתווסף בהמשך.</p>
       </FormField>
 
       <button

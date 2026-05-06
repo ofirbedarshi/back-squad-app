@@ -14,11 +14,6 @@ function TargetCard({ target, onClick }: TargetCardProps) {
     >
       <div className="flex items-center justify-between gap-3">
         <span className="font-bold text-neutral-800 text-base">מטרה {target.targetName}</span>
-        {target.results && (
-          <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-blue-100 text-blue-700">
-            {target.results}
-          </span>
-        )}
       </div>
       <span className="text-sm text-neutral-500">נ.צ: {target.coordinates}</span>
     </div>

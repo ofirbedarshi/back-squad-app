@@ -3,7 +3,6 @@ export interface TargetInput {
   targetDescription?: string
   coordinates: string
   altitude?: number
-  results?: string
 }
 
 export interface Target extends TargetInput {
