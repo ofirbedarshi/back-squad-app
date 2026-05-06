@@ -24,7 +24,8 @@ function PositionCard({ position, onClick }: PositionCardProps) {
         <span>אק"א: {position.aka}</span>
         <span>{LAUNCHER_LABEL[position.launcherType]}</span>
         {position.vehicleId && <span>צ' רכב: {position.vehicleId}</span>}
-        <span>Pitch & Roll: {position.pitchAndRoll}</span>
+        <span>Pitch: {position.pitch}</span>
+        <span>Roll: {position.roll}</span>
       </div>
     </div>
   )

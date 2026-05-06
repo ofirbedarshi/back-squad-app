@@ -19,8 +19,6 @@ function IndicatorCard({ indicator, onClick }: IndicatorCardProps) {
         <span>אמצעי: {indicator.means}</span>
         <span>קוד ציון: {indicator.markCode}</span>
         {indicator.targetDomain && <span>תחום מטרות: {indicator.targetDomain}</span>}
-        {indicator.azimuth !== undefined && <span>אזימוט: {indicator.azimuth}</span>}
-        {indicator.range !== undefined && <span>טווח: {indicator.range}</span>}
       </div>
     </div>
   )

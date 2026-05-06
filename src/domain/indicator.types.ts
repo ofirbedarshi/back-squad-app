@@ -5,8 +5,6 @@ export interface IndicatorInput {
   means: string
   markCode: number
   targetDomain?: string
-  azimuth?: number
-  range?: number
 }
 
 export interface Indicator extends IndicatorInput {

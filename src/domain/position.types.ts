@@ -7,7 +7,8 @@ export interface PositionInput {
   aka: number
   launcherType: LauncherType
   vehicleId?: string
-  pitchAndRoll: number
+  pitch: number
+  roll: number
 }
 
 export interface Position {
@@ -19,5 +20,6 @@ export interface Position {
   aka: number
   launcherType: LauncherType
   vehicleId?: string
-  pitchAndRoll: number
+  pitch: number
+  roll: number
 }

@@ -10,7 +10,8 @@ export function createPosition(input: PositionInput): Position {
     aka: input.aka,
     launcherType: input.launcherType,
     vehicleId: input.vehicleId,
-    pitchAndRoll: input.pitchAndRoll,
+    pitch: input.pitch,
+    roll: input.roll,
   }
 }
 

@@ -14,8 +14,6 @@ const schema = z.object({
   means: z.string().min(1, 'שדה חובה'),
   markCode: numberField,
   targetDomain: z.string().optional(),
-  azimuth: z.number({ error: 'יש להזין מספר' }).optional(),
-  range: z.number({ error: 'יש להזין מספר' }).optional(),
 })
 
 type IndicatorFormValues = z.infer<typeof schema>
@@ -60,14 +58,6 @@ function IndicatorForm({ onSubmit, submitLabel = 'שמור', initialValues }: In
 
       <FormField label="תחום מטרות" error={errors.targetDomain?.message}>
         <Input type="text" hasError={!!errors.targetDomain} {...register('targetDomain')} />
-      </FormField>
-
-      <FormField label="אזימוט" error={errors.azimuth?.message}>
-        <Input type="number" hasError={!!errors.azimuth} {...register('azimuth', { valueAsNumber: true })} />
-      </FormField>
-
-      <FormField label="טווח" error={errors.range?.message}>
-        <Input type="number" hasError={!!errors.range} {...register('range', { valueAsNumber: true })} />
       </FormField>
 
       <button

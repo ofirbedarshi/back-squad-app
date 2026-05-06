@@ -17,10 +17,11 @@ const schema = z.object({
   stationName: z.string().min(1, 'שדה חובה'),
   coordinates: numberField,
   altitude: numberField,
-  aka: numberField,
+  aka: numberField.max(359.9, 'ערך מקסימלי הוא 359.9'),
   launcherType: z.enum(['vehicle', 'infantry']),
   vehicleId: z.string().optional(),
-  pitchAndRoll: z.number({ error: 'יש להזין מספר' }).max(5, 'ערך מקסימלי הוא 5'),
+  pitch: numberField,
+  roll: numberField,
 })
 
 type PositionFormValues = z.infer<typeof schema>
@@ -92,8 +93,12 @@ function PositionForm({ onSubmit, submitLabel = 'שמור', initialValues }: Pos
         </FormField>
       )}
 
-      <FormField label="PITCH & ROLL" error={errors.pitchAndRoll?.message}>
-        <Input type="number" hasError={!!errors.pitchAndRoll} {...register('pitchAndRoll', { valueAsNumber: true })} />
+      <FormField label="Pitch" error={errors.pitch?.message}>
+        <Input type="number" hasError={!!errors.pitch} {...register('pitch', { valueAsNumber: true })} />
+      </FormField>
+
+      <FormField label="Roll" error={errors.roll?.message}>
+        <Input type="number" hasError={!!errors.roll} {...register('roll', { valueAsNumber: true })} />
       </FormField>
 
       <button
