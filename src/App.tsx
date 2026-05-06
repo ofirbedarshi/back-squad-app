@@ -11,6 +11,7 @@ import IndicatorsListScreen from './screens/IndicatorsListScreen'
 import NidbarimScreen from './screens/NidbarimScreen'
 import SadpamScreen from './screens/SadpamScreen'
 import TargetBankScreen from './screens/TargetBankScreen'
+import TargetListScreen from './screens/TargetListScreen'
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
             <Route path="/maagarim" element={<MaagarimScreen />} />
             <Route path="/maagarim/positions" element={<PositionsListScreen />} />
             <Route path="/maagarim/indicators" element={<IndicatorsListScreen />} />
+            <Route path="/maagarim/targets" element={<TargetListScreen />} />
           </Routes>
         </main>
         <BottomNav />
