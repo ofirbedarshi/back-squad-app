@@ -1,5 +1,5 @@
 export interface AttackLogInput {
-  targetNumber: string
+  targetName: string
   date: string
   wasAttacked?: 'yes' | 'no'
   hit?: boolean

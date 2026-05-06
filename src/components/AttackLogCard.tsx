@@ -25,7 +25,7 @@ function AttackLogCard({ log, onClick }: AttackLogCardProps) {
       role={onClick ? 'button' : undefined}
     >
       <div className="flex items-center justify-between">
-        <span className="font-bold text-neutral-800 text-base">מטרה {log.targetNumber}</span>
+        <span className="font-bold text-neutral-800 text-base">מטרה {log.targetName}</span>
         <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${badge.className}`}>
           {badge.label}
         </span>

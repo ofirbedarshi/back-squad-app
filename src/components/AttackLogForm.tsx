@@ -12,7 +12,7 @@ const optionalTextField = z.string().optional()
 const optionalNumberField = z.nan().transform((): undefined => undefined).or(z.number().optional())
 
 const schema = z.object({
-  targetNumber: requiredTextField,
+  targetName: requiredTextField,
   date: requiredTextField,
   wasAttacked: z.enum(['yes', 'no']).optional(),
   hit: z.boolean().optional(),
@@ -89,8 +89,8 @@ function AttackLogForm({ onSubmit, submitLabel = 'שמור', initialValues }: At
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-4">
-      <FormField label="מספר מטרה" error={errors.targetNumber?.message}>
-        <Input type="number" inputMode="numeric" hasError={!!errors.targetNumber} {...register('targetNumber')} />
+      <FormField label="שם מטרה" error={errors.targetName?.message}>
+        <Input type="text" hasError={!!errors.targetName} {...register('targetName')} />
       </FormField>
 
       <FormField label="נתקפה" error={errors.wasAttacked?.message}>
