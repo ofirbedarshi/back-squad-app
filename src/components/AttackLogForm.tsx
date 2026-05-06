@@ -100,7 +100,7 @@ function AttackLogForm({ onSubmit, submitLabel = 'שמור', initialValues }: At
           render={({ field }) => (
             <SegmentedToggle
               options={WAS_ATTACKED_OPTIONS}
-              value={field.value}
+              value={field.value ?? 'no'}
               onChange={field.onChange}
             />
           )}
@@ -114,7 +114,7 @@ function AttackLogForm({ onSubmit, submitLabel = 'שמור', initialValues }: At
           render={({ field }) => (
             <Checkbox
               label="פגע"
-              checked={field.value}
+              checked={field.value ?? false}
               onChange={field.onChange}
             />
           )}
@@ -168,7 +168,7 @@ function AttackLogForm({ onSubmit, submitLabel = 'שמור', initialValues }: At
           render={({ field }) => (
             <SegmentedToggle
               options={GENERATION_OPTIONS}
-              value={field.value}
+              value={field.value ?? 'a'}
               onChange={field.onChange}
             />
           )}

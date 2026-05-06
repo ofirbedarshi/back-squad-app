@@ -16,7 +16,7 @@ function getStatusBadge(wasAttacked: 'yes' | 'no', hit: boolean) {
 }
 
 function AttackLogCard({ log, onClick }: AttackLogCardProps) {
-  const badge = getStatusBadge(log.wasAttacked, log.hit)
+  const badge = getStatusBadge(log.wasAttacked ?? 'no', log.hit ?? false)
 
   return (
     <div
