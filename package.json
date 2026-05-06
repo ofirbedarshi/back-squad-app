@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:html": "tsc -b && vite build --config vite.singlefile.config.ts --outDir output/.html-build && cp output/.html-build/index.html output/back-squad-standalone.html && rm -rf output/.html-build",
     "build:apk": "bash build.sh",
     "lint": "eslint .",
     "preview": "vite preview"
@@ -33,6 +34,7 @@
     "tailwindcss": "^4.2.4",
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.58.2",
-    "vite": "^8.0.10"
+    "vite": "^8.0.10",
+    "vite-plugin-singlefile": "^2.3.3"
   }
 }
