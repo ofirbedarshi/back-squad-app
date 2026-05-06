@@ -5,12 +5,6 @@ export interface PositionCoordinates {
   north: string
 }
 
-export interface CurrentPositionEditableFields {
-  stationName: string
-  coordinates: PositionCoordinates
-  altitude: number
-}
-
 export interface PositionInput {
   stationName: string
   coordinates: PositionCoordinates

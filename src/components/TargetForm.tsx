@@ -3,6 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import FormField from './FormField'
 import Input from './Input'
+import CurrentPositionSummaryEditor from './CurrentPositionSummaryEditor'
 import type { TargetInput } from './target.types'
 
 const requiredTextField = z.string().min(1, 'שדה חובה')
@@ -40,6 +41,8 @@ function TargetForm({ onSubmit, submitLabel = 'שמור', initialValues }: Targe
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-4">
+      <CurrentPositionSummaryEditor />
+
       <FormField label="שם מטרה" error={errors.targetName?.message}>
         <Input type="text" hasError={!!errors.targetName} {...register('targetName')} />
       </FormField>
