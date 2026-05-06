@@ -1,7 +1,12 @@
 import type { Position } from '../domain/position.types'
+import { positionEvents, POSITION_EVENTS } from '../shared/positionEvents'
 
 const POSITIONS_KEY = 'positions'
 const CURRENT_POSITION_ID_KEY = 'currentPositionId'
+
+function notifyPositionStorageChanged(): void {
+  positionEvents.emit(POSITION_EVENTS.CURRENT_CHANGED)
+}
 
 function readPositions(): Position[] {
   const raw = localStorage.getItem(POSITIONS_KEY)
@@ -25,6 +30,7 @@ export function addPosition(position: Position): void {
 
 export function setCurrentPositionId(id: string): void {
   localStorage.setItem(CURRENT_POSITION_ID_KEY, id)
+  notifyPositionStorageChanged()
 }
 
 export function loadCurrentPosition(): Position | null {

@@ -1,6 +1,6 @@
 ---
 name: build-android-apk
-description: Build the Android debug APK for this back-squad-app repository using the existing npm build:apk pipeline and verify the output artifact. Use when the user asks to build an APK, generate Android output, or troubleshoot APK build failures in this project.
+description: Build both Android debug APK and standalone HTML output for this back-squad-app repository using the existing npm pipelines, then verify both artifacts. Use when the user asks to build Android output, generate distributable build artifacts, or troubleshoot build failures in this project.
 disable-model-invocation: true
 ---
 
@@ -18,15 +18,16 @@ Use this skill when working in this repository and the user asks to:
 Run from the repo root:
 
 ```bash
-npm run build:apk
+npm run build:apk && npm run build:html
 ```
 
-This command runs `build.sh`, which performs:
+These commands perform:
 1. Node dependency install (`npm ci`)
 2. React production build (`npm run build`)
 3. Copy `dist/` into Android assets
 4. Gradle debug APK build (`./gradlew assembleDebug`)
 5. Copy final APK to `output/back-squad-app.apk`
+6. Build single-file HTML and copy to `output/apexcodeup.html`
 
 ## Preflight checks
 
@@ -40,10 +41,11 @@ If a preflight check fails, report the exact missing prerequisite and stop.
 
 ## Build workflow
 
-1. Run `npm run build:apk` at repo root.
+1. Run `npm run build:apk && npm run build:html` at repo root.
 2. If build fails in TypeScript stage, fix TypeScript errors first, then rerun.
 3. If Gradle fails, report the failing task and keep the actionable error lines.
-4. On success, verify artifact exists:
+4. If HTML build fails, report the actionable build error lines and rerun after fixing.
+5. On success, verify artifacts exist:
 
 ```bash
 ls -l output
@@ -51,13 +53,16 @@ ls -l output
 
 Expected file:
 - `output/back-squad-app.apk`
+- `output/apexcodeup.html`
 
 ## Response format
 
 After running, report:
 - Success/failure
-- Artifact path (`output/back-squad-app.apk`) on success
-- File size if available
+- Artifact paths on success:
+  - `output/back-squad-app.apk`
+  - `output/apexcodeup.html`
+- File sizes if available
 - Blocking errors and next fix step on failure
 
 ## Guardrails
