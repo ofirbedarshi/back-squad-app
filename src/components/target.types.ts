@@ -3,9 +3,6 @@ export interface TargetInput {
   targetDescription?: string
   coordinates: string
   altitude?: number
-  azimuth?: number
-  range?: number
-  altitudeDiff?: number
   results?: string
 }
 

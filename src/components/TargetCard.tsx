@@ -21,7 +21,6 @@ function TargetCard({ target, onClick }: TargetCardProps) {
         )}
       </div>
       <span className="text-sm text-neutral-500">נ.צ: {target.coordinates}</span>
-      <span className="text-sm text-neutral-500">אזימוט: {target.azimuth ?? '-'} | טווח: {target.range ?? '-'}</span>
     </div>
   )
 }
