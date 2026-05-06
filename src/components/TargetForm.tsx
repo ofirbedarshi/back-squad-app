@@ -8,7 +8,7 @@ import CurrentPositionSummaryEditor from './CurrentPositionSummaryEditor'
 import type { TargetInput } from './target.types'
 import { calculateTargetLiveMetricsUseCase } from '../useCases/calculateTargetLiveMetrics'
 import CoordinateInput from './base/CoordinateInput'
-import { coordinateValueSchema, normalizeCoordinateValue } from './base/coordinateInput.utils'
+import { coordinateValueSchema, parseCoordinateString } from './base/coordinateInput.utils'
 
 const requiredTextField = z.string().min(1, 'שדה חובה')
 const optionalTextField = z.string().optional()
@@ -41,7 +41,7 @@ function TargetForm({ onSubmit, submitLabel = 'שמור', initialValues }: Targe
     resolver: zodResolver(schema),
     defaultValues: {
       ...initialValues,
-      coordinates: normalizeCoordinateValue(initialValues?.coordinates),
+      coordinates: parseCoordinateString(initialValues?.coordinates),
     },
   })
 
