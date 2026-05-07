@@ -42,6 +42,9 @@ fi
 BUILD_TIME="$(date +"%Y-%m-%d %H:%M:%S %Z")"
 BRANCH_NAME="$(git -C "$ROOT_DIR" rev-parse --abbrev-ref HEAD 2>/dev/null || echo "unknown")"
 SHORT_COMMIT="$(git -C "$ROOT_DIR" rev-parse --short HEAD 2>/dev/null || echo "unknown")"
+BUILD_STAMP="$(date +"%Y%m%d-%H%M%S")"
+APK_UPLOAD_NAME="back-squad-app-${SHORT_COMMIT}-${BUILD_STAMP}.apk"
+HTML_UPLOAD_NAME="back-squad-standalone-${SHORT_COMMIT}-${BUILD_STAMP}.html"
 
 CAPTION=$(
     cat <<EOF
@@ -50,6 +53,7 @@ Version: ${APP_VERSION}
 Branch: ${BRANCH_NAME}
 Commit: ${SHORT_COMMIT}
 Built at: ${BUILD_TIME}
+APK filename: ${APK_UPLOAD_NAME}
 EOF
 )
 
@@ -58,14 +62,14 @@ curl --fail --silent --show-error \
     -X POST "https://api.telegram.org/bot${BOT_TOKEN}/sendDocument" \
     -F "chat_id=${TELEGRAM_CHAT_ID}" \
     -F "caption=${CAPTION}" \
-    -F "document=@${APK_PATH}"
+    -F "document=@${APK_PATH};filename=${APK_UPLOAD_NAME}"
 
 echo ">>> Sending HTML to Telegram..."
 curl --fail --silent --show-error \
     -X POST "https://api.telegram.org/bot${BOT_TOKEN}/sendDocument" \
     -F "chat_id=${TELEGRAM_CHAT_ID}" \
-    -F "caption=Standalone HTML for version ${APP_VERSION}" \
-    -F "document=@${HTML_PATH}"
+    -F "caption=Standalone HTML for version ${APP_VERSION} (${HTML_UPLOAD_NAME})" \
+    -F "document=@${HTML_PATH};filename=${HTML_UPLOAD_NAME}"
 
 echo ""
 echo "Done! Sent APK and HTML to Telegram chat ${TELEGRAM_CHAT_ID}."

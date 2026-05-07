@@ -83,7 +83,7 @@ export function useDocFeedback(markdown: string) {
           }
 
           const bulletText = toPlainText(line.slice(2))
-          return `*${section.title}*\n• ${bulletText}\nהערה: ${comment}`
+          return `*${section.title}*\n• ${bulletText}\nהערה: *${comment}*`
         })
         .filter(Boolean),
     )
