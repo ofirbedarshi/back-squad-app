@@ -87,9 +87,14 @@ A `docs/` folder holds short Hebrew documentation files for screens, components,
 - Written for a non-technical reader — no code references, no technical terms, no function names or file paths.
 - Describe: what the screen/component/service does from the user's perspective, what fields exist, what rules apply, and how it behaves.
 
+### Doc rendering rule
+- For each doc in `docs/`, render `DocFeedbackModal` in every screen file listed under `related_files` (entries under `src/screens/`).
+- Import the matching markdown doc using `?raw` and pass it into `DocFeedbackModal`.
+- If a doc has no related screen entry, ask the user where that doc should be rendered.
+
 ### When to create a doc
 - After implementing a new screen, component, or service with meaningful logic → **ask the user** if they want a doc created.
-- If the user agrees → create the doc in `docs/` immediately.
+- If the user agrees → create the doc in `docs/` immediately and render it via `DocFeedbackModal` in all related screens.
 
 ### When to update a doc
 - After changing behavior, fields, validations, or rules in a file → **check if any doc in `docs/` lists that file under `related_files`**.

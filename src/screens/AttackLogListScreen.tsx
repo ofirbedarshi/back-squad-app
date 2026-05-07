@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import AttackLogCard from '../components/AttackLogCard'
 import AttackLogForm from '../components/AttackLogForm'
+import DocFeedbackModal from '../components/base/DocFeedbackModal'
 import Modal from '../components/base/Modal'
 import { useDomainError } from '../hooks/useDomainError'
 import { useUIError } from '../hooks/useUIError'
@@ -8,6 +9,7 @@ import { addAttackLogUseCase } from '../useCases/addAttackLog'
 import { loadAttackLogsUseCase } from '../useCases/loadAttackLogs'
 import { updateAttackLogUseCase } from '../useCases/updateAttackLog'
 import type { AttackLog, AttackLogInput } from '../domain/attackLog.types'
+import attackLogDocMarkdown from '../../docs/יומן-תקיפות.md?raw'
 
 function AttackLogListScreen() {
   const [logs, setLogs] = useState<AttackLog[]>([])
@@ -77,6 +79,12 @@ function AttackLogListScreen() {
           </button>
         )}
       </div>
+      <DocFeedbackModal
+        markdown={attackLogDocMarkdown}
+        modalTitle="מידע על מסך יומן תקיפות"
+        shareTitle="מסך יומן תקיפות"
+        openButtonAriaLabel="פתח מידע על מסך יומן תקיפות"
+      />
     </div>
   )
 }

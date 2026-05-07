@@ -1,3 +1,5 @@
+import { useRef, useState } from 'react'
+import type { PointerEvent as ReactPointerEvent } from 'react'
 import Modal from './Modal'
 import { useDocFeedback } from '../../hooks/useDocFeedback'
 import type { DocFeedbackModalProps } from './docFeedback.types'
@@ -10,6 +12,29 @@ function DocFeedbackModal({
   openButtonText = 'i',
   shareButtonLabel = 'שתף הערות ב-WhatsApp',
 }: DocFeedbackModalProps) {
+  const floatingButtonSize = 48
+  const floatingButtonSideOffset = 16
+  const floatingButtonBottomOffset = 96
+  const initialY =
+    typeof window === 'undefined'
+      ? floatingButtonBottomOffset
+      : Math.max(
+          floatingButtonSideOffset,
+          window.innerHeight - floatingButtonBottomOffset - floatingButtonSize
+        )
+
+  const [buttonPosition, setButtonPosition] = useState({
+    x: floatingButtonSideOffset,
+    y: initialY,
+  })
+  const dragStateRef = useRef<{
+    pointerId: number
+    pointerOffsetX: number
+    pointerOffsetY: number
+    hasMoved: boolean
+  } | null>(null)
+  const shouldIgnoreClickRef = useRef(false)
+
   const {
     isOpen,
     sections,
@@ -35,12 +60,95 @@ function DocFeedbackModal({
     window.open(shareUrl, '_blank', 'noopener,noreferrer')
   }
 
+  function clamp(value: number, min: number, max: number): number {
+    return Math.min(Math.max(value, min), max)
+  }
+
+  function handleOpenButtonClick() {
+    if (shouldIgnoreClickRef.current) {
+      shouldIgnoreClickRef.current = false
+      return
+    }
+
+    open()
+  }
+
+  function handleOpenButtonPointerDown(event: ReactPointerEvent<HTMLButtonElement>) {
+    const nextOffsetX = event.clientX - buttonPosition.x
+    const nextOffsetY = event.clientY - buttonPosition.y
+
+    dragStateRef.current = {
+      pointerId: event.pointerId,
+      pointerOffsetX: nextOffsetX,
+      pointerOffsetY: nextOffsetY,
+      hasMoved: false,
+    }
+
+    event.currentTarget.setPointerCapture(event.pointerId)
+  }
+
+  function handleOpenButtonPointerMove(event: ReactPointerEvent<HTMLButtonElement>) {
+    if (!dragStateRef.current) {
+      return
+    }
+
+    if (dragStateRef.current.pointerId !== event.pointerId) {
+      return
+    }
+
+    const maxX = window.innerWidth - floatingButtonSize - floatingButtonSideOffset
+    const maxY = window.innerHeight - floatingButtonSize - floatingButtonSideOffset
+    const nextX = clamp(
+      event.clientX - dragStateRef.current.pointerOffsetX,
+      floatingButtonSideOffset,
+      maxX
+    )
+    const nextY = clamp(
+      event.clientY - dragStateRef.current.pointerOffsetY,
+      floatingButtonSideOffset,
+      maxY
+    )
+
+    const didMoveEnough =
+      Math.abs(nextX - buttonPosition.x) > 2 || Math.abs(nextY - buttonPosition.y) > 2
+    if (didMoveEnough) {
+      dragStateRef.current.hasMoved = true
+    }
+
+    setButtonPosition({ x: nextX, y: nextY })
+  }
+
+  function handleOpenButtonPointerUp(event: ReactPointerEvent<HTMLButtonElement>) {
+    if (!dragStateRef.current) {
+      return
+    }
+
+    if (dragStateRef.current.pointerId !== event.pointerId) {
+      return
+    }
+
+    if (dragStateRef.current.hasMoved) {
+      shouldIgnoreClickRef.current = true
+    }
+
+    dragStateRef.current = null
+    event.currentTarget.releasePointerCapture(event.pointerId)
+  }
+
   return (
     <>
       <button
         type="button"
-        onClick={open}
-        className="fixed left-4 bottom-24 z-30 h-12 w-12 rounded-full bg-blue-600 text-white text-2xl font-bold shadow-lg active:bg-blue-700 touch-manipulation"
+        onClick={handleOpenButtonClick}
+        onPointerDown={handleOpenButtonPointerDown}
+        onPointerMove={handleOpenButtonPointerMove}
+        onPointerUp={handleOpenButtonPointerUp}
+        onPointerCancel={handleOpenButtonPointerUp}
+        className="fixed z-30 h-12 w-12 rounded-full bg-blue-600 text-white text-2xl font-bold shadow-lg active:bg-blue-700 touch-manipulation select-none"
+        style={{
+          left: `${buttonPosition.x}px`,
+          top: `${buttonPosition.y}px`,
+        }}
         aria-label={openButtonAriaLabel}
       >
         {openButtonText}

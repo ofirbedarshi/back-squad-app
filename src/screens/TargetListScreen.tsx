@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import Modal from '../components/base/Modal'
+import DocFeedbackModal from '../components/base/DocFeedbackModal'
 import CurrentPositionSummaryEditor from '../components/CurrentPositionSummaryEditor'
 import TargetCard from '../components/TargetCard'
 import TargetForm from '../components/TargetForm'
@@ -7,6 +8,7 @@ import type { Target, TargetInput } from '../domain/target.types'
 import { addTargetUseCase } from '../useCases/addTarget'
 import { loadTargetsUseCase } from '../useCases/loadTargets'
 import { updateTargetUseCase } from '../useCases/updateTarget'
+import targetsDocMarkdown from '../../docs/מטרות.md?raw'
 
 function TargetListScreen() {
   const [targets, setTargets] = useState<Target[]>(() => loadTargetsUseCase())
@@ -72,6 +74,12 @@ function TargetListScreen() {
           </button>
         )}
       </div>
+      <DocFeedbackModal
+        markdown={targetsDocMarkdown}
+        modalTitle="מידע על מסך מטרות"
+        shareTitle="מסך מטרות"
+        openButtonAriaLabel="פתח מידע על מסך מטרות"
+      />
     </div>
   )
 }

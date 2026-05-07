@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import IndicatorCard from '../components/IndicatorCard'
 import IndicatorForm from '../components/IndicatorForm'
+import DocFeedbackModal from '../components/base/DocFeedbackModal'
 import Modal from '../components/base/Modal'
 import { useDomainError } from '../hooks/useDomainError'
 import { useUIError } from '../hooks/useUIError'
@@ -8,6 +9,7 @@ import { addIndicatorUseCase } from '../useCases/addIndicator'
 import { loadIndicatorsUseCase } from '../useCases/loadIndicators'
 import { updateIndicatorUseCase } from '../useCases/updateIndicator'
 import type { Indicator, IndicatorInput } from '../domain/indicator.types'
+import indicatorsDocMarkdown from '../../docs/מציינים.md?raw'
 
 function IndicatorsListScreen() {
   const [indicators, setIndicators] = useState<Indicator[]>([])
@@ -77,6 +79,12 @@ function IndicatorsListScreen() {
           </button>
         )}
       </div>
+      <DocFeedbackModal
+        markdown={indicatorsDocMarkdown}
+        modalTitle="מידע על מסך מציינים"
+        shareTitle="מסך מציינים"
+        openButtonAriaLabel="פתח מידע על מסך מציינים"
+      />
     </div>
   )
 }
