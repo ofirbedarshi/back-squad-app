@@ -1,5 +1,7 @@
 package com.backsquad.app
 
+import android.content.Intent
+import android.content.ActivityNotFoundException
 import android.os.Bundle
 import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
@@ -54,9 +56,19 @@ class MainActivity : AppCompatActivity() {
                 view: WebView,
                 request: WebResourceRequest,
             ): Boolean {
-                // Block all navigations that leave the local asset origin
+                // Keep in-app navigation inside the local asset origin.
                 val host = request.url.host ?: return true
-                return host != "appassets.androidplatform.net"
+                if (host == "appassets.androidplatform.net") {
+                    return false
+                }
+
+                // Open external links (e.g. WhatsApp deep links) outside the WebView.
+                return try {
+                    startActivity(Intent(Intent.ACTION_VIEW, request.url))
+                    true
+                } catch (_: ActivityNotFoundException) {
+                    true
+                }
             }
         }
 

@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import type { CommentsBySection, DocSection } from '../components/base/docFeedback.types'
+import type { CommentsByBullet, DocSection } from '../components/base/docFeedback.types'
 
 function stripFrontMatter(markdown: string) {
   if (!markdown.startsWith('---')) {
@@ -39,9 +39,12 @@ function toPlainText(line: string) {
 
 export function useDocFeedback(markdown: string) {
   const [isOpen, setIsOpen] = useState(false)
-  const [commentsBySection, setCommentsBySection] = useState<CommentsBySection>({})
+  const [generalNote, setGeneralNote] = useState('')
+  const [commentsByBullet, setCommentsByBullet] = useState<CommentsByBullet>({})
+  const [visibleInputsByBullet, setVisibleInputsByBullet] = useState<Record<string, boolean>>({})
   const sections = useMemo(() => parseDocSections(markdown), [markdown])
-  const hasComment = Object.values(commentsBySection).some((comment) => comment.trim().length > 0)
+  const hasBulletComment = Object.values(commentsByBullet).some((comment) => comment.trim().length > 0)
+  const hasComment = hasBulletComment || generalNote.trim().length > 0
 
   function open() {
     setIsOpen(true)
@@ -51,31 +54,52 @@ export function useDocFeedback(markdown: string) {
     setIsOpen(false)
   }
 
-  function handleCommentChange(sectionId: string, value: string) {
-    setCommentsBySection((current) => ({
+  function toggleBulletCommentInput(bulletId: string) {
+    setVisibleInputsByBullet((current) => ({
       ...current,
-      [sectionId]: value,
+      [bulletId]: !current[bulletId],
+    }))
+  }
+
+  function handleBulletCommentChange(bulletId: string, value: string) {
+    setCommentsByBullet((current) => ({
+      ...current,
+      [bulletId]: value,
     }))
   }
 
   function buildWhatsAppShareUrl(shareTitle: string) {
-    const comments = sections
-      .map((section) => {
-        const comment = commentsBySection[section.id]?.trim()
-        if (!comment) {
-          return null
-        }
+    const bulletComments = sections.flatMap((section) =>
+      section.bodyLines
+        .map((line, lineIndex) => {
+          if (!line.startsWith('- ')) {
+            return null
+          }
 
-        return `*${section.title}*\n${comment}`
-      })
-      .filter(Boolean)
-      .join('\n\n')
+          const bulletId = `${section.id}-${lineIndex}`
+          const comment = commentsByBullet[bulletId]?.trim()
+          if (!comment) {
+            return null
+          }
 
-    if (!comments) {
+          const bulletText = toPlainText(line.slice(2))
+          return `*${section.title}*\n• ${bulletText}\nהערה: ${comment}`
+        })
+        .filter(Boolean),
+    )
+
+    const cleanGeneralNote = generalNote.trim()
+    const feedbackParts = [...bulletComments]
+
+    if (cleanGeneralNote) {
+      feedbackParts.push(`*הערות כלליות*\n${cleanGeneralNote}`)
+    }
+
+    if (feedbackParts.length === 0) {
       return null
     }
 
-    const shareText = `הערות למסמך: ${shareTitle}\n\n${comments}`
+    const shareText = `הערות למסמך: ${shareTitle}\n\n${feedbackParts.join('\n\n')}`
     return `https://wa.me/?text=${encodeURIComponent(shareText)}`
   }
 
@@ -86,8 +110,12 @@ export function useDocFeedback(markdown: string) {
     open,
     close,
     toPlainText,
-    handleCommentChange,
-    commentsBySection,
+    generalNote,
+    setGeneralNote,
+    commentsByBullet,
+    visibleInputsByBullet,
+    toggleBulletCommentInput,
+    handleBulletCommentChange,
     buildWhatsAppShareUrl,
   }
 }

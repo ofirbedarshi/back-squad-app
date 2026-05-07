@@ -4,7 +4,7 @@ export type DocSection = {
   bodyLines: string[]
 }
 
-export type CommentsBySection = Record<string, string>
+export type CommentsByBullet = Record<string, string>
 
 export type DocFeedbackModalProps = {
   markdown: string
