@@ -20,6 +20,7 @@ ROOT_DIR="$(cd "$(dirname "$0")" && pwd)"
 ANDROID_DIR="$ROOT_DIR/android"
 ASSETS_DIR="$ANDROID_DIR/app/src/main/assets/www"
 OUTPUT_DIR="$ROOT_DIR/output"
+TELEGRAM_SENDER_SCRIPT="$ROOT_DIR/scripts/send-artifacts-to-telegram.sh"
 
 # ── Preflight checks ──────────────────────────────────────────────────────────
 
@@ -70,6 +71,12 @@ cd "$ANDROID_DIR"
 echo ">>> Copying APK to output/..."
 mkdir -p "$OUTPUT_DIR"
 cp "$ANDROID_DIR/app/build/outputs/apk/debug/app-debug.apk" "$OUTPUT_DIR/back-squad-app.apk"
+cp "$ROOT_DIR/dist/index.html" "$OUTPUT_DIR/back-squad-standalone.html"
+
+# ── Step 5: Send artifacts to Telegram ─────────────────────────────────────────
+
+echo ">>> Sending build artifacts to Telegram..."
+"$TELEGRAM_SENDER_SCRIPT" "$OUTPUT_DIR/back-squad-app.apk" "$OUTPUT_DIR/back-squad-standalone.html"
 
 echo ""
 echo "Done! APK is at: output/back-squad-app.apk"

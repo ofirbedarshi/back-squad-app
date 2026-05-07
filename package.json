@@ -8,6 +8,7 @@
     "build": "tsc -b && vite build",
     "build:html": "tsc -b && vite build --config vite.singlefile.config.ts --outDir output/.html-build && cp output/.html-build/index.html output/back-squad-standalone.html && rm -rf output/.html-build",
     "build:apk": "bash build.sh",
+    "send": "bash build.sh",
     "lint": "eslint .",
     "preview": "vite preview"
   },
