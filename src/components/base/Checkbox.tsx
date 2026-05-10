@@ -9,15 +9,14 @@ function Checkbox({ label, checked, onChange }: CheckboxProps) {
     <button
       type="button"
       onClick={() => onChange(!checked)}
-      className="w-full flex items-center justify-between py-3.5 px-4 rounded-2xl border border-neutral-200 bg-neutral-50 touch-manipulation select-none active:bg-neutral-100 transition-colors"
+      className="w-full flex items-center gap-3 py-3.5 px-4 rounded-2xl border border-neutral-200 bg-neutral-50 touch-manipulation select-none active:bg-neutral-100 transition-colors"
     >
-      <span className="text-base text-neutral-800">{label}</span>
       <span
         className={[
           'w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all shrink-0',
           checked
-            ? 'bg-blue-500 border-blue-500'
-            : 'bg-white border-neutral-300',
+          ? 'bg-blue-500 border-blue-500'
+          : 'bg-white border-neutral-300',
         ].join(' ')}
       >
         {checked && (
@@ -36,6 +35,7 @@ function Checkbox({ label, checked, onChange }: CheckboxProps) {
           </svg>
         )}
       </span>
+      <span className="text-base text-neutral-800 text-right">{label}</span>
     </button>
   )
 }

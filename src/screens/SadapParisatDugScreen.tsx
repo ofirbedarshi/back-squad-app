@@ -1,4 +1,35 @@
+import { useState } from 'react'
+import Checkbox from '../components/base/Checkbox'
+import { loadSadapParisatDugChecklistUseCase } from '../useCases/loadSadapParisatDugChecklist'
+import { toggleSadapParisatDugChecklistItemUseCase } from '../useCases/toggleSadapParisatDugChecklistItem'
+import { clearSadapParisatDugChecklistUseCase } from '../useCases/clearSadapParisatDugChecklist'
+
+const CHECKLIST_ITEMS = [
+  { id: 'connector-50', label: 'שלושת המחברים של צמת כבל 50 מחוברים היסב ברכב' },
+  { id: 'cable-secured', label: 'כבל ההרחקה מאובטח לרכב' },
+  { id: 'acdc-on', label: 'ACDC פועל – שמיעת מאורר' },
+  { id: 'no-equipment-behind', label: 'אי ציוד מאחורי גזרת העבודה או על הרכב בקו הרשף, לרבות כבלים' },
+  { id: 'missile-connectors', label: 'חיבור צמות הטילים' },
+  { id: 'butterflies-check', label: 'בדיקת פרפריות 0 ופילוט הכוורת' },
+  { id: 'travel-lock', label: 'סגר מסע מורד וראצ\'טים מנותקים' },
+  { id: 'mlc-ziud', label: 'זיול MLC' },
+  { id: 'doors-closed', label: 'דלתות הרכב סגורות' },
+  { id: 'parking', label: 'רכב כבוי, ב PARKING ופקודת פקיד משימה לעמדה לחוץ' },
+]
+
 function SadapParisatDugScreen() {
+  const [checked, setChecked] = useState<Record<string, boolean>>(
+    () => loadSadapParisatDugChecklistUseCase()
+  )
+
+  function handleToggle(id: string) {
+    setChecked(toggleSadapParisatDugChecklistItemUseCase(id))
+  }
+
+  function handleClear() {
+    setChecked(clearSadapParisatDugChecklistUseCase())
+  }
+
   return (
     <div dir="rtl" className="flex flex-col h-full overflow-y-auto">
       <header className="py-4 px-4 text-center font-bold text-lg border-b border-neutral-200 text-neutral-800">
@@ -64,19 +95,26 @@ function SadapParisatDugScreen() {
 
         {/* בדיקות מפקד לפני תחילת עבודה */}
         <section className="flex flex-col gap-2">
-          <h3 className="font-bold underline text-neutral-800">בדיקות מפקד לפני תחילת עבודה:</h3>
-          <ul className="flex flex-col gap-1 pr-4">
-            <li className="list-disc text-neutral-700">שלושת המחברים של צמת כבל 50 מחוברים היסב ברכב</li>
-            <li className="list-disc text-neutral-700">כבל ההרחקה מאובטח לרכב</li>
-            <li className="list-disc text-neutral-700">ACDC פועל – שמיעת מאורר</li>
-            <li className="list-disc text-neutral-700">אי ציוד מאחורי גזרת העבודה או על הרכב בקו הרשף, לרבות כבלים</li>
-            <li className="list-disc text-neutral-700">חיבור צמות הטילים</li>
-            <li className="list-disc text-neutral-700">בדיקת פרפריות 0 ופילוט הכוורת</li>
-            <li className="list-disc text-neutral-700">סגר מסע מורד וראצ'טים מנותקים</li>
-            <li className="list-disc text-neutral-700">זיול MLC</li>
-            <li className="list-disc text-neutral-700">דלתות הרכב סגורות</li>
-            <li className="list-disc text-neutral-700">רכב כבוי, ב PARKING ופקודת פקיד משימה לעמדה לחוץ</li>
-          </ul>
+          <div className="flex items-center justify-between">
+            <h3 className="font-bold underline text-neutral-800">בדיקות מפקד לפני תחילת עבודה:</h3>
+            <button
+              type="button"
+              onClick={handleClear}
+              className="text-xs text-neutral-500 border border-neutral-300 rounded px-2 py-1 active:bg-neutral-100"
+            >
+              נקה הכל
+            </button>
+          </div>
+          <div className="flex flex-col gap-2">
+            {CHECKLIST_ITEMS.map((item) => (
+              <Checkbox
+                key={item.id}
+                label={item.label}
+                checked={!!checked[item.id]}
+                onChange={() => handleToggle(item.id)}
+              />
+            ))}
+          </div>
         </section>
 
         {/* final step */}
