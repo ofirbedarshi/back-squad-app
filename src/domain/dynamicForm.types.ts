@@ -51,6 +51,11 @@ export interface CoordsField {
   defaultValue?: CoordinateValue
 }
 
+export interface NoteField {
+  type: 'note'
+  text: string
+}
+
 export type RowableField = TextField | DateField | TimeField | ToggleField | CheckboxField | CoordsField
 
 export interface RowField {
@@ -58,7 +63,7 @@ export interface RowField {
   fields: RowableField[]
 }
 
-export type FormFieldDef = HeaderField | RowField | TextField | DateField | TimeField | ToggleField | CheckboxField | CoordsField
+export type FormFieldDef = HeaderField | NoteField | RowField | TextField | DateField | TimeField | ToggleField | CheckboxField | CoordsField
 
 export interface FormSchema {
   fields: FormFieldDef[]

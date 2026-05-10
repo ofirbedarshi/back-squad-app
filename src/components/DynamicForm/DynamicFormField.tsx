@@ -27,6 +27,14 @@ function DynamicFormField({ field, control, register, errors }: DynamicFormField
     )
   }
 
+  if (field.type === 'note') {
+    return (
+      <p className="text-sm text-neutral-500 bg-neutral-100 rounded-xl px-3 py-2 leading-relaxed">
+        {field.text}
+      </p>
+    )
+  }
+
   if (field.type === 'header') {
     return field.bold
       ? <h2 className="text-base font-bold underline text-neutral-800 pt-2">{field.text}</h2>

@@ -8,9 +8,12 @@ interface DynamicFormProps {
   onSubmit: (values: FormValues) => void
   defaultValues?: Partial<FormValues>
   submitLabel?: string
+  /** When provided, sets the form's id so an external button with form={formId} can submit it.
+   *  The internal submit button is hidden in this case. */
+  formId?: string
 }
 
-function DynamicForm({ schema, onSubmit, defaultValues, submitLabel = 'שמור' }: DynamicFormProps) {
+function DynamicForm({ schema, onSubmit, defaultValues, submitLabel = 'שמור', formId }: DynamicFormProps) {
   const schemaDefaults = extractDefaultValues(schema)
 
   const {
@@ -23,12 +26,12 @@ function DynamicForm({ schema, onSubmit, defaultValues, submitLabel = 'שמור'
   })
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-4">
+    <form id={formId} onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-4">
       {schema.fields.map((field, index) => (
         <DynamicFormField
           key={
-            field.type === 'header'
-              ? `header-${index}`
+            field.type === 'header' || field.type === 'note'
+              ? `${field.type}-${index}`
               : field.type === 'row'
                 ? `row-${index}`
                 : field.key
@@ -40,12 +43,14 @@ function DynamicForm({ schema, onSubmit, defaultValues, submitLabel = 'שמור'
         />
       ))}
 
-      <button
-        type="submit"
-        className="w-full py-3.5 rounded-2xl bg-blue-500 text-white text-base font-semibold shadow-sm active:bg-blue-600 transition-colors mt-2"
-      >
-        {submitLabel}
-      </button>
+      {!formId && (
+        <button
+          type="submit"
+          className="w-full py-3.5 rounded-2xl bg-blue-500 text-white text-base font-semibold shadow-sm active:bg-blue-600 transition-colors mt-2"
+        >
+          {submitLabel}
+        </button>
+      )}
     </form>
   )
 }
