@@ -51,9 +51,21 @@ function ReferencePositionSummarySelector() {
 
   const east = referencePosition?.coordinates.east ?? ''
   const north = referencePosition?.coordinates.north ?? ''
+  const isCurrentPosition = referencePosition != null && referencePosition.id === currentPosition?.id
   const summary = referencePosition ? (
     <div className="flex flex-col gap-1">
-      <p className="font-semibold text-neutral-800">עמדת ייחוס:</p>
+      <div className="flex items-center gap-2">
+        <p className="font-semibold text-neutral-800">עמדת ייחוס:</p>
+        {isCurrentPosition ? (
+          <span className="text-xs font-semibold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full">
+            עמדה נוכחית
+          </span>
+        ) : (
+          <span className="text-xs font-semibold bg-orange-100 text-orange-700 px-2 py-0.5 rounded-full">
+            עמדת מאגר
+          </span>
+        )}
+      </div>
       <p className="line-clamp-1">
         <span className="font-medium text-neutral-800">{referencePosition.stationName}</span> | נ"צ {east} / {north}
       </p>
