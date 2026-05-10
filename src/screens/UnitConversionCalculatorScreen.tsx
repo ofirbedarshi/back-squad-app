@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import DocFeedbackModal from '../components/base/DocFeedbackModal'
 import UnitConversionCard from '../components/UnitConversionCard'
 import {
   convertDegreesInputToMilsDisplay,
@@ -6,6 +7,7 @@ import {
   convertMetersInputToFeetDisplay,
   convertMilsInputToDegreesDisplay,
 } from '../useCases/convertUnitsFromInput'
+import unitConversionDocMarkdown from '../../docs/המרת-יחידות.md?raw'
 
 function UnitConversionCalculatorScreen() {
   const [anglesInput, setAnglesInput] = useState('')
@@ -31,7 +33,7 @@ function UnitConversionCalculatorScreen() {
   )
 
   return (
-    <div dir="rtl" className="flex flex-col h-full overflow-y-auto bg-neutral-50">
+    <div dir="rtl" className="relative flex flex-col h-full overflow-y-auto bg-neutral-50">
       <header className="py-4 px-4 text-center font-bold text-lg border-b border-neutral-200 text-neutral-800 shrink-0">
         המרת יחידות
       </header>
@@ -61,6 +63,13 @@ function UnitConversionCalculatorScreen() {
           onToggleDirection={() => setDistanceReversed((v) => !v)}
         />
       </div>
+
+      <DocFeedbackModal
+        markdown={unitConversionDocMarkdown}
+        modalTitle="מידע על המרת יחידות"
+        shareTitle="המרת יחידות"
+        openButtonAriaLabel="פתח מידע על המסך"
+      />
     </div>
   )
 }
