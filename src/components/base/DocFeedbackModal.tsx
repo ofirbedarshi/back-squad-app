@@ -3,6 +3,7 @@ import type { PointerEvent as ReactPointerEvent } from 'react'
 import Modal from './Modal'
 import { useDocFeedback } from '../../hooks/useDocFeedback'
 import type { DocFeedbackModalProps } from './docFeedback.types'
+import { applySeedMockData } from '../../dev/seedMockData'
 
 function DocFeedbackModal({
   markdown,
@@ -35,6 +36,8 @@ function DocFeedbackModal({
   } | null>(null)
   const shouldIgnoreClickRef = useRef(false)
 
+  const [seedDone, setSeedDone] = useState(false)
+
   const {
     isOpen,
     sections,
@@ -50,6 +53,14 @@ function DocFeedbackModal({
     handleBulletCommentChange,
     buildWhatsAppShareUrl,
   } = useDocFeedback(markdown)
+
+  function handleSeedMockData() {
+    applySeedMockData()
+    setSeedDone(true)
+    setTimeout(() => {
+      window.location.reload()
+    }, 800)
+  }
 
   function handleShareToWhatsApp() {
     const shareUrl = buildWhatsAppShareUrl(shareTitle)
@@ -155,7 +166,20 @@ function DocFeedbackModal({
       </button>
 
       {isOpen && (
-        <Modal title={modalTitle} onClose={close}>
+        <Modal
+          title={modalTitle}
+          onClose={close}
+          headerExtra={
+            <button
+              type="button"
+              onClick={handleSeedMockData}
+              disabled={seedDone}
+              className="text-xs font-semibold text-white bg-orange-500 rounded-xl px-2.5 py-1.5 active:bg-orange-600 touch-manipulation disabled:opacity-40 disabled:pointer-events-none"
+            >
+              {seedDone ? 'בוצע...' : 'נתוני דמה'}
+            </button>
+          }
+        >
           <div className="flex flex-col gap-5">
             {sections.map((section) => (
               <section key={section.id} className="rounded-2xl border border-neutral-200 p-3 bg-neutral-50">

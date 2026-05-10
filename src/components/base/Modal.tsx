@@ -6,9 +6,11 @@ interface ModalProps {
   onSave?: () => void
   saveLabel?: string
   saveDisabled?: boolean
+  /** Optional extra element rendered in the header, to the left of the cancel button. */
+  headerExtra?: React.ReactNode
 }
 
-function Modal({ title, onClose, children, onSave, saveLabel = 'שמור', saveDisabled = false }: ModalProps) {
+function Modal({ title, onClose, children, onSave, saveLabel = 'שמור', saveDisabled = false, headerExtra }: ModalProps) {
   return (
     <div className="fixed inset-x-0 top-0 bottom-16 z-40 flex items-end justify-center bg-black/40">
       <div
@@ -19,6 +21,7 @@ function Modal({ title, onClose, children, onSave, saveLabel = 'שמור', saveD
         <div className="flex items-center justify-between px-4 py-4 border-b border-neutral-200 shrink-0 gap-3">
           <span className="font-bold text-neutral-800 text-base min-w-0 truncate">{title}</span>
           <div className="flex items-center gap-2 shrink-0">
+            {headerExtra}
             <button
               type="button"
               onClick={onClose}
