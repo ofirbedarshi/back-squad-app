@@ -4,6 +4,7 @@ import AttackLogForm from '../components/AttackLogForm'
 import DocFeedbackModal from '../components/base/DocFeedbackModal'
 import Modal from '../components/base/Modal'
 import { useDomainError } from '../hooks/useDomainError'
+import { useNotification } from '../hooks/useNotification'
 import { useUIError } from '../hooks/useUIError'
 import { addAttackLogUseCase } from '../useCases/addAttackLog'
 import { loadAttackLogsUseCase } from '../useCases/loadAttackLogs'
@@ -17,6 +18,7 @@ function AttackLogListScreen() {
   const [editingItem, setEditingItem] = useState<AttackLog | null>(null)
   const { triggerError } = useDomainError()
   const { reportUIError } = useUIError()
+  const { notifySuccess } = useNotification()
 
   useEffect(() => {
     setLogs(loadAttackLogsUseCase())
@@ -26,6 +28,7 @@ function AttackLogListScreen() {
     addAttackLogUseCase(data)
     setLogs(loadAttackLogsUseCase())
     setShowForm(false)
+    notifySuccess('התקיפה נוספה בהצלחה')
   }
 
   function handleEdit(data: AttackLogInput) {
@@ -37,6 +40,7 @@ function AttackLogListScreen() {
       updateAttackLogUseCase(editingItem.id, data)
       setLogs(loadAttackLogsUseCase())
       setEditingItem(null)
+      notifySuccess('השינויים נשמרו')
     } catch {
       triggerError('שמירת השינויים נכשלה. אנא נסה שנית.')
     }

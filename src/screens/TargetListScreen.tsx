@@ -5,6 +5,7 @@ import ReferencePositionSummarySelector from '../components/ReferencePositionSum
 import TargetCard from '../components/TargetCard'
 import TargetForm from '../components/TargetForm'
 import type { Target, TargetInput } from '../domain/target.types'
+import { useNotification } from '../hooks/useNotification'
 import { addTargetUseCase } from '../useCases/addTarget'
 import { loadTargetsUseCase } from '../useCases/loadTargets'
 import { updateTargetUseCase } from '../useCases/updateTarget'
@@ -14,6 +15,7 @@ function TargetListScreen() {
   const [targets, setTargets] = useState<Target[]>(() => loadTargetsUseCase())
   const [showForm, setShowForm] = useState(false)
   const [editingItem, setEditingItem] = useState<Target | null>(null)
+  const { notifySuccess } = useNotification()
 
   useEffect(() => {
     setTargets(loadTargetsUseCase())
@@ -23,6 +25,7 @@ function TargetListScreen() {
     addTargetUseCase(data)
     setTargets(loadTargetsUseCase())
     setShowForm(false)
+    notifySuccess('המטרה נוספה בהצלחה')
   }
 
   function handleEdit(data: TargetInput) {
@@ -33,6 +36,7 @@ function TargetListScreen() {
     updateTargetUseCase(editingItem.id, data)
     setTargets(loadTargetsUseCase())
     setEditingItem(null)
+    notifySuccess('השינויים נשמרו')
   }
 
   return (

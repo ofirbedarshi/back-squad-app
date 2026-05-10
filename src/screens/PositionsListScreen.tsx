@@ -4,6 +4,7 @@ import PositionForm from '../components/PositionForm'
 import Modal from '../components/base/Modal'
 import { useCurrentPosition } from '../hooks/useCurrentPosition'
 import { useDomainError } from '../hooks/useDomainError'
+import { useNotification } from '../hooks/useNotification'
 import { useUIError } from '../hooks/useUIError'
 import { addPositionUseCase } from '../useCases/addPosition'
 import { loadPositionsUseCase } from '../useCases/loadPositions'
@@ -17,6 +18,7 @@ function PositionsListScreen() {
   const [editingItem, setEditingItem] = useState<Position | null>(null)
   const { triggerError } = useDomainError()
   const { reportUIError } = useUIError()
+  const { notifySuccess } = useNotification()
 
   useEffect(() => {
     setPositions(loadPositionsUseCase())
@@ -26,6 +28,7 @@ function PositionsListScreen() {
     addPositionUseCase(data)
     setPositions(loadPositionsUseCase())
     setShowForm(false)
+    notifySuccess('העמדה נוספה בהצלחה')
   }
 
   function handleEdit(data: PositionInput) {
@@ -37,6 +40,7 @@ function PositionsListScreen() {
       updatePositionUseCase(editingItem.id, data)
       setPositions(loadPositionsUseCase())
       setEditingItem(null)
+      notifySuccess('השינויים נשמרו')
     } catch {
       triggerError('שמירת השינויים נכשלה. אנא נסה שנית.')
     }

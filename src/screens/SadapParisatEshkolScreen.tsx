@@ -13,13 +13,13 @@ function SadapParisatEshkolScreen() {
           <p className="font-bold text-neutral-800">בע"ת פורסים: 2 מעגנים + מפקד משימה</p>
           <ul className="flex flex-col gap-1.5 pr-4">
             <li className="list-disc text-neutral-700">
-              <span className="underline font-medium">מעגנים</span> מפלסים קרקע עם את הפירה (במידת הצורך)
+              <span className="underline font-medium">מעגנים</span> מפלסים קרקע עם את חפירה (במידת הצורך)
             </li>
             <li className="list-disc text-neutral-700">
               <span className="underline font-medium">מעגנים</span> מרכיבים רגליים אחוריות לבסיס
             </li>
             <li className="list-disc text-neutral-700">
-              <span className="underline font-medium">מפקד משימה</span> ומעגנים מציינים את המשנר באק"א
+              <span className="underline font-medium">מפקד משימה ומעגנים </span> מציינים את המשנר באק"א
             </li>
             <li className="list-disc text-neutral-700">
               <span className="underline font-medium">מפקד משימה</span> עושה בדיקת פילוס ראשונית
@@ -42,55 +42,59 @@ function SadapParisatEshkolScreen() {
           <table className="w-full border-collapse text-sm text-neutral-700">
             <thead>
               <tr className="bg-neutral-100">
-                <th className="border border-neutral-400 p-2 font-bold text-center w-1/2">ציר מערכת</th>
                 <th className="border border-neutral-400 p-2 font-bold text-center w-1/2">ציר חצובה</th>
+                <th className="border border-neutral-400 p-2 font-bold text-center w-1/2">ציר מערכת</th>
               </tr>
             </thead>
             <tbody>
               <tr className="align-top">
                 <td className="border border-neutral-400 p-2">
-                  <span className="underline font-medium">חמש</span> מוציא תיבות מהמנשא וכבל טילים
-                </td>
-                <td className="border border-neutral-400 p-2">
                   <span className="underline font-medium">מעגנים</span> מרכיבים חלק עליון (שני חלקים – חצובה עליונה וכוורת)
                   <br />
                   <span className="text-neutral-500 text-xs">* אחרי הרכבה מוודאים עיגון יציב – במשיכה וסלסול</span>
                 </td>
+                <td className="border border-neutral-400 p-2">
+                  <span className="underline font-medium">חמש</span> מוציא תיבות מהמנשא וכבל טילים
+                </td>
               </tr>
               <tr className="align-top">
+                <td className="border border-neutral-400 p-2">
+                  <span className="underline font-medium">מפקד משימה</span> מודד אק"א, גלגול עלרוד ורשום בעזר
+                </td>
                 <td className="border border-neutral-400 p-2">
                   פריסת כבל הרחקה (<span className="underline font-medium">חמש</span> משחרר כבל,{' '}
                   <span className="underline font-medium">בק"שיסט</span> משרשר לעמדת ההרחקה)
                 </td>
-                <td className="border border-neutral-400 p-2">
-                  <span className="underline font-medium">מפקד משימה</span> מוודד אק"א, לגלל עלרזד ורשום בעזר
-                </td>
               </tr>
               <tr className="align-top">
-                <td className="border border-neutral-400 p-2">
-                  <span className="underline font-medium">בק"שיסט</span> מחבר כבל ההרחקה לתיבת ההרחקה
-                </td>
                 <td className="border border-neutral-400 p-2">
                   <span className="underline font-medium">מעגנים</span> טוענים טילים על המשגר
                 </td>
+                <td className="border border-neutral-400 p-2">
+                  <span className="underline font-medium">בק"שיסט</span> מחבר כבל ההרחקה לתיבת ההרחקה
+                </td>
               </tr>
               <tr className="align-top">
-                <td className="border border-neutral-400 p-2" colSpan={2}>
+                <td className="border border-neutral-400 p-2"></td>
+                <td className="border border-neutral-400 p-2">
                   <span className="underline font-medium">חמש</span> מחבר כבל ההרחקה לתיבות
                 </td>
               </tr>
               <tr className="align-top">
-                <td className="border border-neutral-400 p-2" colSpan={2}>
+                <td className="border border-neutral-400 p-2"></td>
+                <td className="border border-neutral-400 p-2">
                   <span className="underline font-medium">חמש</span> מדליק מתג BATTERY PACK
                 </td>
               </tr>
               <tr className="align-top">
-                <td className="border border-neutral-400 p-2" colSpan={2}>
+                <td className="border border-neutral-400 p-2"></td>
+                <td className="border border-neutral-400 p-2">
                   <span className="underline font-medium">בק"שיסט</span> מדליק מתג Power&amp;nav
                 </td>
               </tr>
               <tr className="align-top">
-                <td className="border border-neutral-400 p-2" colSpan={2}>
+                <td className="border border-neutral-400 p-2"></td>
+                <td className="border border-neutral-400 p-2">
                   <span className="underline font-medium">חמש</span> מוודא LIU OFF ומחבר כבל מהLIU לטילים
                 </td>
               </tr>

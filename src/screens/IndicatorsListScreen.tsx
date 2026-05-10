@@ -4,6 +4,7 @@ import IndicatorForm from '../components/IndicatorForm'
 import DocFeedbackModal from '../components/base/DocFeedbackModal'
 import Modal from '../components/base/Modal'
 import { useDomainError } from '../hooks/useDomainError'
+import { useNotification } from '../hooks/useNotification'
 import { useUIError } from '../hooks/useUIError'
 import { addIndicatorUseCase } from '../useCases/addIndicator'
 import { loadIndicatorsUseCase } from '../useCases/loadIndicators'
@@ -17,6 +18,7 @@ function IndicatorsListScreen() {
   const [editingItem, setEditingItem] = useState<Indicator | null>(null)
   const { triggerError } = useDomainError()
   const { reportUIError } = useUIError()
+  const { notifySuccess } = useNotification()
 
   useEffect(() => {
     setIndicators(loadIndicatorsUseCase())
@@ -26,6 +28,7 @@ function IndicatorsListScreen() {
     addIndicatorUseCase(data)
     setIndicators(loadIndicatorsUseCase())
     setShowForm(false)
+    notifySuccess('המציין נוסף בהצלחה')
   }
 
   function handleEdit(data: IndicatorInput) {
@@ -37,6 +40,7 @@ function IndicatorsListScreen() {
       updateIndicatorUseCase(editingItem.id, data)
       setIndicators(loadIndicatorsUseCase())
       setEditingItem(null)
+      notifySuccess('השינויים נשמרו')
     } catch {
       triggerError('שמירת השינויים נכשלה. אנא נסה שנית.')
     }
