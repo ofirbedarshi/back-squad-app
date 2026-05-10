@@ -5,16 +5,17 @@ import { toggleSadapParisatDugChecklistItemUseCase } from '../useCases/toggleSad
 import { clearSadapParisatDugChecklistUseCase } from '../useCases/clearSadapParisatDugChecklist'
 
 const CHECKLIST_ITEMS = [
-  { id: 'connector-50', label: 'שלושת המחברים של צמת כבל 50 מחוברים היסב ברכב' },
+  { id: 'connector-50', label: 'שלושת המחברים של צמת כבל 50 מחוברים היטב ברכב' },
   { id: 'cable-secured', label: 'כבל ההרחקה מאובטח לרכב' },
   { id: 'acdc-on', label: 'ACDC פועל – שמיעת מאורר' },
-  { id: 'no-equipment-behind', label: 'אי ציוד מאחורי גזרת העבודה או על הרכב בקו הרשף, לרבות כבלים' },
+  { id: 'no-equipment-behind', label: 'אין ציוד מאחורי גזרת העבודה או על הרכב בקו הרשף, לרבות כבלים' },
   { id: 'missile-connectors', label: 'חיבור צמות הטילים' },
   { id: 'butterflies-check', label: 'בדיקת פרפריות 0 ופילוט הכוורת' },
   { id: 'travel-lock', label: 'סגר מסע מורד וראצ\'טים מנותקים' },
-  { id: 'mlc-ziud', label: 'זיול MLC' },
+  { id: 'mlc-ziud', label: 'MLC דולק' },
   { id: 'doors-closed', label: 'דלתות הרכב סגורות' },
-  { id: 'parking', label: 'רכב כבוי, ב PARKING ופקודת פקיד משימה לעמדה לחוץ' },
+  { id: 'parking', label: 'רכב כבוי, ב PARKING עם בלם רגל לחוץ.' },
+  { id: 'liu-unlock', label: 'מפקד מדליק LIU UNLOCK, תיק מפקד משימה לעמדה ומכריז "רכב חם"' }
 ]
 
 function SadapParisatDugScreen() {
@@ -41,19 +42,19 @@ function SadapParisatDugScreen() {
         {/* main steps */}
         <ul className="flex flex-col gap-2 pr-4">
           <li className="list-disc text-neutral-700">
-            נגה מבצע בדיקת נלנול והגבהה ומכבה רכב.
+            נהג מבצע בדיקת נלנול והגבהה ומכבה רכב.
           </li>
           <li className="list-disc text-neutral-700">
             <span className="bg-yellow-200 font-medium px-0.5">מפקד</span> מוודא שטח נקי מסביב למשגר ללא סכנת התלקחות (יש לוודא עבור כל גזרת העבודה).
           </li>
           <li className="list-disc text-neutral-700">
-            <span className="bg-yellow-200 font-medium px-0.5">מפקד</span> קובע, ומעדכן את שאר חברי החוליה את מיקום עמדת הפעולה (מינימום 30 מטר, מחוץ לגזרת העבודה וכמה שיותר מאחורי הרכב).
+            <span className="bg-yellow-200 font-medium px-0.5">מפקד</span> קובע, ומעדכן את שאר חברי החוליה את מיקום עמדת ההפעלה (מינימום 30 מטר, מחוץ לגזרת העבודה וכמה שיותר מאחורי הרכב).
           </li>
           <li className="list-disc text-neutral-700">
-            <span className="bg-yellow-200 font-medium px-0.5">מפקד</span> מכריז פקודת "<strong>צוות פועל</strong>" – בדגש זה החוליה יוצאת מהרכב וכל לוחם רץ בציר שלו.
+            <span className="bg-yellow-200 font-medium px-0.5">מפקד</span> מכריז פקודת "<strong>צוות פעל</strong>" – ברגע זה החוליה יוצאת מהרכב וכל לוחם רץ בציר שלו.
           </li>
           <li className="list-disc text-neutral-700">
-            <span className="bg-yellow-200 font-medium px-0.5">חמש</span> מוודא LIU מכובה, מקפל קשתות, מנתק ראצ'טים, מוריד סגר מסע, ומחבר את צמות הטילים – בסיום לוקח פליקע לעבודה לעמדה.
+            <span className="bg-yellow-200 font-medium px-0.5">חמש</span> מוודא LIU מכובה, מקפל קשתות, מנתק ראצ'טים, מוריד סגר מסע, ומחבר את צמות הטילים – בסיום לוקח פליקן עבודה לעמדה.
           </li>
           <li className="list-disc text-neutral-700">
             <span className="bg-yellow-200 font-medium px-0.5">מפקד</span> מבצע מדידה של אק"א, אזימוט לקצה גבולות הגזרה ואזימוט למכשולים לבדיקה במידה ויש.
@@ -62,16 +63,16 @@ function SadapParisatDugScreen() {
             <span className="bg-yellow-200 px-0.5">סנג'רים</span> פורסים את כבל ההרחקה לכיוון העמדה.
           </li>
           <li className="list-disc font-bold text-neutral-800">
-            <span className="bg-yellow-200 px-0.5">אישה</span> לוקח את תיבת ההרחקה עם הטאצ'סטר ועובדת הפעולה לכיוון עמדת ההפעלה.
+            <span className="bg-yellow-200 px-0.5">אישה</span> לוקח את תיבת ההרחקה עם הטאצ'סטר ויריעת העבודה לכיוון עמדת ההפעלה.
           </li>
           <li className="list-disc font-bold text-neutral-800">
-            <span className="bg-yellow-200 px-0.5">אישה</span> מוודא Nav &amp;PWR לתיבה:
+            <span className="bg-yellow-200 px-0.5">אישה</span> מוודא Nav &amp;PWR
           </li>
           <li className="list-disc font-bold text-neutral-800">
-            <span className="bg-yellow-200 px-0.5">אישה</span> מחבר ומבצטח את צמות ההרחקה אל התיבה
+            <span className="bg-yellow-200 px-0.5">אישה</span> מחבר ומאבטח את צמות ההרחקה אל התיבה
           </li>
-          <li className="list-disc font-bold text-neutral-800">
-            <span className="bg-yellow-200 px-0.5">אישה</span> מאבטחת ומחליף את הצמות ברכב לצמות של תיבת ההרחקות, (יש לשים לב לנתק קודם כל את שתי הצמות הצדדיות, ולאחר מכן את האמצעיות ולהחליף אותה תוך פחות מצי דקה כדי שה MLC לא יפול.)
+          <li className="list-disc text-neutral-700">
+            <span className="bg-yellow-200 px-0.5">אישה</span> מאבטח ומחליף את הצמות ברכב לצמות של תיבת ההרחקה, (יש לשים לב לנתק קודם כל את שתי הצמות הצדדיות, ולאחר מכן את האמצעיות ולהחליף אותה תוך פחות מחצי דקה כדי שה MLC לא יפול.)
           </li>
           <li className="list-disc text-neutral-700">
             <span className="bg-yellow-200 font-medium px-0.5">אישה</span> מזין מיקום עצמי ואק"א על פי מצפן (5+) והזנת גזרת הירי.
@@ -80,7 +81,7 @@ function SadapParisatDugScreen() {
             <span className="bg-yellow-200 font-medium px-0.5">מפקד ואישה</span> מבצעים בדיקה על גזרת הירי שהוגדרה במערכת (ראה פירוט בהמשך).
           </li>
           <li className="list-disc text-neutral-700">
-            <span className="bg-yellow-200 font-medium px-0.5">סנג'רים</span> פורסים גנרטור וכבלים מאריכים לרכב ולעמדת ההפעלה ומחברים ל-ACDC (מינימום 30 מסר מהרכב).
+            <span className="bg-yellow-200 font-medium px-0.5">סנג'רים</span> פורסים גנרטור וכבלים מאריכים לרכב ולעמדת ההפעלה ומחברים ל-ACDC (מינימום 30 מטר מהרכב).
           </li>
           <li className="list-disc text-neutral-700">
             <span className="bg-yellow-200 font-medium px-0.5">סנג'רים</span> מורידים קשרים ומסדרים בעמדה.
@@ -116,11 +117,6 @@ function SadapParisatDugScreen() {
             ))}
           </div>
         </section>
-
-        {/* final step */}
-        <div className="border border-neutral-400 rounded p-3 text-center font-medium text-neutral-800">
-          מפקד מדליק LIU UNLOCK, תיק מפקד משימה לעמדה ומכריז "רכב חם"
-        </div>
 
       </div>
     </div>
