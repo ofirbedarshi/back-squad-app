@@ -15,7 +15,6 @@ import SadapParisatEshkolScreen from './screens/SadapParisatEshkolScreen'
 import SadapKipulEshkolScreen from './screens/SadapKipulEshkolScreen'
 import SadapParisatDugScreen from './screens/SadapParisatDugScreen'
 import SadapKipulDugScreen from './screens/SadapKipulDugScreen'
-import TargetBankScreen from './screens/TargetBankScreen'
 import TargetListScreen from './screens/TargetListScreen'
 
 function App() {
@@ -36,7 +35,7 @@ function App() {
             <Route path="/current-position" element={<CurrentPositionScreen />} />
             <Route path="/calculator" element={<CalculatorScreen />} />
             <Route path="/attack-log" element={<AttackLogListScreen />} />
-            <Route path="/target-bank" element={<TargetBankScreen />} />
+            <Route path="/target-bank" element={<TargetListScreen />} />
             <Route path="/maagarim" element={<MaagarimScreen />} />
             <Route path="/maagarim/positions" element={<PositionsListScreen />} />
             <Route path="/maagarim/indicators" element={<IndicatorsListScreen />} />
