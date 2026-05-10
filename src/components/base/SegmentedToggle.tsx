@@ -4,7 +4,7 @@ interface ToggleOption {
 }
 
 interface SegmentedToggleProps {
-  options: [ToggleOption, ToggleOption]
+  options: ToggleOption[]
   value: string
   onChange: (value: string) => void
 }
