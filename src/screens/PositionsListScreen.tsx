@@ -44,6 +44,11 @@ function PositionsListScreen() {
 
   const currentPositionId = currentPosition?.id ?? null
   const storedPositions = positions.filter((position) => position.id !== currentPositionId)
+  const hasAnySavedPositions = positions.length > 0
+  const archiveIsEmpty = storedPositions.length === 0
+  const archiveEmptyMessage = hasAnySavedPositions
+    ? 'אין עמדות נוספות במאגר'
+    : 'אין עמדות שמורות במאגר'
 
   return (
     <div dir="rtl" className="flex flex-col bg-neutral-50 min-h-full">
@@ -53,9 +58,7 @@ function PositionsListScreen() {
 
       <div className="flex flex-col gap-4 p-4">
         <section className="rounded-2xl border border-neutral-200 bg-white p-3 flex flex-col gap-3 shadow-sm">
-          <div className="flex items-center justify-between">
-            <h2 className="text-sm font-bold text-neutral-800">עמדה נוכחית</h2>
-          </div>
+          <h2 className="text-sm font-bold text-neutral-800">עמדה נוכחית</h2>
           {currentPosition ? (
             <PositionCard position={currentPosition} isCurrent onClick={() => setEditingItem(currentPosition)} />
           ) : (
@@ -68,14 +71,16 @@ function PositionsListScreen() {
         <hr className="border-0 border-t-2 border-dashed border-neutral-300" />
 
         <section className="rounded-2xl border border-neutral-200 bg-white p-3 flex flex-col gap-3 shadow-sm">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between gap-2">
             <h2 className="text-sm font-bold text-neutral-800">עמדות מאגר</h2>
-            <span className="text-xs text-neutral-500 font-medium">{storedPositions.length} עמדות</span>
+            {hasAnySavedPositions ? (
+              <span className="shrink-0 text-xs text-neutral-500 font-medium">{storedPositions.length} עמדות</span>
+            ) : null}
           </div>
 
-          {storedPositions.length === 0 && (
+          {archiveIsEmpty && (
             <p className="text-center text-neutral-400 py-5 border border-dashed border-neutral-200 rounded-xl">
-              אין עמדות נוספות במאגר
+              {archiveEmptyMessage}
             </p>
           )}
 
@@ -83,10 +88,6 @@ function PositionsListScreen() {
             <PositionCard key={position.id} position={position} onClick={() => setEditingItem(position)} />
           ))}
         </section>
-
-        {positions.length === 0 && !showForm && (
-          <p className="text-center text-neutral-400 py-2">אין עמדות שמורות</p>
-        )}
 
         {showForm && (
           <Modal title="הוסף עמדה" onClose={() => setShowForm(false)}>

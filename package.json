@@ -9,6 +9,7 @@
     "build:html": "tsc -b && vite build --config vite.singlefile.config.ts --outDir output/.html-build && cp output/.html-build/index.html output/back-squad-standalone.html && rm -rf output/.html-build",
     "build:apk": "bash build.sh",
     "send": "npm run build:apk && npm run build:html && bash scripts/send-artifacts-to-telegram.sh output/back-squad-app.apk output/back-squad-standalone.html",
+    "seed": "node scripts/seed-localStorage.mjs",
     "lint": "eslint .",
     "preview": "vite preview"
   },

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import Modal from '../components/base/Modal'
 import DocFeedbackModal from '../components/base/DocFeedbackModal'
-import CurrentPositionSummaryEditor from '../components/CurrentPositionSummaryEditor'
+import ReferencePositionSummarySelector from '../components/ReferencePositionSummarySelector'
 import TargetCard from '../components/TargetCard'
 import TargetForm from '../components/TargetForm'
 import type { Target, TargetInput } from '../domain/target.types'
@@ -42,7 +42,7 @@ function TargetListScreen() {
       </header>
 
       <div className="flex flex-col gap-3 p-4">
-        <CurrentPositionSummaryEditor />
+        <ReferencePositionSummarySelector />
 
         {targets.length === 0 && !showForm && (
           <p className="text-center text-neutral-400 py-8">אין מטרות שמורות</p>

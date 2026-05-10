@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { useCurrentPosition } from '../hooks/useCurrentPosition'
+import { useReferencePosition } from '../hooks/useReferencePosition'
 import { calculateTargetLiveMetricsUseCase } from '../useCases/calculateTargetLiveMetrics'
 import type { Target } from '../domain/target.types'
 
@@ -9,14 +9,14 @@ interface TargetCardProps {
 }
 
 function TargetCard({ target, onClick }: TargetCardProps) {
-  const currentPosition = useCurrentPosition()
+  const referencePosition = useReferencePosition()
   const liveMetrics = useMemo(
     () =>
       calculateTargetLiveMetricsUseCase({
         targetCoordinates: target.coordinates,
         targetHeight: target.altitude,
       }),
-    [currentPosition, target.coordinates, target.altitude]
+    [referencePosition, target.coordinates, target.altitude]
   )
 
   const displayAzimuth = liveMetrics ? liveMetrics.azimuth.toFixed(1) : '-'
