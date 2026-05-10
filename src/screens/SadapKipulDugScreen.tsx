@@ -12,10 +12,10 @@ function SadapKipulDugScreen() {
             <span className="bg-yellow-200 font-medium px-0.5">בקש"יסט</span> מוריד את העריסה למצב Home Down.
           </li>
           <li className="list-disc text-neutral-700">
-            <span className="bg-yellow-200 font-medium px-0.5">חמש</span> 'מקרר' את הרכב ומוריד את ה. שנמחבר ראצ'טים וסוגר את סגר המסע.
+            <span className="bg-yellow-200 font-medium px-0.5">חמש</span> 'מקרר' את הרכב ומוריד את הLUI. מחבר ראצ'טים וסוגר את סגר המסע.
           </li>
           <li className="list-disc text-neutral-700">
-            <span className="bg-yellow-200 font-medium px-0.5">אישה</span> מנתק את צמות ההרחקה ממזוודת ההרחקה ומחבר את צמות הרכב לאחר מכן מחזיר את תיבת ההרחקה לרכב ומכניס את הטאבלט למיקומו היעודי ברכב.
+            <span className="bg-yellow-200 font-medium px-0.5">אישה</span> מנתק את צמות ההרחקה ממזוודת ההרחקה ומחבר את צמות הרכב. לאחר מכן מחזיר את תיבת ההרחקה לרכב ומכניס את הטאבלט למיקומו היעודי ברכב.
           </li>
           <li className="list-disc text-neutral-700">
             <span className="bg-yellow-200 font-medium px-0.5">מפקד</span> מקפל את העמדה עם וידוא רשמ"צ.
@@ -30,10 +30,10 @@ function SadapKipulDugScreen() {
             <span className="bg-yellow-200 font-medium px-0.5">סנג'רים</span> מחזירים קשרים.
           </li>
           <li className="list-disc text-neutral-700">
-            <span className="bg-yellow-200 font-medium px-0.5">סנג'רים</span> מנתקים את הגנרסטור מה- ACDC ומעמיסים את הגנרטור ואת הכבלים המאריכים.
+            <span className="bg-yellow-200 font-medium px-0.5">סנג'רים</span> מנתקים את הגנרטור מה- ACDC ומעמיסים את הגנרטור ואת הכבלים המאריכים.
           </li>
           <li className="list-disc text-neutral-700">
-            <span className="bg-yellow-200 font-medium px-0.5">חמש</span> וסנג'רים הרמת קשתות וכיסוי הברזנט.
+            <span className="bg-yellow-200 font-medium px-0.5"> חמש וסנג'רים</span> הרמת קשתות וכיסוי הברזנט.
           </li>
           <li className="list-disc text-neutral-700">
             <span className="bg-yellow-200 font-medium px-0.5">מפקד</span> מבצע סריקה אחרונה שלא נשאר ציוד בעמדה.
