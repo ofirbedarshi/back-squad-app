@@ -22,7 +22,7 @@ function App() {
     <ErrorProvider>
     <HashRouter>
       <div className="flex flex-col min-h-svh bg-neutral-50">
-        <main className="flex-1 pb-16">
+        <main className="flex-1" style={{ paddingBottom: 'calc(4rem + env(safe-area-inset-bottom))' }}>
           <Routes>
             <Route path="/" element={<HomeScreen />} />
             <Route path="/sadap" element={<SadapScreen />} />
