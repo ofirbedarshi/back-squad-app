@@ -1,4 +1,5 @@
 import { HashRouter, Route, Routes } from 'react-router-dom'
+import { ConfirmProvider } from './context/ConfirmContext'
 import { ErrorProvider } from './context/ErrorContext'
 import { NotificationProvider } from './context/NotificationContext'
 import BottomNav from './components/BottomNav'
@@ -27,11 +28,13 @@ import MissChecklistScreen from './screens/MissChecklistScreen'
 import TargetAidScreen from './screens/TargetAidScreen'
 import ZoneMeasurementScreen from './screens/ZoneMeasurementScreen'
 import RshatazimScreen from './screens/RshatazimScreen'
+import NotesScreen from './screens/NotesScreen'
 
 function App() {
   return (
     <ErrorProvider>
     <NotificationProvider>
+    <ConfirmProvider>
     <HashRouter>
       <div className="flex flex-col min-h-svh bg-neutral-50">
         <main className="flex-1" style={{ paddingBottom: 'calc(4rem + env(safe-area-inset-bottom))' }}>
@@ -43,6 +46,7 @@ function App() {
             <Route path="/sadap/parisat-dug" element={<SadapParisatDugScreen />} />
             <Route path="/sadap/kipul-dug" element={<SadapKipulDugScreen />} />
             <Route path="/nidbarim" element={<NidbarimScreen />} />
+            <Route path="/notes" element={<NotesScreen />} />
             <Route path="/current-position" element={<CurrentPositionScreen />} />
             <Route path="/calculator" element={<CalculatorScreen />} />
             <Route path="/calculator/hit-penetration" element={<HitPenetrationCalculatorScreen />} />
@@ -67,6 +71,7 @@ function App() {
         <BottomNav />
       </div>
     </HashRouter>
+    </ConfirmProvider>
     </NotificationProvider>
     </ErrorProvider>
   )

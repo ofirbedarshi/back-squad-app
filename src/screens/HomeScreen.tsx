@@ -14,6 +14,7 @@ function HomeScreen() {
         <MenuButton label='סדפ"ים' to="/sadap" />
         <MenuButton label="נדברים" to="/nidbarim" />
         <MenuButton label="מאגרים" to="/maagarim" />
+        <MenuButton label="הערות" to="/notes" />
         <MenuButton label="אחרים" to="/others" />
         <MenuButton label="עמדה נוכחית" to="/current-position" primary />
       </div>
