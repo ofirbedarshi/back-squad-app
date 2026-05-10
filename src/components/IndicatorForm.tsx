@@ -1,15 +1,17 @@
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import FormField from './FormField'
 import Input from './Input'
+import CoordinateInput from './base/CoordinateInput'
+import { coordinateValueSchema } from './base/coordinateInput.utils'
 import type { IndicatorInput } from '../domain/indicator.types'
 
 const numberField = z.number({ error: 'יש להזין מספר' })
 
 const schema = z.object({
   indicatorName: z.string().min(1, 'שדה חובה'),
-  coordinates: numberField,
+  coordinates: coordinateValueSchema,
   altitude: numberField,
   means: z.string().min(1, 'שדה חובה'),
   markCode: numberField,
@@ -28,10 +30,14 @@ function IndicatorForm({ onSubmit, submitLabel = 'שמור', initialValues }: In
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
   } = useForm<IndicatorFormValues>({
     resolver: zodResolver(schema),
-    defaultValues: initialValues,
+    defaultValues: {
+      ...initialValues,
+      coordinates: initialValues?.coordinates ?? { east: '', north: '3' },
+    },
   })
 
   return (
@@ -40,8 +46,21 @@ function IndicatorForm({ onSubmit, submitLabel = 'שמור', initialValues }: In
         <Input type="text" placeholder="הכנס שם..." hasError={!!errors.indicatorName} {...register('indicatorName')} />
       </FormField>
 
-      <FormField label='נ"צ' error={errors.coordinates?.message}>
-        <Input type="number" hasError={!!errors.coordinates} {...register('coordinates', { valueAsNumber: true })} />
+      <FormField label='נ"צ' error={errors.coordinates?.east?.message || errors.coordinates?.north?.message}>
+        <Controller
+          name="coordinates"
+          control={control}
+          render={({ field }) => (
+            <CoordinateInput
+              value={{
+                east: field.value?.east ?? '',
+                north: field.value?.north ?? '3',
+              }}
+              onChange={field.onChange}
+              hasError={!!errors.coordinates}
+            />
+          )}
+        />
       </FormField>
 
       <FormField label="גובה" error={errors.altitude?.message}>

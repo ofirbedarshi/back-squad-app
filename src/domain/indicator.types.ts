@@ -1,6 +1,8 @@
+import type { PositionCoordinates } from './position.types'
+
 export interface IndicatorInput {
   indicatorName: string
-  coordinates: number
+  coordinates: PositionCoordinates
   altitude: number
   means: string
   markCode: number

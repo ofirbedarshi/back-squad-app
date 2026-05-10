@@ -14,7 +14,7 @@ function IndicatorCard({ indicator, onClick }: IndicatorCardProps) {
     >
       <div className="font-bold text-neutral-800 text-base">{indicator.indicatorName}</div>
       <div className="flex flex-col gap-1 text-sm text-neutral-500">
-        <span>נ"צ: {indicator.coordinates}</span>
+        <span>נ"צ: {indicator.coordinates.east}/{indicator.coordinates.north}</span>
         <span>גובה: {indicator.altitude} מ'</span>
         <span>אמצעי: {indicator.means}</span>
         <span>קוד ציון: {indicator.markCode}</span>
