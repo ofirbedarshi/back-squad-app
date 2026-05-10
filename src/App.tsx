@@ -16,6 +16,12 @@ import SadapKipulEshkolScreen from './screens/SadapKipulEshkolScreen'
 import SadapParisatDugScreen from './screens/SadapParisatDugScreen'
 import SadapKipulDugScreen from './screens/SadapKipulDugScreen'
 import TargetListScreen from './screens/TargetListScreen'
+import OthersScreen from './screens/OthersScreen'
+import BachScreen from './screens/BachScreen'
+import MissChecklistScreen from './screens/MissChecklistScreen'
+import TargetAidScreen from './screens/TargetAidScreen'
+import ZoneMeasurementScreen from './screens/ZoneMeasurementScreen'
+import RshatazimScreen from './screens/RshatazimScreen'
 
 function App() {
   return (
@@ -40,6 +46,12 @@ function App() {
             <Route path="/maagarim/positions" element={<PositionsListScreen />} />
             <Route path="/maagarim/indicators" element={<IndicatorsListScreen />} />
             <Route path="/maagarim/targets" element={<TargetListScreen />} />
+            <Route path="/others" element={<OthersScreen />} />
+            <Route path="/others/bach" element={<BachScreen />} />
+            <Route path="/others/miss-checklist" element={<MissChecklistScreen />} />
+            <Route path="/others/target-aid" element={<TargetAidScreen />} />
+            <Route path="/others/zone-measurement" element={<ZoneMeasurementScreen />} />
+            <Route path="/others/rshatazim" element={<RshatazimScreen />} />
           </Routes>
         </main>
         <BottomNav />
