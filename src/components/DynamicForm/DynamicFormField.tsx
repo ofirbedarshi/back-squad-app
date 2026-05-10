@@ -6,6 +6,7 @@ import SegmentedToggle from '../base/SegmentedToggle'
 import Checkbox from '../base/Checkbox'
 import CoordinateInput from '../base/CoordinateInput'
 import type { CoordinateValue, FormFieldDef, FormValues, RowableField } from '../../domain/dynamicForm.types'
+import ToggleWithConditionsRenderer from './ToggleWithConditionsRenderer'
 
 interface DynamicFormFieldProps {
   field: FormFieldDef
@@ -18,8 +19,11 @@ function DynamicFormField({ field, control, register, errors }: DynamicFormField
   if (field.type === 'row') {
     return (
       <div className="flex gap-3">
-        {field.fields.map((child: RowableField) => (
-          <div key={child.key} className="flex-1 min-w-0">
+        {field.fields.map((child: RowableField, index: number) => (
+          <div
+            key={child.type === 'note' ? `note-${index}` : child.key}
+            className="flex-1 min-w-0"
+          >
             <DynamicFormField field={child} control={control} register={register} errors={errors} />
           </div>
         ))}
@@ -29,7 +33,7 @@ function DynamicFormField({ field, control, register, errors }: DynamicFormField
 
   if (field.type === 'note') {
     return (
-      <p className="text-sm text-neutral-500 bg-neutral-100 rounded-xl px-3 py-2 leading-relaxed">
+      <p className="text-sm text-neutral-500 bg-neutral-100 rounded-xl px-3 py-2 leading-relaxed whitespace-pre-line">
         {field.text}
       </p>
     )
@@ -106,6 +110,24 @@ function DynamicFormField({ field, control, register, errors }: DynamicFormField
             label={field.label}
             checked={formField.value === true}
             onChange={formField.onChange}
+          />
+        )}
+      />
+    )
+  }
+
+  if (field.type === 'toggleWithConditions') {
+    return (
+      <ToggleWithConditionsRenderer
+        field={field}
+        control={control}
+        renderConditionalField={(child, i) => (
+          <DynamicFormField
+            key={'key' in child ? child.key : `cond-${field.key}-${i}`}
+            field={child}
+            control={control}
+            register={register}
+            errors={errors}
           />
         )}
       />

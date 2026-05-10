@@ -55,7 +55,7 @@ export const bachFormSchema: FormSchema = {
     { type: 'text', key: 'aka', label: 'אק"א' },
     { type: 'row', fields: [
       { type: 'text', key: 'wind', label: 'רוח' },
-      { type: 'text', key: 'clouds', label: 'ענות' },
+      { type: 'text', key: 'clouds', label: 'עננות' },
     ]},
     { type: 'text', key: 'azimuthToTarget', label: "אז' עמדה אחורית מטרה (אמורה)" },
     { type: 'text', key: 'launchRange', label: 'טווח עמדת שיגור' },
@@ -68,11 +68,19 @@ export const bachFormSchema: FormSchema = {
     },
     { type: 'toggle', key: 'impact', label: 'פגיעה', options: ['ימין', 'שמאל', 'למעלה', 'למטה'], defaultValue: 'ימין' },
     {
-      type: 'toggle',
+      type: 'toggleWithConditions',
       key: 'arcTrack',
       label: 'מסלול קשתי',
       options: ['כן', 'לא'],
       defaultValue: 'לא',
+      conditions: {
+        'כן': [
+          { type: 'toggle', key: 'arcTrackDirection', label: 'כיוון קשת', options: ['ימין', 'שמאל'], defaultValue: 'ימין' },
+        ],
+        'לא': [
+          { type: 'text', key: 'arcTrackDetails', label: 'פרט' },
+        ],
+      },
     },
     { type: 'text', key: 'fuseType', label: 'סוג רש"ק' },
     {
@@ -124,7 +132,7 @@ export const bachFormSchema: FormSchema = {
     ]},
     { type: 'row', fields: [
       { type: 'text', key: 'indicatorWind', label: 'רוח' },
-      { type: 'text', key: 'indicatorClouds', label: 'ענות' },
+      { type: 'text', key: 'indicatorClouds', label: 'עננות' },
     ]},
     { type: 'toggle', key: 'deviationDirection', label: "נק' הסתה", options: ['ימינה', 'שמאלה', 'למעלה', 'למטה'], defaultValue: 'ימינה' },
     { type: 'text', key: 'aimPoint', label: 'נקודת מכוון' },
@@ -134,14 +142,14 @@ export const bachFormSchema: FormSchema = {
       { type: 'text', key: 'targetSize', label: 'גודל מטרה' },
     ]},
     { type: 'text', key: 'concealments', label: 'הסתרים' },
+    { type: 'note', text: '* הפרש גובה הסתר – גובה מטרה\n* מרחק ההסתר ממטרה' },
 
     { type: 'header', text: 'לאחר ירי', bold: true },
-    { type: 'toggle', key: 'bdaResult', label: 'BDA ראשוני', options: ['אלפא', 'ברבו', 'דלתא', 'אקו'], defaultValue: 'אלפא' },
+    { type: 'toggle', key: 'bdaResult', label: 'קבלת דיווח BDA ראשוני', options: ['אלפא', 'ברבו', 'דלתא', 'אקו'], defaultValue: 'אלפא' },
     { type: 'text', key: 'bdaWithObserver', label: 'BDA עם חוזי' },
     { type: 'text', key: 'unusualEvents', label: 'אירועים חריגים (האם היה ריח חריג בשיגור?)' },
     { type: 'text', key: 'results', label: 'תוצאות' },
-    { type: 'note', text: 'ירי נוסף – אישור מוכנות' },
-    { type: 'text', key: 'renewed', label: 'מחודש' },
+    { type: 'text', key: 'renewed', label: 'ירי נוסף – אישור מוכנות מחודש' },
     { type: 'time', key: 'readyTime', label: 'זמן בהיכון לירי' },
     { type: 'text', key: 'malfunctions', label: 'תקלות במהלך או לפני העבודה' },
 

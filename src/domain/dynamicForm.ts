@@ -20,6 +20,7 @@ export function extractDefaultValues(schema: FormSchema): FormValues {
 }
 
 function collectDefault(field: RowableField, values: FormValues): void {
+  if (field.type === 'note') return
   if (field.defaultValue !== undefined) {
     values[field.key] = field.defaultValue
   }

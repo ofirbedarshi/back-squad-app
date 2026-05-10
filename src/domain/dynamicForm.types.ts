@@ -56,14 +56,42 @@ export interface NoteField {
   text: string
 }
 
-export type RowableField = TextField | DateField | TimeField | ToggleField | CheckboxField | CoordsField
+/** A toggle that reveals different child fields depending on which option is selected. */
+export interface ToggleWithConditionsField {
+  type: 'toggleWithConditions'
+  key: string
+  label: string
+  options: [string, string, ...string[]]
+  defaultValue?: string
+  /** Maps each option value to the fields shown when that option is active. */
+  conditions: Partial<Record<string, FormFieldDef[]>>
+}
+
+export type RowableField =
+  | TextField
+  | DateField
+  | TimeField
+  | ToggleField
+  | CheckboxField
+  | CoordsField
+  | NoteField
 
 export interface RowField {
   type: 'row'
   fields: RowableField[]
 }
 
-export type FormFieldDef = HeaderField | NoteField | RowField | TextField | DateField | TimeField | ToggleField | CheckboxField | CoordsField
+export type FormFieldDef =
+  | HeaderField
+  | NoteField
+  | RowField
+  | TextField
+  | DateField
+  | TimeField
+  | ToggleField
+  | ToggleWithConditionsField
+  | CheckboxField
+  | CoordsField
 
 export interface FormSchema {
   fields: FormFieldDef[]
