@@ -17,21 +17,33 @@
   <p>דף זה כותב ל־<code>localStorage</code> את אותם המפתחות שהאפליקציה משתמשת בהם (מטרות, עמדות, מציינים, יומן תקיפות ועוד).</p>
   <p><strong>שים לב:</strong> הפעולה דורסת את הערכים הקיימים לאותם מפתחות.</p>
   <p>
-    <button type="button" id="seed">מלא נתוני דמה</button>
+    <button type="button" id="seed">מלא שוב נתוני דמה</button>
   </p>
   <p id="status" role="status"></p>
   <p><a href="/">חזרה לאפליקציה</a></p>
   <script>
-    const SEED_PAYLOAD = {"positions":"[{\"id\":\"aaaaaaaa-aaaa-4aaa-aaaa-aaaaaaaaaaa1\",\"savedAt\":\"2026-05-10T10:00:00.000Z\",\"stationName\":\"עמדה אלפא\",\"coordinates\":{\"east\":\"345678\",\"north\":\"3456789\"},\"altitude\":420,\"aka\":40,\"launcherType\":\"vehicle\",\"vehicleId\":\"רכב-12\",\"pitch\":1.1,\"roll\":0.2},{\"id\":\"aaaaaaaa-aaaa-4aaa-aaaa-aaaaaaaaaaa2\",\"savedAt\":\"2026-05-10T10:00:00.000Z\",\"stationName\":\"עמדה בראבו\",\"coordinates\":{\"east\":\"456789\",\"north\":\"4567890\"},\"altitude\":380,\"aka\":38,\"launcherType\":\"infantry\",\"pitch\":0.8,\"roll\":0.1},{\"id\":\"aaaaaaaa-aaaa-4aaa-aaaa-aaaaaaaaaaa3\",\"savedAt\":\"2026-05-10T10:00:00.000Z\",\"stationName\":\"עמדה צ׳ארלי\",\"coordinates\":{\"east\":\"567890\",\"north\":\"5678901\"},\"altitude\":510,\"aka\":41,\"launcherType\":\"vehicle\",\"vehicleId\":\"רכב-07\",\"pitch\":1.5,\"roll\":0.4}]","currentPositionId":"aaaaaaaa-aaaa-4aaa-aaaa-aaaaaaaaaaa1","referencePositionId":"aaaaaaaa-aaaa-4aaa-aaaa-aaaaaaaaaaa2","targets":"[{\"id\":\"bbbbbbbb-bbbb-4bbb-bbbb-bbbbbbbbbbb1\",\"targetName\":\"יעד דמה א׳\",\"targetDescription\":\"מטרה לאימון\",\"coordinates\":\"400000/4000000\",\"altitude\":440},{\"id\":\"bbbbbbbb-bbbb-4bbb-bbbb-bbbbbbbbbbb2\",\"targetName\":\"יעד דמה ב׳\",\"coordinates\":\"410000/4100000\",\"altitude\":395},{\"id\":\"bbbbbbbb-bbbb-4bbb-bbbb-bbbbbbbbbbb3\",\"targetName\":\"יעד דמה ג׳\",\"targetDescription\":\"מבנה\",\"coordinates\":\"420000/4200000\",\"altitude\":480}]","indicators":"[{\"id\":\"cccccccc-cccc-4ccc-cccc-ccccccccccc1\",\"savedAt\":\"2026-05-10T10:00:00.000Z\",\"indicatorName\":\"מציין דמה א׳\",\"coordinates\":4012345,\"altitude\":430,\"means\":\"אופטי\",\"markCode\":12,\"targetDomain\":\"צפון\"},{\"id\":\"cccccccc-cccc-4ccc-cccc-ccccccccccc2\",\"savedAt\":\"2026-05-10T10:00:00.000Z\",\"indicatorName\":\"מציין דמה ב׳\",\"coordinates\":4025678,\"altitude\":400,\"means\":\"מכ״ם\",\"markCode\":7}]","attackLogs":"[{\"id\":\"dddddddd-dddd-4ddd-dddd-dddddddddddd1\",\"savedAt\":\"2026-05-10T10:00:00.000Z\",\"targetName\":\"יעד דמה א׳\",\"date\":\"2026-05-09\",\"wasAttacked\":\"yes\",\"hit\":true,\"result\":\"פגיעה טובה\",\"time\":\"14:30\",\"launcherType\":\"רכבי\",\"generation\":\"a\",\"stationTargetRange\":8500,\"stationTargetAzimuth\":1200},{\"id\":\"dddddddd-dddd-4ddd-dddd-dddddddddddd2\",\"savedAt\":\"2026-05-10T10:00:00.000Z\",\"targetName\":\"יעד דמה ב׳\",\"date\":\"2026-05-08\",\"wasAttacked\":\"no\",\"hit\":false,\"generation\":\"b\"}]"};
-    document.getElementById('seed').addEventListener('click', () => {
+    const SEED_PAYLOAD = {"positions":"[{\"id\":\"aaaaaaaa-aaaa-4aaa-aaaa-aaaaaaaaaaa1\",\"savedAt\":\"2026-05-10T10:00:00.000Z\",\"stationName\":\"עמדה אלפא\",\"coordinates\":{\"east\":\"345678\",\"north\":\"3345678\"},\"altitude\":420,\"aka\":40,\"launcherType\":\"vehicle\",\"vehicleId\":\"רכב-12\",\"pitch\":1.1,\"roll\":0.2},{\"id\":\"aaaaaaaa-aaaa-4aaa-aaaa-aaaaaaaaaaa2\",\"savedAt\":\"2026-05-10T10:00:00.000Z\",\"stationName\":\"עמדה בראבו\",\"coordinates\":{\"east\":\"456789\",\"north\":\"3456789\"},\"altitude\":380,\"aka\":38,\"launcherType\":\"infantry\",\"pitch\":0.8,\"roll\":0.1},{\"id\":\"aaaaaaaa-aaaa-4aaa-aaaa-aaaaaaaaaaa3\",\"savedAt\":\"2026-05-10T10:00:00.000Z\",\"stationName\":\"עמדה צ׳ארלי\",\"coordinates\":{\"east\":\"567890\",\"north\":\"3567890\"},\"altitude\":510,\"aka\":41,\"launcherType\":\"vehicle\",\"vehicleId\":\"רכב-07\",\"pitch\":1.5,\"roll\":0.4}]","currentPositionId":"aaaaaaaa-aaaa-4aaa-aaaa-aaaaaaaaaaa1","referencePositionId":"aaaaaaaa-aaaa-4aaa-aaaa-aaaaaaaaaaa2","targets":"[{\"id\":\"bbbbbbbb-bbbb-4bbb-bbbb-bbbbbbbbbbb1\",\"targetName\":\"יעד דמה א׳\",\"targetDescription\":\"מטרה לאימון\",\"coordinates\":\"400000/3400000\",\"altitude\":440},{\"id\":\"bbbbbbbb-bbbb-4bbb-bbbb-bbbbbbbbbbb2\",\"targetName\":\"יעד דמה ב׳\",\"coordinates\":\"410000/3410000\",\"altitude\":395},{\"id\":\"bbbbbbbb-bbbb-4bbb-bbbb-bbbbbbbbbbb3\",\"targetName\":\"יעד דמה ג׳\",\"targetDescription\":\"מבנה\",\"coordinates\":\"420000/3420000\",\"altitude\":480}]","indicators":"[{\"id\":\"cccccccc-cccc-4ccc-cccc-ccccccccccc1\",\"savedAt\":\"2026-05-10T10:00:00.000Z\",\"indicatorName\":\"מציין דמה א׳\",\"coordinates\":4012345,\"altitude\":430,\"means\":\"אופטי\",\"markCode\":12,\"targetDomain\":\"צפון\"},{\"id\":\"cccccccc-cccc-4ccc-cccc-ccccccccccc2\",\"savedAt\":\"2026-05-10T10:00:00.000Z\",\"indicatorName\":\"מציין דמה ב׳\",\"coordinates\":4025678,\"altitude\":400,\"means\":\"מכ״ם\",\"markCode\":7}]","attackLogs":"[{\"id\":\"dddddddd-dddd-4ddd-dddd-dddddddddddd1\",\"savedAt\":\"2026-05-10T10:00:00.000Z\",\"targetName\":\"יעד דמה א׳\",\"date\":\"2026-05-09\",\"wasAttacked\":\"yes\",\"hit\":true,\"result\":\"פגיעה טובה\",\"time\":\"14:30\",\"launcherType\":\"רכבי\",\"generation\":\"a\",\"stationTargetRange\":8500,\"stationTargetAzimuth\":1200},{\"id\":\"dddddddd-dddd-4ddd-dddd-dddddddddddd2\",\"savedAt\":\"2026-05-10T10:00:00.000Z\",\"targetName\":\"יעד דמה ב׳\",\"date\":\"2026-05-08\",\"wasAttacked\":\"no\",\"hit\":false,\"generation\":\"b\"}]"};
+    function applySeed() {
+      const status = document.getElementById('status');
       try {
         for (const [key, value] of Object.entries(SEED_PAYLOAD)) {
           localStorage.setItem(key, value);
         }
-        document.getElementById('status').textContent = 'בוצע. אפשר לחזור לאפליקציה.';
+        status.textContent = 'בוצע. אפשר לחזור לאפליקציה.';
       } catch (e) {
-        document.getElementById('status').textContent = 'שגיאה: ' + (e && e.message ? e.message : String(e));
+        status.textContent = 'שגיאה: ' + (e && e.message ? e.message : String(e));
       }
+    }
+    document.getElementById('seed').addEventListener('click', applySeed);
+    window.addEventListener('DOMContentLoaded', () => {
+      const status = document.getElementById('status');
+      if (location.protocol === 'file:') {
+        status.textContent =
+          'לא נטען כלום: דף שנפתח מקובץ מקומי (file://) לא חולק את אותו localStorage עם השרת. ' +
+          'הפעל את שרת הפיתוח והיכנס לכתובת: http://localhost:5173/dev-seed.html';
+        return;
+      }
+      applySeed();
     });
   </script>
 </body>

@@ -2,9 +2,10 @@
  * Seeds the app's browser "collections" (localStorage keys used by src/storage/).
  *
  * Usage:
- *   npm run seed
- * Then start the dev server and open: http://localhost:5173/dev-seed.html
- * Click the button to write mock data (replaces existing values for those keys).
+ *   npm run seed   → only regenerates public/dev-seed.html (does not touch the browser).
+ *   npm run dev    → open http://localhost:5173/dev-seed.html (same host/port as the app).
+ *   The page auto-writes mock data on load when served over http(s). Do not open the file via file:// —
+ *   that uses a different localStorage than the app.
  *
  * Keys: positions, currentPositionId, referencePositionId, targets, indicators, attackLogs
  */
@@ -172,21 +173,33 @@ const html = `<!DOCTYPE html>
   <p>דף זה כותב ל־<code>localStorage</code> את אותם המפתחות שהאפליקציה משתמשת בהם (מטרות, עמדות, מציינים, יומן תקיפות ועוד).</p>
   <p><strong>שים לב:</strong> הפעולה דורסת את הערכים הקיימים לאותם מפתחות.</p>
   <p>
-    <button type="button" id="seed">מלא נתוני דמה</button>
+    <button type="button" id="seed">מלא שוב נתוני דמה</button>
   </p>
   <p id="status" role="status"></p>
   <p><a href="/">חזרה לאפליקציה</a></p>
   <script>
     const SEED_PAYLOAD = ${seedPayloadJson};
-    document.getElementById('seed').addEventListener('click', () => {
+    function applySeed() {
+      const status = document.getElementById('status');
       try {
         for (const [key, value] of Object.entries(SEED_PAYLOAD)) {
           localStorage.setItem(key, value);
         }
-        document.getElementById('status').textContent = 'בוצע. אפשר לחזור לאפליקציה.';
+        status.textContent = 'בוצע. אפשר לחזור לאפליקציה.';
       } catch (e) {
-        document.getElementById('status').textContent = 'שגיאה: ' + (e && e.message ? e.message : String(e));
+        status.textContent = 'שגיאה: ' + (e && e.message ? e.message : String(e));
       }
+    }
+    document.getElementById('seed').addEventListener('click', applySeed);
+    window.addEventListener('DOMContentLoaded', () => {
+      const status = document.getElementById('status');
+      if (location.protocol === 'file:') {
+        status.textContent =
+          'לא נטען כלום: דף שנפתח מקובץ מקומי (file://) לא חולק את אותו localStorage עם השרת. ' +
+          'הפעל את שרת הפיתוח והיכנס לכתובת: http://localhost:5173/dev-seed.html';
+        return;
+      }
+      applySeed();
     });
   </script>
 </body>
@@ -197,4 +210,6 @@ mkdirSync(outDir, { recursive: true })
 writeFileSync(outFile, html, 'utf8')
 
 console.log(`Wrote ${outFile}`)
-console.log('Open (with dev server running): http://localhost:5173/dev-seed.html')
+console.log(
+  'This does not write to the app yet. With `npm run dev`, open http://localhost:5173/dev-seed.html (not file://) so the page can fill localStorage.',
+)
