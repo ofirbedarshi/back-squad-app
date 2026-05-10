@@ -3,6 +3,8 @@
  * embeds into public/dev-seed.html directly into the current localStorage.
  *
  * Must stay in sync with scripts/seed-localStorage.mjs whenever seed data changes.
+ *
+ * Keys include userNotes (see src/storage/notesStorage.ts).
  */
 
 const savedAt = '2026-05-10T10:00:00.000Z'
@@ -18,6 +20,8 @@ const IDS = {
   ind2: 'cccccccc-cccc-4ccc-cccc-ccccccccccc2',
   log1: 'dddddddd-dddd-4ddd-dddd-dddddddddddd1',
   log2: 'dddddddd-dddd-4ddd-dddd-dddddddddddd2',
+  note1: 'eeeeeeee-eeee-4eee-eeee-eeeeeeeeeee1',
+  note2: 'eeeeeeee-eeee-4eee-eeee-eeeeeeeeeee2',
 }
 
 const positions = [
@@ -129,6 +133,20 @@ const attackLogs = [
   },
 ]
 
+const userNotes = [
+  {
+    id: IDS.note1,
+    text: 'הערת דמה: לבדיקת רשימת ההערות במסך.',
+    createdAtIso: '2026-05-10T08:15:00.000Z',
+    updatedAtIso: '2026-05-10T09:00:00.000Z',
+  },
+  {
+    id: IDS.note2,
+    text: 'הערה שנייה ללא עריכה.',
+    createdAtIso: '2026-05-09T16:45:00.000Z',
+  },
+]
+
 const SEED_PAYLOAD: Record<string, string> = {
   positions: JSON.stringify(positions),
   currentPositionId: IDS.posAlpha,
@@ -136,6 +154,7 @@ const SEED_PAYLOAD: Record<string, string> = {
   targets: JSON.stringify(targets),
   indicators: JSON.stringify(indicators),
   attackLogs: JSON.stringify(attackLogs),
+  userNotes: JSON.stringify(userNotes),
 }
 
 export function applySeedMockData(): void {

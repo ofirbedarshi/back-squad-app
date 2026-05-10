@@ -72,6 +72,7 @@ export type RowableField =
   | DateField
   | TimeField
   | ToggleField
+  | ToggleWithConditionsField
   | CheckboxField
   | CoordsField
   | NoteField

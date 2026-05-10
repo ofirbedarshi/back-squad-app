@@ -7,7 +7,7 @@
  *   The page auto-writes mock data on load when served over http(s). Do not open the file via file:// —
  *   that uses a different localStorage than the app.
  *
- * Keys: positions, currentPositionId, referencePositionId, targets, indicators, attackLogs
+ * Keys: positions, currentPositionId, referencePositionId, targets, indicators, attackLogs, userNotes
  */
 import { mkdirSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
@@ -31,6 +31,8 @@ const IDS = {
   ind2: 'cccccccc-cccc-4ccc-cccc-ccccccccccc2',
   log1: 'dddddddd-dddd-4ddd-dddd-dddddddddddd1',
   log2: 'dddddddd-dddd-4ddd-dddd-dddddddddddd2',
+  note1: 'eeeeeeee-eeee-4eee-eeee-eeeeeeeeeee1',
+  note2: 'eeeeeeee-eeee-4eee-eeee-eeeeeeeeeee2',
 }
 
 const positions = [
@@ -142,6 +144,20 @@ const attackLogs = [
   },
 ]
 
+const userNotes = [
+  {
+    id: IDS.note1,
+    text: 'הערת דמה: לבדיקת רשימת ההערות במסך.',
+    createdAtIso: '2026-05-10T08:15:00.000Z',
+    updatedAtIso: '2026-05-10T09:00:00.000Z',
+  },
+  {
+    id: IDS.note2,
+    text: 'הערה שנייה ללא עריכה.',
+    createdAtIso: '2026-05-09T16:45:00.000Z',
+  },
+]
+
 /** Matches what the storage layer persists */
 const seedPayload = {
   positions: JSON.stringify(positions),
@@ -150,6 +166,7 @@ const seedPayload = {
   targets: JSON.stringify(targets),
   indicators: JSON.stringify(indicators),
   attackLogs: JSON.stringify(attackLogs),
+  userNotes: JSON.stringify(userNotes),
 }
 
 const seedPayloadJson = JSON.stringify(seedPayload)
