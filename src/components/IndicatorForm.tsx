@@ -34,10 +34,7 @@ function IndicatorForm({ onSubmit, submitLabel = 'שמור', initialValues }: In
     formState: { errors },
   } = useForm<IndicatorFormValues>({
     resolver: zodResolver(schema),
-    defaultValues: {
-      ...initialValues,
-      coordinates: initialValues?.coordinates ?? { east: '', north: '3' },
-    },
+    defaultValues: initialValues,
   })
 
   return (
@@ -52,10 +49,7 @@ function IndicatorForm({ onSubmit, submitLabel = 'שמור', initialValues }: In
           control={control}
           render={({ field }) => (
             <CoordinateInput
-              value={{
-                east: field.value?.east ?? '',
-                north: field.value?.north ?? '3',
-              }}
+              value={field.value}
               onChange={field.onChange}
               hasError={!!errors.coordinates}
             />

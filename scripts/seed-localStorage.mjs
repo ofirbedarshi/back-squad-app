@@ -76,20 +76,20 @@ const targets = [
     id: IDS.target1,
     targetName: 'יעד דמה א׳',
     targetDescription: 'מטרה לאימון',
-    coordinates: '400000/4000000',
+    coordinates: { east: '400000', north: '4000000' },
     altitude: 440,
   },
   {
     id: IDS.target2,
     targetName: 'יעד דמה ב׳',
-    coordinates: '410000/4100000',
+    coordinates: { east: '410000', north: '4100000' },
     altitude: 395,
   },
   {
     id: IDS.target3,
     targetName: 'יעד דמה ג׳',
     targetDescription: 'מבנה',
-    coordinates: '420000/4200000',
+    coordinates: { east: '420000', north: '4200000' },
     altitude: 480,
   },
 ]

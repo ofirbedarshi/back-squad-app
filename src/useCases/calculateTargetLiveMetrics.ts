@@ -1,9 +1,10 @@
 import { loadReferencePositionUseCase } from './loadReferencePosition'
 import { calculateTargetLiveMetrics } from '../domain/targetLiveMetrics'
 import type { TargetLiveMetrics } from '../domain/targetLiveMetrics.types'
+import type { PositionCoordinates } from '../domain/position.types'
 
 interface CalculateTargetLiveMetricsInput {
-  targetCoordinates: string
+  targetCoordinates: PositionCoordinates | undefined
   targetHeight?: number
 }
 
@@ -11,7 +12,7 @@ export function calculateTargetLiveMetricsUseCase(
   input: CalculateTargetLiveMetricsInput
 ): TargetLiveMetrics | null {
   const referencePosition = loadReferencePositionUseCase()
-  if (!referencePosition) {
+  if (!referencePosition || !input.targetCoordinates) {
     return null
   }
 

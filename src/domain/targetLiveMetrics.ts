@@ -1,20 +1,5 @@
 import type { TargetLiveMetrics, TargetLiveMetricsInput } from './targetLiveMetrics.types'
 
-function parseCoordinatePair(coordinates: string): { east: number; north: number } | null {
-  const numericParts = coordinates.match(/-?\d+(?:\.\d+)?/g)
-  if (!numericParts || numericParts.length < 2) {
-    return null
-  }
-
-  const east = Number(numericParts[0])
-  const north = Number(numericParts[1])
-  if (Number.isNaN(east) || Number.isNaN(north)) {
-    return null
-  }
-
-  return { east, north }
-}
-
 export function calculateTargetLiveMetrics(input: TargetLiveMetricsInput): TargetLiveMetrics | null {
   if (input.targetHeight === undefined || Number.isNaN(input.targetHeight)) {
     return null
@@ -27,13 +12,14 @@ export function calculateTargetLiveMetrics(input: TargetLiveMetricsInput): Targe
     return null
   }
 
-  const targetCoordinates = parseCoordinatePair(input.targetCoordinates)
-  if (!targetCoordinates) {
+  const targetEast = Number(input.targetCoordinates.east)
+  const targetNorth = Number(input.targetCoordinates.north)
+  if (Number.isNaN(targetEast) || Number.isNaN(targetNorth)) {
     return null
   }
 
-  const dE = targetCoordinates.east - sourceEast
-  const dN = targetCoordinates.north - sourceNorth
+  const dE = targetEast - sourceEast
+  const dN = targetNorth - sourceNorth
   const altitudeDiff = input.targetHeight - sourceHeight
 
   const range = Math.sqrt(dE ** 2 + dN ** 2 + altitudeDiff ** 2)

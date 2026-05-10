@@ -7,8 +7,8 @@ function CoordinateInput({ value, onChange, hasError = false }: CoordinateInputP
   const northMainInputRef = useRef<HTMLInputElement | null>(null)
   const checkDigitInputRef = useRef<HTMLInputElement | null>(null)
 
-  const east = value.east ?? ''
-  const north = value.north ?? '3'
+  const east = value?.east ?? ''
+  const north = value?.north ?? '3'
   const checkDigit = north.slice(0, 1) || '3'
   const northMain = north.slice(1, 7)
 

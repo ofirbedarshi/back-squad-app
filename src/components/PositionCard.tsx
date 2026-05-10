@@ -20,8 +20,8 @@ function PositionCard({
   selected = false,
   onClick,
 }: PositionCardProps) {
-  const east = typeof position.coordinates === 'object' ? position.coordinates.east : String(position.coordinates ?? '')
-  const north = typeof position.coordinates === 'object' ? position.coordinates.north : ''
+  const east = position.coordinates.east
+  const north = position.coordinates.north
 
   const borderClass = selected
     ? 'border-2 border-blue-500 ring-2 ring-blue-400/40'

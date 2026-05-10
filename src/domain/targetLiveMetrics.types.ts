@@ -1,8 +1,10 @@
+import type { PositionCoordinates } from './position.types'
+
 export interface TargetLiveMetricsInput {
   sourceEast: string
   sourceNorth: string
   sourceHeight: number
-  targetCoordinates: string
+  targetCoordinates: PositionCoordinates
   targetHeight?: number
 }
 

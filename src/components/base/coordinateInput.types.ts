@@ -4,7 +4,7 @@ export interface CoordinateValue {
 }
 
 export interface CoordinateInputProps {
-  value: CoordinateValue
+  value: CoordinateValue | undefined
   onChange: (value: CoordinateValue) => void
   hasError?: boolean
 }

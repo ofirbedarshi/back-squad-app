@@ -4,7 +4,7 @@ import { z } from 'zod'
 import FormField from './FormField'
 import Input from './Input'
 import CoordinateInput from './base/CoordinateInput'
-import { coordinateValueSchema, normalizeCoordinateValue } from './base/coordinateInput.utils'
+import { coordinateValueSchema } from './base/coordinateInput.utils'
 import SegmentedToggle from './base/SegmentedToggle'
 import type { PositionInput } from '../domain/position.types'
 
@@ -51,7 +51,6 @@ function PositionForm({ onSubmit, submitLabel = 'שמור', initialValues }: Pos
     defaultValues: {
       launcherType: LAUNCHER_TYPES.VEHICLE,
       ...initialValues,
-      coordinates: normalizeCoordinateValue(initialValues?.coordinates),
     },
   })
 
@@ -70,10 +69,7 @@ function PositionForm({ onSubmit, submitLabel = 'שמור', initialValues }: Pos
           control={control}
           render={({ field }) => (
             <CoordinateInput
-              value={{
-                east: field.value?.east ?? '',
-                north: field.value?.north ?? '3',
-              }}
+              value={field.value}
               onChange={field.onChange}
               hasError={!!errors.coordinates}
             />

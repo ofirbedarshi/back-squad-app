@@ -1,7 +1,9 @@
+import type { PositionCoordinates } from './position.types'
+
 export interface TargetInput {
   targetName: string
   targetDescription?: string
-  coordinates: string
+  coordinates: PositionCoordinates
   altitude?: number
 }
 
