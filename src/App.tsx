@@ -9,7 +9,11 @@ import HomeScreen from './screens/HomeScreen'
 import MaagarimScreen from './screens/MaagarimScreen'
 import IndicatorsListScreen from './screens/IndicatorsListScreen'
 import NidbarimScreen from './screens/NidbarimScreen'
-import SadpamScreen from './screens/SadpamScreen'
+import SadapScreen from './screens/SadapScreen'
+import SadapParisatEshkolScreen from './screens/SadapParisatEshkolScreen'
+import SadapKipulEshkolScreen from './screens/SadapKipulEshkolScreen'
+import SadapParisatDugScreen from './screens/SadapParisatDugScreen'
+import SadapKipulDugScreen from './screens/SadapKipulDugScreen'
 import TargetBankScreen from './screens/TargetBankScreen'
 import TargetListScreen from './screens/TargetListScreen'
 
@@ -21,7 +25,11 @@ function App() {
         <main className="flex-1 pb-16">
           <Routes>
             <Route path="/" element={<HomeScreen />} />
-            <Route path="/sadpam" element={<SadpamScreen />} />
+            <Route path="/sadap" element={<SadapScreen />} />
+            <Route path="/sadap/parisat-eshkol" element={<SadapParisatEshkolScreen />} />
+            <Route path="/sadap/kipul-eshkol" element={<SadapKipulEshkolScreen />} />
+            <Route path="/sadap/parisat-dug" element={<SadapParisatDugScreen />} />
+            <Route path="/sadap/kipul-dug" element={<SadapKipulDugScreen />} />
             <Route path="/nidbarim" element={<NidbarimScreen />} />
             <Route path="/current-position" element={<CurrentPositionScreen />} />
             <Route path="/calculator" element={<CalculatorScreen />} />
