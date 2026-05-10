@@ -13,12 +13,12 @@ function notifyReferencePositionChanged(): void {
   positionEvents.emit(POSITION_EVENTS.REFERENCE_CHANGED)
 }
 
-function getExplicitReferencePositionId(): string | null {
+export function loadExplicitReferencePositionId(): string | null {
   return localStorage.getItem(REFERENCE_POSITION_ID_KEY)
 }
 
 function referenceResolutionAffectedByPositionUpdate(updatedPositionId: string): boolean {
-  const explicitRefId = getExplicitReferencePositionId()
+  const explicitRefId = loadExplicitReferencePositionId()
   if (explicitRefId) {
     return updatedPositionId === explicitRefId
   }
@@ -47,7 +47,7 @@ export function addPosition(position: Position): void {
 }
 
 export function setCurrentPositionId(id: string): void {
-  const hadExplicitReference = Boolean(getExplicitReferencePositionId())
+  const hadExplicitReference = Boolean(loadExplicitReferencePositionId())
   localStorage.setItem(CURRENT_POSITION_ID_KEY, id)
   notifyCurrentPositionChanged()
   if (!hadExplicitReference) {
@@ -72,7 +72,7 @@ export function loadCurrentPosition(): Position | null {
 
 /** Resolved reference: explicit saved id if set and found; otherwise falls back to current position. */
 export function loadReferencePosition(): Position | null {
-  const explicitId = getExplicitReferencePositionId()
+  const explicitId = loadExplicitReferencePositionId()
   if (explicitId) {
     const fromList = readPositions().find((p) => p.id === explicitId)
     if (fromList) {
