@@ -5,6 +5,11 @@ import BottomNav from './components/BottomNav'
 import PositionsListScreen from './screens/PositionsListScreen'
 import AttackLogListScreen from './screens/AttackLogListScreen'
 import CalculatorScreen from './screens/CalculatorScreen'
+import HitPenetrationCalculatorScreen from './screens/HitPenetrationCalculatorScreen'
+import UnitConversionCalculatorScreen from './screens/UnitConversionCalculatorScreen'
+import MovingTargetCalculatorScreen from './screens/MovingTargetCalculatorScreen'
+import DeflectionAngleCalculatorScreen from './screens/DeflectionAngleCalculatorScreen'
+import DirectionalShootingDistanceScreen from './screens/DirectionalShootingDistanceScreen'
 import CurrentPositionScreen from './screens/CurrentPositionScreen'
 import HomeScreen from './screens/HomeScreen'
 import MaagarimScreen from './screens/MaagarimScreen'
@@ -40,6 +45,11 @@ function App() {
             <Route path="/nidbarim" element={<NidbarimScreen />} />
             <Route path="/current-position" element={<CurrentPositionScreen />} />
             <Route path="/calculator" element={<CalculatorScreen />} />
+            <Route path="/calculator/hit-penetration" element={<HitPenetrationCalculatorScreen />} />
+            <Route path="/calculator/unit-conversion" element={<UnitConversionCalculatorScreen />} />
+            <Route path="/calculator/moving-target" element={<MovingTargetCalculatorScreen />} />
+            <Route path="/calculator/deflection-angle" element={<DeflectionAngleCalculatorScreen />} />
+            <Route path="/calculator/directional-distance" element={<DirectionalShootingDistanceScreen />} />
             <Route path="/attack-log" element={<AttackLogListScreen />} />
             <Route path="/target-bank" element={<TargetListScreen />} />
             <Route path="/maagarim" element={<MaagarimScreen />} />
