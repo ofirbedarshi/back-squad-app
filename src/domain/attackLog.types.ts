@@ -1,3 +1,5 @@
+import type { PositionCoordinates } from './position.types'
+
 export interface AttackLogInput {
   targetName: string
   date: string
@@ -13,15 +15,15 @@ export interface AttackLogInput {
   vehicleEncryptionMethod?: string
   hivePosition?: string
   generation?: 'a' | 'b'
-  stationCoordinates?: number
+  stationCoordinates?: PositionCoordinates
   altitude?: number
-  targetCoordinates?: number
+  targetCoordinates?: PositionCoordinates
   stationTargetRange?: number
   stationTargetAzimuth?: number
   stationTargetAltitudeDiff?: number
   indicatorFactor?: number
   indicatorMeans?: string
-  indicatorCoordinates?: number
+  indicatorCoordinates?: PositionCoordinates
   indicatorTargetAzimuth?: number
   indicatorRange?: number
   apexAngle?: number

@@ -5,6 +5,8 @@ import FormField from './FormField'
 import Input from './Input'
 import SegmentedToggle from './base/SegmentedToggle'
 import Checkbox from './base/Checkbox'
+import CoordinateInput from './base/CoordinateInput'
+import { coordinateValueSchema } from './base/coordinateInput.utils'
 import type { AttackLogInput } from '../domain/attackLog.types'
 
 const requiredTextField = z.string().min(1, 'שדה חובה')
@@ -26,15 +28,15 @@ const schema = z.object({
   vehicleEncryptionMethod: optionalTextField,
   hivePosition: optionalTextField,
   generation: z.enum(['a', 'b']).optional(),
-  stationCoordinates: optionalNumberField,
+  stationCoordinates: coordinateValueSchema.optional(),
   altitude: optionalNumberField,
-  targetCoordinates: optionalNumberField,
+  targetCoordinates: coordinateValueSchema.optional(),
   stationTargetRange: optionalNumberField,
   stationTargetAzimuth: optionalNumberField,
   stationTargetAltitudeDiff: optionalNumberField,
   indicatorFactor: optionalNumberField,
   indicatorMeans: optionalTextField,
-  indicatorCoordinates: optionalNumberField,
+  indicatorCoordinates: coordinateValueSchema.optional(),
   indicatorTargetAzimuth: optionalNumberField,
   indicatorRange: optionalNumberField,
   apexAngle: optionalNumberField,
@@ -175,16 +177,36 @@ function AttackLogForm({ onSubmit, submitLabel = 'שמור', initialValues }: At
         />
       </FormField>
 
-      <FormField label='נ"צ עמדה' error={errors.stationCoordinates?.message}>
-        <Input type="number" hasError={!!errors.stationCoordinates} {...register('stationCoordinates', { valueAsNumber: true })} />
+      <FormField label='נ"צ עמדה' error={errors.stationCoordinates?.east?.message || errors.stationCoordinates?.north?.message}>
+        <Controller
+          name="stationCoordinates"
+          control={control}
+          render={({ field }) => (
+            <CoordinateInput
+              value={field.value}
+              onChange={field.onChange}
+              hasError={!!errors.stationCoordinates}
+            />
+          )}
+        />
       </FormField>
 
       <FormField label="גובה" error={errors.altitude?.message}>
         <Input type="number" hasError={!!errors.altitude} {...register('altitude', { valueAsNumber: true })} />
       </FormField>
 
-      <FormField label='נ"צ מטרה' error={errors.targetCoordinates?.message}>
-        <Input type="number" hasError={!!errors.targetCoordinates} {...register('targetCoordinates', { valueAsNumber: true })} />
+      <FormField label='נ"צ מטרה' error={errors.targetCoordinates?.east?.message || errors.targetCoordinates?.north?.message}>
+        <Controller
+          name="targetCoordinates"
+          control={control}
+          render={({ field }) => (
+            <CoordinateInput
+              value={field.value}
+              onChange={field.onChange}
+              hasError={!!errors.targetCoordinates}
+            />
+          )}
+        />
       </FormField>
 
       <FormField label="טווח עמדת מטרה" error={errors.stationTargetRange?.message}>
@@ -207,8 +229,18 @@ function AttackLogForm({ onSubmit, submitLabel = 'שמור', initialValues }: At
         <Input type="text" hasError={!!errors.indicatorMeans} {...register('indicatorMeans')} />
       </FormField>
 
-      <FormField label='נ"צ מציין' error={errors.indicatorCoordinates?.message}>
-        <Input type="number" hasError={!!errors.indicatorCoordinates} {...register('indicatorCoordinates', { valueAsNumber: true })} />
+      <FormField label='נ"צ מציין' error={errors.indicatorCoordinates?.east?.message || errors.indicatorCoordinates?.north?.message}>
+        <Controller
+          name="indicatorCoordinates"
+          control={control}
+          render={({ field }) => (
+            <CoordinateInput
+              value={field.value}
+              onChange={field.onChange}
+              hasError={!!errors.indicatorCoordinates}
+            />
+          )}
+        />
       </FormField>
 
       <FormField label="אזימות מציין מטרה" error={errors.indicatorTargetAzimuth?.message}>
