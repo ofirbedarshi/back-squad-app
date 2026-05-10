@@ -1,12 +1,19 @@
+import { useNavigate } from 'react-router-dom'
 import PositionForm from '../components/PositionForm'
 import DocFeedbackModal from '../components/base/DocFeedbackModal'
 import { saveCurrentPositionUseCase } from '../useCases/saveCurrentPosition'
+import { useNotification } from '../hooks/useNotification'
 import type { PositionInput } from '../domain/position.types'
 import currentPositionDocMarkdown from '../../docs/מסך-עמדה-נוכחית.md?raw'
 
 function CurrentPositionScreen() {
+  const navigate = useNavigate()
+  const { notifySuccess } = useNotification()
+
   function handleSave(data: PositionInput) {
     saveCurrentPositionUseCase(data)
+    notifySuccess('העמדה נשמרה בהצלחה')
+    navigate('/')
   }
 
   return (

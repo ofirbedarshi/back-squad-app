@@ -1,5 +1,6 @@
 import { HashRouter, Route, Routes } from 'react-router-dom'
 import { ErrorProvider } from './context/ErrorContext'
+import { NotificationProvider } from './context/NotificationContext'
 import BottomNav from './components/BottomNav'
 import PositionsListScreen from './screens/PositionsListScreen'
 import AttackLogListScreen from './screens/AttackLogListScreen'
@@ -20,6 +21,7 @@ import TargetListScreen from './screens/TargetListScreen'
 function App() {
   return (
     <ErrorProvider>
+    <NotificationProvider>
     <HashRouter>
       <div className="flex flex-col min-h-svh bg-neutral-50">
         <main className="flex-1" style={{ paddingBottom: 'calc(4rem + env(safe-area-inset-bottom))' }}>
@@ -44,6 +46,7 @@ function App() {
         <BottomNav />
       </div>
     </HashRouter>
+    </NotificationProvider>
     </ErrorProvider>
   )
 }
