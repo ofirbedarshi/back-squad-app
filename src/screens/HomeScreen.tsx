@@ -1,10 +1,13 @@
 import MenuButton from '../components/MenuButton'
+import CloudHeightWidget from '../components/CloudHeightWidget'
 
 function HomeScreen() {
   return (
     <div dir="rtl" className="flex flex-col h-full">
-      <header className="py-4 px-4 text-center font-bold text-lg border-b border-neutral-200 text-neutral-800">
-        תפריט ראשי
+      <header className="px-4 border-b border-neutral-200 flex items-center justify-between">
+        <div className="w-24" />
+        <span className="font-bold text-lg text-neutral-800 py-4">תפריט ראשי</span>
+        <CloudHeightWidget />
       </header>
 
       <div className="flex flex-col gap-3 p-4">
