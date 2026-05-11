@@ -4,14 +4,16 @@ import NoteAddTriggerButton from '../components/NoteAddTriggerButton'
 import UserNoteRow from '../components/UserNoteRow'
 import DocFeedbackModal from '../components/base/DocFeedbackModal'
 import notesScreenDocMarkdown from '../../docs/מסך-הערות.md?raw'
+import { formatUserNoteSavedAt, noteLastActivityIso } from '../domain/notes'
+import type { NoteVoicePayload, UserNote } from '../domain/notes.types'
 import { useConfirm } from '../hooks/useConfirm'
 import { useDomainError } from '../hooks/useDomainError'
 import { useNotification } from '../hooks/useNotification'
-import { formatUserNoteSavedAt, noteLastActivityIso } from '../domain/notes'
-import type { UserNote } from '../domain/notes.types'
 import { addNoteUseCase } from '../useCases/addNote'
+import { attachVoiceToNoteUseCase } from '../useCases/attachVoiceToNote'
 import { loadNotesUseCase } from '../useCases/loadNotes'
 import { removeNoteUseCase } from '../useCases/removeNote'
+import { removeVoiceFromNoteUseCase } from '../useCases/removeVoiceFromNote'
 import { updateNoteUseCase } from '../useCases/updateNote'
 
 function NotesScreen() {
@@ -21,9 +23,9 @@ function NotesScreen() {
   const [notes, setNotes] = useState<UserNote[]>(() => loadNotesUseCase())
   const [addModalOpen, setAddModalOpen] = useState(false)
 
-  function handleSubmitNewNote(text: string): boolean {
+  async function handleSubmitNewNote(text: string, voice: NoteVoicePayload | null): Promise<boolean> {
     try {
-      const next = addNoteUseCase(text)
+      const next = await addNoteUseCase(text, voice)
       setNotes(next)
       notifySuccess('ההערה נשמרה')
       return true
@@ -34,7 +36,7 @@ function NotesScreen() {
     }
   }
 
-  async function handleRemoveRequest(id: string) {
+  async function handleRemoveNote(id: string) {
     const confirmed = await confirm({
       title: 'מחיקת הערה',
       message: 'האם למחוק את ההערה? לא ניתן לשחזר אחרי המחיקה.',
@@ -43,14 +45,35 @@ function NotesScreen() {
       variant: 'danger',
     })
     if (confirmed) {
-      setNotes(removeNoteUseCase(id))
+      try {
+        setNotes(await removeNoteUseCase(id))
+      } catch {
+        triggerError('מחיקת ההערה נכשלה')
+      }
     }
   }
 
-  function handleUpdate(id: string, text: string): boolean {
+  async function handleRemoveVoiceFromNote(id: string) {
     try {
-      const next = updateNoteUseCase(id, text)
+      setNotes(await removeVoiceFromNoteUseCase(id))
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : 'עדכון ההערה נכשל'
+      triggerError(msg)
+    }
+  }
+
+  async function handleSaveNoteEdit(
+    id: string,
+    text: string,
+    voice: NoteVoicePayload | null,
+  ): Promise<boolean> {
+    try {
+      let next = updateNoteUseCase(id, text)
       setNotes(next)
+      if (voice) {
+        next = await attachVoiceToNoteUseCase(id, voice)
+        setNotes(next)
+      }
       notifySuccess('ההערה עודכנה')
       return true
     } catch (e) {
@@ -76,6 +99,7 @@ function NotesScreen() {
       </header>
 
       <div className="flex flex-col gap-3 p-4">
+        <NoteAddTriggerButton layout="listRow" onClick={() => setAddModalOpen(true)} />
 
         {sorted.length === 0 && !addModalOpen && (
           <p className="text-center text-neutral-400 py-6 text-sm">אין הערות שמורות</p>
@@ -86,15 +110,20 @@ function NotesScreen() {
             key={note.id}
             note={note}
             savedAtLabel={formatUserNoteSavedAt(noteLastActivityIso(note))}
-            onRemove={() => void handleRemoveRequest(note.id)}
-            onUpdate={handleUpdate}
+            onRemove={() => void handleRemoveNote(note.id)}
+            onSave={handleSaveNoteEdit}
+            onRemoveVoice={handleRemoveVoiceFromNote}
+            onPlaybackError={triggerError}
           />
         ))}
-         <NoteAddTriggerButton layout="listRow" onClick={() => setAddModalOpen(true)} />
       </div>
 
       {addModalOpen && (
-        <NoteAddModal onClose={() => setAddModalOpen(false)} onSubmit={handleSubmitNewNote} />
+        <NoteAddModal
+          onClose={() => setAddModalOpen(false)}
+          onSubmit={handleSubmitNewNote}
+          onMicError={triggerError}
+        />
       )}
 
       <DocFeedbackModal

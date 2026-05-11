@@ -13,7 +13,7 @@ interface CloudHeightModalProps {
 
 const UNIT_OPTIONS = [
   { label: 'מטרים', value: 'meters' },
-  { label: 'פיט', value: 'feet' },
+  { label: 'רגל', value: 'feet' },
 ]
 
 function toDisplayValue(heightMeters: number | null, unit: CloudHeightUnit): string {
@@ -62,7 +62,7 @@ function CloudHeightModal({ current, onClose, onSaved }: CloudHeightModalProps) 
 
         <div className="flex flex-col gap-2">
           <label className="text-sm font-medium text-neutral-600">
-            גובה ({unit === 'meters' ? 'מטרים' : 'פיט'})
+            גובה ({unit === 'meters' ? 'מטרים' : 'רגל'})
           </label>
           <input
             type="number"
@@ -81,7 +81,7 @@ function CloudHeightModal({ current, onClose, onSaved }: CloudHeightModalProps) 
               if (isNaN(parsed) || !isFinite(parsed)) return null
               const inMeters = unit === 'feet' ? feetToMeters(parsed) : parsed
               const inFeet = unit === 'meters' ? metersToFeet(parsed) : parsed
-              return `${Math.round(inMeters).toLocaleString('he-IL')} מ׳ = ${Math.round(inFeet).toLocaleString('he-IL')} פיט`
+              return `${Math.round(inMeters).toLocaleString('he-IL')} מ׳ = ${Math.round(inFeet).toLocaleString('he-IL')} רגל`
             })()}
           </p>
         )}
