@@ -1,8 +1,101 @@
+import { useMemo, useState } from 'react'
+import DirectionalShootingResultCard from '../components/DirectionalShootingResultCard'
+import DocFeedbackModal from '../components/base/DocFeedbackModal'
+import SegmentedToggle from '../components/base/SegmentedToggle'
+import Stepper from '../components/base/Stepper'
+import { calculateDirectionalShootingDistanceFromInputs } from '../useCases/calculateDirectionalShootingDistanceFromInputs'
+import directionalShootingDocMarkdown from '../../docs/מרחק-בירי-כיווניות.md?raw'
+import type {
+  DirectionalShootingTargetRangeM,
+  DirectionalShootingTrajectory,
+} from '../domain/directionalShootingDistance.types'
+
+const TRAJECTORY_OPTIONS = [
+  { label: 'שטוח', value: 'flat' },
+  { label: 'לופטד', value: 'lofted' },
+  { label: 'לופטד פלוס', value: 'loftedPlus' },
+]
+
+const MIN_TARGET_RANGE_M = 3000
+const MAX_TARGET_RANGE_M = 8000
+const TARGET_RANGE_STEP_M = 500
+
 function DirectionalShootingDistanceScreen() {
+  const [trajectory, setTrajectory] = useState<DirectionalShootingTrajectory>('flat')
+  const [targetRangeM, setTargetRangeM] = useState<DirectionalShootingTargetRangeM>(3000)
+
+  const result = useMemo(
+    () => calculateDirectionalShootingDistanceFromInputs(trajectory, targetRangeM),
+    [trajectory, targetRangeM],
+  )
+
   return (
-    <div dir="rtl" className="flex flex-col items-center justify-center h-full gap-3 text-neutral-700">
-      <h2 className="text-2xl font-semibold tracking-tight text-center px-4">מרחק בירי כיווניות</h2>
-      <p className="text-sm text-neutral-400">בקרוב</p>
+    <div dir="rtl" className="relative flex flex-col h-full overflow-y-auto bg-neutral-50">
+      <header className="py-4 px-4 text-center font-bold text-lg border-b border-neutral-200 text-neutral-800 shrink-0">
+        מרחק בירי כיווניות
+      </header>
+
+      <div className="flex flex-col gap-4 p-4">
+        <section className="bg-white rounded-2xl border border-neutral-200 shadow-sm p-4 flex flex-col gap-4">
+          <h2 className="text-sm font-semibold text-neutral-500 uppercase tracking-wide">נתוני קלט</h2>
+
+          <div className="flex flex-col gap-1.5">
+            <label className="text-sm font-medium text-neutral-700">מסלול ירי</label>
+            <SegmentedToggle
+              options={TRAJECTORY_OPTIONS}
+              value={trajectory}
+              onChange={(value) => setTrajectory(value as DirectionalShootingTrajectory)}
+            />
+          </div>
+
+          <div className="flex flex-col gap-1.5">
+            <label className="text-sm font-medium text-neutral-700">טווח מטרה</label>
+            <Stepper
+              value={targetRangeM}
+              min={MIN_TARGET_RANGE_M}
+              max={MAX_TARGET_RANGE_M}
+              step={TARGET_RANGE_STEP_M}
+              unit="מ׳"
+              onChange={(value) => setTargetRangeM(value as DirectionalShootingTargetRangeM)}
+            />
+          </div>
+        </section>
+
+        <DirectionalShootingResultCard
+          title="תוצאות מהטבלה"
+          rows={[
+            {
+              label: 'טווח מטרה',
+              value: result.targetRangeM,
+              unit: 'מ׳',
+            },
+            {
+              label: 'X ב-Y מקסימלי',
+              value: result.xAtMaxYM,
+              unit: 'מ׳',
+              highlight: true,
+            },
+            {
+              label: 'ממוצע Y מקסימלי',
+              value: result.meanMaxYM,
+              unit: 'מ׳',
+              highlight: true,
+            },
+            {
+              label: 'סטיית תקן ב-Y מקסימלי',
+              value: result.stdAtMaxYM,
+              unit: 'מ׳',
+            },
+          ]}
+        />
+      </div>
+
+      <DocFeedbackModal
+        markdown={directionalShootingDocMarkdown}
+        modalTitle="מידע על מרחק בירי כיווניות"
+        shareTitle="מרחק בירי כיווניות"
+        openButtonAriaLabel="פתח מידע על מרחק בירי כיווניות"
+      />
     </div>
   )
 }
