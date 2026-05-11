@@ -109,7 +109,7 @@ export const missChecklistFormSchema: FormSchema = {
       options: ['כן', 'לא'],
       defaultValue: 'לא',
     },
-    { type: 'coords', key: 'impactDistanceCoords', label: 'באיזה מרחק מ-נ.צ. המטרה זוהתה פגיעת הטיל?' },
+    { type: 'number', key: 'impactDistanceMeters', label: 'באיזה מרחק מ-נ.צ. המטרה זוהתה פגיעת הטיל? (מטרים)' },
     {
       type: 'toggle',
       key: 'malfunctionOnExit',

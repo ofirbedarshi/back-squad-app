@@ -1,14 +1,18 @@
+import { useNavigate } from 'react-router-dom'
 import DynamicForm from '../components/DynamicForm/DynamicForm'
 import { useNotification } from '../hooks/useNotification'
-import { missChecklistFormSchema } from './missChecklistForm.schema'
 import type { FormValues } from '../domain/dynamicForm.types'
+import { addMissChecklistUseCase } from '../useCases/addMissChecklist'
+import { missChecklistFormSchema } from './missChecklistForm.schema'
 
 function MissChecklistScreen() {
   const { notifySuccess } = useNotification()
+  const navigate = useNavigate()
 
   function handleSubmit(values: FormValues) {
-    console.log('miss checklist values:', values)
-    notifySuccess('הצ\'קליסט נשמר בהצלחה')
+    addMissChecklistUseCase({ values })
+    notifySuccess("הצ'קליסט נשמר בהצלחה")
+    navigate('/others/miss-checklist')
   }
 
   return (

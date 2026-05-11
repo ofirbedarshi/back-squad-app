@@ -47,6 +47,15 @@ export interface CheckboxField {
   defaultValue?: boolean
 }
 
+export interface NumberField {
+  type: 'number'
+  key: string
+  label: string
+  placeholder?: string
+  defaultValue?: number
+  infoTooltipText?: string
+}
+
 export interface CoordsField {
   type: 'coords'
   key: string
@@ -90,6 +99,7 @@ export interface TargetLoaderField {
 
 export type RowableField =
   | TextField
+  | NumberField
   | DateField
   | TimeField
   | ToggleField
@@ -124,6 +134,7 @@ export type FormFieldDef =
   | NoteField
   | RowField
   | TextField
+  | NumberField
   | DateField
   | TimeField
   | ToggleField
@@ -137,4 +148,4 @@ export interface FormSchema {
   fields: FormFieldDef[]
 }
 
-export type FormValues = Record<string, string | boolean | CoordinateValue>
+export type FormValues = Record<string, string | number | boolean | CoordinateValue>

@@ -92,6 +92,21 @@ function DynamicFormField({ field, control, register, errors, setValue, watch }:
     )
   }
 
+  if (field.type === 'number') {
+    const error = errors[field.key]
+    const errorMessage = error && 'message' in error ? (error.message as string) : undefined
+    return (
+      <FormField label={field.label} error={errorMessage} infoTooltipText={field.infoTooltipText}>
+        <Input
+          type="number"
+          placeholder={field.placeholder}
+          hasError={!!error}
+          {...register(field.key, { valueAsNumber: true })}
+        />
+      </FormField>
+    )
+  }
+
   if (field.type === 'date') {
     const error = errors[field.key]
     const errorMessage = error && 'message' in error ? (error.message as string) : undefined
