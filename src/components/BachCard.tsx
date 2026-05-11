@@ -10,7 +10,7 @@ interface BachCardProps {
 function BachCard({ bach, onClick, onRemove }: BachCardProps) {
   const { values } = bach
   const targetName = typeof values.targetName === 'string' ? values.targetName : ''
-  const indicatorName = typeof values.indicatorPositionName === 'string' ? values.indicatorPositionName : ''
+  const indicatorName = typeof values.indicatorName === 'string' ? values.indicatorName : ''
   const date = typeof values.date === 'string' ? values.date : ''
   const hour = typeof values.hour === 'string' ? values.hour : ''
 

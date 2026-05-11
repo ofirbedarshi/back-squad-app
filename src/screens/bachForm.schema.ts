@@ -137,7 +137,7 @@ export const bachFormSchema: FormSchema = {
       text: 'מציין',
       bold: true,
       fieldMappings: {
-        indicatorName: 'indicatorPositionName',
+        indicatorName: 'indicatorName',
         coordinates: 'indicatorPositionCoords',
         altitude: 'indicatorAltitude',
         means: 'indicatorMeans',
@@ -145,7 +145,7 @@ export const bachFormSchema: FormSchema = {
       },
     },
     { type: 'row', fields: [
-      { type: 'text', key: 'indicatorPositionName', label: 'שם עמדה', lockedByRef: 'indicatorId', infoTooltipText: 'שדה זה מתמלא אוטומטית מהמציין הנטען ואינו ניתן לעריכה ידנית' },
+      { type: 'text', key: 'indicatorName', label: 'שם מציין', lockedByRef: 'indicatorId', infoTooltipText: 'שדה זה מתמלא אוטומטית מהמציין הנטען ואינו ניתן לעריכה ידנית' },
       { type: 'coords', key: 'indicatorPositionCoords', label: 'נ.צ. עמדה', lockedByRef: 'indicatorId', infoTooltipText: 'שדה זה מתמלא אוטומטית מהמציין הנטען ואינו ניתן לעריכה ידנית' },
     ]},
     { type: 'row', fields: [
