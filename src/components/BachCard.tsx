@@ -10,7 +10,7 @@ interface BachCardProps {
 function BachCard({ bach, onClick, onRemove }: BachCardProps) {
   const { values } = bach
   const targetName = typeof values.targetName === 'string' ? values.targetName : ''
-  const sector = typeof values.sector === 'string' ? values.sector : ''
+  const indicatorName = typeof values.indicatorPositionName === 'string' ? values.indicatorPositionName : ''
   const date = typeof values.date === 'string' ? values.date : ''
   const hour = typeof values.hour === 'string' ? values.hour : ''
 
@@ -28,7 +28,7 @@ function BachCard({ bach, onClick, onRemove }: BachCardProps) {
             {targetName ? `מטרה: ${targetName}` : 'ללא שם מטרה'}
           </span>
           <div className="text-sm text-neutral-500 flex flex-col gap-1">
-            {sector ? <span>גזרה: {sector}</span> : null}
+            {indicatorName ? <span>מציין: {indicatorName}</span> : null}
             {date || hour ? (
               <span>{[date, hour].filter(Boolean).join(' | ')}</span>
             ) : null}

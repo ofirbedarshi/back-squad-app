@@ -5,6 +5,8 @@ export function extractDefaultValues(schema: FormSchema): FormValues {
 
   for (const field of schema.fields) {
     if (field.type === 'header') continue
+    if (field.type === 'targetLoader') continue
+    if (field.type === 'indicatorLoader') continue
 
     if (field.type === 'row') {
       for (const child of field.fields) {

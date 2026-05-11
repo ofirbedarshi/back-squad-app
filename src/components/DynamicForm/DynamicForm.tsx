@@ -20,6 +20,8 @@ function DynamicForm({ schema, onSubmit, defaultValues, submitLabel = 'שמור'
     register,
     handleSubmit,
     control,
+    setValue,
+    watch,
     formState: { errors },
   } = useForm<FormValues>({
     defaultValues: defaultValues ?? schemaDefaults,
@@ -40,6 +42,8 @@ function DynamicForm({ schema, onSubmit, defaultValues, submitLabel = 'שמור'
           control={control}
           register={register}
           errors={errors}
+          setValue={setValue}
+          watch={watch}
         />
       ))}
 

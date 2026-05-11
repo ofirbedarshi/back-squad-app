@@ -1,10 +1,12 @@
 import { Controller } from 'react-hook-form'
-import type { Control, FieldErrors, UseFormRegister } from 'react-hook-form'
+import type { Control, FieldErrors, UseFormRegister, UseFormSetValue, UseFormWatch } from 'react-hook-form'
 import FormField from '../FormField'
 import Input from '../Input'
 import SegmentedToggle from '../base/SegmentedToggle'
 import Checkbox from '../base/Checkbox'
 import CoordinateInput from '../base/CoordinateInput'
+import TargetLoaderField from './TargetLoaderField'
+import IndicatorLoaderField from './IndicatorLoaderField'
 import type { CoordinateValue, FormFieldDef, FormValues, RowableField } from '../../domain/dynamicForm.types'
 import ToggleWithConditionsRenderer from './ToggleWithConditionsRenderer'
 
@@ -13,9 +15,11 @@ interface DynamicFormFieldProps {
   control: Control<FormValues>
   register: UseFormRegister<FormValues>
   errors: FieldErrors<FormValues>
+  setValue: UseFormSetValue<FormValues>
+  watch: UseFormWatch<FormValues>
 }
 
-function DynamicFormField({ field, control, register, errors }: DynamicFormFieldProps) {
+function DynamicFormField({ field, control, register, errors, setValue, watch }: DynamicFormFieldProps) {
   if (field.type === 'row') {
     return (
       <div className="flex gap-3">
@@ -24,7 +28,7 @@ function DynamicFormField({ field, control, register, errors }: DynamicFormField
             key={child.type === 'note' ? `note-${index}` : child.key}
             className="flex-1 min-w-0"
           >
-            <DynamicFormField field={child} control={control} register={register} errors={errors} />
+            <DynamicFormField field={child} control={control} register={register} errors={errors} setValue={setValue} watch={watch} />
           </div>
         ))}
       </div>
@@ -45,15 +49,43 @@ function DynamicFormField({ field, control, register, errors }: DynamicFormField
       : <h3 className="text-sm font-semibold text-neutral-500">{field.text}</h3>
   }
 
+  if (field.type === 'targetLoader') {
+    const currentTargetId = watch(field.key) as string | undefined
+    return (
+      <TargetLoaderField
+        fieldDef={field}
+        currentTargetId={currentTargetId || undefined}
+        setValue={setValue}
+        register={register}
+        errors={errors}
+      />
+    )
+  }
+
+  if (field.type === 'indicatorLoader') {
+    const currentIndicatorId = watch(field.key) as string | undefined
+    return (
+      <IndicatorLoaderField
+        fieldDef={field}
+        currentIndicatorId={currentIndicatorId || undefined}
+        setValue={setValue}
+        register={register}
+        errors={errors}
+      />
+    )
+  }
+
   if (field.type === 'text') {
     const error = errors[field.key]
     const errorMessage = error && 'message' in error ? (error.message as string) : undefined
+    const isLocked = !!field.lockedByRef
     return (
-      <FormField label={field.label} error={errorMessage}>
+      <FormField label={field.label} error={errorMessage} infoTooltipText={field.infoTooltipText}>
         <Input
           type="text"
           placeholder={field.placeholder}
           hasError={!!error}
+          disabled={isLocked}
           {...register(field.key)}
         />
       </FormField>
@@ -128,6 +160,8 @@ function DynamicFormField({ field, control, register, errors }: DynamicFormField
             control={control}
             register={register}
             errors={errors}
+            setValue={setValue}
+            watch={watch}
           />
         )}
       />
@@ -137,8 +171,9 @@ function DynamicFormField({ field, control, register, errors }: DynamicFormField
   if (field.type === 'coords') {
     const error = errors[field.key]
     const errorMessage = error && 'message' in error ? (error.message as string) : undefined
+    const isLocked = !!field.lockedByRef
     return (
-      <FormField label={field.label} error={errorMessage}>
+      <FormField label={field.label} error={errorMessage} infoTooltipText={field.infoTooltipText}>
         <Controller
           name={field.key}
           control={control}
@@ -152,6 +187,7 @@ function DynamicFormField({ field, control, register, errors }: DynamicFormField
                 value={coordValue}
                 onChange={formField.onChange}
                 hasError={!!error}
+                disabled={isLocked}
               />
             )
           }}

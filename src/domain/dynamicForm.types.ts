@@ -13,6 +13,9 @@ export interface TextField {
   label: string
   placeholder?: string
   defaultValue?: string
+  /** Key of another field whose truthy value disables this field. */
+  lockedByRef?: string
+  infoTooltipText?: string
 }
 
 export interface DateField {
@@ -49,6 +52,9 @@ export interface CoordsField {
   key: string
   label: string
   defaultValue?: CoordinateValue
+  /** Key of another field whose truthy value disables this field. */
+  lockedByRef?: string
+  infoTooltipText?: string
 }
 
 export interface NoteField {
@@ -67,6 +73,21 @@ export interface ToggleWithConditionsField {
   conditions: Partial<Record<string, FormFieldDef[]>>
 }
 
+export interface TargetLoaderField {
+  type: 'targetLoader'
+  /** Form key where the selected target's id is stored. */
+  key: string
+  text: string
+  bold?: boolean
+  /** Maps Target domain properties to form field keys. */
+  fieldMappings: {
+    targetName?: string
+    targetCoords?: string
+    targetAltitude?: string
+    targetDescription?: string
+  }
+}
+
 export type RowableField =
   | TextField
   | DateField
@@ -82,6 +103,22 @@ export interface RowField {
   fields: RowableField[]
 }
 
+export interface IndicatorLoaderField {
+  type: 'indicatorLoader'
+  /** Form key where the selected indicator's id is stored. */
+  key: string
+  text: string
+  bold?: boolean
+  /** Maps Indicator domain properties to form field keys. */
+  fieldMappings: {
+    indicatorName?: string
+    coordinates?: string
+    altitude?: string
+    means?: string
+    markCode?: string
+  }
+}
+
 export type FormFieldDef =
   | HeaderField
   | NoteField
@@ -93,6 +130,8 @@ export type FormFieldDef =
   | ToggleWithConditionsField
   | CheckboxField
   | CoordsField
+  | TargetLoaderField
+  | IndicatorLoaderField
 
 export interface FormSchema {
   fields: FormFieldDef[]
