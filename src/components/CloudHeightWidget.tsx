@@ -11,7 +11,7 @@ function formatHeight(settings: CloudHeightSettings): string {
       ? metersToFeet(settings.heightMeters)
       : settings.heightMeters
   const rounded = Math.round(value)
-  const unit = settings.displayUnit === 'feet' ? 'ft' : 'מ׳'
+  const unit = settings.displayUnit === 'feet' ? 'רגל' : 'מ׳'
   return `${rounded.toLocaleString('he-IL')} ${unit}`
 }
 
