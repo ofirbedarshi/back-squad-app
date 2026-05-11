@@ -85,6 +85,7 @@ function DocFeedbackModal({
   }
 
   function handleOpenButtonPointerDown(event: ReactPointerEvent<HTMLButtonElement>) {
+    event.preventDefault()
     const nextOffsetX = event.clientX - buttonPosition.x
     const nextOffsetY = event.clientY - buttonPosition.y
 
@@ -106,6 +107,8 @@ function DocFeedbackModal({
     if (dragStateRef.current.pointerId !== event.pointerId) {
       return
     }
+
+    event.preventDefault()
 
     const maxX = window.innerWidth - floatingButtonSize - floatingButtonSideOffset
     const maxY = window.innerHeight - floatingButtonSize - floatingButtonSideOffset
@@ -155,7 +158,7 @@ function DocFeedbackModal({
         onPointerMove={handleOpenButtonPointerMove}
         onPointerUp={handleOpenButtonPointerUp}
         onPointerCancel={handleOpenButtonPointerUp}
-        className="fixed z-30 h-12 w-12 rounded-full bg-blue-600 text-white text-2xl font-bold shadow-lg active:bg-blue-700 touch-manipulation select-none"
+        className="fixed z-30 h-12 w-12 rounded-full bg-blue-600 text-white text-2xl font-bold shadow-lg active:bg-blue-700 touch-none select-none"
         style={{
           left: `${buttonPosition.x}px`,
           top: `${buttonPosition.y}px`,

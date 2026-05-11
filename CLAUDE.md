@@ -85,7 +85,9 @@ A `docs/` folder holds short Hebrew documentation files for screens, components,
 - Each doc file starts with a YAML front-matter block listing `related_files` — the source files the doc covers.
 - Content is short, in Hebrew, and in bullet format.
 - Written for a non-technical reader — no code references, no technical terms, no function names or file paths.
-- Describe: what the screen/component/service does from the user's perspective, what fields exist, what rules apply, and how it behaves.
+- Focus on business logic: what the user can do, what is not allowed, required/optional fields, validations, calculations, defaults, persistence, destructive actions, offline/local behavior, and non-obvious side effects.
+- Do **not** document obvious UI walkthroughs the user can see directly, such as which button opens a modal, empty-list messages, where errors appear visually, or that a saved item appears in the list.
+- Keep docs tight. Prefer short sections like: description, data/fields, save rules, calculations, limitations, and local storage behavior. Avoid long field catalogs unless the fields themselves define important rules.
 
 ### Doc rendering rule
 - For each doc in `docs/`, render `DocFeedbackModal` in every screen file listed under `related_files` (entries under `src/screens/`).
@@ -99,6 +101,7 @@ A `docs/` folder holds short Hebrew documentation files for screens, components,
 ### When to update a doc
 - After changing behavior, fields, validations, or rules in a file → **check if any doc in `docs/` lists that file under `related_files`**.
 - If a matching doc exists → **automatically update it** and tell the user it was updated.
+- When updating, rewrite or trim the doc so it remains business-rule focused. Remove stale or trivial UI explanations instead of appending more text.
 - If no doc exists → ask the user if they want one created.
 
 ## When unsure
