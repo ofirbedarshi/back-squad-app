@@ -12,6 +12,9 @@ export function createPosition(input: PositionInput): Position {
     vehicleId: input.vehicleId,
     pitch: input.pitch,
     roll: input.roll,
+    primarySector: input.primarySector,
+    secondarySector: input.secondarySector,
+    obstacles: input.obstacles,
   }
 }
 

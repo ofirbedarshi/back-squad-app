@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import PositionForm from '../components/PositionForm'
+import CurrentPositionForm from '../components/CurrentPositionForm'
 import DocFeedbackModal from '../components/base/DocFeedbackModal'
 import { saveCurrentPositionUseCase } from '../useCases/saveCurrentPosition'
 import { useNotification } from '../hooks/useNotification'
@@ -23,7 +23,7 @@ function CurrentPositionScreen() {
       </header>
 
       <div className="p-4">
-        <PositionForm onSubmit={handleSave} />
+        <CurrentPositionForm onSubmit={handleSave} />
       </div>
       <DocFeedbackModal
         markdown={currentPositionDocMarkdown}

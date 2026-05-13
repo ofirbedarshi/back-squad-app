@@ -1,5 +1,7 @@
+import { useMemo } from 'react'
 import { useLongPressWithShake } from '../hooks/useLongPressWithShake'
 import type { Target } from '../domain/target.types'
+import { calculateTargetLiveMetricsUseCase } from '../useCases/calculateTargetLiveMetrics'
 
 interface TargetCardProps {
   target: Target
@@ -8,7 +10,16 @@ interface TargetCardProps {
 }
 
 function TargetCard({ target, onClick, onLongPress }: TargetCardProps) {
-  const { className: shakeClass, ...longPressProps } = useLongPressWithShake(onLongPress,onClick)
+  const { className: shakeClass, ...longPressProps } = useLongPressWithShake(onLongPress, onClick)
+
+  const metrics = useMemo(
+    () =>
+      calculateTargetLiveMetricsUseCase({
+        targetCoordinates: target.coordinates,
+        targetHeight: target.altitude,
+      }),
+    [target.coordinates, target.altitude]
+  )
 
   return (
     <div
@@ -17,12 +28,25 @@ function TargetCard({ target, onClick, onLongPress }: TargetCardProps) {
       {...longPressProps}
     >
       <span className="font-bold text-neutral-800 text-base">{target.targetName}</span>
-      {target.targetDescription && (
-        <span className="text-sm text-neutral-500">{target.targetDescription}</span>
-      )}
       <span className="text-sm text-neutral-400 font-mono">
         {target.coordinates.east} / {target.coordinates.north}
       </span>
+      {metrics && (
+        <div className="flex gap-3 mt-0.5">
+          <span className="text-sm text-neutral-600">
+            <span className="text-neutral-400 text-xs">אזימוט </span>
+            {metrics.azimuth.toFixed(1)}
+          </span>
+          <span className="text-sm text-neutral-600">
+            <span className="text-neutral-400 text-xs">טווח </span>
+            {metrics.range.toFixed(1)}
+          </span>
+          <span className="text-sm text-neutral-600">
+            <span className="text-neutral-400 text-xs">הפרש גובה </span>
+            {metrics.altitudeDiff.toFixed(1)}
+          </span>
+        </div>
+      )}
     </div>
   )
 }

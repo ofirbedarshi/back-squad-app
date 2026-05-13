@@ -6,6 +6,21 @@ export interface PositionCoordinates {
   palach: string
 }
 
+export interface SectorBoundary {
+  compass?: number
+  target?: number
+}
+
+export interface Sector {
+  left?: SectorBoundary
+  right?: SectorBoundary
+}
+
+export interface Obstacle {
+  compass?: number
+  target?: number
+}
+
 export interface PositionInput {
   stationName: string
   coordinates: PositionCoordinates
@@ -15,6 +30,9 @@ export interface PositionInput {
   vehicleId?: string
   pitch: number
   roll: number
+  primarySector?: Sector
+  secondarySector?: Sector
+  obstacles?: Obstacle[]
 }
 
 export interface Position {
@@ -28,4 +46,7 @@ export interface Position {
   vehicleId?: string
   pitch: number
   roll: number
+  primarySector?: Sector
+  secondarySector?: Sector
+  obstacles?: Obstacle[]
 }
