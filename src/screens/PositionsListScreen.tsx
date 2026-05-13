@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import PositionCard from '../components/PositionCard'
 import PositionForm from '../components/PositionForm'
+import PositionSearchBar from '../components/PositionSearchBar'
 import HeaderOptionsMenu from '../components/base/HeaderOptionsMenu'
 import Modal from '../components/base/Modal'
 import OptionsMenu from '../components/base/OptionsMenu'
@@ -9,6 +10,8 @@ import { useCurrentPosition } from '../hooks/useCurrentPosition'
 import { useDomainError } from '../hooks/useDomainError'
 import { useNotification } from '../hooks/useNotification'
 import { useUIError } from '../hooks/useUIError'
+import { filterByQuery } from '../utils/search'
+import { getPositionSearchFields } from '../utils/positionSearch'
 import { addPositionUseCase } from '../useCases/addPosition'
 import { loadPositionsUseCase } from '../useCases/loadPositions'
 import { removeAllPositionsUseCase } from '../useCases/removeAllPositions'
@@ -18,6 +21,7 @@ import type { Position, PositionInput } from '../domain/position.types'
 
 function PositionsListScreen() {
   const [positions, setPositions] = useState<Position[]>([])
+  const [searchQuery, setSearchQuery] = useState('')
   const currentPosition = useCurrentPosition()
   const [showForm, setShowForm] = useState(false)
   const [editingItem, setEditingItem] = useState<Position | null>(null)
@@ -83,8 +87,9 @@ function PositionsListScreen() {
 
   const currentPositionId = currentPosition?.id ?? null
   const storedPositions = positions.filter((position) => position.id !== currentPositionId)
+  const filteredStoredPositions = filterByQuery(storedPositions, searchQuery, getPositionSearchFields)
   const hasAnySavedPositions = positions.length > 0
-  const archiveIsEmpty = storedPositions.length === 0
+  const archiveIsEmpty = filteredStoredPositions.length === 0
   const archiveEmptyMessage = hasAnySavedPositions
     ? 'אין עמדות נוספות במאגר'
     : 'אין עמדות שמורות במאגר'
@@ -131,13 +136,21 @@ function PositionsListScreen() {
             ) : null}
           </div>
 
-          {archiveIsEmpty && (
+          {storedPositions.length > 0 && (
+            <PositionSearchBar searchQuery={searchQuery} onSearchQueryChange={setSearchQuery} />
+          )}
+
+          {archiveIsEmpty && searchQuery === '' && (
             <p className="text-center text-neutral-400 py-5 border border-dashed border-neutral-200 rounded-xl">
               {archiveEmptyMessage}
             </p>
           )}
 
-          {storedPositions.map((position) => (
+          {storedPositions.length > 0 && filteredStoredPositions.length === 0 && searchQuery !== '' && (
+            <p className="text-center text-neutral-400 py-5">לא נמצאו תוצאות</p>
+          )}
+
+          {filteredStoredPositions.map((position) => (
             <PositionCard
               key={position.id}
               position={position}
