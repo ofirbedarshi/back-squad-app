@@ -6,17 +6,20 @@ const numberField = z.number({ error: 'יש להזין מספר' })
 
 const optionalDegreeField = z.number().min(0).max(359.9, 'ערך מקסימלי הוא 359.9').optional()
 
+const requiredDegreeField = z
+  .number({ error: 'יש להזין מספר' })
+  .min(0, 'ערך מינימלי הוא 0')
+  .max(359.9, 'ערך מקסימלי הוא 359.9')
+
 const boundarySchema = z.object({
-  compass: optionalDegreeField,
-  target: optionalDegreeField,
+  compass: requiredDegreeField,
+  target: requiredDegreeField,
 })
 
-const sectorSchema = z
-  .object({
-    left: boundarySchema.optional(),
-    right: boundarySchema.optional(),
-  })
-  .optional()
+const sectorSchema = z.object({
+  left: boundarySchema,
+  right: boundarySchema,
+})
 
 const obstacleSchema = z.object({
   compass: optionalDegreeField,
