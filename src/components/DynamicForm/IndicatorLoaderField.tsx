@@ -34,7 +34,7 @@ function IndicatorLoaderField({ fieldDef, currentIndicatorId, setValue, register
     const { key, fieldMappings } = fieldDef
     setValue(key, '')
     if (fieldMappings.indicatorName) setValue(fieldMappings.indicatorName, '')
-    if (fieldMappings.coordinates) setValue(fieldMappings.coordinates, { east: '', north: '' })
+    if (fieldMappings.coordinates) setValue(fieldMappings.coordinates, { east: '', north: '', palach: '' })
     if (fieldMappings.altitude) setValue(fieldMappings.altitude, '')
     if (fieldMappings.means) setValue(fieldMappings.means, '')
     if (fieldMappings.markCode) setValue(fieldMappings.markCode, '')
@@ -99,7 +99,7 @@ function IndicatorLoaderField({ fieldDef, currentIndicatorId, setValue, register
               <p className="text-center text-neutral-500 text-sm py-6">אין מציינים שמורים לבחירה</p>
             ) : (
               indicators.map((indicator) => (
-                <IndicatorCard key={indicator.id} indicator={indicator} onClick={() => handleSelect(indicator)} />
+                <IndicatorCard key={indicator.id} indicator={indicator} onClick={() => handleSelect(indicator)} onLongPress={() => {}} />
               ))
             )}
           </div>

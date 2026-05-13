@@ -33,7 +33,7 @@ function TargetLoaderField({ fieldDef, currentTargetId, setValue, register, erro
     const { key, fieldMappings } = fieldDef
     setValue(key, '')
     if (fieldMappings.targetName) setValue(fieldMappings.targetName, '')
-    if (fieldMappings.targetCoords) setValue(fieldMappings.targetCoords, { east: '', north: '' })
+    if (fieldMappings.targetCoords) setValue(fieldMappings.targetCoords, { east: '', north: '', palach: '' })
     if (fieldMappings.targetAltitude) setValue(fieldMappings.targetAltitude, '')
     if (fieldMappings.targetDescription) setValue(fieldMappings.targetDescription, '')
   }
@@ -98,7 +98,7 @@ function TargetLoaderField({ fieldDef, currentTargetId, setValue, register, erro
               <p className="text-center text-neutral-500 text-sm py-6">אין מטרות שמורות לבחירה</p>
             ) : (
               targets.map((target) => (
-                <TargetCard key={target.id} target={target} onClick={() => handleSelect(target)} />
+                <TargetCard key={target.id} target={target} onClick={() => handleSelect(target)} onLongPress={() => {}} />
               ))
             )}
           </div>
