@@ -3,6 +3,7 @@ import Modal from '../components/base/Modal'
 import DocFeedbackModal from '../components/base/DocFeedbackModal'
 import HeaderOptionsMenu from '../components/base/HeaderOptionsMenu'
 import OptionsMenu from '../components/base/OptionsMenu'
+import SearchInput from '../components/base/SearchInput'
 import ReferencePositionSummarySelector from '../components/ReferencePositionSummarySelector'
 import TargetCard from '../components/TargetCard'
 import TargetForm from '../components/TargetForm'
@@ -14,13 +15,18 @@ import { loadTargetsUseCase } from '../useCases/loadTargets'
 import { removeAllTargetsUseCase } from '../useCases/removeAllTargets'
 import { removeTargetUseCase } from '../useCases/removeTarget'
 import { updateTargetUseCase } from '../useCases/updateTarget'
+import { filterByQuery } from '../utils/search'
+import { getTargetSearchFields } from '../utils/targetSearch'
 import targetsDocMarkdown from '../../docs/מטרות.md?raw'
 
 function TargetListScreen() {
   const [targets, setTargets] = useState<Target[]>(() => loadTargetsUseCase())
+  const [searchQuery, setSearchQuery] = useState('')
   const [showForm, setShowForm] = useState(false)
   const [editingItem, setEditingItem] = useState<Target | null>(null)
   const [menuTarget, setMenuTarget] = useState<Target | null>(null)
+
+  const filteredTargets = filterByQuery(targets, searchQuery, getTargetSearchFields)
   const { notifySuccess } = useNotification()
   const confirm = useConfirm()
 
@@ -92,11 +98,21 @@ function TargetListScreen() {
       <div className="flex flex-col gap-3 p-4">
         <ReferencePositionSummarySelector />
 
+        <SearchInput
+          value={searchQuery}
+          onChange={setSearchQuery}
+          placeholder="חפש לפי שם, מזרח או צפון..."
+        />
+
         {targets.length === 0 && !showForm && (
           <p className="text-center text-neutral-400 py-8">אין מטרות שמורות</p>
         )}
 
-        {targets.map((target) => (
+        {targets.length > 0 && filteredTargets.length === 0 && (
+          <p className="text-center text-neutral-400 py-8">לא נמצאו תוצאות</p>
+        )}
+
+        {filteredTargets.map((target) => (
           <TargetCard
             key={target.id}
             target={target}
