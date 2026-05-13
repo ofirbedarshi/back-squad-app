@@ -1,14 +1,17 @@
 import { useEffect, useState } from 'react'
 import Modal from '../components/base/Modal'
 import DocFeedbackModal from '../components/base/DocFeedbackModal'
+import HeaderOptionsMenu from '../components/base/HeaderOptionsMenu'
 import OptionsMenu from '../components/base/OptionsMenu'
 import ReferencePositionSummarySelector from '../components/ReferencePositionSummarySelector'
 import TargetCard from '../components/TargetCard'
 import TargetForm from '../components/TargetForm'
 import type { Target, TargetInput } from '../domain/target.types'
+import { useConfirm } from '../hooks/useConfirm'
 import { useNotification } from '../hooks/useNotification'
 import { addTargetUseCase } from '../useCases/addTarget'
 import { loadTargetsUseCase } from '../useCases/loadTargets'
+import { removeAllTargetsUseCase } from '../useCases/removeAllTargets'
 import { removeTargetUseCase } from '../useCases/removeTarget'
 import { updateTargetUseCase } from '../useCases/updateTarget'
 import targetsDocMarkdown from '../../docs/מטרות.md?raw'
@@ -19,6 +22,7 @@ function TargetListScreen() {
   const [editingItem, setEditingItem] = useState<Target | null>(null)
   const [menuTarget, setMenuTarget] = useState<Target | null>(null)
   const { notifySuccess } = useNotification()
+  const confirm = useConfirm()
 
   useEffect(() => {
     setTargets(loadTargetsUseCase())
@@ -42,16 +46,47 @@ function TargetListScreen() {
     notifySuccess('השינויים נשמרו')
   }
 
-  function handleRemove(target: Target) {
+  async function handleRemove(target: Target) {
+    const confirmed = await confirm({
+      title: 'מחיקת מטרה',
+      message: `למחוק את "${target.targetName}"?`,
+      confirmLabel: 'מחק',
+      cancelLabel: 'ביטול',
+      variant: 'danger',
+    })
+    if (!confirmed) return
     removeTargetUseCase(target.id)
     setTargets(loadTargetsUseCase())
     notifySuccess('המטרה נמחקה')
   }
 
+  async function handleRemoveAll() {
+    const confirmed = await confirm({
+      title: 'מחיקת כל המטרות',
+      message: 'פעולה זו תמחק את כל המטרות השמורות ללא אפשרות שחזור.',
+      confirmLabel: 'מחק הכל',
+      cancelLabel: 'ביטול',
+      variant: 'danger',
+    })
+    if (!confirmed) return
+    removeAllTargetsUseCase()
+    setTargets(loadTargetsUseCase())
+    notifySuccess('כל המטרות נמחקו')
+  }
+
   return (
     <div dir="rtl" className="flex flex-col bg-neutral-50 min-h-full">
-      <header className="py-4 px-4 text-center font-bold text-lg border-b border-neutral-200 text-neutral-800 bg-white">
+      <header className="relative py-4 px-4 text-center font-bold text-lg border-b border-neutral-200 text-neutral-800 bg-white">
         מטרות
+        <HeaderOptionsMenu
+          items={[
+            {
+              label: 'מחק את כל המטרות',
+              variant: 'danger',
+              onSelect: handleRemoveAll,
+            },
+          ]}
+        />
       </header>
 
       <div className="flex flex-col gap-3 p-4">

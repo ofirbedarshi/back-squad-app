@@ -74,6 +74,15 @@ No unexpected behavior is ever ignored.
 
 When you work mainly on **UI** or **domain** logic, include the matching rule in Agent chat: **`@ui-dev`** or **`@domain-dev`** (files under `.cursor/rules/`).
 
+## Destructive action rule
+
+Every delete or irreversible action in the UI **must** be confirmed by the user before executing.
+
+- Use `useConfirm()` (from `src/hooks/useConfirm.ts`) for all delete operations — single item or bulk.
+- Pass `variant: 'danger'` and a clear Hebrew message describing what will be lost.
+- Never call a remove/delete use-case directly from a button click without first awaiting confirmation.
+- This applies to: removing items, clearing lists, and any other action that cannot be undone.
+
 ## Cleanup rule
 After every change, verify that no unused files remain.
 

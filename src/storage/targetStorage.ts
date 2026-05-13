@@ -36,3 +36,7 @@ export function removeTarget(id: string): void {
   const targets = readTargets()
   writeTargets(targets.filter((target) => target.id !== id))
 }
+
+export function removeAllTargets(): void {
+  writeTargets([])
+}
