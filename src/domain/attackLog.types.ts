@@ -10,8 +10,8 @@ export interface AttackLogInput {
   launcherType?: string
   launcherId?: number
   aka?: string
-  pitch?: string
-  roll?: string
+  pitch?: number
+  roll?: number
   vehicleEncryptionMethod?: string
   hivePosition?: string
   generation?: 'a' | 'b'

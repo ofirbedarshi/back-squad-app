@@ -3,6 +3,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import FormField from './FormField'
 import Input from './Input'
+import PitchRollInput from './PitchRollInput'
+import { optionalPitchRollSchema } from './pitchRollInput.utils'
 import SegmentedToggle from './base/SegmentedToggle'
 import Checkbox from './base/Checkbox'
 import CoordinateInput from './base/CoordinateInput'
@@ -23,8 +25,8 @@ const schema = z.object({
   launcherType: optionalTextField,
   launcherId: optionalNumberField,
   aka: optionalTextField,
-  pitch: optionalTextField,
-  roll: optionalTextField,
+  pitch: optionalPitchRollSchema,
+  roll: optionalPitchRollSchema,
   vehicleEncryptionMethod: optionalTextField,
   hivePosition: optionalTextField,
   generation: z.enum(['a', 'b']).optional(),
@@ -147,13 +149,31 @@ function AttackLogForm({ onSubmit, submitLabel = 'שמור', initialValues }: At
         <Input type="text" hasError={!!errors.aka} {...register('aka')} />
       </FormField>
 
-      <FormField label="פיצ׳" error={errors.pitch?.message}>
-        <Input type="text" hasError={!!errors.pitch} {...register('pitch')} />
-      </FormField>
+      <Controller
+        name="pitch"
+        control={control}
+        render={({ field }) => (
+          <PitchRollInput
+            label="פיצ׳"
+            value={field.value}
+            onChange={field.onChange}
+            error={errors.pitch?.message}
+          />
+        )}
+      />
 
-      <FormField label="רול" error={errors.roll?.message}>
-        <Input type="text" hasError={!!errors.roll} {...register('roll')} />
-      </FormField>
+      <Controller
+        name="roll"
+        control={control}
+        render={({ field }) => (
+          <PitchRollInput
+            label="רול"
+            value={field.value}
+            onChange={field.onChange}
+            error={errors.roll?.message}
+          />
+        )}
+      />
 
       <FormField label="באמצעות מה הוצפן הרכב?" error={errors.vehicleEncryptionMethod?.message}>
         <Input type="text" hasError={!!errors.vehicleEncryptionMethod} {...register('vehicleEncryptionMethod')} />

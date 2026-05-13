@@ -3,6 +3,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import FormField from './FormField'
 import Input from './Input'
+import PitchRollInput from './PitchRollInput'
+import { pitchRollSchema } from './pitchRollInput.utils'
 import CoordinateInput from './base/CoordinateInput'
 import { coordinateValueSchema } from './base/coordinateInput.utils'
 import SegmentedToggle from './base/SegmentedToggle'
@@ -22,8 +24,8 @@ const schema = z.object({
   aka: numberField.max(359.9, 'ערך מקסימלי הוא 359.9'),
   launcherType: z.enum(['vehicle', 'infantry']),
   vehicleId: z.string().optional(),
-  pitch: numberField,
-  roll: numberField,
+  pitch: pitchRollSchema,
+  roll: pitchRollSchema,
 })
 
 type PositionFormValues = z.infer<typeof schema>
@@ -105,13 +107,31 @@ function PositionForm({ onSubmit, submitLabel = 'שמור', initialValues }: Pos
         </FormField>
       )}
 
-      <FormField label="Pitch" error={errors.pitch?.message}>
-        <Input type="number" hasError={!!errors.pitch} {...register('pitch', { valueAsNumber: true })} />
-      </FormField>
+      <Controller
+        name="pitch"
+        control={control}
+        render={({ field }) => (
+          <PitchRollInput
+            label="Pitch"
+            value={field.value}
+            onChange={field.onChange}
+            error={errors.pitch?.message}
+          />
+        )}
+      />
 
-      <FormField label="Roll" error={errors.roll?.message}>
-        <Input type="number" hasError={!!errors.roll} {...register('roll', { valueAsNumber: true })} />
-      </FormField>
+      <Controller
+        name="roll"
+        control={control}
+        render={({ field }) => (
+          <PitchRollInput
+            label="Roll"
+            value={field.value}
+            onChange={field.onChange}
+            error={errors.roll?.message}
+          />
+        )}
+      />
 
       <button
         type="submit"
