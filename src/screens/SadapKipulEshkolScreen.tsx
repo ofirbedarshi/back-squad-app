@@ -28,7 +28,7 @@ function SadapKipulEshkolScreen() {
             <span className="ml-1">2.</span> ציר מערכת:
           </h3>
           <ul className="flex flex-col gap-1 pr-4">
-            <li className="list-disc text-neutral-700">לכבות פאוור אנד אב</li>
+            <li className="list-disc text-neutral-700">מכבים פאוור אנד אב</li>
             <li className="list-disc text-neutral-700">ניתוק מחברים מתיבת הרחקה</li>
             <li className="list-disc text-neutral-700">כיבוי Battery Pack (לאחר כיבוי MLC)</li>
             <li className="list-disc text-neutral-700">ניתוק כבלים מהמערכות</li>

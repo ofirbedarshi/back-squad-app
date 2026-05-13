@@ -43,7 +43,7 @@ function IndicatorForm({ onSubmit, submitLabel = 'שמור', initialValues }: In
         <Input type="text" placeholder="הכנס שם..." hasError={!!errors.indicatorName} {...register('indicatorName')} />
       </FormField>
 
-      <FormField label='נ"צ' error={errors.coordinates?.east?.message || errors.coordinates?.north?.message}>
+      <FormField label='נ"צ' error={errors.coordinates?.east?.message || errors.coordinates?.north?.message || errors.coordinates?.palach?.message}>
         <Controller
           name="coordinates"
           control={control}

@@ -71,7 +71,7 @@ function TargetForm({ onSubmit, submitLabel = 'שמור', initialValues }: Targe
         <Input type="text" hasError={!!errors.targetDescription} {...register('targetDescription')} />
       </FormField>
 
-      <FormField label='נ"צ' error={errors.coordinates?.east?.message || errors.coordinates?.north?.message}>
+      <FormField label='נ"צ' error={errors.coordinates?.east?.message || errors.coordinates?.north?.message || errors.coordinates?.palach?.message}>
         <Controller
           name="coordinates"
           control={control}

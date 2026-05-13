@@ -32,7 +32,7 @@ export const bachFormSchema: FormSchema = {
     { type: 'text', key: 'requiredAchievement', label: 'הישג נדרש' },
     { type: 'text', key: 'markingFactor', label: 'גורם מציין' },
     { type: 'text', key: 'recordingFactor', label: 'גורם מתעד' },
-    { type: 'text', key: 'flightAltitude', label: 'גובה מעוף' },
+    { type: 'text', key: 'flightAltitude', label: 'גובה מעוף (מתעד)' },
     {
       type: 'toggle',
       key: 'hitProbability',
@@ -116,8 +116,8 @@ export const bachFormSchema: FormSchema = {
       { type: 'text', key: 'elevationActual', label: 'הגבהה (בוצע)' },
     ]},
     { type: 'row', fields: [
-      { type: 'text', key: 'sizeupComputed', label: 'ציזוד (מחשב)' },
-      { type: 'text', key: 'sizeupActual', label: 'ציזוד (בוצע)' },
+      { type: 'text', key: 'sizeupComputed', label: 'צידוד (מחשב)' },
+      { type: 'text', key: 'sizeupActual', label: 'צידוד (בוצע)' },
     ]},
     {
       type: 'toggle',
@@ -127,8 +127,8 @@ export const bachFormSchema: FormSchema = {
       defaultValue: 'רכב מונע',
     },
     { type: 'row', fields: [
-      { type: 'text', key: 'rightSectorAzimuth', label: 'אזימות גבול גזרה ימני' },
-      { type: 'text', key: 'leftSectorAzimuth', label: 'אזימות גבול גזרה שמאלי' },
+      { type: 'text', key: 'rightSectorAzimuth', label: 'אז׳ גבול גזרה ימני' },
+      { type: 'text', key: 'leftSectorAzimuth', label: 'אז׳ גבול גזרה שמאלי' },
     ]},
 
     {
@@ -146,7 +146,7 @@ export const bachFormSchema: FormSchema = {
     },
     { type: 'row', fields: [
       { type: 'text', key: 'indicatorName', label: 'שם מציין', lockedByRef: 'indicatorId', infoTooltipText: 'שדה זה מתמלא אוטומטית מהמציין הנטען ואינו ניתן לעריכה ידנית' },
-      { type: 'coords', key: 'indicatorPositionCoords', label: 'נ.צ. עמדה', lockedByRef: 'indicatorId', infoTooltipText: 'שדה זה מתמלא אוטומטית מהמציין הנטען ואינו ניתן לעריכה ידנית' },
+      { type: 'coords', key: 'indicatorPositionCoords', label: 'נ.צ. מציין', lockedByRef: 'indicatorId', infoTooltipText: 'שדה זה מתמלא אוטומטית מהמציין הנטען ואינו ניתן לעריכה ידנית' },
     ]},
     { type: 'row', fields: [
       { type: 'text', key: 'indicatorAltitude', label: 'גובה', lockedByRef: 'indicatorId', infoTooltipText: 'שדה זה מתמלא אוטומטית מהמציין הנטען ואינו ניתן לעריכה ידנית' },

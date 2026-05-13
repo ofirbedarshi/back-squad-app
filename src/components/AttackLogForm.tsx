@@ -177,7 +177,7 @@ function AttackLogForm({ onSubmit, submitLabel = 'שמור', initialValues }: At
         />
       </FormField>
 
-      <FormField label='נ"צ עמדה' error={errors.stationCoordinates?.east?.message || errors.stationCoordinates?.north?.message}>
+      <FormField label='נ"צ עמדה' error={errors.stationCoordinates?.east?.message || errors.stationCoordinates?.north?.message || errors.stationCoordinates?.palach?.message}>
         <Controller
           name="stationCoordinates"
           control={control}
@@ -195,7 +195,7 @@ function AttackLogForm({ onSubmit, submitLabel = 'שמור', initialValues }: At
         <Input type="number" hasError={!!errors.altitude} {...register('altitude', { valueAsNumber: true })} />
       </FormField>
 
-      <FormField label='נ"צ מטרה' error={errors.targetCoordinates?.east?.message || errors.targetCoordinates?.north?.message}>
+      <FormField label='נ"צ מטרה' error={errors.targetCoordinates?.east?.message || errors.targetCoordinates?.north?.message || errors.targetCoordinates?.palach?.message}>
         <Controller
           name="targetCoordinates"
           control={control}
@@ -229,7 +229,7 @@ function AttackLogForm({ onSubmit, submitLabel = 'שמור', initialValues }: At
         <Input type="text" hasError={!!errors.indicatorMeans} {...register('indicatorMeans')} />
       </FormField>
 
-      <FormField label='נ"צ מציין' error={errors.indicatorCoordinates?.east?.message || errors.indicatorCoordinates?.north?.message}>
+      <FormField label='נ"צ מציין' error={errors.indicatorCoordinates?.east?.message || errors.indicatorCoordinates?.north?.message || errors.indicatorCoordinates?.palach?.message}>
         <Controller
           name="indicatorCoordinates"
           control={control}

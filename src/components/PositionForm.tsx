@@ -63,7 +63,7 @@ function PositionForm({ onSubmit, submitLabel = 'שמור', initialValues }: Pos
         <Input type="text" placeholder="הכנס שם..." hasError={!!errors.stationName} {...register('stationName')} />
       </FormField>
 
-      <FormField label='נ"צ' error={errors.coordinates?.east?.message || errors.coordinates?.north?.message}>
+      <FormField label='נ"צ' error={errors.coordinates?.east?.message || errors.coordinates?.north?.message || errors.coordinates?.palach?.message}>
         <Controller
           name="coordinates"
           control={control}

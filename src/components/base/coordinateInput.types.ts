@@ -1,6 +1,7 @@
 export interface CoordinateValue {
   east: string
   north: string
+  palach: string
 }
 
 export interface CoordinateInputProps {

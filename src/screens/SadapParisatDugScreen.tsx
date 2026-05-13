@@ -11,7 +11,7 @@ const CHECKLIST_ITEMS = [
   { id: 'no-equipment-behind', label: 'אין ציוד מאחורי גזרת העבודה או על הרכב בקו הרשף, לרבות כבלים' },
   { id: 'missile-connectors', label: 'חיבור צמות הטילים' },
   { id: 'butterflies-check', label: 'בדיקת פרפריות 0 ופילוט הכוורת' },
-  { id: 'travel-lock', label: 'סגר מסע מורד וראצ\'טים מנותקים' },
+  { id: 'travel-lock', label: 'פתיחת סגר מסע וראצ׳טים מנותקים' },
   { id: 'mlc-ziud', label: 'MLC דולק' },
   { id: 'doors-closed', label: 'דלתות הרכב סגורות' },
   { id: 'parking', label: 'רכב כבוי, ב PARKING עם בלם רגל לחוץ.' },
@@ -42,7 +42,7 @@ function SadapParisatDugScreen() {
         {/* main steps */}
         <ul className="flex flex-col gap-2 pr-4">
           <li className="list-disc text-neutral-700">
-            נהג מבצע בדיקת נלנול והגבהה ומכבה רכב.
+            <span className="bg-yellow-200 font-medium px-0.5">נהג</span> מבצע בדיקת נלנול והגבהה ומכבה רכב.
           </li>
           <li className="list-disc text-neutral-700">
             <span className="bg-yellow-200 font-medium px-0.5">מפקד</span> מוודא שטח נקי מסביב למשגר ללא סכנת התלקחות (יש לוודא עבור כל גזרת העבודה).

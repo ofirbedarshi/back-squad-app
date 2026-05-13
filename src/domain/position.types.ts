@@ -3,6 +3,7 @@ export type LauncherType = 'vehicle' | 'infantry'
 export interface PositionCoordinates {
   east: string
   north: string
+  palach: string
 }
 
 export interface PositionInput {
