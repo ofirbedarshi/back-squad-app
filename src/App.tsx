@@ -1,4 +1,4 @@
-import { HashRouter, Route, Routes } from 'react-router-dom'
+import { HashRouter, Route, Routes, useLocation } from 'react-router-dom'
 import { ConfirmProvider } from './context/ConfirmContext'
 import { ErrorProvider } from './context/ErrorContext'
 import { NotificationProvider } from './context/NotificationContext'
@@ -34,15 +34,12 @@ import ZoneMeasurementScreen from './screens/ZoneMeasurementScreen'
 import RshatazimScreen from './screens/RshatazimScreen'
 import NotesScreen from './screens/NotesScreen'
 
-function App() {
+function AppRoutes() {
+  const location = useLocation()
   return (
-    <ErrorProvider>
-    <NotificationProvider>
-    <ConfirmProvider>
-    <HashRouter>
-      <div className="flex flex-col min-h-svh bg-neutral-50">
-        <main className="flex-1" style={{ paddingBottom: 'calc(4rem + env(safe-area-inset-bottom))' }}>
-          <Routes>
+    <div className="flex flex-col min-h-svh bg-neutral-50">
+      <main className="flex-1" style={{ paddingBottom: 'calc(4rem + env(safe-area-inset-bottom))' }}>
+        <Routes key={location.key}>
             <Route path="/" element={<HomeScreen />} />
             <Route path="/sadap" element={<SadapScreen />} />
             <Route path="/sadap/parisat-eshkol" element={<SadapParisatEshkolScreen />} />
@@ -74,10 +71,20 @@ function App() {
             <Route path="/others/target-aid" element={<TargetAidScreen />} />
             <Route path="/others/zone-measurement" element={<ZoneMeasurementScreen />} />
             <Route path="/others/rshatazim" element={<RshatazimScreen />} />
-          </Routes>
-        </main>
-        <BottomNav />
-      </div>
+        </Routes>
+      </main>
+      <BottomNav />
+    </div>
+  )
+}
+
+function App() {
+  return (
+    <ErrorProvider>
+    <NotificationProvider>
+    <ConfirmProvider>
+    <HashRouter>
+      <AppRoutes />
     </HashRouter>
     </ConfirmProvider>
     </NotificationProvider>

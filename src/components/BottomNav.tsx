@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 
 interface NavItem {
   to: string
@@ -98,6 +98,8 @@ const navItems: NavItem[] = [
 ]
 
 function BottomNav() {
+  const navigate = useNavigate()
+
   return (
     <nav
       dir="rtl"
@@ -109,6 +111,10 @@ function BottomNav() {
           key={item.to}
           to={item.to}
           end={item.to === '/'}
+          onClick={(e) => {
+            e.preventDefault()
+            navigate(item.to, { state: { navKey: Date.now() } })
+          }}
           className={({ isActive }) =>
             [
               'relative flex flex-col items-center justify-center gap-1 flex-1 py-2.5 min-h-[60px] text-[10px] font-semibold tracking-wide transition-colors touch-manipulation select-none',
