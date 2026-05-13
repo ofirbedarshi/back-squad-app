@@ -3,7 +3,7 @@ import Modal from '../components/base/Modal'
 import DocFeedbackModal from '../components/base/DocFeedbackModal'
 import HeaderOptionsMenu from '../components/base/HeaderOptionsMenu'
 import OptionsMenu from '../components/base/OptionsMenu'
-import SearchInput from '../components/base/SearchInput'
+import TargetSearchBar from '../components/TargetSearchBar'
 import ReferencePositionSummarySelector from '../components/ReferencePositionSummarySelector'
 import TargetCard from '../components/TargetCard'
 import TargetForm from '../components/TargetForm'
@@ -16,17 +16,27 @@ import { removeAllTargetsUseCase } from '../useCases/removeAllTargets'
 import { removeTargetUseCase } from '../useCases/removeTarget'
 import { updateTargetUseCase } from '../useCases/updateTarget'
 import { filterByQuery } from '../utils/search'
-import { getTargetSearchFields } from '../utils/targetSearch'
+import { getTargetSearchFields, filterTargetsByAdvancedFilter } from '../utils/targetSearch'
+import type { TargetAdvancedFilter } from '../utils/targetSearch.types'
+import { emptyTargetAdvancedFilter } from '../utils/targetSearch.types'
+import { calculateTargetLiveMetricsUseCase } from '../useCases/calculateTargetLiveMetrics'
 import targetsDocMarkdown from '../../docs/מטרות.md?raw'
 
 function TargetListScreen() {
   const [targets, setTargets] = useState<Target[]>(() => loadTargetsUseCase())
   const [searchQuery, setSearchQuery] = useState('')
+  const [advancedFilter, setAdvancedFilter] = useState<TargetAdvancedFilter>(emptyTargetAdvancedFilter)
   const [showForm, setShowForm] = useState(false)
   const [editingItem, setEditingItem] = useState<Target | null>(null)
   const [menuTarget, setMenuTarget] = useState<Target | null>(null)
 
-  const filteredTargets = filterByQuery(targets, searchQuery, getTargetSearchFields)
+  const textFilteredTargets = filterByQuery(targets, searchQuery, getTargetSearchFields)
+
+  const filteredTargets = filterTargetsByAdvancedFilter(
+    textFilteredTargets,
+    advancedFilter,
+    (target) => calculateTargetLiveMetricsUseCase({ targetCoordinates: target.coordinates, targetHeight: target.altitude }),
+  )
   const { notifySuccess } = useNotification()
   const confirm = useConfirm()
 
@@ -98,10 +108,11 @@ function TargetListScreen() {
       <div className="flex flex-col gap-3 p-4">
         <ReferencePositionSummarySelector />
 
-        <SearchInput
-          value={searchQuery}
-          onChange={setSearchQuery}
-          placeholder="חפש לפי שם, מזרח או צפון..."
+        <TargetSearchBar
+          searchQuery={searchQuery}
+          onSearchQueryChange={setSearchQuery}
+          advancedFilter={advancedFilter}
+          onAdvancedFilterChange={setAdvancedFilter}
         />
 
         {targets.length === 0 && !showForm && (
