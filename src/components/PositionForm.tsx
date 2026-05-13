@@ -79,13 +79,18 @@ function PositionForm({ onSubmit, submitLabel = 'שמור', initialValues }: Pos
         />
       </FormField>
 
-      <FormField label="גובה עמדה" error={errors.altitude?.message}>
-        <Input type="number" placeholder="במטרים" hasError={!!errors.altitude} {...register('altitude', { valueAsNumber: true })} />
-      </FormField>
-
-      <FormField label='אק"א' error={errors.aka?.message}>
-        <Input type="number" hasError={!!errors.aka} {...register('aka', { valueAsNumber: true })} />
-      </FormField>
+      <div className="flex gap-3">
+        <div className="flex-1">
+          <FormField label="גובה עמדה" error={errors.altitude?.message}>
+            <Input type="number" placeholder="במטרים" hasError={!!errors.altitude} {...register('altitude', { valueAsNumber: true })} />
+          </FormField>
+        </div>
+        <div className="flex-1">
+          <FormField label='אק"א' error={errors.aka?.message}>
+            <Input type="number" hasError={!!errors.aka} {...register('aka', { valueAsNumber: true })} />
+          </FormField>
+        </div>
+      </div>
 
       <FormField label="סוג משגר">
         <Controller
@@ -107,31 +112,36 @@ function PositionForm({ onSubmit, submitLabel = 'שמור', initialValues }: Pos
         </FormField>
       )}
 
-      <Controller
-        name="pitch"
-        control={control}
-        render={({ field }) => (
-          <PitchRollInput
-            label="Pitch"
-            value={field.value}
-            onChange={field.onChange}
-            error={errors.pitch?.message}
+      <div className="flex gap-3">
+        <div className="flex-1">
+          <Controller
+            name="pitch"
+            control={control}
+            render={({ field }) => (
+              <PitchRollInput
+                label="Pitch"
+                value={field.value}
+                onChange={field.onChange}
+                error={errors.pitch?.message}
+              />
+            )}
           />
-        )}
-      />
-
-      <Controller
-        name="roll"
-        control={control}
-        render={({ field }) => (
-          <PitchRollInput
-            label="Roll"
-            value={field.value}
-            onChange={field.onChange}
-            error={errors.roll?.message}
+        </div>
+        <div className="flex-1">
+          <Controller
+            name="roll"
+            control={control}
+            render={({ field }) => (
+              <PitchRollInput
+                label="Roll"
+                value={field.value}
+                onChange={field.onChange}
+                error={errors.roll?.message}
+              />
+            )}
           />
-        )}
-      />
+        </div>
+      </div>
 
       <button
         type="submit"
