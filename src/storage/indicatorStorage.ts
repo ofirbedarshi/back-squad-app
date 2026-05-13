@@ -31,3 +31,11 @@ export function updateIndicator(updated: Indicator): void {
 export function loadIndicators(): Indicator[] {
   return readIndicators()
 }
+
+export function removeIndicator(id: string): void {
+  writeIndicators(readIndicators().filter((ind) => ind.id !== id))
+}
+
+export function removeAllIndicators(): void {
+  writeIndicators([])
+}

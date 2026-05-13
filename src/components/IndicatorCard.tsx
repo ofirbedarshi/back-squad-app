@@ -1,16 +1,20 @@
+import { useLongPressWithShake } from '../hooks/useLongPressWithShake'
 import type { Indicator } from '../domain/indicator.types'
 
 interface IndicatorCardProps {
   indicator: Indicator
-  onClick?: () => void
+  onClick: () => void
+  onLongPress: () => void
 }
 
-function IndicatorCard({ indicator, onClick }: IndicatorCardProps) {
+function IndicatorCard({ indicator, onClick, onLongPress }: IndicatorCardProps) {
+  const { className: shakeClass, ...longPressProps } = useLongPressWithShake(onLongPress, onClick)
+
   return (
     <div
-      className="bg-white rounded-2xl border border-neutral-200 shadow-sm p-4 flex flex-col gap-2 active:bg-neutral-50 transition-colors touch-manipulation select-none"
-      onClick={onClick}
-      role={onClick ? 'button' : undefined}
+      className={`bg-white rounded-2xl border border-neutral-200 shadow-sm p-4 flex flex-col gap-2 active:bg-neutral-50 transition-colors touch-manipulation select-none ${shakeClass}`}
+      role="button"
+      {...longPressProps}
     >
       <div className="font-bold text-neutral-800 text-base">{indicator.indicatorName}</div>
       <div className="flex flex-col gap-1 text-sm text-neutral-500">
