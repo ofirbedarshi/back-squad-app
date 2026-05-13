@@ -1,16 +1,20 @@
+import { useLongPressWithShake } from '../hooks/useLongPressWithShake'
 import type { Target } from '../domain/target.types'
 
 interface TargetCardProps {
   target: Target
-  onClick?: () => void
+  onClick: () => void
+  onLongPress: () => void
 }
 
-function TargetCard({ target, onClick }: TargetCardProps) {
+function TargetCard({ target, onClick, onLongPress }: TargetCardProps) {
+  const { className: shakeClass, ...longPressProps } = useLongPressWithShake(onLongPress,onClick)
+
   return (
     <div
-      className="bg-white rounded-2xl border border-neutral-200 shadow-sm p-4 flex flex-col gap-1.5 active:bg-neutral-50 transition-colors touch-manipulation select-none"
-      onClick={onClick}
-      role={onClick ? 'button' : undefined}
+      className={`bg-white rounded-2xl border border-neutral-200 shadow-sm p-4 flex flex-col gap-1.5 active:bg-neutral-50 transition-colors touch-manipulation select-none ${shakeClass}`}
+      role="button"
+      {...longPressProps}
     >
       <span className="font-bold text-neutral-800 text-base">{target.targetName}</span>
       {target.targetDescription && (

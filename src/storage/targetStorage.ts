@@ -31,3 +31,8 @@ export function updateTarget(updated: Target): void {
 export function loadTargets(): Target[] {
   return readTargets()
 }
+
+export function removeTarget(id: string): void {
+  const targets = readTargets()
+  writeTargets(targets.filter((target) => target.id !== id))
+}

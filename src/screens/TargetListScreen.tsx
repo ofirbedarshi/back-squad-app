@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import Modal from '../components/base/Modal'
 import DocFeedbackModal from '../components/base/DocFeedbackModal'
+import OptionsMenu from '../components/base/OptionsMenu'
 import ReferencePositionSummarySelector from '../components/ReferencePositionSummarySelector'
 import TargetCard from '../components/TargetCard'
 import TargetForm from '../components/TargetForm'
@@ -8,6 +9,7 @@ import type { Target, TargetInput } from '../domain/target.types'
 import { useNotification } from '../hooks/useNotification'
 import { addTargetUseCase } from '../useCases/addTarget'
 import { loadTargetsUseCase } from '../useCases/loadTargets'
+import { removeTargetUseCase } from '../useCases/removeTarget'
 import { updateTargetUseCase } from '../useCases/updateTarget'
 import targetsDocMarkdown from '../../docs/מטרות.md?raw'
 
@@ -15,6 +17,7 @@ function TargetListScreen() {
   const [targets, setTargets] = useState<Target[]>(() => loadTargetsUseCase())
   const [showForm, setShowForm] = useState(false)
   const [editingItem, setEditingItem] = useState<Target | null>(null)
+  const [menuTarget, setMenuTarget] = useState<Target | null>(null)
   const { notifySuccess } = useNotification()
 
   useEffect(() => {
@@ -39,6 +42,12 @@ function TargetListScreen() {
     notifySuccess('השינויים נשמרו')
   }
 
+  function handleRemove(target: Target) {
+    removeTargetUseCase(target.id)
+    setTargets(loadTargetsUseCase())
+    notifySuccess('המטרה נמחקה')
+  }
+
   return (
     <div dir="rtl" className="flex flex-col bg-neutral-50 min-h-full">
       <header className="py-4 px-4 text-center font-bold text-lg border-b border-neutral-200 text-neutral-800 bg-white">
@@ -53,7 +62,12 @@ function TargetListScreen() {
         )}
 
         {targets.map((target) => (
-          <TargetCard key={target.id} target={target} onClick={() => setEditingItem(target)} />
+          <TargetCard
+            key={target.id}
+            target={target}
+            onClick={() => setEditingItem(target)}
+            onLongPress={() => setMenuTarget(target)}
+          />
         ))}
 
         {showForm && (
@@ -66,6 +80,20 @@ function TargetListScreen() {
           <Modal title="עריכת מטרה" onClose={() => setEditingItem(null)}>
             <TargetForm onSubmit={handleEdit} submitLabel="שמור שינויים" initialValues={editingItem} />
           </Modal>
+        )}
+
+        {menuTarget && (
+          <OptionsMenu
+            title={menuTarget.targetName}
+            items={[
+              {
+                label: 'מחק מטרה',
+                variant: 'danger',
+                onSelect: () => handleRemove(menuTarget),
+              },
+            ]}
+            onClose={() => setMenuTarget(null)}
+          />
         )}
 
         {!showForm && (
