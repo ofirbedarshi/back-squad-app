@@ -1,5 +1,6 @@
 import type { Target } from '../domain/target.types'
 import type { TargetLiveMetrics } from '../domain/targetLiveMetrics.types'
+import type { MetricFilter } from './search.types'
 import type { TargetAdvancedFilter } from './targetSearch.types'
 
 export function getTargetSearchFields(target: Target): string[] {
@@ -10,9 +11,23 @@ export function getTargetSearchFields(target: Target): string[] {
   ]
 }
 
-function passesMinMax(value: number, min: string, max: string): boolean {
-  const minNum = min !== '' ? parseFloat(min) : -Infinity
-  const maxNum = max !== '' ? parseFloat(max) : Infinity
+function isMetricFilterActive(filter: MetricFilter): boolean {
+  if (filter.mode === 'exact') return filter.exact !== ''
+  if (filter.mode === 'max') return filter.max !== ''
+  return filter.min !== '' || filter.max !== ''
+}
+
+function passesMetricFilter(value: number, filter: MetricFilter): boolean {
+  if (filter.mode === 'exact') {
+    if (filter.exact === '') return true
+    return value === parseFloat(filter.exact)
+  }
+  if (filter.mode === 'max') {
+    if (filter.max === '') return true
+    return value >= 0 && value <= parseFloat(filter.max)
+  }
+  const minNum = filter.min !== '' ? parseFloat(filter.min) : -Infinity
+  const maxNum = filter.max !== '' ? parseFloat(filter.max) : Infinity
   return value >= minNum && value <= maxNum
 }
 
@@ -21,8 +36,8 @@ export function filterTargetsByAdvancedFilter(
   filter: TargetAdvancedFilter,
   getMetrics: (target: Target) => TargetLiveMetrics | null,
 ): Target[] {
-  const hasRangeFilter = filter.range.min !== '' || filter.range.max !== ''
-  const hasAzimuthFilter = filter.azimuth.min !== '' || filter.azimuth.max !== ''
+  const hasRangeFilter = isMetricFilterActive(filter.range)
+  const hasAzimuthFilter = isMetricFilterActive(filter.azimuth)
 
   if (!hasRangeFilter && !hasAzimuthFilter) return targets
 
@@ -30,8 +45,8 @@ export function filterTargetsByAdvancedFilter(
     const metrics = getMetrics(target)
     if (!metrics) return false
 
-    if (hasRangeFilter && !passesMinMax(metrics.range, filter.range.min, filter.range.max)) return false
-    if (hasAzimuthFilter && !passesMinMax(metrics.azimuth, filter.azimuth.min, filter.azimuth.max)) return false
+    if (hasRangeFilter && !passesMetricFilter(metrics.range, filter.range)) return false
+    if (hasAzimuthFilter && !passesMetricFilter(metrics.azimuth, filter.azimuth)) return false
 
     return true
   })

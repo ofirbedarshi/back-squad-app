@@ -1,11 +1,18 @@
-import type { RangeFilter } from './search.types'
+import type { MetricFilter } from './search.types'
 
 export interface TargetAdvancedFilter {
-  range: RangeFilter
-  azimuth: RangeFilter
+  range: MetricFilter
+  azimuth: MetricFilter
+}
+
+export const emptyMetricFilter: MetricFilter = {
+  mode: 'max',
+  exact: '',
+  min: '',
+  max: '',
 }
 
 export const emptyTargetAdvancedFilter: TargetAdvancedFilter = {
-  range: { min: '', max: '' },
-  azimuth: { min: '', max: '' },
+  range: { ...emptyMetricFilter },
+  azimuth: { ...emptyMetricFilter },
 }
