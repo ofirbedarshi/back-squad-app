@@ -19,7 +19,11 @@ function SectorCard({ title, fieldPrefix }: SectorCardProps) {
   const { register, formState: { errors } } = useFormContext<PositionFormValues>()
   const sectorErrors = (errors[fieldPrefix] ?? {}) as SectorErrors
 
-  const plusTen = usePlusN(`${fieldPrefix}.left.target`, 10)
+  const appliedFieldPath =
+    fieldPrefix === 'primarySector'
+      ? 'plusTenApplied.primarySectorLeftTarget'
+      : 'plusTenApplied.secondarySectorLeftTarget'
+  const plusTen = usePlusN(`${fieldPrefix}.left.target`, appliedFieldPath, 10)
 
   const errorMessage =
     sectorErrors?.right?.compass?.message ||
@@ -64,6 +68,7 @@ function SectorCard({ title, fieldPrefix }: SectorCardProps) {
             hasError={!!sectorErrors?.left?.target}
             {...register(`${fieldPrefix}.left.target` as 'primarySector.left.target', plusTen.registerOptions)}
           />
+          <input type="hidden" {...register(plusTen.appliedFieldPath as 'plusTenApplied.primarySectorLeftTarget')} />
           <PlusNButton n={10} isApplied={plusTen.applied} onApply={plusTen.apply} />
         </div>
         {errorMessage && (

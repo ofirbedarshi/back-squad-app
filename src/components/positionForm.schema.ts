@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import { pitchRollSchema } from './pitchRollInput.utils'
 import { coordinateValueSchema } from './base/coordinateInput.utils'
+import type { PositionInput } from '../domain/position.types'
 
 const numberField = z.number({ error: 'יש להזין מספר' })
 
@@ -21,6 +22,11 @@ const sectorSchema = z.object({
   right: boundarySchema,
 })
 
+const plusTenAppliedSchema = z.object({
+  primarySectorLeftTarget: z.boolean(),
+  secondarySectorLeftTarget: z.boolean(),
+})
+
 const obstacleSchema = z.object({
   compass: optionalDegreeField,
   target: optionalDegreeField,
@@ -31,19 +37,38 @@ export const LAUNCHER_TYPES = {
   INFANTRY: 'infantry',
 } as const
 
-export const schema = z.object({
-  stationName: z.string().min(1, 'שדה חובה'),
-  coordinates: coordinateValueSchema,
-  altitude: numberField,
-  aka: numberField.max(359.9, 'ערך מקסימלי הוא 359.9'),
-  launcherType: z.enum(['vehicle', 'infantry']),
-  vehicleId: z.string().optional(),
-  pitch: pitchRollSchema,
-  roll: pitchRollSchema,
-  primarySector: sectorSchema,
-  secondarySector: sectorSchema,
-  obstacles: z.array(obstacleSchema).optional(),
-})
+export const schema = z
+  .object({
+    stationName: z.string().min(1, 'שדה חובה'),
+    coordinates: coordinateValueSchema,
+    altitude: numberField,
+    aka: numberField.max(359.9, 'ערך מקסימלי הוא 359.9'),
+    launcherType: z.enum(['vehicle', 'infantry']),
+    vehicleId: z.string().optional(),
+    pitch: pitchRollSchema,
+    roll: pitchRollSchema,
+    primarySector: sectorSchema,
+    secondarySector: sectorSchema,
+    plusTenApplied: plusTenAppliedSchema,
+    obstacles: z.array(obstacleSchema).optional(),
+  })
+  .superRefine((data, ctx) => {
+    if (!data.plusTenApplied.primarySectorLeftTarget) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['primarySector', 'left', 'target'],
+        message: 'יש ללחוץ על +10 לפני השמירה',
+      })
+    }
+
+    if (!data.plusTenApplied.secondarySectorLeftTarget) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['secondarySector', 'left', 'target'],
+        message: 'יש ללחוץ על +10 לפני השמירה',
+      })
+    }
+  })
 
 export type PositionFormValues = z.infer<typeof schema>
 
@@ -57,6 +82,13 @@ export const EMPTY_OBSTACLES = [
   { compass: undefined, target: undefined },
   { compass: undefined, target: undefined },
 ]
+
+export function getInitialPlusTenApplied(initialValues?: PositionInput) {
+  return {
+    primarySectorLeftTarget: typeof initialValues?.primarySector?.left?.target === 'number',
+    secondarySectorLeftTarget: typeof initialValues?.secondarySector?.left?.target === 'number',
+  }
+}
 
 export function parseDegreeInput(v: string): number | undefined {
   if (v === '' || v === null || v === undefined) return undefined
