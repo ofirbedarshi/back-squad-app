@@ -1,4 +1,3 @@
-import { useMemo } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -6,8 +5,7 @@ import FormField from './FormField'
 import Input from './Input'
 import ReferencePositionSummarySelector from './ReferencePositionSummarySelector'
 import type { TargetInput } from '../domain/target.types'
-import { useReferencePosition } from '../hooks/useReferencePosition'
-import { calculateTargetLiveMetricsUseCase } from '../useCases/calculateTargetLiveMetrics'
+import { useTargetLiveMetrics } from '../hooks/useTargetLiveMetrics'
 import CoordinateInput from './base/CoordinateInput'
 import { coordinateValueSchema } from './base/coordinateInput.utils'
 
@@ -31,7 +29,6 @@ interface TargetFormProps {
 }
 
 function TargetForm({ onSubmit, submitLabel = 'שמור', initialValues }: TargetFormProps) {
-  const referencePosition = useReferencePosition()
   const {
     register,
     handleSubmit,
@@ -46,14 +43,7 @@ function TargetForm({ onSubmit, submitLabel = 'שמור', initialValues }: Targe
   const watchedCoordinates = watch('coordinates')
   const watchedAltitude = watch('altitude')
 
-  const liveMetrics = useMemo(
-    () =>
-      calculateTargetLiveMetricsUseCase({
-        targetCoordinates: watchedCoordinates,
-        targetHeight: watchedAltitude,
-      }),
-    [referencePosition, watchedCoordinates, watchedAltitude]
-  )
+  const liveMetrics = useTargetLiveMetrics(watchedCoordinates, watchedAltitude)
 
   const displayAzimuth = liveMetrics ? liveMetrics.azimuth.toFixed(1) : ''
   const displayRange = liveMetrics ? liveMetrics.range.toFixed(1) : ''

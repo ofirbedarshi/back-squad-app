@@ -1,7 +1,6 @@
-import { useMemo } from 'react'
 import { useLongPressWithShake } from '../hooks/useLongPressWithShake'
+import { useTargetLiveMetrics } from '../hooks/useTargetLiveMetrics'
 import type { Target } from '../domain/target.types'
-import { calculateTargetLiveMetricsUseCase } from '../useCases/calculateTargetLiveMetrics'
 
 interface TargetCardProps {
   target: Target
@@ -12,14 +11,7 @@ interface TargetCardProps {
 function TargetCard({ target, onClick, onLongPress }: TargetCardProps) {
   const { className: shakeClass, ...longPressProps } = useLongPressWithShake(onLongPress, onClick)
 
-  const metrics = useMemo(
-    () =>
-      calculateTargetLiveMetricsUseCase({
-        targetCoordinates: target.coordinates,
-        targetHeight: target.altitude,
-      }),
-    [target.coordinates, target.altitude]
-  )
+  const metrics = useTargetLiveMetrics(target.coordinates, target.altitude)
 
   return (
     <div
