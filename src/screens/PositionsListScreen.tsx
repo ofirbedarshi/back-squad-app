@@ -1,13 +1,18 @@
 import { useState, useEffect } from 'react'
 import PositionCard from '../components/PositionCard'
 import PositionForm from '../components/PositionForm'
+import HeaderOptionsMenu from '../components/base/HeaderOptionsMenu'
 import Modal from '../components/base/Modal'
+import OptionsMenu from '../components/base/OptionsMenu'
+import { useConfirm } from '../hooks/useConfirm'
 import { useCurrentPosition } from '../hooks/useCurrentPosition'
 import { useDomainError } from '../hooks/useDomainError'
 import { useNotification } from '../hooks/useNotification'
 import { useUIError } from '../hooks/useUIError'
 import { addPositionUseCase } from '../useCases/addPosition'
 import { loadPositionsUseCase } from '../useCases/loadPositions'
+import { removeAllPositionsUseCase } from '../useCases/removeAllPositions'
+import { removePositionUseCase } from '../useCases/removePosition'
 import { updatePositionUseCase } from '../useCases/updatePosition'
 import type { Position, PositionInput } from '../domain/position.types'
 
@@ -16,9 +21,11 @@ function PositionsListScreen() {
   const currentPosition = useCurrentPosition()
   const [showForm, setShowForm] = useState(false)
   const [editingItem, setEditingItem] = useState<Position | null>(null)
+  const [menuPosition, setMenuPosition] = useState<Position | null>(null)
   const { triggerError } = useDomainError()
   const { reportUIError } = useUIError()
   const { notifySuccess } = useNotification()
+  const confirm = useConfirm()
 
   useEffect(() => {
     setPositions(loadPositionsUseCase())
@@ -46,6 +53,34 @@ function PositionsListScreen() {
     }
   }
 
+  async function handleRemove(position: Position) {
+    const confirmed = await confirm({
+      title: 'מחיקת עמדה',
+      message: `למחוק את "${position.stationName}"?`,
+      confirmLabel: 'מחק',
+      cancelLabel: 'ביטול',
+      variant: 'danger',
+    })
+    if (!confirmed) return
+    removePositionUseCase(position.id)
+    setPositions(loadPositionsUseCase())
+    notifySuccess('העמדה נמחקה')
+  }
+
+  async function handleRemoveAll() {
+    const confirmed = await confirm({
+      title: 'מחיקת כל העמדות',
+      message: 'פעולה זו תמחק את כל העמדות השמורות כולל העמדה הנוכחית, ללא אפשרות שחזור.',
+      confirmLabel: 'מחק הכל',
+      cancelLabel: 'ביטול',
+      variant: 'danger',
+    })
+    if (!confirmed) return
+    removeAllPositionsUseCase()
+    setPositions(loadPositionsUseCase())
+    notifySuccess('כל העמדות נמחקו')
+  }
+
   const currentPositionId = currentPosition?.id ?? null
   const storedPositions = positions.filter((position) => position.id !== currentPositionId)
   const hasAnySavedPositions = positions.length > 0
@@ -56,15 +91,29 @@ function PositionsListScreen() {
 
   return (
     <div dir="rtl" className="flex flex-col bg-neutral-50 min-h-full">
-      <header className="py-4 px-4 text-center font-bold text-lg border-b border-neutral-200 text-neutral-800 bg-white">
+      <header className="relative py-4 px-4 text-center font-bold text-lg border-b border-neutral-200 text-neutral-800 bg-white">
         עמדות
+        <HeaderOptionsMenu
+          items={[
+            {
+              label: 'מחק את כל העמדות',
+              variant: 'danger',
+              onSelect: handleRemoveAll,
+            },
+          ]}
+        />
       </header>
 
       <div className="flex flex-col gap-4 p-4">
         <section className="rounded-2xl border border-neutral-200 bg-white p-3 flex flex-col gap-3 shadow-sm">
           <h2 className="text-sm font-bold text-neutral-800">עמדה נוכחית</h2>
           {currentPosition ? (
-            <PositionCard position={currentPosition} isCurrent onClick={() => setEditingItem(currentPosition)} />
+            <PositionCard
+              position={currentPosition}
+              isCurrent
+              onClick={() => setEditingItem(currentPosition)}
+              onLongPress={() => setMenuPosition(currentPosition)}
+            />
           ) : (
             <p className="text-sm text-neutral-500 bg-neutral-50 border border-neutral-200 rounded-xl p-3 text-center">
               לא נבחרה עמדה נוכחית
@@ -89,7 +138,12 @@ function PositionsListScreen() {
           )}
 
           {storedPositions.map((position) => (
-            <PositionCard key={position.id} position={position} onClick={() => setEditingItem(position)} />
+            <PositionCard
+              key={position.id}
+              position={position}
+              onClick={() => setEditingItem(position)}
+              onLongPress={() => setMenuPosition(position)}
+            />
           ))}
         </section>
 
@@ -103,6 +157,20 @@ function PositionsListScreen() {
           <Modal title="עריכת עמדה" onClose={() => setEditingItem(null)}>
             <PositionForm onSubmit={handleEdit} submitLabel="שמור שינויים" initialValues={editingItem} />
           </Modal>
+        )}
+
+        {menuPosition && (
+          <OptionsMenu
+            title={menuPosition.stationName}
+            items={[
+              {
+                label: 'מחק עמדה',
+                variant: 'danger',
+                onSelect: () => handleRemove(menuPosition),
+              },
+            ]}
+            onClose={() => setMenuPosition(null)}
+          />
         )}
 
         {!showForm && (

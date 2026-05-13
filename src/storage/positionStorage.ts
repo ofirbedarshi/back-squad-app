@@ -94,3 +94,31 @@ export function updatePosition(updated: Position): void {
 export function loadPositions(): Position[] {
   return readPositions()
 }
+
+export function removePosition(id: string): void {
+  writePositions(readPositions().filter((p) => p.id !== id))
+
+  const currentId = localStorage.getItem(CURRENT_POSITION_ID_KEY)
+  const explicitRefId = loadExplicitReferencePositionId()
+
+  if (currentId === id) {
+    localStorage.removeItem(CURRENT_POSITION_ID_KEY)
+    notifyCurrentPositionChanged()
+    if (!explicitRefId) {
+      notifyReferencePositionChanged()
+    }
+  }
+
+  if (explicitRefId === id) {
+    localStorage.removeItem(REFERENCE_POSITION_ID_KEY)
+    notifyReferencePositionChanged()
+  }
+}
+
+export function removeAllPositions(): void {
+  writePositions([])
+  localStorage.removeItem(CURRENT_POSITION_ID_KEY)
+  localStorage.removeItem(REFERENCE_POSITION_ID_KEY)
+  notifyCurrentPositionChanged()
+  notifyReferencePositionChanged()
+}

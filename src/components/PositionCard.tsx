@@ -1,3 +1,4 @@
+import { useLongPressWithShake } from '../hooks/useLongPressWithShake'
 import type { Position } from '../domain/position.types'
 
 interface PositionCardProps {
@@ -11,6 +12,7 @@ interface PositionCardProps {
   /** Draft / list selection (e.g. reference picker) — blue frame on the card itself. */
   selected?: boolean
   onClick?: () => void
+  onLongPress?: () => void
 }
 
 function PositionCard({
@@ -19,6 +21,7 @@ function PositionCard({
   emphasizeCurrent = true,
   selected = false,
   onClick,
+  onLongPress,
 }: PositionCardProps) {
   const east = position.coordinates.east
   const north = position.coordinates.north
@@ -29,12 +32,14 @@ function PositionCard({
       ? 'border-emerald-400 ring-1 ring-emerald-200'
       : 'border-neutral-200'
 
+  const { className: shakeClass, ...longPressHandlers } = useLongPressWithShake(onLongPress, onClick)
+
+  const interactiveProps = onLongPress
+    ? { role: 'button' as const, className: `bg-white rounded-2xl border shadow-sm p-3 flex flex-col gap-1.5 active:bg-neutral-50 transition-colors touch-manipulation select-none ${borderClass} ${shakeClass}`, ...longPressHandlers }
+    : { role: onClick ? ('button' as const) : undefined, className: `bg-white rounded-2xl border shadow-sm p-3 flex flex-col gap-1.5 active:bg-neutral-50 transition-colors touch-manipulation select-none ${borderClass}`, onClick }
+
   return (
-    <div
-      className={`bg-white rounded-2xl border shadow-sm p-3 flex flex-col gap-1.5 active:bg-neutral-50 transition-colors touch-manipulation select-none ${borderClass}`}
-      onClick={onClick}
-      role={onClick ? 'button' : undefined}
-    >
+    <div {...interactiveProps}>
       <div className="flex items-center justify-between gap-2">
         <div className="font-bold text-neutral-800 text-base">{position.stationName}</div>
         {isCurrent && (

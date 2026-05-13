@@ -7,15 +7,17 @@ type LongPressWithShakeProps = ReturnType<typeof useLongPress> & {
 }
 
 export function useLongPressWithShake(
-  onLongPress: () => void,
+  onLongPress?: () => void,
   onPress?: () => void,
 ): LongPressWithShakeProps {
   const [shaking, setShaking] = useState(false)
 
   const longPressHandlers = useLongPress(
     () => {
-      setShaking(true)
-      onLongPress()
+      if (onLongPress) {
+        setShaking(true)
+        onLongPress()
+      }
     },
     onPress,
   )
