@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import IndicatorCard from '../components/IndicatorCard'
 import IndicatorForm from '../components/IndicatorForm'
+import IndicatorSearchBar from '../components/IndicatorSearchBar'
 import DocFeedbackModal from '../components/base/DocFeedbackModal'
 import HeaderOptionsMenu from '../components/base/HeaderOptionsMenu'
 import Modal from '../components/base/Modal'
@@ -9,6 +10,8 @@ import { useConfirm } from '../hooks/useConfirm'
 import { useDomainError } from '../hooks/useDomainError'
 import { useNotification } from '../hooks/useNotification'
 import { useUIError } from '../hooks/useUIError'
+import { filterByQuery } from '../utils/search'
+import { getIndicatorSearchFields } from '../utils/indicatorSearch'
 import { addIndicatorUseCase } from '../useCases/addIndicator'
 import { loadIndicatorsUseCase } from '../useCases/loadIndicators'
 import { removeAllIndicatorsUseCase } from '../useCases/removeAllIndicators'
@@ -19,9 +22,12 @@ import indicatorsDocMarkdown from '../../docs/מציינים.md?raw'
 
 function IndicatorsListScreen() {
   const [indicators, setIndicators] = useState<Indicator[]>([])
+  const [searchQuery, setSearchQuery] = useState('')
   const [showForm, setShowForm] = useState(false)
   const [editingItem, setEditingItem] = useState<Indicator | null>(null)
   const [menuIndicator, setMenuIndicator] = useState<Indicator | null>(null)
+  const filteredIndicators = filterByQuery(indicators, searchQuery, getIndicatorSearchFields)
+
   const { triggerError } = useDomainError()
   const { reportUIError } = useUIError()
   const { notifySuccess } = useNotification()
@@ -97,11 +103,17 @@ function IndicatorsListScreen() {
       </header>
 
       <div className="flex flex-col gap-3 p-4">
+        <IndicatorSearchBar searchQuery={searchQuery} onSearchQueryChange={setSearchQuery} />
+
         {indicators.length === 0 && !showForm && (
           <p className="text-center text-neutral-400 py-8">אין מציינים שמורים</p>
         )}
 
-        {indicators.map((indicator) => (
+        {indicators.length > 0 && filteredIndicators.length === 0 && (
+          <p className="text-center text-neutral-400 py-8">לא נמצאו תוצאות</p>
+        )}
+
+        {filteredIndicators.map((indicator) => (
           <IndicatorCard
             key={indicator.id}
             indicator={indicator}
