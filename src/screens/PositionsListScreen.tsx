@@ -95,8 +95,8 @@ function PositionsListScreen() {
     : 'אין עמדות שמורות במאגר'
 
   return (
-    <div dir="rtl" className="flex flex-col bg-neutral-50 min-h-full">
-      <header className="relative py-4 px-4 text-center font-bold text-lg border-b border-neutral-200 text-neutral-800 bg-white">
+    <div dir="rtl" className="flex flex-col bg-neutral-100 min-h-full">
+      <header className="relative py-3 px-4 text-center font-bold text-base border-b border-neutral-200 text-neutral-800 bg-white">
         עמדות
         <HeaderOptionsMenu
           items={[
@@ -109,9 +109,9 @@ function PositionsListScreen() {
         />
       </header>
 
-      <div className="flex flex-col gap-4 p-4">
-        <section className="rounded-2xl border border-neutral-200 bg-white p-3 flex flex-col gap-3 shadow-sm">
-          <h2 className="text-sm font-bold text-neutral-800">עמדה נוכחית</h2>
+      <div className="flex flex-col gap-3 p-3">
+        <section className="rounded-xl border border-neutral-200 bg-neutral-50 px-3 py-2 flex flex-col gap-2 shadow-sm">
+          <h2 className="text-xs font-bold text-emerald-600 uppercase tracking-wide">עמדה נוכחית</h2>
           {currentPosition ? (
             <PositionCard
               position={currentPosition}
@@ -120,7 +120,7 @@ function PositionsListScreen() {
               onLongPress={() => setMenuPosition(currentPosition)}
             />
           ) : (
-            <p className="text-sm text-neutral-500 bg-neutral-50 border border-neutral-200 rounded-xl p-3 text-center">
+            <p className="text-xs text-neutral-400 text-center py-2">
               לא נבחרה עמדה נוכחית
             </p>
           )}
@@ -128,9 +128,9 @@ function PositionsListScreen() {
 
         <hr className="border-0 border-t-2 border-dashed border-neutral-300" />
 
-        <section className="rounded-2xl border border-neutral-200 bg-white p-3 flex flex-col gap-3 shadow-sm">
+        <section className="rounded-xl border border-neutral-200 bg-neutral-50 px-3 py-3 flex flex-col gap-3 shadow-sm">
           <div className="flex items-center justify-between gap-2">
-            <h2 className="text-sm font-bold text-neutral-800">עמדות מאגר</h2>
+            <h2 className="text-xs font-bold text-blue-600 uppercase tracking-wide">עמדות מאגר</h2>
             {hasAnySavedPositions ? (
               <span className="shrink-0 text-xs text-neutral-500 font-medium">{storedPositions.length} עמדות</span>
             ) : null}
@@ -141,23 +141,25 @@ function PositionsListScreen() {
           )}
 
           {archiveIsEmpty && searchQuery === '' && (
-            <p className="text-center text-neutral-400 py-5 border border-dashed border-neutral-200 rounded-xl">
+            <p className="text-center text-neutral-400 py-3 text-sm border border-dashed border-neutral-200 rounded-xl">
               {archiveEmptyMessage}
             </p>
           )}
 
           {storedPositions.length > 0 && filteredStoredPositions.length === 0 && searchQuery !== '' && (
-            <p className="text-center text-neutral-400 py-5">לא נמצאו תוצאות</p>
+            <p className="text-center text-neutral-400 py-3 text-sm">לא נמצאו תוצאות</p>
           )}
 
-          {filteredStoredPositions.map((position) => (
-            <PositionCard
-              key={position.id}
-              position={position}
-              onClick={() => setEditingItem(position)}
-              onLongPress={() => setMenuPosition(position)}
-            />
-          ))}
+          <div className="flex flex-col gap-2">
+            {filteredStoredPositions.map((position) => (
+              <PositionCard
+                key={position.id}
+                position={position}
+                onClick={() => setEditingItem(position)}
+                onLongPress={() => setMenuPosition(position)}
+              />
+            ))}
+          </div>
         </section>
 
         {showForm && (
@@ -190,7 +192,7 @@ function PositionsListScreen() {
           <button
             type="button"
             onClick={() => setShowForm(true)}
-            className="w-full py-4 rounded-2xl border-2 border-dashed border-neutral-300 text-neutral-500 font-semibold text-base active:bg-neutral-100 transition-colors touch-manipulation select-none"
+            className="w-full py-2.5 rounded-xl border-2 border-dashed border-neutral-300 text-neutral-500 font-semibold text-sm active:bg-neutral-100 transition-colors touch-manipulation select-none"
           >
             + הוסף עמדה
           </button>

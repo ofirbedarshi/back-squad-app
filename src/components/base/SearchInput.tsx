@@ -15,7 +15,7 @@ function SearchInput({ value, onChange, placeholder }: SearchInputProps) {
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="w-full py-2.5 pr-9 pl-3 rounded-xl border border-neutral-300 bg-white text-neutral-800 text-sm placeholder:text-neutral-400 focus:outline-none focus:border-blue-400 transition-colors"
+        className="w-full py-2 pr-9 pl-3 rounded-xl border border-transparent bg-neutral-200/70 text-neutral-800 text-sm placeholder:text-neutral-400 focus:outline-none focus:bg-white focus:border-blue-400 transition-all"
         dir="rtl"
       />
     </div>
