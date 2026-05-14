@@ -35,18 +35,26 @@ export interface PositionInput {
   obstacles?: Obstacle[]
 }
 
+/** Row from storage: archive-only save may omit current-position fields until completed in UI. */
 export interface Position {
   id: string
   savedAt: string
   stationName: string
   coordinates: PositionCoordinates
   altitude: number
-  aka: number
-  launcherType: LauncherType
+  aka?: number
+  launcherType?: LauncherType
   vehicleId?: string
-  pitch: number
-  roll: number
+  pitch?: number
+  roll?: number
   primarySector?: Sector
   secondarySector?: Sector
   obstacles?: Obstacle[]
 }
+
+/** Initial values for position forms (base required; rest filled later e.g. promote-to-current). */
+export type PositionFormInitialShape = Pick<
+  PositionInput,
+  'stationName' | 'coordinates' | 'altitude'
+> &
+  Partial<Omit<PositionInput, 'stationName' | 'coordinates' | 'altitude'>>

@@ -3,12 +3,12 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import PositionBaseFields from './PositionBaseFields'
 import { schema, LAUNCHER_TYPES, EMPTY_OBSTACLES, getInitialPlusTenApplied } from './positionForm.schema'
 import type { PositionFormValues } from './positionForm.schema'
-import type { PositionInput } from '../domain/position.types'
+import type { PositionFormInitialShape, PositionInput } from '../domain/position.types'
 
 interface PositionFormProps {
   onSubmit: (data: PositionInput) => void
   submitLabel?: string
-  initialValues?: PositionInput
+  initialValues?: PositionFormInitialShape
 }
 
 function PositionForm({ onSubmit, submitLabel = 'שמור', initialValues }: PositionFormProps) {

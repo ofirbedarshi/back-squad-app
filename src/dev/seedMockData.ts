@@ -46,10 +46,6 @@ const positions = [
     stationName: 'עמדה בראבו',
     coordinates: { east: '456789', north: '4567890', palach: '36' },
     altitude: 380,
-    aka: 38,
-    launcherType: 'infantry',
-    pitch: 0.8,
-    roll: 0.1,
   },
   {
     id: IDS.posCharlie,
@@ -57,11 +53,6 @@ const positions = [
     stationName: 'עמדה צ׳ארלי',
     coordinates: { east: '567890', north: '5678901', palach: '36' },
     altitude: 510,
-    aka: 41,
-    launcherType: 'vehicle',
-    vehicleId: 'רכב-07',
-    pitch: 1.5,
-    roll: 0.4,
   },
 ]
 

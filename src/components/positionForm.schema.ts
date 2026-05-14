@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import { pitchRollSchema } from './pitchRollInput.utils'
 import { coordinateValueSchema } from './base/coordinateInput.utils'
-import type { PositionInput } from '../domain/position.types'
+import type { PositionFormInitialShape } from '../domain/position.types'
 
 const numberField = z.number({ error: 'יש להזין מספר' })
 
@@ -83,7 +83,7 @@ export const EMPTY_OBSTACLES = [
   { compass: undefined, target: undefined },
 ]
 
-export function getInitialPlusTenApplied(initialValues?: PositionInput) {
+export function getInitialPlusTenApplied(initialValues?: PositionFormInitialShape) {
   return {
     primarySectorLeftTarget: typeof initialValues?.primarySector?.left?.target === 'number',
     secondarySectorLeftTarget: typeof initialValues?.secondarySector?.left?.target === 'number',

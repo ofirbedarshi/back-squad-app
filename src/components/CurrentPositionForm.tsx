@@ -4,14 +4,15 @@ import PositionBaseFields from './PositionBaseFields'
 import AdditionalFormForCurrentPosition from './AdditionalFormForCurrentPosition'
 import { schema, LAUNCHER_TYPES, EMPTY_OBSTACLES, getInitialPlusTenApplied } from './positionForm.schema'
 import type { PositionFormValues } from './positionForm.schema'
-import type { PositionInput } from '../domain/position.types'
+import type { PositionFormInitialShape, PositionInput } from '../domain/position.types'
 
 interface CurrentPositionFormProps {
   onSubmit: (data: PositionInput) => void
-  initialValues?: PositionInput
+  initialValues?: PositionFormInitialShape
+  submitLabel?: string
 }
 
-function CurrentPositionForm({ onSubmit, initialValues }: CurrentPositionFormProps) {
+function CurrentPositionForm({ onSubmit, initialValues, submitLabel = 'שמור' }: CurrentPositionFormProps) {
   const methods = useForm<PositionFormValues>({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -36,7 +37,7 @@ function CurrentPositionForm({ onSubmit, initialValues }: CurrentPositionFormPro
           type="submit"
           className="mt-2 py-4 rounded-2xl text-base font-bold text-white bg-gradient-to-br from-blue-400 to-blue-600 shadow-lg shadow-blue-200 active:scale-95 transition-transform touch-manipulation select-none"
         >
-          שמור
+          {submitLabel}
         </button>
       </form>
     </FormProvider>

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import PositionCard from '../components/PositionCard'
+import CurrentPositionForm from '../components/CurrentPositionForm'
 import PositionForm from '../components/PositionForm'
 import PositionSearchBar from '../components/PositionSearchBar'
 import HeaderOptionsMenu from '../components/base/HeaderOptionsMenu'
@@ -14,6 +15,7 @@ import { filterByQuery } from '../utils/search'
 import { getPositionSearchFields } from '../utils/positionSearch'
 import { addPositionUseCase } from '../useCases/addPosition'
 import { loadPositionsUseCase } from '../useCases/loadPositions'
+import { promoteStoredPositionToCurrentUseCase } from '../useCases/promoteStoredPositionToCurrent'
 import { removeAllPositionsUseCase } from '../useCases/removeAllPositions'
 import { removePositionUseCase } from '../useCases/removePosition'
 import { updatePositionUseCase } from '../useCases/updatePosition'
@@ -26,6 +28,7 @@ function PositionsListScreen() {
   const [showForm, setShowForm] = useState(false)
   const [editingItem, setEditingItem] = useState<Position | null>(null)
   const [menuPosition, setMenuPosition] = useState<Position | null>(null)
+  const [promotingPosition, setPromotingPosition] = useState<Position | null>(null)
   const { triggerError } = useDomainError()
   const { reportUIError } = useUIError()
   const { notifySuccess } = useNotification()
@@ -54,6 +57,21 @@ function PositionsListScreen() {
       notifySuccess('השינויים נשמרו')
     } catch {
       triggerError('שמירת השינויים נכשלה. אנא נסה שנית.')
+    }
+  }
+
+  function handlePromoteToCurrent(data: PositionInput) {
+    if (!promotingPosition) {
+      reportUIError('לא ניתן להגדיר: אין עמדה נבחרת')
+      return
+    }
+    try {
+      promoteStoredPositionToCurrentUseCase(promotingPosition.id, data)
+      setPositions(loadPositionsUseCase())
+      setPromotingPosition(null)
+      notifySuccess('העמדה הוגדרה כעמדה נוכחית')
+    } catch {
+      triggerError('שמירת העמדה נכשלה. אנא נסה שנית.')
     }
   }
 
@@ -178,14 +196,35 @@ function PositionsListScreen() {
           <OptionsMenu
             title={menuPosition.stationName}
             items={[
+              ...(menuPosition.id !== currentPositionId
+                ? [
+                    {
+                      label: 'הפוך לעמדה נוכחית',
+                      onSelect: () => {
+                        setPromotingPosition(menuPosition)
+                        setMenuPosition(null)
+                      },
+                    },
+                  ]
+                : []),
               {
                 label: 'מחק עמדה',
-                variant: 'danger',
+                variant: 'danger' as const,
                 onSelect: () => handleRemove(menuPosition),
               },
             ]}
             onClose={() => setMenuPosition(null)}
           />
+        )}
+
+        {promotingPosition && (
+          <Modal title="הגדרה כעמדה נוכחית" onClose={() => setPromotingPosition(null)}>
+            <CurrentPositionForm
+              onSubmit={handlePromoteToCurrent}
+              initialValues={promotingPosition}
+              submitLabel="הפוך לעמדה נוכחית"
+            />
+          </Modal>
         )}
 
         {!showForm && (
