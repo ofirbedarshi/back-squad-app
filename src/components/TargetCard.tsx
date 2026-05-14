@@ -24,7 +24,7 @@ function TargetCard({ target, onClick, onLongPress }: TargetCardProps) {
     >
       <span className="font-bold text-neutral-800 text-base">{target.targetName}</span>
       <span className="text-sm text-neutral-400 font-mono">
-        {target.coordinates.east} / {target.coordinates.north}
+        {target.coordinates.east}/{target.coordinates.north}
       </span>
       {metrics && (
         <div className="flex gap-3 mt-0.5">

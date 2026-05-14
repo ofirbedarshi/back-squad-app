@@ -67,7 +67,7 @@ function ReferencePositionSummarySelector() {
         )}
       </div>
       <p className="line-clamp-1">
-        <span className="font-medium text-neutral-800">{referencePosition.stationName}</span> | נ"צ {east} / {north}
+        <span className="font-medium text-neutral-800">{referencePosition.stationName}</span> | נ"צ {north} / {east}
       </p>
     </div>
   ) : (

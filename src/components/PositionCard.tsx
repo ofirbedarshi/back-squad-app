@@ -58,7 +58,7 @@ function PositionCard({
         )}
       </div>
       <div className="text-xs text-neutral-500">
-        נ"צ: {east}{north ? ` / ${north}` : ''} | גובה: {position.altitude} מ'
+        נ"צ: {east}/{north} | גובה: {position.altitude} מ'
       </div>
     </div>
   )
