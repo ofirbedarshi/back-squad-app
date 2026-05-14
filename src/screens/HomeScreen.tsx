@@ -11,12 +11,12 @@ function HomeScreen() {
       </header>
 
       <div className="flex flex-col gap-3 p-4">
-        <MenuButton label='סדפ"ים' to="/sadap" />
-        <MenuButton label="נדברים" to="/nidbarim" />
-        <MenuButton label="מאגרים" to="/maagarim" />
-        <MenuButton label="הערות" to="/notes" />
-        <MenuButton label="אחרים" to="/others" />
         <MenuButton label="עמדה נוכחית" to="/current-position" primary />
+        <MenuButton label="מאגרים" to="/maagarim" />
+        <MenuButton label="נדברים" to="/nidbarim" />
+        <MenuButton label='סדפ"ים' to="/sadap" />
+        <MenuButton label="אחרים" to="/others" />
+        <MenuButton label="הערות" to="/notes" />
       </div>
     </div>
   )
