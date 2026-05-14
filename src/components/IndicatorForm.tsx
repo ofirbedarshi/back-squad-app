@@ -4,16 +4,19 @@ import { z } from 'zod'
 import FormField from './FormField'
 import Input from './Input'
 import CoordinateInput from './base/CoordinateInput'
+import SelectInput from './base/SelectInput'
 import { coordinateValueSchema } from './base/coordinateInput.utils'
-import type { IndicatorInput } from '../domain/indicator.types'
+import type { IndicatorInput, IndicatorMeans } from '../domain/indicator.types'
 
 const numberField = z.number({ error: 'יש להזין מספר' })
+const indicatorMeansOptions = ['שיח', 'ראטלר', 'ספקטרו', 'צור', 'זיק', 'דוהר שמיים'] as const satisfies readonly IndicatorMeans[]
+const indicatorMeansSelectOptions = indicatorMeansOptions.map((means) => ({ label: means, value: means }))
 
 const schema = z.object({
   indicatorName: z.string().min(1, 'שדה חובה'),
   coordinates: coordinateValueSchema,
   altitude: numberField,
-  means: z.string().min(1, 'שדה חובה'),
+  means: z.enum(indicatorMeansOptions, { error: 'שדה חובה' }),
   markCode: numberField,
   targetDomain: z.string().optional(),
 })
@@ -62,7 +65,12 @@ function IndicatorForm({ onSubmit, submitLabel = 'שמור', initialValues }: In
       </FormField>
 
       <FormField label="אמצעי" error={errors.means?.message}>
-        <Input type="text" hasError={!!errors.means} {...register('means')} />
+        <SelectInput
+          placeholder="בחר אמצעי"
+          options={indicatorMeansSelectOptions}
+          hasError={!!errors.means}
+          {...register('means')}
+        />
       </FormField>
 
       <FormField label="קוד ציון" error={errors.markCode?.message}>
