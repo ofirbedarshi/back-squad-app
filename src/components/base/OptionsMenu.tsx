@@ -13,7 +13,7 @@ interface OptionsMenuProps {
 function OptionsMenu({ title, items, onClose }: OptionsMenuProps) {
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end bg-black/40"
+      className="fixed inset-0 z-[65] flex items-end bg-black/40"
       role="presentation"
       onClick={onClose}
     >
@@ -21,6 +21,7 @@ function OptionsMenu({ title, items, onClose }: OptionsMenuProps) {
         dir="rtl"
         role="menu"
         className="w-full rounded-t-2xl bg-white shadow-2xl overflow-hidden"
+        style={{ paddingBottom: 'max(12px, env(safe-area-inset-bottom, 0px))' }}
         onClick={(e) => e.stopPropagation()}
       >
         {title && (

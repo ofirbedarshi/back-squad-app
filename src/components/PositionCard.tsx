@@ -1,4 +1,5 @@
 import { useLongPressWithShake } from '../hooks/useLongPressWithShake'
+import { useSuppressNativeTextSelection } from '../hooks/useSuppressNativeTextSelection'
 import type { Position } from '../domain/position.types'
 
 interface PositionCardProps {
@@ -34,12 +35,22 @@ function PositionCard({
 
   const { className: shakeClass, ...longPressHandlers } = useLongPressWithShake(onLongPress, onClick)
 
+  const rootRef = useSuppressNativeTextSelection<HTMLDivElement>()
+
   const interactiveProps = onLongPress
-    ? { role: 'button' as const, className: `bg-white rounded-xl border shadow-sm px-3 py-2.5 flex flex-col gap-1 active:bg-neutral-50 transition-colors touch-manipulation select-none ${borderClass} ${shakeClass}`, ...longPressHandlers }
-    : { role: onClick ? ('button' as const) : undefined, className: `bg-white rounded-xl border shadow-sm px-3 py-2.5 flex flex-col gap-1 active:bg-neutral-50 transition-colors touch-manipulation select-none ${borderClass}`, onClick }
+    ? {
+        role: 'button' as const,
+        className: `interactive-no-copy bg-white rounded-xl border shadow-sm px-3 py-2.5 flex flex-col gap-1 active:bg-neutral-50 transition-colors touch-manipulation ${borderClass} ${shakeClass}`,
+        ...longPressHandlers,
+      }
+    : {
+        role: onClick ? ('button' as const) : undefined,
+        className: `interactive-no-copy bg-white rounded-xl border shadow-sm px-3 py-2.5 flex flex-col gap-1 active:bg-neutral-50 transition-colors touch-manipulation ${borderClass}`,
+        onClick,
+      }
 
   return (
-    <div {...interactiveProps}>
+    <div ref={rootRef} {...interactiveProps}>
       <div className="flex items-center justify-between gap-2">
         <div className="font-semibold text-neutral-800 text-sm">{position.stationName}</div>
         {isCurrent && (

@@ -1,4 +1,5 @@
 import { useLongPressWithShake } from '../hooks/useLongPressWithShake'
+import { useSuppressNativeTextSelection } from '../hooks/useSuppressNativeTextSelection'
 import { useTargetLiveMetrics } from '../hooks/useTargetLiveMetrics'
 import type { Target } from '../domain/target.types'
 
@@ -10,12 +11,14 @@ interface TargetCardProps {
 
 function TargetCard({ target, onClick, onLongPress }: TargetCardProps) {
   const { className: shakeClass, ...longPressProps } = useLongPressWithShake(onLongPress, onClick)
+  const rootRef = useSuppressNativeTextSelection<HTMLDivElement>()
 
   const metrics = useTargetLiveMetrics(target.coordinates, target.altitude)
 
   return (
     <div
-      className={`bg-white rounded-2xl border border-neutral-200 shadow-sm p-4 flex flex-col gap-1.5 active:bg-neutral-50 transition-colors touch-manipulation select-none ${shakeClass}`}
+      ref={rootRef}
+      className={`interactive-no-copy bg-white rounded-2xl border border-neutral-200 shadow-sm p-4 flex flex-col gap-1.5 active:bg-neutral-50 transition-colors touch-manipulation ${shakeClass}`}
       role="button"
       {...longPressProps}
     >

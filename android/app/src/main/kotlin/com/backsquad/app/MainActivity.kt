@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Intent
 import android.content.ActivityNotFoundException
 import android.content.pm.PackageManager
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.webkit.PermissionRequest
 import android.webkit.WebChromeClient
@@ -44,6 +45,7 @@ class MainActivity : AppCompatActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun configureWebView(wv: WebView) {
         val assetLoader = WebViewAssetLoader.Builder()
             .addPathHandler("/assets/", AssetsPathHandler(this))
@@ -109,6 +111,10 @@ class MainActivity : AppCompatActivity() {
             loadWithOverviewMode = true
             useWideViewPort = true
         }
+
+        // Consume native WebView long-click so Chromium does not start text-selection ActionMode.
+        // JS still receives touch events; app long-press timers keep working.
+        wv.setOnLongClickListener { true }
     }
 
     override fun onRequestPermissionsResult(

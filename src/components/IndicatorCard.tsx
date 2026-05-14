@@ -1,4 +1,5 @@
 import { useLongPressWithShake } from '../hooks/useLongPressWithShake'
+import { useSuppressNativeTextSelection } from '../hooks/useSuppressNativeTextSelection'
 import type { Indicator } from '../domain/indicator.types'
 
 interface IndicatorCardProps {
@@ -9,10 +10,12 @@ interface IndicatorCardProps {
 
 function IndicatorCard({ indicator, onClick, onLongPress }: IndicatorCardProps) {
   const { className: shakeClass, ...longPressProps } = useLongPressWithShake(onLongPress, onClick)
+  const rootRef = useSuppressNativeTextSelection<HTMLDivElement>()
 
   return (
     <div
-      className={`bg-white rounded-2xl border border-neutral-200 shadow-sm p-4 flex flex-col gap-2 active:bg-neutral-50 transition-colors touch-manipulation select-none ${shakeClass}`}
+      ref={rootRef}
+      className={`interactive-no-copy bg-white rounded-2xl border border-neutral-200 shadow-sm p-4 flex flex-col gap-2 active:bg-neutral-50 transition-colors touch-manipulation ${shakeClass}`}
       role="button"
       {...longPressProps}
     >
