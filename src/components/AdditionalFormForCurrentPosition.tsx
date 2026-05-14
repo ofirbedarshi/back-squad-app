@@ -29,8 +29,8 @@ function AdditionalFormForCurrentPosition() {
       </FormField>
 
       {isVehicle && (
-        <FormField label="צ׳ רכב">
-          <Input type="text" {...register('vehicleId')} />
+        <FormField label="צ׳ רכב" error={errors.vehicleId?.message}>
+          <Input type="text" hasError={!!errors.vehicleId} {...register('vehicleId')} />
         </FormField>
       )}
 

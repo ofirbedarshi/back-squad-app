@@ -1,8 +1,9 @@
 import { useForm, FormProvider } from 'react-hook-form'
+import type { Resolver } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import PositionBaseFields from './PositionBaseFields'
 import AdditionalFormForCurrentPosition from './AdditionalFormForCurrentPosition'
-import { schema, LAUNCHER_TYPES, EMPTY_OBSTACLES, getInitialPlusTenApplied } from './positionForm.schema'
+import { currentPositionFormSchema, LAUNCHER_TYPES, EMPTY_OBSTACLES, getInitialPlusTenApplied } from './positionForm.schema'
 import type { PositionFormValues } from './positionForm.schema'
 import type { PositionFormInitialShape, PositionInput } from '../domain/position.types'
 
@@ -14,7 +15,7 @@ interface CurrentPositionFormProps {
 
 function CurrentPositionForm({ onSubmit, initialValues, submitLabel = 'שמור' }: CurrentPositionFormProps) {
   const methods = useForm<PositionFormValues>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(currentPositionFormSchema) as Resolver<PositionFormValues>,
     defaultValues: {
       launcherType: LAUNCHER_TYPES.VEHICLE,
       obstacles: EMPTY_OBSTACLES,
