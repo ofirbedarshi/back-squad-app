@@ -16,6 +16,9 @@ export interface TextField {
   /** Key of another field whose truthy value disables this field. */
   lockedByRef?: string
   infoTooltipText?: string
+  /** Auto-calculated from loaded target + indicator; empty when either is missing. */
+  computedFrom?: 'indicatorToTarget'
+  computedMetric?: 'azimuth' | 'range'
 }
 
 export interface DateField {

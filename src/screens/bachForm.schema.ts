@@ -169,8 +169,22 @@ export const bachFormSchema: FormSchema = {
     ]},
     { type: 'row', fields: [
       { type: 'text', key: 'indicatorKoz', label: 'קו"צ', lockedByRef: 'indicatorId', infoTooltipText: 'שדה זה מתמלא אוטומטית מהמציין הנטען ואינו ניתן לעריכה ידנית' },
-      { type: 'text', key: 'indicatorToTargetAzimuth', label: "אז' מציין מטרה" },
-      { type: 'text', key: 'indicationRange', label: 'טווח ציון' },
+      {
+        type: 'text',
+        key: 'indicatorToTargetAzimuth',
+        label: "אז' מציין מטרה",
+        computedFrom: 'indicatorToTarget',
+        computedMetric: 'azimuth',
+        infoTooltipText: 'ערך מחושב אוטומטית לפי נ"צ וגובה המציין והמטרה כששניהם נטענו מהרשימה. לא ניתן לעריכה ידנית.',
+      },
+      {
+        type: 'text',
+        key: 'indicationRange',
+        label: 'טווח ציון',
+        computedFrom: 'indicatorToTarget',
+        computedMetric: 'range',
+        infoTooltipText: 'ערך מחושב אוטומטית כטווח בין המציין למטרה לפי נ"צ וגובה של שניהם כששניהם נטענו מהרשימה. לא ניתן לעריכה ידנית.',
+      },
     ]},
     { type: 'row', fields: [
       { type: 'text', key: 'indicatorWind', label: 'רוח' },
