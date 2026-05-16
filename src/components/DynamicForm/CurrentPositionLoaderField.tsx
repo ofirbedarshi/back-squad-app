@@ -1,7 +1,12 @@
 import { useEffect, useRef } from 'react'
-import type { UseFormRegister, UseFormSetValue, UseFormWatch } from 'react-hook-form'
+import type { FieldErrors, UseFormGetValues, UseFormRegister, UseFormSetValue, UseFormWatch } from 'react-hook-form'
 import type { BachRearPositionFormFields } from '../../domain/bachRearPosition.types'
-import type { FormValues, CurrentPositionLoaderField as CurrentPositionLoaderFieldDef } from '../../domain/dynamicForm.types'
+import { makeFieldValidator } from '../../domain/dynamicFormValidation'
+import type {
+  FormValues,
+  CurrentPositionLoaderField as CurrentPositionLoaderFieldDef,
+  ToggleWithConditionsField,
+} from '../../domain/dynamicForm.types'
 import { loadBachRearPositionFromCurrentUseCase } from '../../useCases/loadBachRearPositionFromCurrent'
 
 interface CurrentPositionLoaderFieldProps {
@@ -9,6 +14,9 @@ interface CurrentPositionLoaderFieldProps {
   setValue: UseFormSetValue<FormValues>
   register: UseFormRegister<FormValues>
   watch: UseFormWatch<FormValues>
+  errors: FieldErrors<FormValues>
+  getValues: UseFormGetValues<FormValues>
+  parentByKey: Map<string, ToggleWithConditionsField>
 }
 
 function applyLoadedPosition(
@@ -32,12 +40,23 @@ function applyLoadedPosition(
   }
 }
 
-function CurrentPositionLoaderField({ fieldDef, setValue, register, watch }: CurrentPositionLoaderFieldProps) {
+function CurrentPositionLoaderField({
+  fieldDef,
+  setValue,
+  register,
+  watch,
+  errors,
+  getValues,
+  parentByKey,
+}: CurrentPositionLoaderFieldProps) {
   const hasAutoLoadedRef = useRef(false)
   const currentPositionId = watch(fieldDef.key) as string | undefined
   const savedPositionName = fieldDef.fieldMappings.positionName
     ? (watch(fieldDef.fieldMappings.positionName) as string | undefined)
     : undefined
+
+  const error = errors[fieldDef.key]
+  const errorMessage = error && 'message' in error ? (error.message as string) : undefined
 
   useEffect(() => {
     if (hasAutoLoadedRef.current) {
@@ -52,7 +71,19 @@ function CurrentPositionLoaderField({ fieldDef, setValue, register, watch }: Cur
     applyLoadedPosition(setValue, fieldDef, loadBachRearPositionFromCurrentUseCase())
   }, [currentPositionId, fieldDef, savedPositionName, setValue])
 
-  return <input type="hidden" {...register(fieldDef.key)} />
+  return (
+    <>
+      <input
+        type="hidden"
+        {...register(fieldDef.key, {
+          validate: makeFieldValidator(fieldDef, getValues, parentByKey),
+        })}
+      />
+      {errorMessage && (
+        <p className="text-xs text-red-500 px-1 -mt-1">{errorMessage}</p>
+      )}
+    </>
+  )
 }
 
 export default CurrentPositionLoaderField

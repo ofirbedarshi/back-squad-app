@@ -1,5 +1,5 @@
 import { Controller } from 'react-hook-form'
-import type { Control, FieldErrors, UseFormRegister, UseFormSetValue, UseFormWatch } from 'react-hook-form'
+import type { Control, FieldErrors, UseFormGetValues, UseFormRegister, UseFormSetValue, UseFormWatch } from 'react-hook-form'
 import FormField from '../FormField'
 import Input from '../Input'
 import SegmentedToggle from '../base/SegmentedToggle'
@@ -10,8 +10,9 @@ import IndicatorLoaderField from './IndicatorLoaderField'
 import CurrentPositionLoaderField from './CurrentPositionLoaderField'
 import ComputedTextField from './ComputedTextField'
 import type { ComputedTextFieldDef } from './computedTextField.types'
-import type { CoordinateValue, FormFieldDef, FormValues, RowableField } from '../../domain/dynamicForm.types'
+import type { CoordinateValue, FormFieldDef, FormValues, RowableField, ToggleWithConditionsField } from '../../domain/dynamicForm.types'
 import ToggleWithConditionsRenderer from './ToggleWithConditionsRenderer'
+import { makeFieldValidator } from '../../domain/dynamicFormValidation'
 
 interface DynamicFormFieldProps {
   field: FormFieldDef
@@ -20,9 +21,30 @@ interface DynamicFormFieldProps {
   errors: FieldErrors<FormValues>
   setValue: UseFormSetValue<FormValues>
   watch: UseFormWatch<FormValues>
+  getValues: UseFormGetValues<FormValues>
+  parentByKey: Map<string, ToggleWithConditionsField>
 }
 
-function DynamicFormField({ field, control, register, errors, setValue, watch }: DynamicFormFieldProps) {
+function DynamicFormField({
+  field,
+  control,
+  register,
+  errors,
+  setValue,
+  watch,
+  getValues,
+  parentByKey,
+}: DynamicFormFieldProps) {
+  const sharedChildProps = {
+    control,
+    register,
+    errors,
+    setValue,
+    watch,
+    getValues,
+    parentByKey,
+  }
+
   if (field.type === 'row') {
     return (
       <div className="flex gap-3">
@@ -31,7 +53,7 @@ function DynamicFormField({ field, control, register, errors, setValue, watch }:
             key={child.type === 'note' ? `note-${index}` : child.key}
             className="flex-1 min-w-0"
           >
-            <DynamicFormField field={child} control={control} register={register} errors={errors} setValue={setValue} watch={watch} />
+            <DynamicFormField field={child as FormFieldDef} {...sharedChildProps} />
           </div>
         ))}
       </div>
@@ -40,7 +62,7 @@ function DynamicFormField({ field, control, register, errors, setValue, watch }:
 
   if (field.type === 'note') {
     return (
-      <p className="text-sm text-neutral-500 bg-neutral-100 rounded-xl px-3 py-2 leading-relaxed whitespace-pre-line">
+      <p className="text-sm text-amber-800 bg-amber-100 rounded-xl px-3 py-2 leading-relaxed whitespace-pre-line">
         {field.text}
       </p>
     )
@@ -61,6 +83,8 @@ function DynamicFormField({ field, control, register, errors, setValue, watch }:
         setValue={setValue}
         register={register}
         errors={errors}
+        getValues={getValues}
+        parentByKey={parentByKey}
       />
     )
   }
@@ -74,6 +98,8 @@ function DynamicFormField({ field, control, register, errors, setValue, watch }:
         setValue={setValue}
         register={register}
         errors={errors}
+        getValues={getValues}
+        parentByKey={parentByKey}
       />
     )
   }
@@ -85,6 +111,9 @@ function DynamicFormField({ field, control, register, errors, setValue, watch }:
         setValue={setValue}
         register={register}
         watch={watch}
+        errors={errors}
+        getValues={getValues}
+        parentByKey={parentByKey}
       />
     )
   }
@@ -103,6 +132,9 @@ function DynamicFormField({ field, control, register, errors, setValue, watch }:
     const error = errors[field.key]
     const errorMessage = error && 'message' in error ? (error.message as string) : undefined
     const isLocked = !!field.lockedByRef
+    const validate = field.lockedByRef
+      ? undefined
+      : makeFieldValidator(field, getValues, parentByKey)
     return (
       <FormField label={field.label} error={errorMessage} infoTooltipText={field.infoTooltipText}>
         <Input
@@ -110,7 +142,7 @@ function DynamicFormField({ field, control, register, errors, setValue, watch }:
           placeholder={field.placeholder}
           hasError={!!error}
           disabled={isLocked}
-          {...register(field.key)}
+          {...register(field.key, { validate })}
         />
       </FormField>
     )
@@ -125,7 +157,10 @@ function DynamicFormField({ field, control, register, errors, setValue, watch }:
           type="number"
           placeholder={field.placeholder}
           hasError={!!error}
-          {...register(field.key, { valueAsNumber: true })}
+          {...register(field.key, {
+            valueAsNumber: true,
+            validate: makeFieldValidator(field, getValues, parentByKey),
+          })}
         />
       </FormField>
     )
@@ -136,7 +171,11 @@ function DynamicFormField({ field, control, register, errors, setValue, watch }:
     const errorMessage = error && 'message' in error ? (error.message as string) : undefined
     return (
       <FormField label={field.label} error={errorMessage}>
-        <Input type="date" hasError={!!error} {...register(field.key)} />
+        <Input
+          type="date"
+          hasError={!!error}
+          {...register(field.key, { validate: makeFieldValidator(field, getValues, parentByKey) })}
+        />
       </FormField>
     )
   }
@@ -146,22 +185,29 @@ function DynamicFormField({ field, control, register, errors, setValue, watch }:
     const errorMessage = error && 'message' in error ? (error.message as string) : undefined
     return (
       <FormField label={field.label} error={errorMessage}>
-        <Input type="time" hasError={!!error} {...register(field.key)} />
+        <Input
+          type="time"
+          hasError={!!error}
+          {...register(field.key, { validate: makeFieldValidator(field, getValues, parentByKey) })}
+        />
       </FormField>
     )
   }
 
   if (field.type === 'toggle') {
+    const error = errors[field.key]
+    const errorMessage = error && 'message' in error ? (error.message as string) : undefined
     return (
-      <FormField label={field.label}>
+      <FormField label={field.label} error={errorMessage}>
         <Controller
           name={field.key}
           control={control}
-          defaultValue={field.defaultValue ?? field.options[0]}
+          defaultValue={field.defaultValue}
+          rules={{ validate: makeFieldValidator(field, getValues, parentByKey) }}
           render={({ field: formField }) => (
             <SegmentedToggle
-              options={field.options.map(opt => ({ label: opt, value: opt }))}
-              value={typeof formField.value === 'string' ? formField.value : field.options[0]}
+              options={field.options.map((opt) => ({ label: opt, value: opt }))}
+              value={typeof formField.value === 'string' ? formField.value : undefined}
               onChange={formField.onChange}
             />
           )}
@@ -176,6 +222,7 @@ function DynamicFormField({ field, control, register, errors, setValue, watch }:
         name={field.key}
         control={control}
         defaultValue={field.defaultValue ?? false}
+        rules={{ validate: makeFieldValidator(field, getValues, parentByKey) }}
         render={({ field: formField }) => (
           <Checkbox
             label={field.label}
@@ -192,15 +239,14 @@ function DynamicFormField({ field, control, register, errors, setValue, watch }:
       <ToggleWithConditionsRenderer
         field={field}
         control={control}
+        errors={errors}
+        getValues={getValues}
+        parentByKey={parentByKey}
         renderConditionalField={(child, i) => (
           <DynamicFormField
             key={'key' in child ? child.key : `cond-${field.key}-${i}`}
             field={child}
-            control={control}
-            register={register}
-            errors={errors}
-            setValue={setValue}
-            watch={watch}
+            {...sharedChildProps}
           />
         )}
       />
@@ -216,6 +262,11 @@ function DynamicFormField({ field, control, register, errors, setValue, watch }:
         <Controller
           name={field.key}
           control={control}
+          rules={
+            field.lockedByRef
+              ? undefined
+              : { validate: makeFieldValidator(field, getValues, parentByKey) }
+          }
           render={({ field: formField }) => {
             const coordValue =
               typeof formField.value === 'object' && formField.value !== null

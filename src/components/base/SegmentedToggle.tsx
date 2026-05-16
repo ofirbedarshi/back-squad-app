@@ -5,15 +5,17 @@ interface ToggleOption {
 
 interface SegmentedToggleProps {
   options: ToggleOption[]
-  value: string
+  value?: string
   onChange: (value: string) => void
 }
 
 function SegmentedToggle({ options, value, onChange }: SegmentedToggleProps) {
+  const selectedValue = value?.trim() ? value : undefined
+
   return (
     <div className="flex w-full rounded-2xl border border-neutral-200 bg-neutral-100 p-1 gap-1">
       {options.map((option) => {
-        const isActive = option.value === value
+        const isActive = selectedValue !== undefined && option.value === selectedValue
         return (
           <button
             key={option.value}

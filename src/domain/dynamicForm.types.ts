@@ -12,6 +12,7 @@ export interface TextField {
   key: string
   label: string
   placeholder?: string
+  required?: boolean
   defaultValue?: string
   /** Key of another field whose truthy value disables this field. */
   lockedByRef?: string
@@ -25,6 +26,7 @@ export interface DateField {
   type: 'date'
   key: string
   label: string
+  required?: boolean
   defaultValue?: string
 }
 
@@ -32,6 +34,7 @@ export interface TimeField {
   type: 'time'
   key: string
   label: string
+  required?: boolean
   defaultValue?: string
 }
 
@@ -40,6 +43,7 @@ export interface ToggleField {
   key: string
   label: string
   options: [string, string, ...string[]]
+  required?: boolean
   defaultValue?: string
 }
 
@@ -47,6 +51,7 @@ export interface CheckboxField {
   type: 'checkbox'
   key: string
   label: string
+  required?: boolean
   defaultValue?: boolean
 }
 
@@ -55,6 +60,7 @@ export interface NumberField {
   key: string
   label: string
   placeholder?: string
+  required?: boolean
   defaultValue?: number
   infoTooltipText?: string
 }
@@ -63,6 +69,7 @@ export interface CoordsField {
   type: 'coords'
   key: string
   label: string
+  required?: boolean
   defaultValue?: CoordinateValue
   /** Key of another field whose truthy value disables this field. */
   lockedByRef?: string
@@ -80,6 +87,7 @@ export interface ToggleWithConditionsField {
   key: string
   label: string
   options: [string, string, ...string[]]
+  required?: boolean
   defaultValue?: string
   /** Maps each option value to the fields shown when that option is active. */
   conditions: Partial<Record<string, FormFieldDef[]>>
@@ -91,6 +99,7 @@ export interface TargetLoaderField {
   key: string
   text: string
   bold?: boolean
+  required?: boolean
   /** Maps Target domain properties to form field keys. */
   fieldMappings: {
     targetName?: string
@@ -122,6 +131,7 @@ export interface IndicatorLoaderField {
   key: string
   text: string
   bold?: boolean
+  required?: boolean
   /** Maps Indicator domain properties to form field keys. */
   fieldMappings: {
     indicatorName?: string
@@ -137,6 +147,7 @@ export interface CurrentPositionLoaderField {
   type: 'currentPositionLoader'
   /** Form key where the captured position id is stored. */
   key: string
+  required?: boolean
   fieldMappings: {
     positionName?: string
     positionCoords?: string

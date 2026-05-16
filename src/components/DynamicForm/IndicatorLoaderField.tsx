@@ -1,9 +1,10 @@
 import { useMemo, useState } from 'react'
-import type { FieldErrors, UseFormRegister, UseFormSetValue } from 'react-hook-form'
+import type { FieldErrors, UseFormGetValues, UseFormRegister, UseFormSetValue } from 'react-hook-form'
 import Modal from '../base/Modal'
 import IndicatorCard from '../IndicatorCard'
 import { loadIndicatorsUseCase } from '../../useCases/loadIndicators'
-import type { FormValues, IndicatorLoaderField as IndicatorLoaderFieldDef } from '../../domain/dynamicForm.types'
+import { makeFieldValidator } from '../../domain/dynamicFormValidation'
+import type { FormValues, IndicatorLoaderField as IndicatorLoaderFieldDef, ToggleWithConditionsField } from '../../domain/dynamicForm.types'
 import type { Indicator } from '../../domain/indicator.types'
 
 interface IndicatorLoaderFieldProps {
@@ -12,9 +13,19 @@ interface IndicatorLoaderFieldProps {
   setValue: UseFormSetValue<FormValues>
   register: UseFormRegister<FormValues>
   errors: FieldErrors<FormValues>
+  getValues: UseFormGetValues<FormValues>
+  parentByKey: Map<string, ToggleWithConditionsField>
 }
 
-function IndicatorLoaderField({ fieldDef, currentIndicatorId, setValue, register, errors }: IndicatorLoaderFieldProps) {
+function IndicatorLoaderField({
+  fieldDef,
+  currentIndicatorId,
+  setValue,
+  register,
+  errors,
+  getValues,
+  parentByKey,
+}: IndicatorLoaderFieldProps) {
   const [showModal, setShowModal] = useState(false)
   const indicators = useMemo(() => loadIndicatorsUseCase(), [showModal])
   const loadedIndicator = indicators.find((i) => i.id === currentIndicatorId)
@@ -47,7 +58,9 @@ function IndicatorLoaderField({ fieldDef, currentIndicatorId, setValue, register
     <>
       <input
         type="hidden"
-        {...register(fieldDef.key, { validate: (v) => !!v || 'יש לטעון מציין לפני שמירה' })}
+        {...register(fieldDef.key, {
+          validate: makeFieldValidator(fieldDef, getValues, parentByKey),
+        })}
       />
 
       <div className="flex flex-col gap-1">

@@ -32,12 +32,11 @@ function collectDefault(field: RowableField, values: FormValues): void {
   if (field.type === 'toggleWithConditions') {
     if (field.defaultValue !== undefined) {
       values[field.key] = field.defaultValue
-    }
-    const activeKey = field.defaultValue ?? field.options[0]
-    const branch = field.conditions[activeKey]
-    if (branch) {
-      for (const child of branch) {
-        collectDefaultFromFormFieldDef(child, values)
+      const branch = field.conditions[field.defaultValue]
+      if (branch) {
+        for (const child of branch) {
+          collectDefaultFromFormFieldDef(child, values)
+        }
       }
     }
     return

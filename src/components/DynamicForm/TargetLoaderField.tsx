@@ -1,9 +1,10 @@
 import { useMemo, useState } from 'react'
-import type { FieldErrors, UseFormRegister, UseFormSetValue } from 'react-hook-form'
+import type { FieldErrors, UseFormGetValues, UseFormRegister, UseFormSetValue } from 'react-hook-form'
 import Modal from '../base/Modal'
 import TargetCard from '../TargetCard'
 import { loadTargetsUseCase } from '../../useCases/loadTargets'
-import type { FormValues, TargetLoaderField as TargetLoaderFieldDef } from '../../domain/dynamicForm.types'
+import { makeFieldValidator } from '../../domain/dynamicFormValidation'
+import type { FormValues, TargetLoaderField as TargetLoaderFieldDef, ToggleWithConditionsField } from '../../domain/dynamicForm.types'
 import type { Target } from '../../domain/target.types'
 
 interface TargetLoaderFieldProps {
@@ -12,9 +13,19 @@ interface TargetLoaderFieldProps {
   setValue: UseFormSetValue<FormValues>
   register: UseFormRegister<FormValues>
   errors: FieldErrors<FormValues>
+  getValues: UseFormGetValues<FormValues>
+  parentByKey: Map<string, ToggleWithConditionsField>
 }
 
-function TargetLoaderField({ fieldDef, currentTargetId, setValue, register, errors }: TargetLoaderFieldProps) {
+function TargetLoaderField({
+  fieldDef,
+  currentTargetId,
+  setValue,
+  register,
+  errors,
+  getValues,
+  parentByKey,
+}: TargetLoaderFieldProps) {
   const [showModal, setShowModal] = useState(false)
   const targets = useMemo(() => loadTargetsUseCase(), [showModal])
   const loadedTarget = targets.find((t) => t.id === currentTargetId)
@@ -43,10 +54,11 @@ function TargetLoaderField({ fieldDef, currentTargetId, setValue, register, erro
 
   return (
     <>
-      {/* Hidden input so react-hook-form validates targetId as required */}
       <input
         type="hidden"
-        {...register(fieldDef.key, { validate: (v) => !!v || 'יש לטעון מטרה לפני שמירה' })}
+        {...register(fieldDef.key, {
+          validate: makeFieldValidator(fieldDef, getValues, parentByKey),
+        })}
       />
 
       <div className="flex flex-col gap-1">

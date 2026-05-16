@@ -1,5 +1,7 @@
+import { useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { extractDefaultValues } from '../../domain/dynamicForm'
+import { buildParentByKeyMap } from '../../domain/dynamicFormValidation'
 import DynamicFormField from './DynamicFormField'
 import type { FormSchema, FormValues } from '../../domain/dynamicForm.types'
 
@@ -15,6 +17,7 @@ interface DynamicFormProps {
 
 function DynamicForm({ schema, onSubmit, defaultValues, submitLabel = 'שמור', formId }: DynamicFormProps) {
   const schemaDefaults = extractDefaultValues(schema)
+  const parentByKey = useMemo(() => buildParentByKeyMap(schema), [schema])
 
   const {
     register,
@@ -22,6 +25,7 @@ function DynamicForm({ schema, onSubmit, defaultValues, submitLabel = 'שמור'
     control,
     setValue,
     watch,
+    getValues,
     formState: { errors },
   } = useForm<FormValues>({
     defaultValues: defaultValues ?? schemaDefaults,
@@ -44,6 +48,8 @@ function DynamicForm({ schema, onSubmit, defaultValues, submitLabel = 'שמור'
           errors={errors}
           setValue={setValue}
           watch={watch}
+          getValues={getValues}
+          parentByKey={parentByKey}
         />
       ))}
 
