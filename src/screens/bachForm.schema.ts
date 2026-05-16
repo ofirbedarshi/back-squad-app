@@ -54,9 +54,20 @@ export const bachFormSchema: FormSchema = {
 
     { type: 'header', text: 'עמדת שיגור', bold: true },
     { type: 'header', text: 'אחורי', bold: false },
-    { type: 'text', key: 'positionName', label: 'שם עמדה' },
-    { type: 'coords', key: 'positionCoords', label: 'נ.צ. עמדה' },
-    { type: 'text', key: 'positionAltitude', label: 'גובה' },
+    { type: 'note', text: '* פרטי העמדה נטענים אוטומטית מהעמדה הנוכחית ואינם ניתנים לעריכה' },
+    {
+      type: 'currentPositionLoader',
+      key: 'rearPositionId',
+      fieldMappings: {
+        positionName: 'positionName',
+        positionCoords: 'positionCoords',
+        positionAltitude: 'positionAltitude',
+        aka: 'aka',
+      },
+    },
+    { type: 'text', key: 'positionName', label: 'שם עמדה', lockedByRef: 'rearPositionId', infoTooltipText: 'שדה זה מתמלא אוטומטית מהעמדה הנוכחית ואינו ניתן לעריכה ידנית' },
+    { type: 'coords', key: 'positionCoords', label: 'נ.צ. עמדה', lockedByRef: 'rearPositionId', infoTooltipText: 'שדה זה מתמלא אוטומטית מהעמדה הנוכחית ואינו ניתן לעריכה ידנית' },
+    { type: 'text', key: 'positionAltitude', label: 'גובה', lockedByRef: 'rearPositionId', infoTooltipText: 'שדה זה מתמלא אוטומטית מהעמדה הנוכחית ואינו ניתן לעריכה ידנית' },
     { type: 'row', fields: [
       { type: 'text', key: 'missileC', label: "צ' הטיל" },
       { type: 'text', key: 'serialNumber', label: "מספר סידורי דוג'" },
@@ -65,7 +76,7 @@ export const bachFormSchema: FormSchema = {
       { type: 'text', key: 'barrelNumber', label: 'מספר קנה' },
       { type: 'text', key: 'koz', label: 'קו"צ' },
     ]},
-    { type: 'text', key: 'aka', label: 'אק"א' },
+    { type: 'text', key: 'aka', label: 'אק"א', lockedByRef: 'rearPositionId', infoTooltipText: 'שדה זה מתמלא אוטומטית מהעמדה הנוכחית ואינו ניתן לעריכה ידנית' },
     { type: 'row', fields: [
       { type: 'text', key: 'wind', label: 'רוח' },
       { type: 'text', key: 'clouds', label: 'עננות' },

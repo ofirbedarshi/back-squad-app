@@ -132,6 +132,19 @@ export interface IndicatorLoaderField {
   }
 }
 
+/** Like targetLoader, but fills mapped fields from current position on mount (no load button). */
+export interface CurrentPositionLoaderField {
+  type: 'currentPositionLoader'
+  /** Form key where the captured position id is stored. */
+  key: string
+  fieldMappings: {
+    positionName?: string
+    positionCoords?: string
+    positionAltitude?: string
+    aka?: string
+  }
+}
+
 export type FormFieldDef =
   | HeaderField
   | NoteField
@@ -146,6 +159,7 @@ export type FormFieldDef =
   | CoordsField
   | TargetLoaderField
   | IndicatorLoaderField
+  | CurrentPositionLoaderField
 
 export interface FormSchema {
   fields: FormFieldDef[]

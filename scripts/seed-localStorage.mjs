@@ -175,6 +175,7 @@ const bachs = [
       hitProbabilityDetails: 'מטרה חצי מוסתרת',
       controlApproved: 'כן',
       approvedBy: 'מ"פ',
+      rearPositionId: IDS.posAlpha,
       positionName: 'עמדה אלפא',
       positionCoords: { east: '345678', north: '3456789', palach: '36' },
       positionAltitude: '420',

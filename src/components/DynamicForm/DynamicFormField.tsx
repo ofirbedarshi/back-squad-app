@@ -7,6 +7,7 @@ import Checkbox from '../base/Checkbox'
 import CoordinateInput from '../base/CoordinateInput'
 import TargetLoaderField from './TargetLoaderField'
 import IndicatorLoaderField from './IndicatorLoaderField'
+import CurrentPositionLoaderField from './CurrentPositionLoaderField'
 import ComputedTextField from './ComputedTextField'
 import type { ComputedTextFieldDef } from './computedTextField.types'
 import type { CoordinateValue, FormFieldDef, FormValues, RowableField } from '../../domain/dynamicForm.types'
@@ -73,6 +74,17 @@ function DynamicFormField({ field, control, register, errors, setValue, watch }:
         setValue={setValue}
         register={register}
         errors={errors}
+      />
+    )
+  }
+
+  if (field.type === 'currentPositionLoader') {
+    return (
+      <CurrentPositionLoaderField
+        fieldDef={field}
+        setValue={setValue}
+        register={register}
+        watch={watch}
       />
     )
   }
