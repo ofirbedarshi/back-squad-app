@@ -1,13 +1,37 @@
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import RshamatzChecklistSection from '../components/RshamatzChecklistSection'
+import { loadRshamatzRehevChecklistUseCase } from '../useCases/loadRshamatzRehevChecklist'
+import { saveRshamatzRehevChecklistUseCase } from '../useCases/saveRshamatzRehevChecklist'
+import { toggleRshamatzRehevChecklistItemUseCase } from '../useCases/toggleRshamatzRehevChecklistItem'
+import type { RshamatzRehevChecklistState } from '../domain/rshamatzRehevChecklist.types'
+import { debounce } from '../utils/debounce'
 import { RSHAMATZ_REHEV_CHECKLIST_SECTIONS } from './rshamatzRehevChecklist.data'
 
+const NOTES_SAVE_DEBOUNCE_MS = 400
+
 function RshamatzRehevScreen() {
-  const [checked, setChecked] = useState<Record<string, boolean>>({})
-  const [notes, setNotes] = useState('')
+  const [state, setState] = useState(() => loadRshamatzRehevChecklistUseCase())
+
+  const debouncedSaveNotes = useMemo(
+    () =>
+      debounce((snapshot: RshamatzRehevChecklistState) => {
+        saveRshamatzRehevChecklistUseCase(snapshot)
+      }, NOTES_SAVE_DEBOUNCE_MS),
+    []
+  )
+
+  useEffect(() => () => debouncedSaveNotes.cancel(), [debouncedSaveNotes])
 
   function handleToggle(id: string) {
-    setChecked((prev) => ({ ...prev, [id]: !prev[id] }))
+    setState((prev) => toggleRshamatzRehevChecklistItemUseCase(id, prev))
+  }
+
+  function handleNotesChange(notes: string) {
+    setState((prev) => {
+      const next = { ...prev, notes }
+      debouncedSaveNotes(next)
+      return next
+    })
   }
 
   return (
@@ -21,7 +45,7 @@ function RshamatzRehevScreen() {
           <RshamatzChecklistSection
             key={section.id}
             section={section}
-            checked={checked}
+            checked={state.checked}
             onToggle={handleToggle}
           />
         ))}
@@ -32,8 +56,8 @@ function RshamatzRehevScreen() {
           </label>
           <textarea
             id="rshamatz-rehev-notes"
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
+            value={state.notes}
+            onChange={(e) => handleNotesChange(e.target.value)}
             rows={4}
             className="w-full rounded-lg border border-neutral-300 bg-neutral-200/60 px-3 py-3 text-base text-neutral-900 placeholder:text-neutral-500 focus:outline-none focus:border-neutral-400 focus:bg-neutral-100 resize-y min-h-[96px]"
             placeholder=""
