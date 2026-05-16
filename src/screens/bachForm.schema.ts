@@ -170,6 +170,7 @@ export const bachFormSchema: FormSchema = {
     { type: 'row', fields: [
       { type: 'text', key: 'indicatorKoz', label: 'קו"צ', lockedByRef: 'indicatorId', infoTooltipText: 'שדה זה מתמלא אוטומטית מהמציין הנטען ואינו ניתן לעריכה ידנית' },
       { type: 'text', key: 'indicatorToTargetAzimuth', label: "אז' מציין מטרה" },
+      { type: 'text', key: 'indicationRange', label: 'טווח ציון' },
     ]},
     { type: 'row', fields: [
       { type: 'text', key: 'indicatorWind', label: 'רוח' },
@@ -177,7 +178,6 @@ export const bachFormSchema: FormSchema = {
     ]},
     { type: 'text', key: 'aimPoint', label: 'נקודת מכוון' },
     { type: 'row', fields: [
-      { type: 'text', key: 'indicationRange', label: 'טווח ציון' },
       { type: 'text', key: 'spotSize', label: 'גודל כתם' },
       { type: 'text', key: 'targetSize', label: 'גודל מטרה' },
     ]},
