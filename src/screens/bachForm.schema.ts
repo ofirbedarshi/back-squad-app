@@ -106,15 +106,33 @@ export const bachFormSchema: FormSchema = {
       { type: 'number', key: 'missileFlightTime', label: 'זמן מעוף הטיל' },
     ]},
     { type: 'number', key: 'munitionsCount', label: "מס' חימושים" },
-    { type: 'row', fields: [
-      { type: 'toggle', key: 'manualPlacement', label: 'הצבה ידנית', options: ['כן', 'לא'], defaultValue: 'לא' },
-      { type: 'text', key: 'elevationComputed', label: 'הגבהה (מחשב)' },
-      { type: 'text', key: 'elevationActual', label: 'הגבהה (בוצע)' },
-    ]},
-    { type: 'row', fields: [
-      { type: 'text', key: 'sizeupComputed', label: 'צידוד (מחשב)' },
-      { type: 'text', key: 'sizeupActual', label: 'צידוד (בוצע)' },
-    ]},
+    {
+      type: 'toggleWithConditions',
+      key: 'manualPlacement',
+      label: 'הצבה ידנית',
+      options: ['כן', 'לא'],
+      defaultValue: 'לא',
+      conditions: {
+        כן: [
+          { type: 'row', fields: [
+            {
+              type: 'toggle',
+              key: 'elevation',
+              label: 'הגבהה ',
+              options: ['מחשב', 'בוצע'],
+              defaultValue: 'מחשב',
+            },
+            {
+              type: 'toggle',
+              key: 'sizeup',
+              label: 'צידוד ',
+              options: ['מחשב', 'בוצע'],
+              defaultValue: 'מחשב',
+            },
+          ]},
+        ],
+      },
+    },
     {
       type: 'toggle',
       key: 'powerSource',
