@@ -17,3 +17,7 @@ export function loadRshamatzRehevChecklist(): RshamatzRehevChecklistState {
 export function saveRshamatzRehevChecklist(state: RshamatzRehevChecklistState): void {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state))
 }
+
+export function removeRshamatzRehevChecklist(): void {
+  localStorage.removeItem(STORAGE_KEY)
+}

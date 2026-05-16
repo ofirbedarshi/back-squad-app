@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import RshamatzChecklistSection from '../components/RshamatzChecklistSection'
+import { useConfirm } from '../hooks/useConfirm'
+import { clearRshamatzRehevChecklistUseCase } from '../useCases/clearRshamatzRehevChecklist'
 import { loadRshamatzRehevChecklistUseCase } from '../useCases/loadRshamatzRehevChecklist'
 import { saveRshamatzRehevChecklistUseCase } from '../useCases/saveRshamatzRehevChecklist'
 import { toggleRshamatzRehevChecklistItemUseCase } from '../useCases/toggleRshamatzRehevChecklistItem'
@@ -10,6 +12,7 @@ import { RSHAMATZ_REHEV_CHECKLIST_SECTIONS } from './rshamatzRehevChecklist.data
 const NOTES_SAVE_DEBOUNCE_MS = 400
 
 function RshamatzRehevScreen() {
+  const confirm = useConfirm()
   const [state, setState] = useState(() => loadRshamatzRehevChecklistUseCase())
 
   const debouncedSaveNotes = useMemo(
@@ -34,10 +37,32 @@ function RshamatzRehevScreen() {
     })
   }
 
+  async function handleClearAll() {
+    const confirmed = await confirm({
+      title: 'ניקוי רשמ"צ רכב',
+      message: 'למחוק את כל הסימונים וההערות? לא ניתן לשחזר.',
+      confirmLabel: 'נקה הכל',
+      cancelLabel: 'ביטול',
+      variant: 'danger',
+    })
+    if (!confirmed) return
+
+    debouncedSaveNotes.cancel()
+    setState(clearRshamatzRehevChecklistUseCase())
+  }
+
   return (
     <div dir="rtl" className="flex flex-col h-full overflow-y-auto">
-      <header className="py-4 px-4 text-center font-bold text-lg border-b border-neutral-200 text-neutral-800 shrink-0">
-        רשמ"צ רכב
+      <header className="py-4 px-4 flex items-center justify-between border-b border-neutral-200 text-neutral-800 shrink-0">
+        <span className="w-[4.5rem]" aria-hidden />
+        <span className="flex-1 text-center font-bold text-lg">רשמ"צ רכב</span>
+        <button
+          type="button"
+          onClick={() => void handleClearAll()}
+          className="text-xs text-red-600 border border-red-200 rounded-lg px-2.5 py-1.5 font-medium active:bg-red-50 touch-manipulation shrink-0"
+        >
+          נקה הכל
+        </button>
       </header>
 
       <div className="flex flex-col gap-6 p-4 pb-8">
