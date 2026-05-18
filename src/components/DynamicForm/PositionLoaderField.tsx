@@ -125,15 +125,19 @@ function PositionLoaderField({
 
       <div className="flex flex-col gap-1">
         <div className="flex items-center justify-between gap-2 pt-2 flex-wrap">
-          {fieldDef.bold ? (
-            <h2 className="text-base font-bold underline text-neutral-800">{fieldDef.text}</h2>
-          ) : (
-            <h3 className="text-sm font-semibold text-neutral-500">{fieldDef.text}</h3>
-          )}
+          <div className="flex items-center gap-2 min-w-0 flex-wrap">
+            {fieldDef.bold ? (
+              <h2 className="text-base font-bold underline text-neutral-800">{fieldDef.text}</h2>
+            ) : (
+              <h3 className="text-sm font-semibold text-neutral-500">{fieldDef.text}</h3>
+            )}
+            {hasPositionSelection ? (
+              <PositionCurrentArchiveBadge isCurrentStation={isCurrentSelection} />
+            ) : null}
+          </div>
 
           {hasPositionSelection ? (
             <div className="flex items-center gap-1.5 shrink-0 flex-wrap justify-end">
-              <PositionCurrentArchiveBadge isCurrentStation={isCurrentSelection} />
               <button
                 type="button"
                 onClick={() => setShowModal(true)}
