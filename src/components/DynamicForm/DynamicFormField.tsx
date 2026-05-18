@@ -8,7 +8,8 @@ import CoordinateInput from '../base/CoordinateInput'
 import TargetLoaderField from './TargetLoaderField'
 import IndicatorLoaderField from './IndicatorLoaderField'
 import CurrentPositionLoaderField from './CurrentPositionLoaderField'
-import ComputedTextField from './ComputedTextField'
+import IndicatorToTargetComputedTextField from './IndicatorToTargetComputedTextField'
+import PositionToTargetComputedTextField from './PositionToTargetComputedTextField'
 import type { ComputedTextFieldDef } from './computedTextField.types'
 import type { CoordinateValue, FormFieldDef, FormValues, RowableField, ToggleWithConditionsField } from '../../domain/dynamicForm.types'
 import ToggleWithConditionsRenderer from './ToggleWithConditionsRenderer'
@@ -120,7 +121,17 @@ function DynamicFormField({
 
   if (field.type === 'text' && field.computedFrom === 'indicatorToTarget' && field.computedMetric) {
     return (
-      <ComputedTextField
+      <IndicatorToTargetComputedTextField
+        field={field as ComputedTextFieldDef}
+        watch={watch}
+        setValue={setValue}
+      />
+    )
+  }
+
+  if (field.type === 'text' && field.computedFrom === 'positionToTarget' && field.computedMetric) {
+    return (
+      <PositionToTargetComputedTextField
         field={field as ComputedTextFieldDef}
         watch={watch}
         setValue={setValue}

@@ -1,17 +1,14 @@
 import { useEffect, useMemo } from 'react'
 import FormField from '../FormField'
 import Input from '../Input'
-import { useIndicatorToTargetMetrics } from '../../hooks/useIndicatorToTargetMetrics'
-import type { IndicatorToTargetMetrics } from '../../domain/indicatorToTargetMetrics.types'
+import type { TargetLiveMetrics } from '../../domain/targetLiveMetrics.types'
 import type { ComputedTextFieldProps } from './computedTextField.types'
 
-function formatMetricValue(metrics: IndicatorToTargetMetrics, metric: 'azimuth' | 'range'): string {
+function formatMetricValue(metrics: TargetLiveMetrics, metric: 'azimuth' | 'range'): string {
   return metric === 'azimuth' ? metrics.azimuth.toFixed(1) : metrics.range.toFixed(1)
 }
 
-function ComputedTextField({ field, watch, setValue }: ComputedTextFieldProps) {
-  const metrics = useIndicatorToTargetMetrics(watch)
-
+function ComputedTextField({ field, metrics, setValue }: ComputedTextFieldProps) {
   const displayValue = useMemo(() => {
     if (!metrics) {
       return ''

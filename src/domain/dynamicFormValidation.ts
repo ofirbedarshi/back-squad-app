@@ -29,7 +29,10 @@ type ValidatableFieldType =
   | 'currentPositionLoader'
 
 function isComputedTextField(field: TextField): boolean {
-  return field.computedFrom === 'indicatorToTarget' && !!field.computedMetric
+  return (
+    (field.computedFrom === 'indicatorToTarget' || field.computedFrom === 'positionToTarget') &&
+    !!field.computedMetric
+  )
 }
 
 function isCoordsFilled(value: unknown): boolean {

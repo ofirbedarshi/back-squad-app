@@ -17,8 +17,8 @@ export interface TextField {
   /** Key of another field whose truthy value disables this field. */
   lockedByRef?: string
   infoTooltipText?: string
-  /** Auto-calculated from loaded target + indicator; empty when either is missing. */
-  computedFrom?: 'indicatorToTarget'
+  /** Auto-calculated from loaded entities; empty when source or target is missing. */
+  computedFrom?: 'indicatorToTarget' | 'positionToTarget'
   computedMetric?: 'azimuth' | 'range'
   /** Manual azimuth in degrees (0–359.9); non-empty optional values must be numeric. */
   valueKind?: 'azimuthDegree'

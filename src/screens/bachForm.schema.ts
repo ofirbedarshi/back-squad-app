@@ -86,9 +86,10 @@ export const bachFormSchema: FormSchema = {
     {
       type: 'text',
       key: 'azimuthToTarget',
-      label: "אז' עמדה אחורית מטרה (אמורה)",
-      required: true,
-      valueKind: 'azimuthDegree',
+      label: "אז' עמדת שיגור מטרה (אמורה)",
+      computedFrom: 'positionToTarget',
+      computedMetric: 'azimuth',
+      infoTooltipText: 'ערך מחושב אוטומטית לפי נ"צ וגובה העמדה האחורית והמטרה כששניהם נטענו. לא ניתן לעריכה ידנית.',
     },
     { type: 'text', key: 'launchRange', label: 'טווח עמדת שיגור', required: true },
     { type: 'header', text: 'מאפייני משימה', bold: true },
