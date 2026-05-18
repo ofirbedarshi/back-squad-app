@@ -1,9 +1,15 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import type { NoteVoicePayload, UserNote } from '../domain/notes.types'
 import { formatVoiceDurationSec } from '../domain/voiceNote'
 import NoteDeleteIconButton from './NoteDeleteIconButton'
 import NoteVoicePlayback from './NoteVoicePlayback'
 import VoiceRecorderPanel from './VoiceRecorderPanel'
+import FormDraftClearButton from './FormDraftClearButton'
+import { FORM_DRAFT_DEBOUNCE_MS, FORM_DRAFT_KEYS } from '../domain/formDraft.types'
+import { loadFormDraftUseCase } from '../useCases/loadFormDraft'
+import { saveFormDraftUseCase } from '../useCases/saveFormDraft'
+import { clearFormDraftUseCase } from '../useCases/clearFormDraft'
+import { debounce } from '../utils/debounce'
 import { useConfirm } from '../hooks/useConfirm'
 
 interface UserNoteRowProps {
@@ -30,15 +36,28 @@ function UserNoteRow({
   const [recorderKey, setRecorderKey] = useState(0)
   const [saving, setSaving] = useState(false)
 
+  const debouncedSaveEditDraft = useMemo(
+    () =>
+      debounce((payload: { id: string; text: string }) => {
+        saveFormDraftUseCase(FORM_DRAFT_KEYS.noteEdit(payload.id), { text: payload.text })
+      }, FORM_DRAFT_DEBOUNCE_MS),
+    [],
+  )
+
+  useEffect(() => () => debouncedSaveEditDraft.cancel(), [debouncedSaveEditDraft])
+
   useEffect(() => {
-    if (!isEditing) {
-      setDraft(note.text)
-      setVoiceEditDraft(null)
-    }
-  }, [note.text, note.id, note.hasVoice, isEditing])
+    if (!isEditing) return
+    debouncedSaveEditDraft({ id: note.id, text: draft })
+  }, [isEditing, draft, note.id, debouncedSaveEditDraft])
+
+
 
   function handleStartEdit() {
-    setDraft(note.text)
+    const stored = loadFormDraftUseCase(FORM_DRAFT_KEYS.noteEdit(note.id))
+    const restored =
+      stored && typeof stored === 'object' && typeof stored.text === 'string' ? stored.text : note.text
+    setDraft(restored)
     setVoiceEditDraft(null)
     setRecorderKey((k) => k + 1)
     setIsEditing(true)
@@ -49,6 +68,8 @@ function UserNoteRow({
     try {
       const ok = await onSave(note.id, draft, voiceEditDraft)
       if (ok) {
+        clearFormDraftUseCase(FORM_DRAFT_KEYS.noteEdit(note.id))
+        debouncedSaveEditDraft.cancel()
         setIsEditing(false)
         setVoiceEditDraft(null)
         setRecorderKey((k) => k + 1)
@@ -63,6 +84,20 @@ function UserNoteRow({
     setVoiceEditDraft(null)
     setRecorderKey((k) => k + 1)
     setIsEditing(false)
+  }
+
+  async function handleClearNoteEditDraft() {
+    const ok = await confirm({
+      title: 'ניקוי טיוטה',
+      message: 'לחזור לטקסט האחרון שנשמר בהערה? שינויי עריכה שלא נשמרו יאבדו.',
+      confirmLabel: 'נקה טיוטה',
+      cancelLabel: 'ביטול',
+      variant: 'danger',
+    })
+    if (!ok) return
+    clearFormDraftUseCase(FORM_DRAFT_KEYS.noteEdit(note.id))
+    debouncedSaveEditDraft.cancel()
+    setDraft(note.text)
   }
 
   async function handleRemoveVoiceClick() {
@@ -100,6 +135,7 @@ function UserNoteRow({
             rows={5}
             className="w-full rounded-2xl border border-neutral-200/90 bg-neutral-50/30 px-4 py-3 text-base text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:border-neutral-300 focus:bg-white focus:ring-1 focus:ring-neutral-900/10 resize-y min-h-[100px] transition"
           />
+          <FormDraftClearButton onPress={() => void handleClearNoteEditDraft()} disabled={saving} />
           <div className="flex items-center gap-2">
             <div className="min-w-0 flex-1">
               <VoiceRecorderPanel

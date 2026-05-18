@@ -14,12 +14,14 @@ import { useUIError } from '../hooks/useUIError'
 import { filterByQuery } from '../utils/search'
 import { getPositionSearchFields } from '../utils/positionSearch'
 import { addPositionUseCase } from '../useCases/addPosition'
+import { clearFormDraftUseCase } from '../useCases/clearFormDraft'
 import { loadPositionsUseCase } from '../useCases/loadPositions'
 import { promoteStoredPositionToCurrentUseCase } from '../useCases/promoteStoredPositionToCurrent'
 import { removeAllPositionsUseCase } from '../useCases/removeAllPositions'
 import { removePositionUseCase } from '../useCases/removePosition'
 import { updatePositionUseCase } from '../useCases/updatePosition'
 import type { Position, PositionInput } from '../domain/position.types'
+import { FORM_DRAFT_KEYS } from '../domain/formDraft.types'
 
 function PositionsListScreen() {
   const [positions, setPositions] = useState<Position[]>([])
@@ -40,6 +42,7 @@ function PositionsListScreen() {
 
   function handleAdd(data: PositionInput) {
     addPositionUseCase(data)
+    clearFormDraftUseCase(FORM_DRAFT_KEYS.POSITION_CREATE)
     setPositions(loadPositionsUseCase())
     setShowForm(false)
     notifySuccess('העמדה נוספה בהצלחה')
@@ -52,6 +55,7 @@ function PositionsListScreen() {
     }
     try {
       updatePositionUseCase(editingItem.id, data)
+      clearFormDraftUseCase(FORM_DRAFT_KEYS.positionEdit(editingItem.id))
       setPositions(loadPositionsUseCase())
       setEditingItem(null)
       notifySuccess('השינויים נשמרו')
@@ -67,6 +71,7 @@ function PositionsListScreen() {
     }
     try {
       promoteStoredPositionToCurrentUseCase(promotingPosition.id, data)
+      clearFormDraftUseCase(FORM_DRAFT_KEYS.positionPromote(promotingPosition.id))
       setPositions(loadPositionsUseCase())
       setPromotingPosition(null)
       notifySuccess('העמדה הוגדרה כעמדה נוכחית')
@@ -182,13 +187,24 @@ function PositionsListScreen() {
 
         {showForm && (
           <Modal title="הוסף עמדה" onClose={() => setShowForm(false)}>
-            <PositionForm onSubmit={handleAdd} submitLabel="הוסף" />
+            <PositionForm
+              key={FORM_DRAFT_KEYS.POSITION_CREATE}
+              draftKey={FORM_DRAFT_KEYS.POSITION_CREATE}
+              onSubmit={handleAdd}
+              submitLabel="הוסף"
+            />
           </Modal>
         )}
 
         {editingItem && (
           <Modal title="עריכת עמדה" onClose={() => setEditingItem(null)}>
-            <PositionForm onSubmit={handleEdit} submitLabel="שמור שינויים" initialValues={editingItem} />
+            <PositionForm
+              key={FORM_DRAFT_KEYS.positionEdit(editingItem.id)}
+              draftKey={FORM_DRAFT_KEYS.positionEdit(editingItem.id)}
+              onSubmit={handleEdit}
+              submitLabel="שמור שינויים"
+              initialValues={editingItem}
+            />
           </Modal>
         )}
 
@@ -220,6 +236,8 @@ function PositionsListScreen() {
         {promotingPosition && (
           <Modal title="הגדרה כעמדה נוכחית" onClose={() => setPromotingPosition(null)}>
             <CurrentPositionForm
+              key={FORM_DRAFT_KEYS.positionPromote(promotingPosition.id)}
+              draftKey={FORM_DRAFT_KEYS.positionPromote(promotingPosition.id)}
               onSubmit={handlePromoteToCurrent}
               initialValues={promotingPosition}
               submitLabel="הפוך לעמדה נוכחית"

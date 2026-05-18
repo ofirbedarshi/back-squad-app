@@ -1,11 +1,17 @@
+import { useMemo } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
+import FormDraftClearButton from './FormDraftClearButton'
 import FormField from './FormField'
 import Input from './Input'
 import ReferencePositionSummarySelector from './ReferencePositionSummarySelector'
 import type { TargetInput } from '../domain/target.types'
 import { useTargetLiveMetrics } from '../hooks/useTargetLiveMetrics'
+import { useDraftMergedDefaults } from '../hooks/useDraftMergedDefaults'
+import { clearFormDraftUseCase } from '../useCases/clearFormDraft'
+import { useFormDraft } from '../hooks/useFormDraft'
+import { useConfirm } from '../hooks/useConfirm'
 import CoordinateInput from './base/CoordinateInput'
 import { coordinateValueSchema } from './base/coordinateInput.utils'
 
@@ -22,23 +28,64 @@ const schema = z.object({
 
 type TargetFormValues = z.infer<typeof schema>
 
+function emptyTargetBaseline(): TargetFormValues {
+  return {
+    targetName: '',
+    targetDescription: '',
+    coordinates: { east: '', north: '', palach: '36' },
+    altitude: undefined,
+  }
+}
+
 interface TargetFormProps {
   onSubmit: (data: TargetInput) => void
   submitLabel?: string
   initialValues?: TargetInput
+  draftKey?: string
 }
 
-function TargetForm({ onSubmit, submitLabel = 'שמור', initialValues }: TargetFormProps) {
+function TargetForm({ onSubmit, submitLabel = 'שמור', initialValues, draftKey }: TargetFormProps) {
+  const confirm = useConfirm()
+
+  const baseline = useMemo(() => {
+    const base = emptyTargetBaseline()
+    return initialValues ? { ...base, ...initialValues } : base
+  }, [initialValues])
+
+  const defaultValues = useDraftMergedDefaults(draftKey, baseline)
+
   const {
     register,
     handleSubmit,
     control,
     watch,
+    reset,
     formState: { errors },
   } = useForm<TargetFormValues>({
     resolver: zodResolver(schema),
-    defaultValues: initialValues,
+    defaultValues,
   })
+
+  const { resetToBaseline } = useFormDraft({
+    draftKey,
+    baseline,
+    watch,
+    reset,
+  })
+
+  async function handleClearDraft() {
+    if (!draftKey) return
+    const ok = await confirm({
+      title: 'ניקוי טיוטה',
+      message: 'למחוק את הטיוטה של טופס המטרה?',
+      confirmLabel: 'נקה טיוטה',
+      cancelLabel: 'ביטול',
+      variant: 'danger',
+    })
+    if (!ok) return
+    clearFormDraftUseCase(draftKey)
+    resetToBaseline()
+  }
 
   const watchedCoordinates = watch('coordinates')
   const watchedAltitude = watch('altitude')
@@ -94,6 +141,8 @@ function TargetForm({ onSubmit, submitLabel = 'שמור', initialValues }: Targe
       <FormField label="תוצאות">
         <p className="text-sm font-bold text-amber-700">TODO: שדה זה יתווסף בהמשך.</p>
       </FormField>
+
+      {draftKey ? <FormDraftClearButton onPress={() => void handleClearDraft()} /> : null}
 
       <button
         type="submit"

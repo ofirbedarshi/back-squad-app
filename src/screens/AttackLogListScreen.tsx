@@ -7,9 +7,11 @@ import { useDomainError } from '../hooks/useDomainError'
 import { useNotification } from '../hooks/useNotification'
 import { useUIError } from '../hooks/useUIError'
 import { addAttackLogUseCase } from '../useCases/addAttackLog'
+import { clearFormDraftUseCase } from '../useCases/clearFormDraft'
 import { loadAttackLogsUseCase } from '../useCases/loadAttackLogs'
 import { updateAttackLogUseCase } from '../useCases/updateAttackLog'
 import type { AttackLog, AttackLogInput } from '../domain/attackLog.types'
+import { FORM_DRAFT_KEYS } from '../domain/formDraft.types'
 import attackLogDocMarkdown from '../../docs/יומן-תקיפות.md?raw'
 
 function AttackLogListScreen() {
@@ -26,6 +28,7 @@ function AttackLogListScreen() {
 
   function handleAdd(data: AttackLogInput) {
     addAttackLogUseCase(data)
+    clearFormDraftUseCase(FORM_DRAFT_KEYS.ATTACK_LOG_CREATE)
     setLogs(loadAttackLogsUseCase())
     setShowForm(false)
     notifySuccess('התקיפה נוספה בהצלחה')
@@ -38,6 +41,7 @@ function AttackLogListScreen() {
     }
     try {
       updateAttackLogUseCase(editingItem.id, data)
+      clearFormDraftUseCase(FORM_DRAFT_KEYS.attackLogEdit(editingItem.id))
       setLogs(loadAttackLogsUseCase())
       setEditingItem(null)
       notifySuccess('השינויים נשמרו')
@@ -63,13 +67,24 @@ function AttackLogListScreen() {
 
         {showForm && (
           <Modal title="הוסף תקיפה" onClose={() => setShowForm(false)}>
-            <AttackLogForm onSubmit={handleAdd} submitLabel="שמור" />
+            <AttackLogForm
+              key={FORM_DRAFT_KEYS.ATTACK_LOG_CREATE}
+              draftKey={FORM_DRAFT_KEYS.ATTACK_LOG_CREATE}
+              onSubmit={handleAdd}
+              submitLabel="שמור"
+            />
           </Modal>
         )}
 
         {editingItem && (
           <Modal title="עריכת תקיפה" onClose={() => setEditingItem(null)}>
-            <AttackLogForm onSubmit={handleEdit} submitLabel="שמור שינויים" initialValues={editingItem} />
+            <AttackLogForm
+              key={FORM_DRAFT_KEYS.attackLogEdit(editingItem.id)}
+              draftKey={FORM_DRAFT_KEYS.attackLogEdit(editingItem.id)}
+              onSubmit={handleEdit}
+              submitLabel="שמור שינויים"
+              initialValues={editingItem}
+            />
           </Modal>
         )}
 

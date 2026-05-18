@@ -133,6 +133,19 @@ export function getInitialPlusTenApplied(initialValues?: PositionFormInitialShap
   }
 }
 
+/** Default values shared by מאגר עמדות ומסך העלאה לעמדה נוכחית (archive schema). */
+export function createArchivePositionDefaultValues(
+  initialValues?: PositionFormInitialShape,
+): PositionFormValues {
+  return {
+    launcherType: LAUNCHER_TYPES.VEHICLE,
+    obstacles: EMPTY_OBSTACLES,
+    plusTenApplied: getInitialPlusTenApplied(initialValues),
+    ...initialValues,
+  } as PositionFormValues
+}
+
+
 export function parseDegreeInput(v: string): number | undefined {
   if (v === '' || v === null || v === undefined) return undefined
   const n = parseFloat(v)

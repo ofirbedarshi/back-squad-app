@@ -1,6 +1,8 @@
+import { useMemo } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
+import FormDraftClearButton from './FormDraftClearButton'
 import FormField from './FormField'
 import Input from './Input'
 import PitchRollInput from './PitchRollInput'
@@ -17,6 +19,10 @@ import {
   AZIMUTH_DEGREE_MAX,
   AZIMUTH_DEGREE_MIN,
 } from '../domain/azimuthDegree'
+import { clearFormDraftUseCase } from '../useCases/clearFormDraft'
+import { useDraftMergedDefaults } from '../hooks/useDraftMergedDefaults'
+import { useFormDraft } from '../hooks/useFormDraft'
+import { useConfirm } from '../hooks/useConfirm'
 
 const requiredTextField = z.string().min(1, 'שדה חובה')
 const optionalTextField = z.string().optional()
@@ -73,6 +79,15 @@ const schema = z.object({
 
 type AttackLogFormValues = z.infer<typeof schema>
 
+function buildAttackLogBaseline(initialValues?: AttackLogInput): AttackLogFormValues {
+  return {
+    wasAttacked: 'no',
+    hit: false,
+    generation: 'a',
+    ...initialValues,
+  } as AttackLogFormValues
+}
+
 const WAS_ATTACKED_OPTIONS: [{ label: string; value: string }, { label: string; value: string }] = [
   { label: 'כן', value: 'yes' },
   { label: 'לא', value: 'no' },
@@ -87,24 +102,46 @@ interface AttackLogFormProps {
   onSubmit: (data: AttackLogInput) => void
   submitLabel?: string
   initialValues?: AttackLogInput
+  draftKey?: string
 }
 
-function AttackLogForm({ onSubmit, submitLabel = 'שמור', initialValues }: AttackLogFormProps) {
+function AttackLogForm({ onSubmit, submitLabel = 'שמור', initialValues, draftKey }: AttackLogFormProps) {
+  const confirm = useConfirm()
+  const baseline = useMemo(() => buildAttackLogBaseline(initialValues), [initialValues])
+  const defaultValues = useDraftMergedDefaults(draftKey, baseline)
+
   const {
     register,
     handleSubmit,
     control,
     watch,
+    reset,
     formState: { errors },
   } = useForm<AttackLogFormValues>({
     resolver: zodResolver(schema),
-    defaultValues: {
-      wasAttacked: 'no',
-      hit: false,
-      generation: 'a',
-      ...initialValues,
-    },
+    defaultValues,
   })
+
+  const { resetToBaseline } = useFormDraft({
+    draftKey,
+    baseline,
+    watch,
+    reset,
+  })
+
+  async function handleClearDraft() {
+    if (!draftKey) return
+    const ok = await confirm({
+      title: 'ניקוי טיוטה',
+      message: 'למחוק את הטיוטה של טופס יומן התקיפות?',
+      confirmLabel: 'נקה טיוטה',
+      cancelLabel: 'ביטול',
+      variant: 'danger',
+    })
+    if (!ok) return
+    clearFormDraftUseCase(draftKey)
+    resetToBaseline()
+  }
 
   const wasAttacked = watch('wasAttacked')
 
@@ -352,6 +389,8 @@ function AttackLogForm({ onSubmit, submitLabel = 'שמור', initialValues }: At
       <FormField label="סוג מרעום" error={errors.fuseType?.message}>
         <Input type="text" hasError={!!errors.fuseType} {...register('fuseType')} />
       </FormField>
+
+      {draftKey ? <FormDraftClearButton onPress={() => void handleClearDraft()} /> : null}
 
       <button
         type="submit"

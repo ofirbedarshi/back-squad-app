@@ -1,12 +1,18 @@
+import { useMemo } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
+import FormDraftClearButton from './FormDraftClearButton'
 import FormField from './FormField'
 import Input from './Input'
 import CoordinateInput from './base/CoordinateInput'
 import SelectInput from './base/SelectInput'
 import { coordinateValueSchema } from './base/coordinateInput.utils'
 import type { IndicatorInput, IndicatorMeans } from '../domain/indicator.types'
+import { clearFormDraftUseCase } from '../useCases/clearFormDraft'
+import { useDraftMergedDefaults } from '../hooks/useDraftMergedDefaults'
+import { useFormDraft } from '../hooks/useFormDraft'
+import { useConfirm } from '../hooks/useConfirm'
 
 const numberField = z.number({ error: 'יש להזין מספר' })
 const markCodeField = numberField
@@ -27,22 +33,63 @@ const schema = z.object({
 
 type IndicatorFormValues = z.infer<typeof schema>
 
+function baselineFromInitial(initialValues?: IndicatorInput): IndicatorFormValues {
+  return {
+    indicatorName: initialValues?.indicatorName ?? '',
+    coordinates: initialValues?.coordinates ?? { east: '', north: '', palach: '36' },
+    altitude: typeof initialValues?.altitude === 'number' ? initialValues.altitude : 0,
+    means: initialValues?.means ?? 'שיח',
+    markCode: typeof initialValues?.markCode === 'number' ? initialValues.markCode : 0,
+    targetDomain: initialValues?.targetDomain ?? '',
+  }
+}
+
 interface IndicatorFormProps {
   onSubmit: (data: IndicatorInput) => void
   submitLabel?: string
   initialValues?: IndicatorInput
+  draftKey?: string
 }
 
-function IndicatorForm({ onSubmit, submitLabel = 'שמור', initialValues }: IndicatorFormProps) {
+function IndicatorForm({ onSubmit, submitLabel = 'שמור', initialValues, draftKey }: IndicatorFormProps) {
+  const confirm = useConfirm()
+
+  const baseline = useMemo(() => baselineFromInitial(initialValues), [initialValues])
+
+  const defaultValues = useDraftMergedDefaults(draftKey, baseline)
+
   const {
     register,
     handleSubmit,
     control,
+    watch,
+    reset,
     formState: { errors },
   } = useForm<IndicatorFormValues>({
     resolver: zodResolver(schema),
-    defaultValues: initialValues,
+    defaultValues,
   })
+
+  const { resetToBaseline } = useFormDraft({
+    draftKey,
+    baseline,
+    watch,
+    reset,
+  })
+
+  async function handleClearDraft() {
+    if (!draftKey) return
+    const ok = await confirm({
+      title: 'ניקוי טיוטה',
+      message: 'למחוק את הטיוטה של טופס המציין?',
+      confirmLabel: 'נקה טיוטה',
+      cancelLabel: 'ביטול',
+      variant: 'danger',
+    })
+    if (!ok) return
+    clearFormDraftUseCase(draftKey)
+    resetToBaseline()
+  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-4">
@@ -92,6 +139,8 @@ function IndicatorForm({ onSubmit, submitLabel = 'שמור', initialValues }: In
       <FormField label="תחום מטרות" error={errors.targetDomain?.message}>
         <Input type="text" hasError={!!errors.targetDomain} {...register('targetDomain')} />
       </FormField>
+
+      {draftKey ? <FormDraftClearButton onPress={() => void handleClearDraft()} /> : null}
 
       <button
         type="submit"

@@ -7,10 +7,12 @@ import TargetSearchBar from '../components/TargetSearchBar'
 import ReferencePositionSummarySelector from '../components/ReferencePositionSummarySelector'
 import TargetCard from '../components/TargetCard'
 import TargetForm from '../components/TargetForm'
+import { FORM_DRAFT_KEYS } from '../domain/formDraft.types'
 import type { Target, TargetInput } from '../domain/target.types'
 import { useConfirm } from '../hooks/useConfirm'
 import { useNotification } from '../hooks/useNotification'
 import { addTargetUseCase } from '../useCases/addTarget'
+import { clearFormDraftUseCase } from '../useCases/clearFormDraft'
 import { loadTargetsUseCase } from '../useCases/loadTargets'
 import { removeAllTargetsUseCase } from '../useCases/removeAllTargets'
 import { removeTargetUseCase } from '../useCases/removeTarget'
@@ -46,6 +48,7 @@ function TargetListScreen() {
 
   function handleAdd(data: TargetInput) {
     addTargetUseCase(data)
+    clearFormDraftUseCase(FORM_DRAFT_KEYS.TARGET_CREATE)
     setTargets(loadTargetsUseCase())
     setShowForm(false)
     notifySuccess('המטרה נוספה בהצלחה')
@@ -57,6 +60,7 @@ function TargetListScreen() {
     }
 
     updateTargetUseCase(editingItem.id, data)
+    clearFormDraftUseCase(FORM_DRAFT_KEYS.targetEdit(editingItem.id))
     setTargets(loadTargetsUseCase())
     setEditingItem(null)
     notifySuccess('השינויים נשמרו')
@@ -134,13 +138,24 @@ function TargetListScreen() {
 
         {showForm && (
           <Modal title="הוסף מטרה" onClose={() => setShowForm(false)}>
-            <TargetForm onSubmit={handleAdd} submitLabel="שמור" />
+            <TargetForm
+              key={FORM_DRAFT_KEYS.TARGET_CREATE}
+              draftKey={FORM_DRAFT_KEYS.TARGET_CREATE}
+              onSubmit={handleAdd}
+              submitLabel="שמור"
+            />
           </Modal>
         )}
 
         {editingItem && (
           <Modal title="עריכת מטרה" onClose={() => setEditingItem(null)}>
-            <TargetForm onSubmit={handleEdit} submitLabel="שמור שינויים" initialValues={editingItem} />
+            <TargetForm
+              key={FORM_DRAFT_KEYS.targetEdit(editingItem.id)}
+              draftKey={FORM_DRAFT_KEYS.targetEdit(editingItem.id)}
+              onSubmit={handleEdit}
+              submitLabel="שמור שינויים"
+              initialValues={editingItem}
+            />
           </Modal>
         )}
 

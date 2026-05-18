@@ -2,9 +2,11 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import CurrentPositionForm from '../components/CurrentPositionForm'
 import DocFeedbackModal from '../components/base/DocFeedbackModal'
+import { FORM_DRAFT_KEYS } from '../domain/formDraft.types'
 import { saveCurrentPositionUseCase } from '../useCases/saveCurrentPosition'
 import { updatePositionUseCase } from '../useCases/updatePosition'
 import { loadCurrentPositionUseCase } from '../useCases/loadCurrentPosition'
+import { clearFormDraftUseCase } from '../useCases/clearFormDraft'
 import { useNotification } from '../hooks/useNotification'
 import type { Position, PositionInput } from '../domain/position.types'
 import currentPositionDocMarkdown from '../../docs/מסך-עמדה-נוכחית.md?raw'
@@ -22,6 +24,7 @@ function CurrentPositionScreen() {
   }, [])
 
   function handleSave(data: PositionInput) {
+    clearFormDraftUseCase(FORM_DRAFT_KEYS.CURRENT_POSITION)
     if (existingPosition) {
       updatePositionUseCase(existingPosition.id, data)
     } else {
@@ -41,7 +44,11 @@ function CurrentPositionScreen() {
 
       <div className="p-4">
         {loaded && (
-          <CurrentPositionForm onSubmit={handleSave} initialValues={existingPosition ?? undefined} />
+          <CurrentPositionForm
+            draftKey={FORM_DRAFT_KEYS.CURRENT_POSITION}
+            onSubmit={handleSave}
+            initialValues={existingPosition ?? undefined}
+          />
         )}
       </div>
       <DocFeedbackModal

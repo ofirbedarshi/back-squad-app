@@ -13,11 +13,13 @@ import { useUIError } from '../hooks/useUIError'
 import { filterByQuery } from '../utils/search'
 import { getIndicatorSearchFields } from '../utils/indicatorSearch'
 import { addIndicatorUseCase } from '../useCases/addIndicator'
+import { clearFormDraftUseCase } from '../useCases/clearFormDraft'
 import { loadIndicatorsUseCase } from '../useCases/loadIndicators'
 import { removeAllIndicatorsUseCase } from '../useCases/removeAllIndicators'
 import { removeIndicatorUseCase } from '../useCases/removeIndicator'
 import { updateIndicatorUseCase } from '../useCases/updateIndicator'
 import type { Indicator, IndicatorInput } from '../domain/indicator.types'
+import { FORM_DRAFT_KEYS } from '../domain/formDraft.types'
 import indicatorsDocMarkdown from '../../docs/מציינים.md?raw'
 
 function IndicatorsListScreen() {
@@ -39,6 +41,7 @@ function IndicatorsListScreen() {
 
   function handleAdd(data: IndicatorInput) {
     addIndicatorUseCase(data)
+    clearFormDraftUseCase(FORM_DRAFT_KEYS.INDICATOR_CREATE)
     setIndicators(loadIndicatorsUseCase())
     setShowForm(false)
     notifySuccess('המציין נוסף בהצלחה')
@@ -51,6 +54,7 @@ function IndicatorsListScreen() {
     }
     try {
       updateIndicatorUseCase(editingItem.id, data)
+      clearFormDraftUseCase(FORM_DRAFT_KEYS.indicatorEdit(editingItem.id))
       setIndicators(loadIndicatorsUseCase())
       setEditingItem(null)
       notifySuccess('השינויים נשמרו')
@@ -124,13 +128,24 @@ function IndicatorsListScreen() {
 
         {showForm && (
           <Modal title="הוסף מציין" onClose={() => setShowForm(false)}>
-            <IndicatorForm onSubmit={handleAdd} submitLabel="הוסף" />
+            <IndicatorForm
+              key={FORM_DRAFT_KEYS.INDICATOR_CREATE}
+              draftKey={FORM_DRAFT_KEYS.INDICATOR_CREATE}
+              onSubmit={handleAdd}
+              submitLabel="הוסף"
+            />
           </Modal>
         )}
 
         {editingItem && (
           <Modal title="עריכת מציין" onClose={() => setEditingItem(null)}>
-            <IndicatorForm onSubmit={handleEdit} submitLabel="שמור שינויים" initialValues={editingItem} />
+            <IndicatorForm
+              key={FORM_DRAFT_KEYS.indicatorEdit(editingItem.id)}
+              draftKey={FORM_DRAFT_KEYS.indicatorEdit(editingItem.id)}
+              onSubmit={handleEdit}
+              submitLabel="שמור שינויים"
+              initialValues={editingItem}
+            />
           </Modal>
         )}
 
