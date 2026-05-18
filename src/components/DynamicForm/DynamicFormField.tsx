@@ -258,6 +258,7 @@ function DynamicFormField({
               options={field.options.map((opt) => ({ label: opt, value: opt }))}
               value={typeof formField.value === 'string' ? formField.value : undefined}
               onChange={formField.onChange}
+              allowDeselect={field.required !== true}
             />
           )}
         />

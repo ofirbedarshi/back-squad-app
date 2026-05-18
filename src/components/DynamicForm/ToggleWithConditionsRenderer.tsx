@@ -34,6 +34,7 @@ export default function ToggleWithConditionsRenderer({
                 options={field.options.map((opt) => ({ label: opt, value: opt }))}
                 value={currentValue}
                 onChange={formField.onChange}
+                allowDeselect={field.required !== true}
               />
             </FormField>
             {conditionalFields.map((child, i) => renderConditionalField(child, i))}
