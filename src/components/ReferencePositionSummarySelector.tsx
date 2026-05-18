@@ -1,10 +1,9 @@
 import { useMemo, useState } from 'react'
-import Modal from './base/Modal'
+import PositionCurrentArchiveBadge from './base/PositionCurrentArchiveBadge'
 import SummaryEditCard from './base/SummaryEditCard'
-import PositionCard from './PositionCard'
+import PositionPickerModal from './PositionPickerModal'
 import { useReferencePosition } from '../hooks/useReferencePosition'
 import { useCurrentPosition } from '../hooks/useCurrentPosition'
-import { loadExplicitReferencePositionIdUseCase } from '../useCases/loadExplicitReferencePositionId'
 import { loadPositionsUseCase } from '../useCases/loadPositions'
 import { setReferencePositionIdUseCase } from '../useCases/setReferencePositionId'
 import type { Position } from '../domain/position.types'
@@ -13,41 +12,13 @@ function ReferencePositionSummarySelector() {
   const referencePosition = useReferencePosition()
   const currentPosition = useCurrentPosition()
   const [showPicker, setShowPicker] = useState(false)
-  /** Saved explicit id when the picker opened (`null` = ברירת מחדל לפי עמדה נוכחית). */
-  const [baselineExplicitId, setBaselineExplicitId] = useState<string | null>(null)
-  /** Pending choice until the user taps שמור. */
-  const [draftExplicitId, setDraftExplicitId] = useState<string | null>(null)
 
   /** Re-read storage when the modal opens so the list matches other screens. */
   const positions = useMemo(() => loadPositionsUseCase(), [showPicker])
 
-  const positionsWithCurrentFirst = useMemo(() => {
-    const cid = currentPosition?.id
-    if (!cid) return positions
-    return [...positions].sort((a, b) => {
-      if (a.id === cid) return -1
-      if (b.id === cid) return 1
-      return 0
-    })
-  }, [positions, currentPosition?.id])
-
-  function openPicker() {
-    const baseline = loadExplicitReferencePositionIdUseCase()
-    setBaselineExplicitId(baseline)
-    setDraftExplicitId(baseline)
-    setShowPicker(true)
+  function handlePick(position: Position) {
+    setReferencePositionIdUseCase(position.id)
   }
-
-  function handleSelectPosition(position: Position) {
-    setDraftExplicitId(position.id)
-  }
-
-  function handleSavePicker() {
-    setReferencePositionIdUseCase(draftExplicitId)
-    setShowPicker(false)
-  }
-
-  const pickerHasChanges = baselineExplicitId !== draftExplicitId
 
   const east = referencePosition?.coordinates.east ?? ''
   const north = referencePosition?.coordinates.north ?? ''
@@ -56,15 +27,7 @@ function ReferencePositionSummarySelector() {
     <div className="flex flex-col gap-1">
       <div className="flex items-center gap-2">
         <p className="font-semibold text-neutral-800">עמדת ייחוס:</p>
-        {isCurrentPosition ? (
-          <span className="text-xs font-semibold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full">
-            עמדה נוכחית
-          </span>
-        ) : (
-          <span className="text-xs font-semibold bg-orange-100 text-orange-700 px-2 py-0.5 rounded-full">
-            עמדת מאגר
-          </span>
-        )}
+        <PositionCurrentArchiveBadge isCurrentStation={isCurrentPosition} />
       </div>
       <p className="line-clamp-1">
         <span className="font-medium text-neutral-800">{referencePosition.stationName}</span> | נ"צ {north} / {east}
@@ -78,40 +41,20 @@ function ReferencePositionSummarySelector() {
     <>
       <SummaryEditCard
         summary={summary}
-        onEdit={openPicker}
+        onEdit={() => setShowPicker(true)}
         editButtonLabel="בחר עמדת ייחוס"
         disabled={positions.length === 0 && !currentPosition}
       />
 
-      {showPicker && (
-        <Modal
-          title="בחר עמדת ייחוס"
-          onClose={() => setShowPicker(false)}
-          onSave={handleSavePicker}
-          saveDisabled={!pickerHasChanges}
-        >
-          <div className="flex flex-col gap-3 px-2">
-            {positions.length === 0 ? (
-              <p className="text-center text-neutral-500 text-sm py-4">אין עמדות שמורות לבחירה</p>
-            ) : (
-              positionsWithCurrentFirst.map((position) => {
-                const isDraftSelected = draftExplicitId === position.id
-                const isCurrentStation = currentPosition?.id === position.id
-                return (
-                  <PositionCard
-                    key={position.id}
-                    position={position}
-                    isCurrent={isCurrentStation}
-                    emphasizeCurrent={false}
-                    selected={isDraftSelected}
-                    onClick={() => handleSelectPosition(position)}
-                  />
-                )
-              })
-            )}
-          </div>
-        </Modal>
-      )}
+      <PositionPickerModal
+        open={showPicker}
+        title="בחר עמדת ייחוס"
+        onClose={() => setShowPicker(false)}
+        positions={positions}
+        currentStationId={currentPosition?.id}
+        selectedPositionId={referencePosition?.id ?? null}
+        onPick={handlePick}
+      />
     </>
   )
 }

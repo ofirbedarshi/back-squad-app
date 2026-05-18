@@ -67,6 +67,27 @@ export const targetAidFormSchema: FormSchema = {
     },
 
     {
+      type: 'positionLoader',
+      key: 'referencePositionId',
+      text: 'עמדה',
+      bold: true,
+      required: false,
+      fieldMappings: {
+        positionName: 'referencePositionName',
+        positionCoords: 'referencePositionCoords',
+        positionAltitude: 'referencePositionAltitude',
+        aka: 'referencePositionAka',
+      },
+    },
+    {
+      type: 'text',
+      key: 'referencePositionName',
+      label: 'שם עמדה',
+      lockedByRef: 'referencePositionId',
+      infoTooltipText: 'מתמלא מהעמדה שנבחרת או מהעמדה הנוכחית בטעינה',
+    },
+
+    {
       type: 'row',
       fields: [
         {

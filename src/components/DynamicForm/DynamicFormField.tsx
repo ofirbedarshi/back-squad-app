@@ -9,6 +9,7 @@ import CoordinateInput from '../base/CoordinateInput'
 import TargetLoaderField from './TargetLoaderField'
 import IndicatorLoaderField from './IndicatorLoaderField'
 import CurrentPositionLoaderField from './CurrentPositionLoaderField'
+import PositionLoaderField from './PositionLoaderField'
 import IndicatorToTargetComputedTextField from './IndicatorToTargetComputedTextField'
 import PositionToTargetComputedTextField from './PositionToTargetComputedTextField'
 import type { ComputedTextFieldDef } from './computedTextField.types'
@@ -99,6 +100,22 @@ function DynamicFormField({
         currentIndicatorId={currentIndicatorId || undefined}
         setValue={setValue}
         register={register}
+        errors={errors}
+        getValues={getValues}
+        parentByKey={parentByKey}
+      />
+    )
+  }
+
+  if (field.type === 'positionLoader') {
+    const currentPositionId = watch(field.key) as string | undefined
+    return (
+      <PositionLoaderField
+        fieldDef={field}
+        currentPositionId={currentPositionId || undefined}
+        setValue={setValue}
+        register={register}
+        watch={watch}
         errors={errors}
         getValues={getValues}
         parentByKey={parentByKey}

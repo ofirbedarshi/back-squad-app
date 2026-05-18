@@ -16,6 +16,7 @@ function collectDefaultFromFormFieldDef(field: FormFieldDef, values: FormValues)
     field.type === 'note' ||
     field.type === 'targetLoader' ||
     field.type === 'indicatorLoader' ||
+    field.type === 'positionLoader' ||
     field.type === 'currentPositionLoader'
   ) return
   if (field.type === 'row') {
