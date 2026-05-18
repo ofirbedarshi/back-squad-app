@@ -26,7 +26,6 @@ function targetAidPositionToTargetComputedField(
 /** Loader field keys match בדח תחקור where shared; מציין still maps נ"צ/גובה ב-storage דרך ה-loader בלי שדות מיותרים במסך. */
 export const targetAidFormSchema: FormSchema = {
   fields: [
-    { type: 'header', text: 'מטרה', bold: false },
     {
       type: 'targetLoader',
       key: 'targetId',
@@ -42,7 +41,7 @@ export const targetAidFormSchema: FormSchema = {
     {
       type: 'text',
       key: 'targetNumber',
-      label: 'מספר מטרה',
+      label: 'שם מטרה',
       lockedByRef: 'targetId',
       infoTooltipText: 'מתמלא מהמטרה שנבחרה',
     },
@@ -75,18 +74,23 @@ export const targetAidFormSchema: FormSchema = {
       },
     },
     {
-      type: 'text',
-      key: 'indicatorName',
-      label: 'שם מציין',
-      lockedByRef: 'indicatorId',
-      infoTooltipText: 'מתמלא מהמציין שנבחר',
-    },
-    {
-      type: 'text',
-      key: 'indicatorKoz',
-      label: 'קו"צ',
-      lockedByRef: 'indicatorId',
-      infoTooltipText: 'מתמלא מהמציין שנבחר',
+      type: 'row',
+      fields: [
+        {
+          type: 'text',
+          key: 'indicatorName',
+          label: 'שם מציין',
+          lockedByRef: 'indicatorId',
+          infoTooltipText: 'מתמלא מהמציין שנבחר',
+        },
+        {
+          type: 'text',
+          key: 'indicatorKoz',
+          label: 'קו"צ',
+          lockedByRef: 'indicatorId',
+          infoTooltipText: 'מתמלא מהמציין שנבחר',
+        },
+      ],
     },
 
     {
@@ -119,6 +123,11 @@ export const targetAidFormSchema: FormSchema = {
           'הפרש גובה עמדה מטרה',
           'ערך מחושב אוטומטית לפי גובה העמדה והמטרה כששניהם נטענו. לא ניתן לעריכה ידנית.',
         ),
+      ],
+    },
+    {
+      type: 'row',
+      fields: [
         targetAidPositionToTargetComputedField(
           'azimuth',
           'bearingManual',
