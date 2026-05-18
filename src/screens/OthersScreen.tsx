@@ -12,7 +12,7 @@ function OthersScreen() {
         <MenuButton label='צאק"ליסט החטאה' to="/others/miss-checklist" />
         <MenuButton label="עזר מטרות למפקד משימה" to="/others/target-aid" />
         <MenuButton label='מדידת גזרת יר"י' to="/others/zone-measurement" />
-        <MenuButton label='רשת"צים' to="/others/rshatazim" />
+        <MenuButton label='רשמ״צים' to="/others/rshatazim" />
       </div>
     </div>
   )

@@ -1,15 +1,19 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import MissChecklistCard from '../components/MissChecklistCard'
+import DocFeedbackModal from '../components/base/DocFeedbackModal'
+import OptionsMenu from '../components/base/OptionsMenu'
 import type { MissChecklist } from '../domain/missChecklist.types'
 import { useConfirm } from '../hooks/useConfirm'
 import { useDomainError } from '../hooks/useDomainError'
 import { useNotification } from '../hooks/useNotification'
 import { loadMissChecklistsUseCase } from '../useCases/loadMissChecklists'
 import { removeMissChecklistUseCase } from '../useCases/removeMissChecklist'
+import missChecklistDocMarkdown from '../../docs/צקליסט-החטאה.md?raw'
 
 function MissChecklistListScreen() {
   const [items, setItems] = useState<MissChecklist[]>(() => loadMissChecklistsUseCase())
+  const [menuItem, setMenuItem] = useState<MissChecklist | null>(null)
   const navigate = useNavigate()
   const confirm = useConfirm()
   const { triggerError } = useDomainError()
@@ -53,9 +57,27 @@ function MissChecklistListScreen() {
             key={item.id}
             item={item}
             onClick={() => navigate(`/others/miss-checklist/${item.id}/edit`)}
-            onRemove={() => void handleRemove(item.id)}
+            onLongPress={() => setMenuItem(item)}
           />
         ))}
+
+        {menuItem && (
+          <OptionsMenu
+            title={
+              typeof menuItem.values.targetType === 'string' && menuItem.values.targetType.trim() !== ''
+                ? menuItem.values.targetType
+                : "צ'קליסט החטאה"
+            }
+            items={[
+              {
+                label: "מחק צ'קליסט",
+                variant: 'danger',
+                onSelect: () => void handleRemove(menuItem.id),
+              },
+            ]}
+            onClose={() => setMenuItem(null)}
+          />
+        )}
 
         <button
           type="button"
@@ -65,6 +87,12 @@ function MissChecklistListScreen() {
           + הוסף צ'קליסט
         </button>
       </div>
+      <DocFeedbackModal
+        markdown={missChecklistDocMarkdown}
+        modalTitle="מידע על צ'קליסט החטאה"
+        shareTitle="צ'קליסט החטאה"
+        openButtonAriaLabel="פתח מידע על צ'קליסט החטאה"
+      />
     </div>
   )
 }

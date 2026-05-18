@@ -1,13 +1,14 @@
-import NoteDeleteIconButton from './NoteDeleteIconButton'
+import { useLongPressWithShake } from '../hooks/useLongPressWithShake'
+import { useSuppressNativeTextSelection } from '../hooks/useSuppressNativeTextSelection'
 import type { Bach } from '../domain/bach.types'
 
 interface BachCardProps {
   bach: Bach
-  onClick?: () => void
-  onRemove?: () => void
+  onClick: () => void
+  onLongPress: () => void
 }
 
-function BachCard({ bach, onClick, onRemove }: BachCardProps) {
+function BachCard({ bach, onClick, onLongPress }: BachCardProps) {
   const { values } = bach
   const targetName = typeof values.targetName === 'string' ? values.targetName : ''
   const indicatorName = typeof values.indicatorName === 'string' ? values.indicatorName : ''
@@ -16,14 +17,18 @@ function BachCard({ bach, onClick, onRemove }: BachCardProps) {
 
   const createdDate = new Date(bach.createdAt).toLocaleDateString('he-IL')
 
+  const { className: shakeClass, ...longPressProps } = useLongPressWithShake(onLongPress, onClick)
+  const rootRef = useSuppressNativeTextSelection<HTMLDivElement>()
+
   return (
-    <div className="bg-white rounded-2xl border border-neutral-200 shadow-sm p-4 flex flex-col gap-2">
+    <div
+      ref={rootRef}
+      className={`interactive-no-copy bg-white rounded-2xl border border-neutral-200 shadow-sm p-4 flex flex-col gap-2 active:bg-neutral-50 transition-colors touch-manipulation select-none ${shakeClass}`}
+      role="button"
+      {...longPressProps}
+    >
       <div className="flex items-start justify-between gap-3">
-        <div
-          className="flex-1 flex flex-col gap-1 active:bg-neutral-50 transition-colors touch-manipulation select-none rounded-xl -m-1 p-1"
-          onClick={onClick}
-          role={onClick ? 'button' : undefined}
-        >
+        <div className="flex-1 flex flex-col gap-1">
           <span className="font-bold text-neutral-800 text-base">
             {targetName ? `מטרה: ${targetName}` : 'ללא שם מטרה'}
           </span>
@@ -34,10 +39,7 @@ function BachCard({ bach, onClick, onRemove }: BachCardProps) {
             ) : null}
           </div>
         </div>
-        <div className="flex items-center gap-2 shrink-0 self-start pt-0.5">
-          <span className="text-xs text-neutral-400">{createdDate}</span>
-          {onRemove && <NoteDeleteIconButton onClick={onRemove} />}
-        </div>
+        <span className="text-xs text-neutral-400 shrink-0 self-start pt-0.5">{createdDate}</span>
       </div>
     </div>
   )
