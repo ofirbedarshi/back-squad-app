@@ -2,15 +2,26 @@ import { z } from 'zod'
 import { pitchRollSchema } from './pitchRollInput.utils'
 import { coordinateValueSchema } from './base/coordinateInput.utils'
 import type { PositionFormInitialShape } from '../domain/position.types'
+import {
+  AZIMUTH_DEGREE_MAX,
+  AZIMUTH_DEGREE_MIN,
+  AZIMUTH_MAX_MESSAGE,
+  AZIMUTH_MIN_MESSAGE,
+  AZIMUTH_MUST_BE_NUMBER_MESSAGE,
+} from '../domain/azimuthDegree'
 
-const numberField = z.number({ error: 'יש להזין מספר' })
+const numberField = z.number({ error: AZIMUTH_MUST_BE_NUMBER_MESSAGE })
 
-const optionalDegreeField = z.number().min(0).max(359.9, 'ערך מקסימלי הוא 359.9').optional()
+const optionalDegreeField = z
+  .number({ error: AZIMUTH_MUST_BE_NUMBER_MESSAGE })
+  .min(AZIMUTH_DEGREE_MIN, AZIMUTH_MIN_MESSAGE)
+  .max(AZIMUTH_DEGREE_MAX, AZIMUTH_MAX_MESSAGE)
+  .optional()
 
 const requiredDegreeField = z
-  .number({ error: 'יש להזין מספר' })
-  .min(0, 'ערך מינימלי הוא 0')
-  .max(359.9, 'ערך מקסימלי הוא 359.9')
+  .number({ error: AZIMUTH_MUST_BE_NUMBER_MESSAGE })
+  .min(AZIMUTH_DEGREE_MIN, AZIMUTH_MIN_MESSAGE)
+  .max(AZIMUTH_DEGREE_MAX, AZIMUTH_MAX_MESSAGE)
 
 const boundarySchema = z.object({
   compass: requiredDegreeField,
@@ -41,7 +52,9 @@ const sharedPositionFields = {
   stationName: z.string().min(1, 'שדה חובה'),
   coordinates: coordinateValueSchema,
   altitude: numberField,
-  aka: numberField.max(359.9, 'ערך מקסימלי הוא 359.9'),
+  aka: numberField
+    .min(AZIMUTH_DEGREE_MIN, AZIMUTH_MIN_MESSAGE)
+    .max(AZIMUTH_DEGREE_MAX, AZIMUTH_MAX_MESSAGE),
   pitch: pitchRollSchema,
   roll: pitchRollSchema,
   primarySector: sectorSchema,

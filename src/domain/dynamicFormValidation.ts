@@ -1,3 +1,4 @@
+import { validateAzimuthDegreeValue } from './azimuthDegree.ts'
 import type { CoordinateValue } from './dynamicForm.types'
 import type {
   FormFieldDef,
@@ -9,6 +10,10 @@ import type {
 } from './dynamicForm.types'
 
 export const REQUIRED_FIELD_MESSAGE = 'שדה חובה'
+
+function isAzimuthDegreeTextField(field: FormFieldDef | RowableField): boolean {
+  return field.type === 'text' && field.valueKind === 'azimuthDegree'
+}
 
 type ValidatableFieldType =
   | 'text'
@@ -143,6 +148,9 @@ export function shouldValidateField(
   if (!('key' in field)) return false
   if (field.type === 'text' && isComputedTextField(field)) return false
   if ('lockedByRef' in field && field.lockedByRef) return false
+  if (isAzimuthDegreeTextField(field)) {
+    return isFieldVisible(field, values, parentByKey)
+  }
   if (field.required !== true) return false
   return isFieldVisible(field, values, parentByKey)
 }
@@ -151,7 +159,13 @@ export function validateFieldValue(
   field: FormFieldDef | RowableField,
   value: unknown,
 ): true | string {
-  if (!('key' in field) || field.required !== true) return true
+  if (!('key' in field)) return true
+
+  if (isAzimuthDegreeTextField(field)) {
+    return validateAzimuthDegreeValue(value, { required: field.required === true })
+  }
+
+  if (field.required !== true) return true
 
   if (field.type === 'text' || field.type === 'date' || field.type === 'time') {
     return isFilledFormValue(value, field.type) || REQUIRED_FIELD_MESSAGE

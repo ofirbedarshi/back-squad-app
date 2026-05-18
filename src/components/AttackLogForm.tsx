@@ -10,10 +10,27 @@ import Checkbox from './base/Checkbox'
 import CoordinateInput from './base/CoordinateInput'
 import { coordinateValueSchema } from './base/coordinateInput.utils'
 import type { AttackLogInput } from '../domain/attackLog.types'
+import {
+  AZIMUTH_MAX_MESSAGE,
+  AZIMUTH_MUST_BE_NUMBER_MESSAGE,
+  AZIMUTH_MIN_MESSAGE,
+  AZIMUTH_DEGREE_MAX,
+  AZIMUTH_DEGREE_MIN,
+} from '../domain/azimuthDegree'
 
 const requiredTextField = z.string().min(1, 'שדה חובה')
 const optionalTextField = z.string().optional()
 const optionalNumberField = z.nan().transform((): undefined => undefined).or(z.number().optional())
+const optionalAzimuthDegreeField = z
+  .nan()
+  .transform((): undefined => undefined)
+  .or(
+    z
+      .number({ error: AZIMUTH_MUST_BE_NUMBER_MESSAGE })
+      .min(AZIMUTH_DEGREE_MIN, AZIMUTH_MIN_MESSAGE)
+      .max(AZIMUTH_DEGREE_MAX, AZIMUTH_MAX_MESSAGE)
+      .optional(),
+  )
 
 const schema = z.object({
   targetName: requiredTextField,
@@ -34,17 +51,17 @@ const schema = z.object({
   altitude: optionalNumberField,
   targetCoordinates: coordinateValueSchema.optional(),
   stationTargetRange: optionalNumberField,
-  stationTargetAzimuth: optionalNumberField,
+  stationTargetAzimuth: optionalAzimuthDegreeField,
   stationTargetAltitudeDiff: optionalNumberField,
   indicatorFactor: optionalNumberField,
   indicatorMeans: optionalTextField,
   indicatorCoordinates: coordinateValueSchema.optional(),
-  indicatorTargetAzimuth: optionalNumberField,
+  indicatorTargetAzimuth: optionalAzimuthDegreeField,
   indicatorRange: optionalNumberField,
   apexAngle: optionalNumberField,
   spotSizeWithoutSpread: optionalNumberField,
   targetFront: optionalTextField,
-  wallAzimuth: optionalNumberField,
+  wallAzimuth: optionalAzimuthDegreeField,
   spotSizeWithSpread: optionalNumberField,
   cloudBaseAltitude: optionalNumberField,
   windSpeed: optionalNumberField,
@@ -234,7 +251,14 @@ function AttackLogForm({ onSubmit, submitLabel = 'שמור', initialValues }: At
       </FormField>
 
       <FormField label="אזימות עמדה מטרה" error={errors.stationTargetAzimuth?.message}>
-        <Input type="number" hasError={!!errors.stationTargetAzimuth} {...register('stationTargetAzimuth', { valueAsNumber: true })} />
+        <Input
+          type="number"
+          min={0}
+          max={359.9}
+          step={0.1}
+          hasError={!!errors.stationTargetAzimuth}
+          {...register('stationTargetAzimuth', { valueAsNumber: true })}
+        />
       </FormField>
 
       <FormField label="הפרש גובה עמדה מטרה" error={errors.stationTargetAltitudeDiff?.message}>
@@ -264,7 +288,14 @@ function AttackLogForm({ onSubmit, submitLabel = 'שמור', initialValues }: At
       </FormField>
 
       <FormField label="אזימות מציין מטרה" error={errors.indicatorTargetAzimuth?.message}>
-        <Input type="number" hasError={!!errors.indicatorTargetAzimuth} {...register('indicatorTargetAzimuth', { valueAsNumber: true })} />
+        <Input
+          type="number"
+          min={0}
+          max={359.9}
+          step={0.1}
+          hasError={!!errors.indicatorTargetAzimuth}
+          {...register('indicatorTargetAzimuth', { valueAsNumber: true })}
+        />
       </FormField>
 
       <FormField label="טווח מציין" error={errors.indicatorRange?.message}>
@@ -284,7 +315,14 @@ function AttackLogForm({ onSubmit, submitLabel = 'שמור', initialValues }: At
       </FormField>
 
       <FormField label="אזימות הקיר" error={errors.wallAzimuth?.message}>
-        <Input type="number" hasError={!!errors.wallAzimuth} {...register('wallAzimuth', { valueAsNumber: true })} />
+        <Input
+          type="number"
+          min={0}
+          max={359.9}
+          step={0.1}
+          hasError={!!errors.wallAzimuth}
+          {...register('wallAzimuth', { valueAsNumber: true })}
+        />
       </FormField>
 
       <FormField label="גודל כתם (עם מריחה)" error={errors.spotSizeWithSpread?.message}>

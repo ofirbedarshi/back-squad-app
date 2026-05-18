@@ -20,6 +20,8 @@ export interface TextField {
   /** Auto-calculated from loaded target + indicator; empty when either is missing. */
   computedFrom?: 'indicatorToTarget'
   computedMetric?: 'azimuth' | 'range'
+  /** Manual azimuth in degrees (0–359.9); non-empty optional values must be numeric. */
+  valueKind?: 'azimuthDegree'
 }
 
 export interface DateField {

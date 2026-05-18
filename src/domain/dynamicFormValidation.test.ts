@@ -81,3 +81,28 @@ describe('validateFormValues', () => {
     assert.deepEqual(errors, {})
   })
 })
+
+const azimuthSchema: FormSchema = {
+  fields: [
+    { type: 'text', key: 'requiredAz', label: 'חובה', required: true, valueKind: 'azimuthDegree' },
+    { type: 'text', key: 'optionalAz', label: 'אופציונלי', required: false, valueKind: 'azimuthDegree' },
+  ],
+}
+
+describe('azimuth degree validation', () => {
+  it('rejects out-of-range required azimuth on save', () => {
+    const errors = validateFormValues(azimuthSchema, {
+      requiredAz: '400',
+      optionalAz: '',
+    })
+    assert.equal(errors.requiredAz, 'ערך מקסימלי הוא 359.9')
+  })
+
+  it('rejects invalid optional azimuth when filled', () => {
+    const errors = validateFormValues(azimuthSchema, {
+      requiredAz: '90',
+      optionalAz: 'abc',
+    })
+    assert.equal(errors.optionalAz, 'יש להזין מספר')
+  })
+})

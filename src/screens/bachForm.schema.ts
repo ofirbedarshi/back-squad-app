@@ -83,7 +83,13 @@ export const bachFormSchema: FormSchema = {
       { type: 'text', key: 'wind', label: 'רוח', required: true },
       { type: 'text', key: 'clouds', label: 'עננות', required: true },
     ]},
-    { type: 'text', key: 'azimuthToTarget', label: "אז' עמדה אחורית מטרה (אמורה)", required: true },
+    {
+      type: 'text',
+      key: 'azimuthToTarget',
+      label: "אז' עמדה אחורית מטרה (אמורה)",
+      required: true,
+      valueKind: 'azimuthDegree',
+    },
     { type: 'text', key: 'launchRange', label: 'טווח עמדת שיגור', required: true },
     { type: 'header', text: 'מאפייני משימה', bold: true },
     {
@@ -154,8 +160,20 @@ export const bachFormSchema: FormSchema = {
       required: true,
     },
     { type: 'row', fields: [
-      { type: 'text', key: 'rightSectorAzimuth', label: 'אז׳ גבול גזרה ימני', required: true },
-      { type: 'text', key: 'leftSectorAzimuth', label: 'אז׳ גבול גזרה שמאלי', required: true },
+      {
+        type: 'text',
+        key: 'rightSectorAzimuth',
+        label: 'אז׳ גבול גזרה ימני',
+        required: true,
+        valueKind: 'azimuthDegree',
+      },
+      {
+        type: 'text',
+        key: 'leftSectorAzimuth',
+        label: 'אז׳ גבול גזרה שמאלי',
+        required: true,
+        valueKind: 'azimuthDegree',
+      },
     ]},
 
     {
