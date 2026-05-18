@@ -22,7 +22,7 @@ export function calculateTargetLiveMetrics(input: TargetLiveMetricsInput): Targe
   const dN = targetNorth - sourceNorth
   const altitudeDiff = input.targetHeight - sourceHeight
 
-  const range = Math.sqrt(dE ** 2 + dN ** 2 + altitudeDiff ** 2)
+  const range = Math.sqrt(dE ** 2 + dN ** 2)
 
   let theta = Math.atan2(dE, dN)
   if (theta < 0) {
