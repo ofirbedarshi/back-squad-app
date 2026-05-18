@@ -16,7 +16,7 @@ interface DynamicFormProps {
 }
 
 function DynamicForm({ schema, onSubmit, defaultValues, submitLabel = 'שמור', formId }: DynamicFormProps) {
-  const schemaDefaults = extractDefaultValues(schema)
+  const schemaDefaults = useMemo(() => extractDefaultValues(schema), [schema])
   const parentByKey = useMemo(() => buildParentByKeyMap(schema), [schema])
 
   const {

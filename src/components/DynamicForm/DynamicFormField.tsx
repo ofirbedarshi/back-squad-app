@@ -2,6 +2,7 @@ import { Controller } from 'react-hook-form'
 import type { Control, FieldErrors, UseFormGetValues, UseFormRegister, UseFormSetValue, UseFormWatch } from 'react-hook-form'
 import FormField from '../FormField'
 import Input from '../Input'
+import Textarea from '../base/Textarea'
 import SegmentedToggle from '../base/SegmentedToggle'
 import Checkbox from '../base/Checkbox'
 import CoordinateInput from '../base/CoordinateInput'
@@ -150,6 +151,26 @@ function DynamicFormField({
       <FormField label={field.label} error={errorMessage} infoTooltipText={field.infoTooltipText}>
         <Input
           type="text"
+          placeholder={field.placeholder}
+          hasError={!!error}
+          disabled={isLocked}
+          {...register(field.key, { validate })}
+        />
+      </FormField>
+    )
+  }
+
+  if (field.type === 'textarea') {
+    const error = errors[field.key]
+    const errorMessage = error && 'message' in error ? (error.message as string) : undefined
+    const isLocked = !!field.lockedByRef
+    const validate = field.lockedByRef
+      ? undefined
+      : makeFieldValidator(field, getValues, parentByKey)
+    return (
+      <FormField label={field.label} error={errorMessage} infoTooltipText={field.infoTooltipText}>
+        <Textarea
+          rows={field.rows ?? 4}
           placeholder={field.placeholder}
           hasError={!!error}
           disabled={isLocked}

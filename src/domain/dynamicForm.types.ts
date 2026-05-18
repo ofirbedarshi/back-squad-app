@@ -24,6 +24,18 @@ export interface TextField {
   valueKind?: 'azimuthDegree'
 }
 
+export interface TextareaField {
+  type: 'textarea'
+  key: string
+  label: string
+  placeholder?: string
+  required?: boolean
+  defaultValue?: string
+  rows?: number
+  infoTooltipText?: string
+  lockedByRef?: string
+}
+
 export interface DateField {
   type: 'date'
   key: string
@@ -113,6 +125,7 @@ export interface TargetLoaderField {
 
 export type RowableField =
   | TextField
+  | TextareaField
   | NumberField
   | DateField
   | TimeField
@@ -163,6 +176,7 @@ export type FormFieldDef =
   | NoteField
   | RowField
   | TextField
+  | TextareaField
   | NumberField
   | DateField
   | TimeField

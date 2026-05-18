@@ -17,6 +17,7 @@ function isAzimuthDegreeTextField(field: FormFieldDef | RowableField): boolean {
 
 type ValidatableFieldType =
   | 'text'
+  | 'textarea'
   | 'number'
   | 'date'
   | 'time'
@@ -52,6 +53,7 @@ export function isFilledFormValue(
 ): boolean {
   switch (fieldType) {
     case 'text':
+    case 'textarea':
     case 'date':
     case 'time':
       return typeof value === 'string' && value.trim() !== ''
@@ -170,7 +172,7 @@ export function validateFieldValue(
 
   if (field.required !== true) return true
 
-  if (field.type === 'text' || field.type === 'date' || field.type === 'time') {
+  if (field.type === 'text' || field.type === 'textarea' || field.type === 'date' || field.type === 'time') {
     return isFilledFormValue(value, field.type) || REQUIRED_FIELD_MESSAGE
   }
   if (field.type === 'number') {
