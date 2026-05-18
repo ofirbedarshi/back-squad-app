@@ -4,8 +4,17 @@ import Input from '../Input'
 import type { TargetLiveMetrics } from '../../domain/targetLiveMetrics.types'
 import type { ComputedTextFieldProps } from './computedTextField.types'
 
-function formatMetricValue(metrics: TargetLiveMetrics, metric: 'azimuth' | 'range'): string {
-  return metric === 'azimuth' ? metrics.azimuth.toFixed(1) : metrics.range.toFixed(1)
+function formatMetricValue(
+  metrics: TargetLiveMetrics,
+  metric: 'azimuth' | 'range' | 'altitudeDiff',
+): string {
+  if (metric === 'azimuth') {
+    return metrics.azimuth.toFixed(1)
+  }
+  if (metric === 'range') {
+    return metrics.range.toFixed(1)
+  }
+  return metrics.altitudeDiff.toFixed(1)
 }
 
 function ComputedTextField({ field, metrics, setValue }: ComputedTextFieldProps) {

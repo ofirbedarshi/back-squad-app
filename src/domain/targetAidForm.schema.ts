@@ -1,4 +1,27 @@
-import type { FormSchema } from './dynamicForm.types'
+import type { FormSchema, PositionToTargetWatchKeyOverrides, TextField } from './dynamicForm.types'
+
+const TARGET_AID_POSITION_TO_TARGET_WATCH_KEYS = {
+  positionId: 'referencePositionId',
+  positionCoords: 'referencePositionCoords',
+  positionAltitude: 'referencePositionAltitude',
+} as const satisfies PositionToTargetWatchKeyOverrides
+
+function targetAidPositionToTargetComputedField(
+  computedMetric: 'altitudeDiff' | 'azimuth' | 'range',
+  key: string,
+  label: string,
+  infoTooltipText: string,
+): TextField {
+  return {
+    type: 'text',
+    key,
+    label,
+    computedFrom: 'positionToTarget',
+    computedMetric,
+    positionToTargetWatchKeys: TARGET_AID_POSITION_TO_TARGET_WATCH_KEYS,
+    infoTooltipText,
+  }
+}
 
 /** Loader field keys match בדח תחקור where shared; מציין still maps נ"צ/גובה ב-storage דרך ה-loader בלי שדות מיותרים במסך. */
 export const targetAidFormSchema: FormSchema = {
@@ -90,24 +113,24 @@ export const targetAidFormSchema: FormSchema = {
     {
       type: 'row',
       fields: [
-        {
-          type: 'text',
-          key: 'positionTargetAltitudeDelta',
-          label: 'הפרש גובה עמדה מטרה',
-          required: false,
-        },
-        {
-          type: 'text',
-          key: 'bearingManual',
-          label: 'אמורה',
-          required: false,
-        },
-        {
-          type: 'text',
-          key: 'rangeManual',
-          label: 'טווח',
-          required: false,
-        },
+        targetAidPositionToTargetComputedField(
+          'altitudeDiff',
+          'positionTargetAltitudeDelta',
+          'הפרש גובה עמדה מטרה',
+          'ערך מחושב אוטומטית לפי גובה העמדה והמטרה כששניהם נטענו. לא ניתן לעריכה ידנית.',
+        ),
+        targetAidPositionToTargetComputedField(
+          'azimuth',
+          'bearingManual',
+          'אמורה',
+          'ערך מחושב אוטומטית לפי נ"צ וגובה העמדה והמטרה כששניהם נטענו. לא ניתן לעריכה ידנית.',
+        ),
+        targetAidPositionToTargetComputedField(
+          'range',
+          'rangeManual',
+          'טווח',
+          'ערך מחושב אוטומטית כטווח בין העמדה למטרה לפי נ"צ כששניהם נטענו. לא ניתן לעריכה ידנית.',
+        ),
       ],
     },
 

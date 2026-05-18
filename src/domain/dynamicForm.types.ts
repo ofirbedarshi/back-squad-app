@@ -1,6 +1,16 @@
 export type { CoordinateValue } from '../components/base/coordinateInput.types'
 import type { CoordinateValue } from '../components/base/coordinateInput.types'
 
+/** Form keys watched for computed position→target metrics. Omitted entries use Bach (עמדה אחורית) defaults. */
+export type PositionToTargetWatchKeyOverrides = Partial<{
+  targetId: string
+  positionId: string
+  positionCoords: string
+  positionAltitude: string
+  targetCoords: string
+  targetAltitude: string
+}>
+
 export interface HeaderField {
   type: 'header'
   text: string
@@ -19,7 +29,9 @@ export interface TextField {
   infoTooltipText?: string
   /** Auto-calculated from loaded entities; empty when source or target is missing. */
   computedFrom?: 'indicatorToTarget' | 'positionToTarget'
-  computedMetric?: 'azimuth' | 'range'
+  computedMetric?: 'azimuth' | 'range' | 'altitudeDiff'
+  /** When `computedFrom` is positionToTarget: which form keys hold position/target (defaults: בדח rear position + מטרה). */
+  positionToTargetWatchKeys?: PositionToTargetWatchKeyOverrides
   /** Manual azimuth in degrees (0–359.9); non-empty optional values must be numeric. */
   valueKind?: 'azimuthDegree'
 }

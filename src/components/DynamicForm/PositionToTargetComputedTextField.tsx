@@ -1,6 +1,6 @@
 import type { UseFormSetValue, UseFormWatch } from 'react-hook-form'
-import { usePositionToTargetMetrics } from '../../hooks/usePositionToTargetMetrics'
 import type { FormValues } from '../../domain/dynamicForm.types'
+import { usePositionToTargetMetrics } from '../../hooks/usePositionToTargetMetrics'
 import ComputedTextField from './ComputedTextField'
 import type { ComputedTextFieldDef } from './computedTextField.types'
 
@@ -11,7 +11,7 @@ interface PositionToTargetComputedTextFieldProps {
 }
 
 function PositionToTargetComputedTextField({ field, watch, setValue }: PositionToTargetComputedTextFieldProps) {
-  const metrics = usePositionToTargetMetrics(watch)
+  const metrics = usePositionToTargetMetrics(watch, field.positionToTargetWatchKeys)
 
   return <ComputedTextField field={field} metrics={metrics} setValue={setValue} />
 }

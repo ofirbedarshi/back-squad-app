@@ -4,7 +4,7 @@ import type { TargetLiveMetrics } from '../../domain/targetLiveMetrics.types'
 
 export type ComputedTextFieldDef = TextField & {
   computedFrom: 'indicatorToTarget' | 'positionToTarget'
-  computedMetric: 'azimuth' | 'range'
+  computedMetric: 'azimuth' | 'range' | 'altitudeDiff'
 }
 
 export interface ComputedTextFieldProps {
