@@ -49,6 +49,7 @@ function NadbarEditScreen() {
           {getNadbarCardTitle(nadbar)}
         </span>
         <NadbarLinksToolbar
+          replaceMode
           pointerId={nadbar.links?.pointerId}
           targetId={nadbar.links?.targetId}
           onLinksChange={saveLinks}

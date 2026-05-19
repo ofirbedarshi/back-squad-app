@@ -35,6 +35,36 @@ UI is responsible only for presentation and user interaction.
 - **This applies to ALL reusable UI pieces** — including helper functions that return JSX, class strings, or style logic (e.g. `inputClass`, `buttonClass`). If it controls how a UI element looks or behaves, it is a component and must live in its own file.
 - There are NO exceptions based on size, simplicity, or "tight coupling"
 
+## Extract early — screens compose, components render
+
+Screens and multi-step flows must stay thin. **Extract** instead of growing one file.
+
+### One concern per file
+
+- **Each wizard step / screen section** → its own component (e.g. `NadbarNewLinksStep`, `NadbarNewChatStep` — not both in the screen).
+- **Repeated layout blocks** (header, footer, badge, card section) → dedicated components.
+- **Non-trivial UI state and handlers** (step machine, save flow, validation gates) → `src/hooks/` composable (e.g. `useNadbarNewFlow`), not inline in the screen.
+
+### Screen responsibility
+
+A screen should only:
+
+1. Read route params / call a flow hook
+2. Choose which step component to render
+3. Pass props and callbacks down
+
+If the screen file grows past ~40 lines or mixes layout + business orchestration, split it.
+
+### Default split checklist
+
+Before finishing UI work, ask:
+
+- Can this header/footer/section be its own component?
+- Can this handler block move to a hook?
+- Would another step reuse this piece?
+
+If yes → extract now, not later.
+
 ## Component folder structure
 
 ### `src/components/base/`
