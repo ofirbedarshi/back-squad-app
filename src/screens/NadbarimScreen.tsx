@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import NadbarCard from '../components/NadbarCard'
+import ListCard from '../components/base/ListCard'
 import HeaderOptionsMenu from '../components/base/HeaderOptionsMenu'
 import OptionsMenu from '../components/base/OptionsMenu'
 import type { Indicator } from '../domain/indicator.types'
@@ -19,7 +19,6 @@ function NadbarimScreen() {
   const [nadbars, setNadbars] = useState<Nadbar[]>([])
   const [targets, setTargets] = useState<Target[]>([])
   const [indicators, setIndicators] = useState<Indicator[]>([])
-  const [menuNadbar, setMenuNadbar] = useState<Nadbar | null>(null)
   const [typePickerOpen, setTypePickerOpen] = useState(false)
   const navigate = useNavigate()
   const confirm = useConfirm()
@@ -83,29 +82,36 @@ function NadbarimScreen() {
           <p className="text-center text-neutral-400 py-8">אין נדברים שמורים</p>
         )}
 
-        {nadbars.map((nadbar) => (
-          <NadbarCard
-            key={nadbar.id}
-            nadbar={nadbar}
-            details={getNadbarCardDetails(nadbar, targets, indicators)}
-            onClick={() => navigate(`/nadbarim/${nadbar.id}/edit`)}
-            onLongPress={() => setMenuNadbar(nadbar)}
-          />
-        ))}
+        {nadbars.map((nadbar) => {
+          const { targetName, indicatorName, updatedAtLabel } = getNadbarCardDetails(
+            nadbar,
+            targets,
+            indicators,
+          )
 
-        {menuNadbar && (
-          <OptionsMenu
-            title={getNadbarCardTitle(menuNadbar)}
-            items={[
-              {
-                label: 'מחק נדבר',
-                variant: 'danger',
-                onSelect: () => handleRemove(menuNadbar),
-              },
-            ]}
-            onClose={() => setMenuNadbar(null)}
-          />
-        )}
+          return (
+            <ListCard
+              key={nadbar.id}
+              title={getNadbarCardTitle(nadbar)}
+              subheader={
+                <div className="flex flex-col gap-0.5">
+                  <span>מטרה: {targetName}</span>
+                  <span>מציין: {indicatorName}</span>
+                </div>
+              }
+              lastUpdatedAt={updatedAtLabel}
+              onClick={() => navigate(`/nadbarim/${nadbar.id}/edit`)}
+              menuTitle={getNadbarCardTitle(nadbar)}
+              menuItems={[
+                {
+                  label: 'מחק נדבר',
+                  variant: 'danger',
+                  onSelect: () => void handleRemove(nadbar),
+                },
+              ]}
+            />
+          )
+        })}
 
         {typePickerOpen && (
           <OptionsMenu
