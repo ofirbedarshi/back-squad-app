@@ -52,6 +52,7 @@ function NadbarEditScreen() {
           replaceMode
           pointerId={nadbar.links?.pointerId}
           targetId={nadbar.links?.targetId}
+          positionId={nadbar.links?.positionId}
           onLinksChange={saveLinks}
         />
       </header>

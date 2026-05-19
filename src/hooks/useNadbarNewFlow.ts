@@ -17,6 +17,7 @@ export function useNadbarNewFlow() {
   const [step, setStep] = useState<NewNadbarStep>('links')
   const [pointerId, setPointerId] = useState<string | undefined>()
   const [targetId, setTargetId] = useState<string | undefined>()
+  const [positionId, setPositionId] = useState<string | undefined>()
   const [draftNadbar, setDraftNadbar] = useState<Nadbar | null>(null)
 
   function updateLinkIds(links: NadbarLinksUpdate) {
@@ -26,13 +27,16 @@ export function useNadbarNewFlow() {
     if ('targetId' in links) {
       setTargetId(links.targetId ?? undefined)
     }
+    if ('positionId' in links) {
+      setPositionId(links.positionId ?? undefined)
+    }
   }
 
   function advanceFromLinksStep() {
-    if (!nadbarType || !pointerId || !targetId) return
+    if (!nadbarType || !pointerId || !targetId || !positionId) return
     try {
       const base = createNadbarFromTypeUseCase(nadbarType)
-      const withLinks = applyNadbarLinksToNadbarUseCase(base, { pointerId, targetId })
+      const withLinks = applyNadbarLinksToNadbarUseCase(base, { pointerId, targetId, positionId })
       setDraftNadbar(withLinks)
       setStep('chat')
     } catch (error) {
@@ -61,6 +65,7 @@ export function useNadbarNewFlow() {
     step,
     pointerId,
     targetId,
+    positionId,
     draftNadbar,
     updateLinkIds,
     advanceFromLinksStep,

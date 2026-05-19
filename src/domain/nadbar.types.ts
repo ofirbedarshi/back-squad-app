@@ -11,10 +11,11 @@ export interface NadbarMessage {
   content: string
 }
 
-/** Saved indicator (מציין) and target references */
+/** Saved indicator (מציין), target, and position references */
 export interface NadbarLinks {
   pointerId?: string
   targetId?: string
+  positionId?: string
 }
 
 export interface Nadbar {
@@ -35,4 +36,5 @@ export interface NadbarTemplate {
 export interface NadbarLinksUpdate {
   pointerId?: string | null
   targetId?: string | null
+  positionId?: string | null
 }

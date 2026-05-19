@@ -17,6 +17,7 @@ function NadbarNewChatStep({ nadbarType, draftNadbar, onLinksChange, onSave }: N
         nadbarType={nadbarType}
         pointerId={draftNadbar.links?.pointerId}
         targetId={draftNadbar.links?.targetId}
+        positionId={draftNadbar.links?.positionId}
         onLinksChange={onLinksChange}
         onSave={onSave}
       />

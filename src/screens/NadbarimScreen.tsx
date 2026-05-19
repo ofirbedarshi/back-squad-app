@@ -5,10 +5,12 @@ import HeaderOptionsMenu from '../components/base/HeaderOptionsMenu'
 import OptionsMenu from '../components/base/OptionsMenu'
 import type { Indicator } from '../domain/indicator.types'
 import { NADBAR_TYPES, type Nadbar } from '../domain/nadbar.types'
+import type { Position } from '../domain/position.types'
 import type { Target } from '../domain/target.types'
 import { useConfirm } from '../hooks/useConfirm'
 import { useNotification } from '../hooks/useNotification'
 import { loadIndicatorsUseCase } from '../useCases/loadIndicators'
+import { loadPositionsUseCase } from '../useCases/loadPositions'
 import { loadNadbarsUseCase } from '../useCases/loadNadbars'
 import { loadTargetsUseCase } from '../useCases/loadTargets'
 import { removeAllNadbarsUseCase } from '../useCases/removeAllNadbars'
@@ -19,6 +21,7 @@ function NadbarimScreen() {
   const [nadbars, setNadbars] = useState<Nadbar[]>([])
   const [targets, setTargets] = useState<Target[]>([])
   const [indicators, setIndicators] = useState<Indicator[]>([])
+  const [positions, setPositions] = useState<Position[]>([])
   const [typePickerOpen, setTypePickerOpen] = useState(false)
   const navigate = useNavigate()
   const confirm = useConfirm()
@@ -28,6 +31,7 @@ function NadbarimScreen() {
     setNadbars(loadNadbarsUseCase())
     setTargets(loadTargetsUseCase())
     setIndicators(loadIndicatorsUseCase())
+    setPositions(loadPositionsUseCase())
   }
 
   useEffect(() => {
@@ -83,10 +87,11 @@ function NadbarimScreen() {
         )}
 
         {nadbars.map((nadbar) => {
-          const { targetName, indicatorName, updatedAtLabel } = getNadbarCardDetails(
+          const { targetName, indicatorName, positionName, updatedAtLabel } = getNadbarCardDetails(
             nadbar,
             targets,
             indicators,
+            positions,
           )
 
           return (
@@ -97,6 +102,7 @@ function NadbarimScreen() {
                 <div className="flex flex-col gap-0.5">
                   <span>מטרה: {targetName}</span>
                   <span>מציין: {indicatorName}</span>
+                  <span>עמדה: {positionName}</span>
                 </div>
               }
               lastUpdatedAt={updatedAtLabel}

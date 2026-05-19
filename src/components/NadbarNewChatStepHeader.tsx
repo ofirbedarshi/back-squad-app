@@ -6,6 +6,7 @@ interface NadbarNewChatStepHeaderProps {
   nadbarType: NadbarType
   pointerId?: string
   targetId?: string
+  positionId?: string
   onLinksChange: (links: NadbarLinksUpdate) => void
   onSave: () => void
 }
@@ -14,6 +15,7 @@ function NadbarNewChatStepHeader({
   nadbarType,
   pointerId,
   targetId,
+  positionId,
   onLinksChange,
   onSave,
 }: NadbarNewChatStepHeaderProps) {
@@ -23,7 +25,12 @@ function NadbarNewChatStepHeader({
         הוסף · {getNadbarTypeLabel(nadbarType)}
       </span>
       <div className="flex items-center gap-1 shrink-0">
-        <NadbarLinksToolbar pointerId={pointerId} targetId={targetId} onLinksChange={onLinksChange} />
+        <NadbarLinksToolbar
+          pointerId={pointerId}
+          targetId={targetId}
+          positionId={positionId}
+          onLinksChange={onLinksChange}
+        />
         <button
           type="button"
           onClick={onSave}

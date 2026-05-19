@@ -59,16 +59,21 @@ describe('getNadbarTemplate', () => {
 })
 
 describe('applyNadbarLinks', () => {
-  it('sets pointer and target ids and updates updatedAt', () => {
-    const nadbar = createNadbarFromTemplate('Katmam', {
-      messages: [{ source: 'Me', content: 'בדיקה' }],
-    })
+  it('sets pointer, target, and position ids and updates updatedAt', () => {
+    const nadbar = {
+      ...createNadbarFromTemplate('Katmam', {
+        messages: [{ source: 'Me', content: 'בדיקה' }],
+      }),
+      updatedAt: '2020-01-01T00:00:00.000Z',
+    }
     const updated = applyNadbarLinks(nadbar, {
       pointerId: 'pointer-1',
       targetId: 'target-1',
+      positionId: 'position-1',
     })
     assert.equal(updated.links?.pointerId, 'pointer-1')
     assert.equal(updated.links?.targetId, 'target-1')
+    assert.equal(updated.links?.positionId, 'position-1')
     assert.notEqual(updated.updatedAt, nadbar.updatedAt)
   })
 
@@ -79,19 +84,32 @@ describe('applyNadbarLinks', () => {
     const withLinks = applyNadbarLinks(nadbar, {
       pointerId: 'pointer-1',
       targetId: 'target-1',
+      positionId: 'position-1',
     })
-    const cleared = applyNadbarLinks(withLinks, { pointerId: null, targetId: null })
+    const cleared = applyNadbarLinks(withLinks, {
+      pointerId: null,
+      targetId: null,
+      positionId: null,
+    })
     assert.equal(cleared.links, undefined)
   })
 })
 
 describe('hasCompleteNadbarLinks', () => {
-  it('requires both pointer and target ids', () => {
+  it('requires pointer, target, and position ids', () => {
     assert.equal(hasCompleteNadbarLinks(undefined), false)
     assert.equal(hasCompleteNadbarLinks({ pointerId: 'pointer-1' }), false)
     assert.equal(hasCompleteNadbarLinks({ targetId: 'target-1' }), false)
     assert.equal(
       hasCompleteNadbarLinks({ pointerId: 'pointer-1', targetId: 'target-1' }),
+      false,
+    )
+    assert.equal(
+      hasCompleteNadbarLinks({
+        pointerId: 'pointer-1',
+        targetId: 'target-1',
+        positionId: 'position-1',
+      }),
       true,
     )
   })
@@ -118,6 +136,7 @@ describe('isValidNadbar', () => {
     const withLinks = applyNadbarLinks(nadbar, {
       pointerId: 'pointer-1',
       targetId: 'target-1',
+      positionId: 'position-1',
     })
     assert.ok(isValidNadbar(withLinks))
   })

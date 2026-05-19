@@ -26,7 +26,15 @@ function isNadbarLinks(value: unknown): boolean {
   if (value === undefined) return true
   if (!value || typeof value !== 'object') return false
   const record = value as Record<string, unknown>
-  return isOptionalEntityId(record.pointerId) && isOptionalEntityId(record.targetId)
+  return (
+    isOptionalEntityId(record.pointerId) &&
+    isOptionalEntityId(record.targetId) &&
+    isOptionalEntityId(record.positionId)
+  )
+}
+
+export function hasCompleteNadbarLinks(links: NadbarLinks | undefined): boolean {
+  return Boolean(links?.pointerId && links?.targetId && links?.positionId)
 }
 
 type NadbarLegacyRecord = Nadbar & { pointerId?: string; targetId?: string }
@@ -35,8 +43,9 @@ export function normalizeNadbar(nadbar: Nadbar): Nadbar {
   const legacy = nadbar as NadbarLegacyRecord
   const pointerId = nadbar.links?.pointerId ?? legacy.pointerId
   const targetId = nadbar.links?.targetId ?? legacy.targetId
+  const positionId = nadbar.links?.positionId
 
-  if (!pointerId && !targetId) {
+  if (!pointerId && !targetId && !positionId) {
     return {
       id: nadbar.id,
       createdAt: nadbar.createdAt,
@@ -55,6 +64,7 @@ export function normalizeNadbar(nadbar: Nadbar): Nadbar {
     links: {
       ...(pointerId ? { pointerId } : {}),
       ...(targetId ? { targetId } : {}),
+      ...(positionId ? { positionId } : {}),
     },
   }
 }
@@ -78,7 +88,15 @@ function mergeNadbarLinks(current: NadbarLinks | undefined, update: NadbarLinksU
     }
   }
 
-  return next.pointerId || next.targetId ? next : undefined
+  if (update.positionId !== undefined) {
+    if (update.positionId === null || update.positionId === '') {
+      delete next.positionId
+    } else {
+      next.positionId = update.positionId
+    }
+  }
+
+  return next.pointerId || next.targetId || next.positionId ? next : undefined
 }
 
 function isNadbarMessage(value: unknown): value is NadbarMessage {
@@ -148,6 +166,7 @@ export function isValidNadbar(value: unknown): value is Nadbar {
     record.messages.every(isNadbarMessage) &&
     isNadbarLinks(record.links) &&
     isOptionalEntityId(record.pointerId) &&
-    isOptionalEntityId(record.targetId)
+    isOptionalEntityId(record.targetId) &&
+    isOptionalEntityId(record.positionId)
   )
 }

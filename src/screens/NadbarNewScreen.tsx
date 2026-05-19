@@ -8,6 +8,7 @@ function NadbarNewScreen() {
     step,
     pointerId,
     targetId,
+    positionId,
     draftNadbar,
     updateLinkIds,
     advanceFromLinksStep,
@@ -25,6 +26,7 @@ function NadbarNewScreen() {
         nadbarType={nadbarType}
         pointerId={pointerId}
         targetId={targetId}
+        positionId={positionId}
         onLinksChange={updateLinkIds}
         onNext={advanceFromLinksStep}
       />

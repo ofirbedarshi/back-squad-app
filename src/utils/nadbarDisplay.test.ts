@@ -2,6 +2,7 @@ import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
 import type { Indicator } from '../domain/indicator.types'
 import type { Nadbar } from '../domain/nadbar.types'
+import type { Position } from '../domain/position.types'
 import type { Target } from '../domain/target.types'
 import { formatNadbarUpdatedAt, getNadbarCardDetails, getNadbarCardTitle } from './nadbarDisplay'
 
@@ -18,6 +19,16 @@ const targets: Target[] = [
     id: 'target-1',
     targetName: 'מטרה אלפא',
     coordinates: { easting: 100, northing: 200 },
+  },
+]
+
+const positions: Position[] = [
+  {
+    id: 'position-1',
+    savedAt: '2026-05-01T10:00:00.000Z',
+    stationName: 'עמדה גמא',
+    coordinates: { east: '100', north: '200', palach: '300' },
+    altitude: 50,
   },
 ]
 
@@ -40,24 +51,27 @@ describe('getNadbarCardTitle', () => {
 })
 
 describe('getNadbarCardDetails', () => {
-  it('resolves linked target and indicator names', () => {
+  it('resolves linked target, indicator, and position names', () => {
     const details = getNadbarCardDetails(
       {
         ...baseNadbar,
-        links: { targetId: 'target-1', pointerId: 'pointer-1' },
+        links: { targetId: 'target-1', pointerId: 'pointer-1', positionId: 'position-1' },
       },
       targets,
       indicators,
+      positions,
     )
     assert.equal(details.targetName, 'מטרה אלפא')
     assert.equal(details.indicatorName, 'מציין בטא')
+    assert.equal(details.positionName, 'עמדה גמא')
     assert.notEqual(details.updatedAtLabel, '—')
   })
 
   it('shows placeholders when links are missing', () => {
-    const details = getNadbarCardDetails(baseNadbar, targets, indicators)
+    const details = getNadbarCardDetails(baseNadbar, targets, indicators, positions)
     assert.equal(details.targetName, 'ללא מטרה')
     assert.equal(details.indicatorName, 'ללא מציין')
+    assert.equal(details.positionName, 'ללא עמדה')
   })
 
   it('shows missing entity labels when ids are stale', () => {
@@ -68,9 +82,11 @@ describe('getNadbarCardDetails', () => {
       },
       targets,
       indicators,
+      positions,
     )
     assert.equal(details.targetName, 'מטרה לא נמצאה')
     assert.equal(details.indicatorName, 'מציין לא נמצא')
+    assert.equal(details.positionName, 'ללא עמדה')
   })
 })
 

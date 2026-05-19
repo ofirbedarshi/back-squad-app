@@ -1,5 +1,6 @@
 import type { Indicator } from '../domain/indicator.types'
 import type { Nadbar, NadbarType } from '../domain/nadbar.types'
+import type { Position } from '../domain/position.types'
 import type { Target } from '../domain/target.types'
 import type { NadbarCardDetails } from './nadbarDisplay.types'
 
@@ -43,14 +44,22 @@ function resolveIndicatorName(pointerId: string | undefined, indicators: Indicat
   return indicator?.indicatorName ?? 'מציין לא נמצא'
 }
 
+function resolvePositionName(positionId: string | undefined, positions: Position[]): string {
+  if (!positionId) return 'ללא עמדה'
+  const position = positions.find((item) => item.id === positionId)
+  return position?.stationName ?? 'עמדה לא נמצאה'
+}
+
 export function getNadbarCardDetails(
   nadbar: Nadbar,
   targets: Target[],
   indicators: Indicator[],
+  positions: Position[],
 ): NadbarCardDetails {
   return {
     targetName: resolveTargetName(nadbar.links?.targetId, targets),
     indicatorName: resolveIndicatorName(nadbar.links?.pointerId, indicators),
+    positionName: resolvePositionName(nadbar.links?.positionId, positions),
     updatedAtLabel: formatNadbarUpdatedAt(nadbar.updatedAt),
   }
 }
