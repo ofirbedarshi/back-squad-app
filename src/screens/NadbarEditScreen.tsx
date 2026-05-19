@@ -62,7 +62,7 @@ function NadbarEditScreen() {
       </p>
 
       <div className="flex-1 overflow-y-auto">
-        <NadbarChatView messages={nadbar.messages} />
+        <NadbarChatView messages={nadbar.messages} links={nadbar.links} />
       </div>
     </div>
   )

@@ -25,7 +25,7 @@ function NadbarNewChatStep({ nadbarType, draftNadbar, onLinksChange, onSave }: N
       <NadbarNewStepBadge stepNumber={2} totalSteps={2} />
 
       <div className="flex-1 overflow-y-auto">
-        <NadbarChatView messages={draftNadbar.messages} />
+        <NadbarChatView messages={draftNadbar.messages} links={draftNadbar.links} />
       </div>
     </div>
   )

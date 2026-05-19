@@ -5,7 +5,6 @@ import {
   createNadbarFromTemplate,
   hasCompleteNadbarLinks,
   isValidNadbar,
-  normalizeNadbar,
   parseNadbarTemplate,
 } from './nadbar.ts'
 import { getNadbarTemplate } from './nadbarTemplates.ts'
@@ -115,19 +114,6 @@ describe('hasCompleteNadbarLinks', () => {
   })
 })
 
-describe('normalizeNadbar', () => {
-  it('moves legacy top-level ids into links', () => {
-    const nadbar = createNadbarFromTemplate('Katmam', {
-      messages: [{ source: 'Me', content: 'בדיקה' }],
-    })
-    const legacy = { ...nadbar, pointerId: 'pointer-1', targetId: 'target-1' }
-    const normalized = normalizeNadbar(legacy)
-    assert.equal(normalized.links?.pointerId, 'pointer-1')
-    assert.equal(normalized.links?.targetId, 'target-1')
-    assert.equal((normalized as { pointerId?: string }).pointerId, undefined)
-  })
-})
-
 describe('isValidNadbar', () => {
   it('accepts optional pointer and target ids', () => {
     const nadbar = createNadbarFromTemplate('Katmam', {
@@ -141,7 +127,7 @@ describe('isValidNadbar', () => {
     assert.ok(isValidNadbar(withLinks))
   })
 
-  it('rejects legacy savedAt shape', () => {
+  it('rejects record missing required fields', () => {
     assert.equal(
       isValidNadbar({
         id: '1',
@@ -149,6 +135,16 @@ describe('isValidNadbar', () => {
         type: 'Katmam',
         data: {},
       }),
+      false,
+    )
+  })
+
+  it('rejects top-level link ids outside links', () => {
+    const nadbar = createNadbarFromTemplate('Katmam', {
+      messages: [{ source: 'Me', content: 'בדיקה' }],
+    })
+    assert.equal(
+      isValidNadbar({ ...nadbar, pointerId: 'pointer-1', targetId: 'target-1' }),
       false,
     )
   })

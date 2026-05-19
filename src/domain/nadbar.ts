@@ -37,12 +37,9 @@ export function hasCompleteNadbarLinks(links: NadbarLinks | undefined): boolean 
   return Boolean(links?.pointerId && links?.targetId && links?.positionId)
 }
 
-type NadbarLegacyRecord = Nadbar & { pointerId?: string; targetId?: string }
-
 export function normalizeNadbar(nadbar: Nadbar): Nadbar {
-  const legacy = nadbar as NadbarLegacyRecord
-  const pointerId = nadbar.links?.pointerId ?? legacy.pointerId
-  const targetId = nadbar.links?.targetId ?? legacy.targetId
+  const pointerId = nadbar.links?.pointerId
+  const targetId = nadbar.links?.targetId
   const positionId = nadbar.links?.positionId
 
   if (!pointerId && !targetId && !positionId) {
@@ -164,9 +161,6 @@ export function isValidNadbar(value: unknown): value is Nadbar {
     Array.isArray(record.messages) &&
     record.messages.length > 0 &&
     record.messages.every(isNadbarMessage) &&
-    isNadbarLinks(record.links) &&
-    isOptionalEntityId(record.pointerId) &&
-    isOptionalEntityId(record.targetId) &&
-    isOptionalEntityId(record.positionId)
+    isNadbarLinks(record.links)
   )
 }

@@ -1,10 +1,14 @@
+import { useNadbarMessageResourcesContext } from '../context/NadbarMessageResourcesContext'
 import type { NadbarMessage } from '../domain/nadbar.types'
+import { fillNadbarMessageContent } from '../utils/nadbarMessageFill'
 
 interface NadbarMessageBubbleProps {
   message: NadbarMessage
 }
 
 function NadbarMessageBubble({ message }: NadbarMessageBubbleProps) {
+  const resources = useNadbarMessageResourcesContext()
+  const displayContent = fillNadbarMessageContent(message.content, resources)
   const isMe = message.source === 'Me'
 
   return (
@@ -16,7 +20,7 @@ function NadbarMessageBubble({ message }: NadbarMessageBubbleProps) {
             : 'bg-white text-neutral-900 border border-neutral-200 rounded-bl-md'
         }`}
       >
-        {message.content}
+        {displayContent}
       </div>
     </div>
   )
