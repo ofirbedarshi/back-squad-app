@@ -37,7 +37,6 @@ function IndicatorPickerModal({
               key={indicator.id}
               indicator={indicator}
               onClick={() => handleCardPick(indicator)}
-              onLongPress={() => {}}
             />
           ))
         )}

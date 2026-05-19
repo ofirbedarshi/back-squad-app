@@ -5,7 +5,6 @@ import IndicatorSearchBar from '../components/IndicatorSearchBar'
 import DocFeedbackModal from '../components/base/DocFeedbackModal'
 import HeaderOptionsMenu from '../components/base/HeaderOptionsMenu'
 import Modal from '../components/base/Modal'
-import OptionsMenu from '../components/base/OptionsMenu'
 import { useConfirm } from '../hooks/useConfirm'
 import { useDomainError } from '../hooks/useDomainError'
 import { useNotification } from '../hooks/useNotification'
@@ -25,7 +24,6 @@ function IndicatorsListScreen() {
   const [searchQuery, setSearchQuery] = useState('')
   const [showForm, setShowForm] = useState(false)
   const [editingItem, setEditingItem] = useState<Indicator | null>(null)
-  const [menuIndicator, setMenuIndicator] = useState<Indicator | null>(null)
   const filteredIndicators = filterByQuery(indicators, searchQuery, getIndicatorSearchFields)
 
   const { triggerError } = useDomainError()
@@ -118,7 +116,13 @@ function IndicatorsListScreen() {
             key={indicator.id}
             indicator={indicator}
             onClick={() => setEditingItem(indicator)}
-            onLongPress={() => setMenuIndicator(indicator)}
+            menuItems={[
+              {
+                label: 'מחק מציין',
+                variant: 'danger',
+                onSelect: () => void handleRemove(indicator),
+              },
+            ]}
           />
         ))}
 
@@ -132,20 +136,6 @@ function IndicatorsListScreen() {
           <Modal title="עריכת מציין" onClose={() => setEditingItem(null)}>
             <IndicatorForm onSubmit={handleEdit} submitLabel="שמור שינויים" initialValues={editingItem} />
           </Modal>
-        )}
-
-        {menuIndicator && (
-          <OptionsMenu
-            title={menuIndicator.indicatorName}
-            items={[
-              {
-                label: 'מחק מציין',
-                variant: 'danger',
-                onSelect: () => handleRemove(menuIndicator),
-              },
-            ]}
-            onClose={() => setMenuIndicator(null)}
-          />
         )}
 
         {!showForm && (
