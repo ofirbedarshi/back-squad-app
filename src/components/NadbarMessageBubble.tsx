@@ -19,9 +19,8 @@ function NadbarMessageBubble({ message }: NadbarMessageBubbleProps) {
             ? 'bg-emerald-100 text-neutral-900 rounded-br-md'
             : 'bg-white text-neutral-900 border border-neutral-200 rounded-bl-md'
         }`}
-      >
-        {displayContent}
-      </div>
+        dangerouslySetInnerHTML={{ __html: displayContent }}
+      />
     </div>
   )
 }

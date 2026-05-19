@@ -16,7 +16,10 @@ const indicator: Indicator = {
 describe('fillNadbarMessageContent', () => {
   it('replaces indicator.markCode when indicator is present', () => {
     const content = 'קבל, קו״צ {{indicator.markCode}}. כמו כן, גור ____'
-    assert.equal(fillNadbarMessageContent(content, { indicator }), 'קבל, קו״צ 42. כמו כן, גור ____')
+    assert.equal(
+      fillNadbarMessageContent(content, { indicator }),
+      'קבל, קו״צ <u>42</u>. כמו כן, גור ____',
+    )
   })
 
   it('keeps token when indicator is missing', () => {
