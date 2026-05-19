@@ -1,8 +1,10 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
 import {
+  applyNadbarLinks,
   createNadbarFromTemplate,
   isValidNadbar,
+  normalizeNadbar,
   parseNadbarTemplate,
 } from './nadbar.ts'
 import { getNadbarTemplate } from './nadbarTemplates.ts'
@@ -55,7 +57,58 @@ describe('getNadbarTemplate', () => {
   })
 })
 
+describe('applyNadbarLinks', () => {
+  it('sets pointer and target ids and updates updatedAt', () => {
+    const nadbar = createNadbarFromTemplate('Katmam', {
+      messages: [{ source: 'Me', content: 'בדיקה' }],
+    })
+    const updated = applyNadbarLinks(nadbar, {
+      pointerId: 'pointer-1',
+      targetId: 'target-1',
+    })
+    assert.equal(updated.links?.pointerId, 'pointer-1')
+    assert.equal(updated.links?.targetId, 'target-1')
+    assert.notEqual(updated.updatedAt, nadbar.updatedAt)
+  })
+
+  it('clears links when passed null', () => {
+    const nadbar = createNadbarFromTemplate('Katmam', {
+      messages: [{ source: 'Me', content: 'בדיקה' }],
+    })
+    const withLinks = applyNadbarLinks(nadbar, {
+      pointerId: 'pointer-1',
+      targetId: 'target-1',
+    })
+    const cleared = applyNadbarLinks(withLinks, { pointerId: null, targetId: null })
+    assert.equal(cleared.links, undefined)
+  })
+})
+
+describe('normalizeNadbar', () => {
+  it('moves legacy top-level ids into links', () => {
+    const nadbar = createNadbarFromTemplate('Katmam', {
+      messages: [{ source: 'Me', content: 'בדיקה' }],
+    })
+    const legacy = { ...nadbar, pointerId: 'pointer-1', targetId: 'target-1' }
+    const normalized = normalizeNadbar(legacy)
+    assert.equal(normalized.links?.pointerId, 'pointer-1')
+    assert.equal(normalized.links?.targetId, 'target-1')
+    assert.equal((normalized as { pointerId?: string }).pointerId, undefined)
+  })
+})
+
 describe('isValidNadbar', () => {
+  it('accepts optional pointer and target ids', () => {
+    const nadbar = createNadbarFromTemplate('Katmam', {
+      messages: [{ source: 'Me', content: 'בדיקה' }],
+    })
+    const withLinks = applyNadbarLinks(nadbar, {
+      pointerId: 'pointer-1',
+      targetId: 'target-1',
+    })
+    assert.ok(isValidNadbar(withLinks))
+  })
+
   it('rejects legacy savedAt shape', () => {
     assert.equal(
       isValidNadbar({

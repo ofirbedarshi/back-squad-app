@@ -11,15 +11,28 @@ export interface NadbarMessage {
   content: string
 }
 
+/** Saved indicator (מציין) and target references */
+export interface NadbarLinks {
+  pointerId?: string
+  targetId?: string
+}
+
 export interface Nadbar {
   id: string
   createdAt: string
   updatedAt: string
   type: NadbarType
   messages: NadbarMessage[]
+  links?: NadbarLinks
 }
 
 /** Template JSON shape — no id/timestamps */
 export interface NadbarTemplate {
   messages: NadbarMessage[]
+}
+
+/** Partial update for {@link Nadbar.links}; `null` clears a field */
+export interface NadbarLinksUpdate {
+  pointerId?: string | null
+  targetId?: string | null
 }

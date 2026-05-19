@@ -4,6 +4,8 @@ import {
   type Nadbar,
   type NadbarMessage,
   type NadbarMessageSource,
+  type NadbarLinks,
+  type NadbarLinksUpdate,
   type NadbarTemplate,
   type NadbarType,
 } from './nadbar.types'
@@ -14,6 +16,69 @@ export function isNadbarType(value: string): value is NadbarType {
 
 function isNadbarMessageSource(value: unknown): value is NadbarMessageSource {
   return typeof value === 'string' && (NADBAR_MESSAGE_SOURCES as readonly string[]).includes(value)
+}
+
+function isOptionalEntityId(value: unknown): boolean {
+  return value === undefined || (typeof value === 'string' && value.length > 0)
+}
+
+function isNadbarLinks(value: unknown): boolean {
+  if (value === undefined) return true
+  if (!value || typeof value !== 'object') return false
+  const record = value as Record<string, unknown>
+  return isOptionalEntityId(record.pointerId) && isOptionalEntityId(record.targetId)
+}
+
+type NadbarLegacyRecord = Nadbar & { pointerId?: string; targetId?: string }
+
+export function normalizeNadbar(nadbar: Nadbar): Nadbar {
+  const legacy = nadbar as NadbarLegacyRecord
+  const pointerId = nadbar.links?.pointerId ?? legacy.pointerId
+  const targetId = nadbar.links?.targetId ?? legacy.targetId
+
+  if (!pointerId && !targetId) {
+    return {
+      id: nadbar.id,
+      createdAt: nadbar.createdAt,
+      updatedAt: nadbar.updatedAt,
+      type: nadbar.type,
+      messages: nadbar.messages,
+    }
+  }
+
+  return {
+    id: nadbar.id,
+    createdAt: nadbar.createdAt,
+    updatedAt: nadbar.updatedAt,
+    type: nadbar.type,
+    messages: nadbar.messages,
+    links: {
+      ...(pointerId ? { pointerId } : {}),
+      ...(targetId ? { targetId } : {}),
+    },
+  }
+}
+
+function mergeNadbarLinks(current: NadbarLinks | undefined, update: NadbarLinksUpdate): NadbarLinks | undefined {
+  const next: NadbarLinks = { ...current }
+
+  if (update.pointerId !== undefined) {
+    if (update.pointerId === null || update.pointerId === '') {
+      delete next.pointerId
+    } else {
+      next.pointerId = update.pointerId
+    }
+  }
+
+  if (update.targetId !== undefined) {
+    if (update.targetId === null || update.targetId === '') {
+      delete next.targetId
+    } else {
+      next.targetId = update.targetId
+    }
+  }
+
+  return next.pointerId || next.targetId ? next : undefined
 }
 
 function isNadbarMessage(value: unknown): value is NadbarMessage {
@@ -41,6 +106,23 @@ export function parseNadbarTemplate(raw: unknown): NadbarTemplate {
   }
 }
 
+export function applyNadbarLinks(nadbar: Nadbar, links: NadbarLinksUpdate): Nadbar {
+  const normalized = normalizeNadbar(nadbar)
+  const mergedLinks = mergeNadbarLinks(normalized.links, links)
+  const now = new Date().toISOString()
+
+  if (!mergedLinks) {
+    const { links: _links, ...rest } = normalized
+    return { ...rest, updatedAt: now }
+  }
+
+  return {
+    ...normalized,
+    updatedAt: now,
+    links: mergedLinks,
+  }
+}
+
 export function createNadbarFromTemplate(type: NadbarType, template: NadbarTemplate): Nadbar {
   const now = new Date().toISOString()
   return {
@@ -63,6 +145,9 @@ export function isValidNadbar(value: unknown): value is Nadbar {
     isNadbarType(record.type) &&
     Array.isArray(record.messages) &&
     record.messages.length > 0 &&
-    record.messages.every(isNadbarMessage)
+    record.messages.every(isNadbarMessage) &&
+    isNadbarLinks(record.links) &&
+    isOptionalEntityId(record.pointerId) &&
+    isOptionalEntityId(record.targetId)
   )
 }

@@ -1,16 +1,18 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import NadbarChatView from '../components/NadbarChatView'
+import NadbarLinksToolbar from '../components/NadbarLinksToolbar'
 import { useDomainError } from '../hooks/useDomainError'
+import type { Nadbar, NadbarLinksUpdate } from '../domain/nadbar.types'
 import { getNadbarByIdUseCase } from '../useCases/getNadbarById'
+import { updateNadbarLinksUseCase } from '../useCases/updateNadbarLinks'
 import { getNadbarCardTitle, getNadbarTypeLabel } from '../utils/nadbarDisplay'
 
 function NadbarEditScreen() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const { triggerError } = useDomainError()
-
-  const nadbar = id ? getNadbarByIdUseCase(id) : undefined
+  const [nadbar, setNadbar] = useState<Nadbar | undefined>(() => (id ? getNadbarByIdUseCase(id) : undefined))
 
   useEffect(() => {
     if (!nadbar) {
@@ -19,24 +21,38 @@ function NadbarEditScreen() {
     }
   }, [nadbar, navigate, triggerError])
 
+  function saveLinks(links: NadbarLinksUpdate) {
+    if (!nadbar) return
+    try {
+      const updated = updateNadbarLinksUseCase(nadbar.id, links)
+      setNadbar(updated)
+    } catch (error) {
+      triggerError(error instanceof Error ? error.message : 'שמירת הנדבר נכשלה')
+    }
+  }
+
   if (!nadbar) {
     return null
   }
 
   return (
     <div dir="rtl" className="flex flex-col bg-neutral-50 min-h-full">
-      <header className="sticky top-0 z-10 bg-white px-4 py-3 flex items-center border-b border-neutral-200 shrink-0">
+      <header className="sticky top-0 z-10 bg-white px-4 py-3 flex items-center gap-2 border-b border-neutral-200 shrink-0">
         <button
           type="button"
           onClick={() => navigate('/nadbarim')}
-          className="text-sm font-semibold text-blue-600 active:opacity-70 touch-manipulation"
+          className="text-sm font-semibold text-blue-600 active:opacity-70 touch-manipulation shrink-0"
         >
           חזור
         </button>
-        <span className="flex-1 text-center font-bold text-lg text-neutral-800 truncate px-2">
+        <span className="flex-1 text-center font-bold text-lg text-neutral-800 truncate px-1 min-w-0">
           {getNadbarCardTitle(nadbar)}
         </span>
-        <span className="w-12" />
+        <NadbarLinksToolbar
+          pointerId={nadbar.links?.pointerId}
+          targetId={nadbar.links?.targetId}
+          onLinksChange={saveLinks}
+        />
       </header>
 
       <p className="text-center text-xs text-neutral-500 py-2 bg-white border-b border-neutral-100">

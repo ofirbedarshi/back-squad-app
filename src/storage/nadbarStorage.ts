@@ -1,4 +1,4 @@
-import { isValidNadbar } from '../domain/nadbar'
+import { isValidNadbar, normalizeNadbar } from '../domain/nadbar'
 import type { Nadbar } from '../domain/nadbar.types'
 
 const NADBARS_KEY = 'nadbarim'
@@ -9,7 +9,7 @@ function readNadbars(): Nadbar[] {
   try {
     const parsed: unknown = JSON.parse(raw)
     if (!Array.isArray(parsed)) return []
-    return parsed.filter(isValidNadbar)
+    return parsed.filter(isValidNadbar).map((item) => normalizeNadbar(item))
   } catch {
     return []
   }
