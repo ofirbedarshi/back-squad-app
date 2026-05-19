@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
 import type { Indicator } from '../domain/indicator.types'
+import type { Position } from '../domain/position.types'
 import type { Target } from '../domain/target.types'
 import {
   fillNadbarMessageContent,
@@ -23,6 +24,14 @@ const target: Target = {
   targetName: '7',
   coordinates: { east: '12', north: '34', palach: '36' },
   altitude: 440,
+}
+
+const position: Position = {
+  id: 'position-1',
+  savedAt: '2026-05-01T10:00:00.000Z',
+  stationName: 'עמדה אלפא',
+  coordinates: { east: '100', north: '200', palach: '36' },
+  altitude: 50,
 }
 
 describe('fillNadbarMessageContent', () => {
@@ -64,6 +73,20 @@ describe('fillNadbarMessageContent', () => {
     }
     const content = 'גמל {{target.altitude}} במטרים'
     assert.equal(fillNadbarMessageContent(content, { target: targetWithoutAltitude }), content)
+  })
+
+  it('replaces position station name when position is present', () => {
+    const content = 'שם עמדת שיגור {{position.stationName}} (שם עמדה)'
+    assert.equal(
+      fillNadbarMessageContent(content, { position }),
+      'שם עמדת שיגור <u>עמדה אלפא</u> (שם עמדה)',
+    )
+  })
+
+  it('shows load position prompt when position is missing', () => {
+    const prompt = '<span class="text-red-600 font-medium">נא לטעון עמדה</span>'
+    const content = 'שם עמדת שיגור {{position.stationName}}'
+    assert.equal(fillNadbarMessageContent(content, {}), `שם עמדת שיגור ${prompt}`)
   })
 
   it('shows load target prompt when target is missing', () => {
@@ -115,6 +138,13 @@ describe('resolveResourceSegment', () => {
     assert.deepEqual(resolveResourceSegment('indicator.markCode', {}), {
       type: 'missing',
       prompt: 'נא לטעון מציין',
+    })
+  })
+
+  it('returns position station name when position is loaded', () => {
+    assert.deepEqual(resolveResourceSegment('position.stationName', { position }), {
+      type: 'value',
+      value: 'עמדה אלפא',
     })
   })
 })

@@ -1,7 +1,7 @@
 {
   "messages": [
-    { "source": "They", "content": "מעביר נתוני מטרה (נ.צ+ גובה +מאפייני מטרה)" },
-    { "source": "Me", "content": "מקבל נתוני נ.צ- מוודא ומעביר שם עמדת שיגור+ פתיחה בורמ\"ח." },
+    { "source": "They", "content": "מעביר נתוני מטרה. מטרה: {{target.targetName}} (שם מטרה) נצ {{target.coordinates.east}}/{{target.coordinates.north}} (נצ מטרה) גובה {{target.altitude}} (גובה מטרה)" },
+    { "source": "Me", "content": "מקבל נתוני נ.צ- מוודא ומעביר שם עמדת שיגור {{position.stationName}} (שם עמדה)+ פתיחה בורמ\"ח." },
     { "source": "They", "content": "מוודא נתונים ומעביר קוד ציון." },
     { "source": "Me", "content": "מקבלים קוד ציון וחוזרים עליו" },
     { "source": "Me", "content": "קבל, אנחנו מחמשים טילים רק בפקודת הללויה, ומשגרים רק בפקודת אושר אושר." },

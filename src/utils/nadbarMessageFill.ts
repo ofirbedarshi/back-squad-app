@@ -22,6 +22,7 @@ const TOKEN_GETTERS: Record<string, (resources: NadbarMessageResources) => strin
     resources.target?.altitude != null ? String(resources.target.altitude) : undefined,
   'target.coordinates.east': (resources) => resources.target?.coordinates.east ?? undefined,
   'target.coordinates.north': (resources) => resources.target?.coordinates.north ?? undefined,
+  'position.stationName': (resources) => resources.position?.stationName ?? undefined,
 }
 
 function escapeHtml(text: string): string {
