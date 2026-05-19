@@ -30,7 +30,7 @@ function NadbarLinkPickerSection({
         <div className={isComplete ? 'shrink-0' : 'min-w-0 flex-1'}>
           <div className="flex items-center gap-1.5">
             <h2 className="text-sm font-bold text-neutral-800">{title}</h2>
-            {isComplete ? <LoadPickerSuccessBadge compact /> : null}
+            {isComplete ? <LoadPickerSuccessBadge /> : null}
           </div>
           {!isComplete ? <p className="truncate text-xs text-neutral-500">{description}</p> : null}
         </div>

@@ -76,7 +76,7 @@ function PositionLoadButton({
           <LoadPickerChip
             displayName={loadedPosition.stationName}
             onClear={onClear}
-            compact={variant === 'toolbar'}
+            dense={variant === 'toolbar'}
             clearAriaLabel="נקה עמדה"
           />
         )

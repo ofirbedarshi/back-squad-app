@@ -47,7 +47,7 @@ function TargetLoadButton({
             onClear={onClear}
           />
         ) : (
-          <LoadPickerChip displayName={loadedTarget.targetName} onClear={onClear} compact={variant === 'toolbar'} clearAriaLabel="נקה מטרה" />
+          <LoadPickerChip displayName={loadedTarget.targetName} onClear={onClear} dense={variant === 'toolbar'} clearAriaLabel="נקה מטרה" />
         )
       ) : (
         <LoadPickerEmptyButton

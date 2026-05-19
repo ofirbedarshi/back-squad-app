@@ -1,13 +1,14 @@
 interface LoadPickerChipProps {
   displayName: string
   onClear: () => void
-  compact?: boolean
+  /** Toolbar-sized chip (nadbar chat toolbar). */
+  dense?: boolean
   clearAriaLabel: string
 }
 
-function LoadPickerChip({ displayName, onClear, compact = false, clearAriaLabel }: LoadPickerChipProps) {
-  const chipGap = compact ? 'gap-0.5' : 'gap-1.5'
-  const chipMaxW = compact ? 'max-w-[72px]' : 'max-w-[140px]'
+function LoadPickerChip({ displayName, onClear, dense = false, clearAriaLabel }: LoadPickerChipProps) {
+  const chipGap = dense ? 'gap-0.5' : 'gap-1.5'
+  const chipMaxW = dense ? 'max-w-[72px]' : 'max-w-[140px]'
 
   return (
     <div className={`flex items-center shrink-0 ${chipGap}`}>
@@ -19,7 +20,7 @@ function LoadPickerChip({ displayName, onClear, compact = false, clearAriaLabel 
       <button
         type="button"
         onClick={onClear}
-        className={`text-neutral-400 text-base leading-none active:text-neutral-600 touch-manipulation ${compact ? 'px-0.5' : 'px-1'}`}
+        className={`text-neutral-400 text-base leading-none active:text-neutral-600 touch-manipulation ${dense ? 'px-0.5' : 'px-1'}`}
         aria-label={clearAriaLabel}
       >
         ✕

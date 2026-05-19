@@ -50,7 +50,7 @@ function IndicatorLoadButton({
           <LoadPickerChip
             displayName={loadedIndicator.indicatorName}
             onClear={onClear}
-            compact={variant === 'toolbar'}
+            dense={variant === 'toolbar'}
             clearAriaLabel="נקה מציין"
           />
         )
