@@ -3,24 +3,36 @@ import { useNavigate } from 'react-router-dom'
 import NadbarCard from '../components/NadbarCard'
 import HeaderOptionsMenu from '../components/base/HeaderOptionsMenu'
 import OptionsMenu from '../components/base/OptionsMenu'
+import type { Indicator } from '../domain/indicator.types'
+import { NADBAR_TYPES, type Nadbar } from '../domain/nadbar.types'
+import type { Target } from '../domain/target.types'
 import { useConfirm } from '../hooks/useConfirm'
 import { useNotification } from '../hooks/useNotification'
+import { loadIndicatorsUseCase } from '../useCases/loadIndicators'
 import { loadNadbarsUseCase } from '../useCases/loadNadbars'
+import { loadTargetsUseCase } from '../useCases/loadTargets'
 import { removeAllNadbarsUseCase } from '../useCases/removeAllNadbars'
 import { removeNadbarUseCase } from '../useCases/removeNadbar'
-import { NADBAR_TYPES, type Nadbar } from '../domain/nadbar.types'
-import { getNadbarCardTitle, getNadbarTypeLabel } from '../utils/nadbarDisplay'
+import { getNadbarCardDetails, getNadbarCardTitle, getNadbarTypeLabel } from '../utils/nadbarDisplay'
 
 function NadbarimScreen() {
   const [nadbars, setNadbars] = useState<Nadbar[]>([])
+  const [targets, setTargets] = useState<Target[]>([])
+  const [indicators, setIndicators] = useState<Indicator[]>([])
   const [menuNadbar, setMenuNadbar] = useState<Nadbar | null>(null)
   const [typePickerOpen, setTypePickerOpen] = useState(false)
   const navigate = useNavigate()
   const confirm = useConfirm()
   const { notifySuccess } = useNotification()
 
-  useEffect(() => {
+  function resetResources() {
     setNadbars(loadNadbarsUseCase())
+    setTargets(loadTargetsUseCase())
+    setIndicators(loadIndicatorsUseCase())
+  }
+
+  useEffect(() => {
+    resetResources()
   }, [])
 
   async function handleRemove(nadbar: Nadbar) {
@@ -33,7 +45,7 @@ function NadbarimScreen() {
     })
     if (!confirmed) return
     removeNadbarUseCase(nadbar.id)
-    setNadbars(loadNadbarsUseCase())
+    resetResources()
     notifySuccess('הנדבר נמחק')
   }
 
@@ -47,7 +59,7 @@ function NadbarimScreen() {
     })
     if (!confirmed) return
     removeAllNadbarsUseCase()
-    setNadbars(loadNadbarsUseCase())
+    resetResources()
     notifySuccess('כל הנדברים נמחקו')
   }
 
@@ -75,6 +87,7 @@ function NadbarimScreen() {
           <NadbarCard
             key={nadbar.id}
             nadbar={nadbar}
+            details={getNadbarCardDetails(nadbar, targets, indicators)}
             onClick={() => navigate(`/nadbarim/${nadbar.id}/edit`)}
             onLongPress={() => setMenuNadbar(nadbar)}
           />
