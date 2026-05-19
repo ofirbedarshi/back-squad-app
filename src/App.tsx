@@ -15,7 +15,7 @@ import CurrentPositionScreen from './screens/CurrentPositionScreen'
 import HomeScreen from './screens/HomeScreen'
 import MaagarimScreen from './screens/MaagarimScreen'
 import IndicatorsListScreen from './screens/IndicatorsListScreen'
-import NidbarimScreen from './screens/NidbarimScreen'
+import NadbarimScreen from './screens/NadbarimScreen'
 import SadapScreen from './screens/SadapScreen'
 import SadapParisatEshkolScreen from './screens/SadapParisatEshkolScreen'
 import SadapKipulEshkolScreen from './screens/SadapKipulEshkolScreen'
@@ -47,7 +47,7 @@ function AppRoutes() {
             <Route path="/sadap/kipul-eshkol" element={<SadapKipulEshkolScreen />} />
             <Route path="/sadap/parisat-dug" element={<SadapParisatDugScreen />} />
             <Route path="/sadap/kipul-dug" element={<SadapKipulDugScreen />} />
-            <Route path="/nidbarim" element={<NidbarimScreen />} />
+            <Route path="/nadbarim" element={<NadbarimScreen />} />
             <Route path="/notes" element={<NotesScreen />} />
             <Route path="/current-position" element={<CurrentPositionScreen />} />
             <Route path="/calculator" element={<CalculatorScreen />} />

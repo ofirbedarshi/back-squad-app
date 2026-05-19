@@ -1,4 +1,4 @@
-function NidbarimScreen() {
+function NadbarimScreen() {
   return (
     <div className="flex flex-col items-center justify-center h-full gap-3 text-neutral-700">
       <span className="text-5xl">📡</span>
@@ -8,4 +8,4 @@ function NidbarimScreen() {
   )
 }
 
-export default NidbarimScreen
+export default NadbarimScreen
