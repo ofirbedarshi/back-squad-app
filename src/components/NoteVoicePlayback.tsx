@@ -4,9 +4,11 @@ import { loadVoiceBlobUseCase } from '../useCases/loadVoiceBlob'
 interface NoteVoicePlaybackProps {
   noteId: string
   onError: (message: string) => void
+  /** When true, taps on the play button do not bubble to a parent ListCard press handler. */
+  stopCardPress?: boolean
 }
 
-function NoteVoicePlayback({ noteId, onError }: NoteVoicePlaybackProps) {
+function NoteVoicePlayback({ noteId, onError, stopCardPress = false }: NoteVoicePlaybackProps) {
   const [blobUrl, setBlobUrl] = useState<string | null>(null)
   const [playState, setPlayState] = useState<'idle' | 'playing' | 'loading'>('idle')
   const audioRef = useRef<HTMLAudioElement>(null)
@@ -87,11 +89,22 @@ function NoteVoicePlayback({ noteId, onError }: NoteVoicePlaybackProps) {
 
   const label = playState === 'playing' ? 'השהה' : playState === 'loading' ? 'טוען…' : 'נגן'
 
+  function stopPressPropagation(e: React.SyntheticEvent) {
+    if (stopCardPress) {
+      e.stopPropagation()
+    }
+  }
+
   return (
     <>
       <button
         type="button"
-        onClick={() => void handleToggle()}
+        onClick={(e) => {
+          stopPressPropagation(e)
+          void handleToggle()
+        }}
+        onMouseDown={stopPressPropagation}
+        onTouchStart={stopPressPropagation}
         disabled={playState === 'loading'}
         className="shrink-0 rounded-full border border-neutral-200 bg-white px-4 py-2 text-sm font-medium text-neutral-800 shadow-sm active:bg-neutral-50 touch-manipulation select-none disabled:opacity-50 transition"
       >

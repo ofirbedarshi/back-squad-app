@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import NoteAddModal from '../components/NoteAddModal'
 import NoteAddTriggerButton from '../components/NoteAddTriggerButton'
+import NoteEditModal from '../components/NoteEditModal'
 import UserNoteRow from '../components/UserNoteRow'
 import DocFeedbackModal from '../components/base/DocFeedbackModal'
 import HeaderOptionsMenu from '../components/base/HeaderOptionsMenu'
@@ -24,6 +25,7 @@ function NotesScreen() {
   const { notifySuccess } = useNotification()
   const [notes, setNotes] = useState<UserNote[]>(() => loadNotesUseCase())
   const [addModalOpen, setAddModalOpen] = useState(false)
+  const [editingNote, setEditingNote] = useState<UserNote | null>(null)
 
   async function handleSubmitNewNote(text: string, voice: NoteVoicePayload | null): Promise<boolean> {
     try {
@@ -129,10 +131,15 @@ function NotesScreen() {
           <UserNoteRow
             key={note.id}
             note={note}
-            savedAtLabel={formatUserNoteSavedAt(noteLastActivityIso(note))}
-            onRemove={() => void handleRemoveNote(note.id)}
-            onSave={handleSaveNoteEdit}
-            onRemoveVoice={handleRemoveVoiceFromNote}
+            lastUpdatedAt={formatUserNoteSavedAt(noteLastActivityIso(note))}
+            onClick={() => setEditingNote(note)}
+            menuItems={[
+              {
+                label: 'מחק הערה',
+                variant: 'danger',
+                onSelect: () => void handleRemoveNote(note.id),
+              },
+            ]}
             onPlaybackError={triggerError}
           />
         ))}
@@ -142,6 +149,16 @@ function NotesScreen() {
         <NoteAddModal
           onClose={() => setAddModalOpen(false)}
           onSubmit={handleSubmitNewNote}
+          onMicError={triggerError}
+        />
+      )}
+
+      {editingNote && (
+        <NoteEditModal
+          note={editingNote}
+          onClose={() => setEditingNote(null)}
+          onSubmit={handleSaveNoteEdit}
+          onRemoveVoice={handleRemoveVoiceFromNote}
           onMicError={triggerError}
         />
       )}
