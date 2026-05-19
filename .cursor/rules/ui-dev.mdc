@@ -62,8 +62,16 @@ Before finishing UI work, ask:
 - Can this header/footer/section be its own component?
 - Can this handler block move to a hook?
 - Would another step reuse this piece?
+- **Does a `condition` switch between two different UIs?** (not a tiny style tweak) → each UI state gets its own component file. Parent only picks which child to render.
 
 If yes → extract now, not later.
+
+### UI states are not “just a ternary”
+
+`large ? <BigLayout /> : <ChipLayout />` inside one file is a smell when layouts differ meaningfully. Extract:
+
+- `LoadPickerLargeSelected` / `LoadPickerChip` / `LoadPickerEmptyButton` — not inline JSX branches
+- Same rule for wizard steps, empty vs filled forms, list vs detail panels
 
 ## Component folder structure
 
