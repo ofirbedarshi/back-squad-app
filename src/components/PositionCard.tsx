@@ -1,5 +1,5 @@
-import { useLongPressWithShake } from '../hooks/useLongPressWithShake'
-import { useSuppressNativeTextSelection } from '../hooks/useSuppressNativeTextSelection'
+import ListCard from './base/ListCard'
+import type { OptionsMenuItem } from './base/OptionsMenu'
 import type { Position } from '../domain/position.types'
 
 interface PositionCardProps {
@@ -12,8 +12,22 @@ interface PositionCardProps {
   emphasizeCurrent?: boolean
   /** Draft / list selection (e.g. reference picker) — blue frame on the card itself. */
   selected?: boolean
-  onClick?: () => void
-  onLongPress?: () => void
+  onClick: () => void
+  menuItems?: OptionsMenuItem[]
+}
+
+function getPositionCardClassName(
+  selected: boolean,
+  isCurrent: boolean,
+  emphasizeCurrent: boolean,
+): string | undefined {
+  if (selected) {
+    return 'border-2 border-blue-500 ring-2 ring-blue-400/40'
+  }
+  if (isCurrent && emphasizeCurrent) {
+    return 'border-emerald-400 ring-1 ring-emerald-200'
+  }
+  return undefined
 }
 
 function PositionCard({
@@ -22,45 +36,32 @@ function PositionCard({
   emphasizeCurrent = true,
   selected = false,
   onClick,
-  onLongPress,
+  menuItems,
 }: PositionCardProps) {
-  const east = position.coordinates.east
-  const north = position.coordinates.north
-
-  const borderClass = selected
-    ? 'border-2 border-blue-500 ring-2 ring-blue-400/40'
-    : isCurrent && emphasizeCurrent
-      ? 'border-emerald-400 ring-1 ring-emerald-200'
-      : 'border-neutral-200 border-r-2 border-r-blue-400/60'
-
-  const { className: shakeClass, ...longPressHandlers } = useLongPressWithShake(onLongPress, onClick)
-
-  const rootRef = useSuppressNativeTextSelection<HTMLDivElement>()
-
-  const interactiveProps = onLongPress
-    ? {
-        role: 'button' as const,
-        className: `interactive-no-copy bg-white rounded-xl border shadow-sm px-3 py-2.5 flex flex-col gap-1 active:bg-neutral-50 transition-colors touch-manipulation ${borderClass} ${shakeClass}`,
-        ...longPressHandlers,
-      }
-    : {
-        role: onClick ? ('button' as const) : undefined,
-        className: `interactive-no-copy bg-white rounded-xl border shadow-sm px-3 py-2.5 flex flex-col gap-1 active:bg-neutral-50 transition-colors touch-manipulation ${borderClass}`,
-        onClick,
-      }
+  const { east, north } = position.coordinates
 
   return (
-    <div ref={rootRef} {...interactiveProps}>
-      <div className="flex items-center justify-between gap-2">
-        <div className="font-semibold text-neutral-800 text-sm">{position.stationName}</div>
-        {isCurrent && (
-          <span className="text-xs font-semibold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full">עמדה נוכחית</span>
-        )}
-      </div>
-      <div className="text-xs text-neutral-500">
-        נ"צ: {east}/{north} | גובה: {position.altitude} מ'
-      </div>
-    </div>
+    <ListCard
+      className={getPositionCardClassName(selected, isCurrent, emphasizeCurrent)}
+      title={
+        <div className="flex items-center justify-between gap-2 w-full">
+          <span className="truncate">{position.stationName}</span>
+          {isCurrent ? (
+            <span className="shrink-0 text-xs font-semibold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full">
+              עמדה נוכחית
+            </span>
+          ) : null}
+        </div>
+      }
+      menuTitle={position.stationName}
+      menuItems={menuItems}
+      subheader={
+        <span>
+          נ"צ: {east}/{north} | גובה: {position.altitude} מ'
+        </span>
+      }
+      onClick={onClick}
+    />
   )
 }
 

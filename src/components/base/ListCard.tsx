@@ -11,6 +11,7 @@ function ListCard({
   subheader,
   lastUpdatedAt,
   lastUpdatedLabel = DEFAULT_LAST_UPDATED_LABEL,
+  className,
   onClick,
   menuTitle,
   menuItems,
@@ -29,13 +30,19 @@ function ListCard({
     <>
       <div
         ref={rootRef}
-        className={`interactive-no-copy bg-white rounded-2xl border border-neutral-200 shadow-sm p-4 flex flex-col gap-2 active:bg-neutral-50 transition-colors touch-manipulation ${shakeClass}`}
+        className={[
+          'interactive-no-copy bg-white rounded-2xl border border-neutral-200 shadow-sm p-4 flex flex-col gap-2 active:bg-neutral-50 transition-colors touch-manipulation',
+          shakeClass,
+          className,
+        ]
+          .filter(Boolean)
+          .join(' ')}
         role="button"
         {...longPressProps}
       >
         <div className="flex items-start justify-between gap-3">
           <div className="flex-1 flex flex-col gap-1 min-w-0">
-            <span className="font-bold text-neutral-800 text-base">{title}</span>
+            <div className="font-bold text-neutral-800 text-base min-w-0">{title}</div>
             {subheader ? <div className="text-sm text-neutral-500">{subheader}</div> : null}
           </div>
           {lastUpdatedAt ? (

@@ -6,6 +6,7 @@ export interface ListCardProps {
   subheader?: ReactNode
   lastUpdatedAt?: string
   lastUpdatedLabel?: string
+  className?: string
   onClick: () => void
   menuTitle?: string
   menuItems?: OptionsMenuItem[]

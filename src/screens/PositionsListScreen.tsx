@@ -5,7 +5,6 @@ import PositionForm from '../components/PositionForm'
 import PositionSearchBar from '../components/PositionSearchBar'
 import HeaderOptionsMenu from '../components/base/HeaderOptionsMenu'
 import Modal from '../components/base/Modal'
-import OptionsMenu from '../components/base/OptionsMenu'
 import { useConfirm } from '../hooks/useConfirm'
 import { useCurrentPosition } from '../hooks/useCurrentPosition'
 import { useDomainError } from '../hooks/useDomainError'
@@ -27,7 +26,6 @@ function PositionsListScreen() {
   const currentPosition = useCurrentPosition()
   const [showForm, setShowForm] = useState(false)
   const [editingItem, setEditingItem] = useState<Position | null>(null)
-  const [menuPosition, setMenuPosition] = useState<Position | null>(null)
   const [promotingPosition, setPromotingPosition] = useState<Position | null>(null)
   const { triggerError } = useDomainError()
   const { reportUIError } = useUIError()
@@ -112,6 +110,24 @@ function PositionsListScreen() {
     ? 'אין עמדות נוספות במאגר'
     : 'אין עמדות שמורות במאגר'
 
+  function getPositionMenuItems(position: Position) {
+    return [
+      ...(position.id !== currentPositionId
+        ? [
+            {
+              label: 'הפוך לעמדה נוכחית',
+              onSelect: () => setPromotingPosition(position),
+            },
+          ]
+        : []),
+      {
+        label: 'מחק עמדה',
+        variant: 'danger' as const,
+        onSelect: () => void handleRemove(position),
+      },
+    ]
+  }
+
   return (
     <div dir="rtl" className="flex flex-col bg-neutral-100 min-h-full">
       <header className="relative py-3 px-4 text-center font-bold text-base border-b border-neutral-200 text-neutral-800 bg-white">
@@ -135,7 +151,7 @@ function PositionsListScreen() {
               position={currentPosition}
               isCurrent
               onClick={() => setEditingItem(currentPosition)}
-              onLongPress={() => setMenuPosition(currentPosition)}
+              menuItems={getPositionMenuItems(currentPosition)}
             />
           ) : (
             <p className="text-xs text-neutral-400 text-center py-2">
@@ -168,13 +184,13 @@ function PositionsListScreen() {
             <p className="text-center text-neutral-400 py-3 text-sm">לא נמצאו תוצאות</p>
           )}
 
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-3">
             {filteredStoredPositions.map((position) => (
               <PositionCard
                 key={position.id}
                 position={position}
                 onClick={() => setEditingItem(position)}
-                onLongPress={() => setMenuPosition(position)}
+                menuItems={getPositionMenuItems(position)}
               />
             ))}
           </div>
@@ -190,31 +206,6 @@ function PositionsListScreen() {
           <Modal title="עריכת עמדה" onClose={() => setEditingItem(null)}>
             <PositionForm onSubmit={handleEdit} submitLabel="שמור שינויים" initialValues={editingItem} />
           </Modal>
-        )}
-
-        {menuPosition && (
-          <OptionsMenu
-            title={menuPosition.stationName}
-            items={[
-              ...(menuPosition.id !== currentPositionId
-                ? [
-                    {
-                      label: 'הפוך לעמדה נוכחית',
-                      onSelect: () => {
-                        setPromotingPosition(menuPosition)
-                        setMenuPosition(null)
-                      },
-                    },
-                  ]
-                : []),
-              {
-                label: 'מחק עמדה',
-                variant: 'danger' as const,
-                onSelect: () => handleRemove(menuPosition),
-              },
-            ]}
-            onClose={() => setMenuPosition(null)}
-          />
         )}
 
         {promotingPosition && (
