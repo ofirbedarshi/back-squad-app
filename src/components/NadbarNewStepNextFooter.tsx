@@ -5,16 +5,16 @@ interface NadbarNewStepNextFooterProps {
 
 function NadbarNewStepNextFooter({ canProceed, onNext }: NadbarNewStepNextFooterProps) {
   return (
-    <footer className="sticky bottom-0 bg-white border-t border-neutral-200 p-4 shrink-0">
+    <footer className="sticky bottom-0 shrink-0 border-t border-neutral-200/60 bg-gradient-to-t from-neutral-50 via-neutral-50/95 to-neutral-50/70 p-4 backdrop-blur-sm">
       <button
         type="button"
         disabled={!canProceed}
         onClick={onNext}
         className={[
-          'w-full py-3.5 rounded-2xl font-bold text-base touch-manipulation transition-colors',
+          'w-full rounded-2xl py-3.5 text-base font-bold touch-manipulation transition-colors',
           canProceed
-            ? 'text-white bg-blue-600 active:bg-blue-700'
-            : 'text-neutral-400 bg-neutral-100 cursor-not-allowed',
+            ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20 active:bg-blue-700'
+            : 'cursor-not-allowed bg-neutral-200 text-neutral-400',
         ].join(' ')}
       >
         הבא

@@ -29,8 +29,12 @@ function NadbarNewLinksStep({
     <div dir="rtl" className="flex flex-col bg-neutral-50 min-h-full">
       <NadbarNewLinksStepHeader nadbarType={nadbarType} />
 
-      <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-4">
-        <NadbarLinkPickerSection title="מציין" description="בחר מציין מהמאגר">
+      <div className="flex-1 overflow-y-auto px-3.5 pb-4 pt-2 flex flex-col gap-3">
+        <NadbarLinkPickerSection
+          title="מציין"
+          description="בחר מציין מהמאגר"
+          isComplete={Boolean(pointerId)}
+        >
           <IndicatorLoadButton
             large
             indicatorId={pointerId}
@@ -39,7 +43,11 @@ function NadbarNewLinksStep({
           />
         </NadbarLinkPickerSection>
 
-        <NadbarLinkPickerSection title="מטרה" description="בחר מטרה ממאגר המטרות">
+        <NadbarLinkPickerSection
+          title="מטרה"
+          description="בחר מטרה ממאגר המטרות"
+          isComplete={Boolean(targetId)}
+        >
           <TargetLoadButton
             large
             targetId={targetId}
@@ -48,7 +56,11 @@ function NadbarNewLinksStep({
           />
         </NadbarLinkPickerSection>
 
-        <NadbarLinkPickerSection title="עמדה" description="בחר עמדה ממאגר העמדות">
+        <NadbarLinkPickerSection
+          title="עמדה"
+          description="בחר עמדה ממאגר העמדות"
+          isComplete={Boolean(positionId)}
+        >
           <PositionLoadButton
             large
             positionId={positionId}
