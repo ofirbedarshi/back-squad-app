@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import type { Nadbar, NadbarLinksUpdate } from '../domain/nadbar.types'
 import { addNadbarUseCase } from '../useCases/addNadbar'
+import { assertNadbarSaveableUseCase } from '../useCases/assertNadbarSaveable'
 import { applyNadbarLinksToNadbarUseCase } from '../useCases/applyNadbarLinksToNadbar'
 import { createNadbarFromTypeUseCase } from '../useCases/createNadbarFromType'
 import { useDomainError } from './useDomainError'
@@ -55,9 +56,14 @@ export function useNadbarNewFlow() {
 
   function saveNadbar() {
     if (!draftNadbar) return
-    addNadbarUseCase(draftNadbar)
-    notifySuccess('הנדבר נשמר')
-    navigate('/nadbarim')
+    try {
+      assertNadbarSaveableUseCase(draftNadbar)
+      addNadbarUseCase(draftNadbar)
+      notifySuccess('הנדבר נשמר')
+      navigate('/nadbarim')
+    } catch (error) {
+      triggerError(error instanceof Error ? error.message : 'שמירת הנדבר נכשלה')
+    }
   }
 
   return {

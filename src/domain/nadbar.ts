@@ -33,8 +33,17 @@ function isNadbarLinks(value: unknown): boolean {
   )
 }
 
+export const NADBAR_SAVE_LINKS_REQUIRED_MESSAGE =
+  'לא ניתן לשמור. וודא שעמדה מטרה ומציין טעונים'
+
 export function hasCompleteNadbarLinks(links: NadbarLinks | undefined): boolean {
   return Boolean(links?.pointerId && links?.targetId && links?.positionId)
+}
+
+export function assertNadbarLinksForSave(links: NadbarLinks | undefined): void {
+  if (!hasCompleteNadbarLinks(links)) {
+    throw new Error(NADBAR_SAVE_LINKS_REQUIRED_MESSAGE)
+  }
 }
 
 export function normalizeNadbar(nadbar: Nadbar): Nadbar {

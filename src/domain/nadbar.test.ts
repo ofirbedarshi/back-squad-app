@@ -2,9 +2,11 @@ import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
 import {
   applyNadbarLinks,
+  assertNadbarLinksForSave,
   createNadbarFromTemplate,
   hasCompleteNadbarLinks,
   isValidNadbar,
+  NADBAR_SAVE_LINKS_REQUIRED_MESSAGE,
   parseNadbarTemplate,
 } from './nadbar.ts'
 import { getNadbarTemplate } from './nadbarTemplates.ts'
@@ -91,6 +93,26 @@ describe('applyNadbarLinks', () => {
       positionId: null,
     })
     assert.equal(cleared.links, undefined)
+  })
+})
+
+describe('assertNadbarLinksForSave', () => {
+  it('throws when any link id is missing', () => {
+    assert.throws(
+      () => assertNadbarLinksForSave({ pointerId: 'pointer-1', targetId: 'target-1' }),
+      (error: unknown) =>
+        error instanceof Error && error.message === NADBAR_SAVE_LINKS_REQUIRED_MESSAGE,
+    )
+  })
+
+  it('does not throw when all link ids are present', () => {
+    assert.doesNotThrow(() =>
+      assertNadbarLinksForSave({
+        pointerId: 'pointer-1',
+        targetId: 'target-1',
+        positionId: 'position-1',
+      }),
+    )
   })
 })
 
