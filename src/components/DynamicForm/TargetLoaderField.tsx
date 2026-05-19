@@ -1,6 +1,6 @@
 import type { FieldErrors, UseFormGetValues, UseFormRegister, UseFormSetValue } from 'react-hook-form'
 import TargetLoadButton from '../TargetLoadButton'
-import { makeFieldValidator } from '../../domain/dynamicFormValidation'
+import LoaderFieldShell from './LoaderFieldShell'
 import type { FormValues, TargetLoaderField as TargetLoaderFieldDef, ToggleWithConditionsField } from '../../domain/dynamicForm.types'
 import type { Target } from '../../domain/target.types'
 
@@ -45,34 +45,21 @@ function TargetLoaderField({
   const errorMessage = error && 'message' in error ? (error.message as string) : undefined
 
   return (
-    <>
-      <input
-        type="hidden"
-        {...register(fieldDef.key, {
-          validate: makeFieldValidator(fieldDef, getValues, parentByKey),
-        })}
-      />
-
-      <div className="flex flex-col gap-1">
-        <div className="flex items-center justify-between gap-2 pt-2">
-          {fieldDef.bold
-            ? <h2 className="text-base font-bold underline text-neutral-800">{fieldDef.text}</h2>
-            : <h3 className="text-sm font-semibold text-neutral-500">{fieldDef.text}</h3>
-          }
-
-          <TargetLoadButton
-            targetId={currentTargetId}
-            onSelect={handleSelect}
-            onClear={handleClear}
-            errorMessage={errorMessage}
-          />
-        </div>
-
-        {errorMessage && (
-          <p className="text-xs text-red-500 px-1">{errorMessage}</p>
-        )}
-      </div>
-    </>
+    <LoaderFieldShell
+      fieldDef={fieldDef}
+      register={register}
+      getValues={getValues}
+      parentByKey={parentByKey}
+      errorMessage={errorMessage}
+      actions={
+        <TargetLoadButton
+          targetId={currentTargetId}
+          onSelect={handleSelect}
+          onClear={handleClear}
+          errorMessage={errorMessage}
+        />
+      }
+    />
   )
 }
 
