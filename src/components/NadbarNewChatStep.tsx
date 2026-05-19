@@ -1,6 +1,5 @@
 import NadbarChatView from './NadbarChatView'
 import NadbarNewChatStepHeader from './NadbarNewChatStepHeader'
-import NadbarNewStepBadge from './NadbarNewStepBadge'
 import type { Nadbar, NadbarLinksUpdate, NadbarType } from '../domain/nadbar.types'
 
 interface NadbarNewChatStepProps {
@@ -28,8 +27,6 @@ function NadbarNewChatStep({
         onLinksChange={onLinksChange}
         onSave={onSave}
       />
-
-      <NadbarNewStepBadge stepNumber={2} totalSteps={2} />
 
       <div className="flex-1 overflow-y-auto">
         <NadbarChatView
