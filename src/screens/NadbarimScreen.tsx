@@ -8,12 +8,13 @@ import { useNotification } from '../hooks/useNotification'
 import { loadNadbarsUseCase } from '../useCases/loadNadbars'
 import { removeAllNadbarsUseCase } from '../useCases/removeAllNadbars'
 import { removeNadbarUseCase } from '../useCases/removeNadbar'
-import type { Nadbar } from '../domain/nadbar.types'
-import { getNadbarCardTitle } from '../utils/nadbarDisplay'
+import { NADBAR_TYPES, type Nadbar } from '../domain/nadbar.types'
+import { getNadbarCardTitle, getNadbarTypeLabel } from '../utils/nadbarDisplay'
 
 function NadbarimScreen() {
   const [nadbars, setNadbars] = useState<Nadbar[]>([])
   const [menuNadbar, setMenuNadbar] = useState<Nadbar | null>(null)
+  const [typePickerOpen, setTypePickerOpen] = useState(false)
   const navigate = useNavigate()
   const confirm = useConfirm()
   const { notifySuccess } = useNotification()
@@ -93,9 +94,20 @@ function NadbarimScreen() {
           />
         )}
 
+        {typePickerOpen && (
+          <OptionsMenu
+            title="בחר סוג נדבר"
+            items={NADBAR_TYPES.map((type) => ({
+              label: getNadbarTypeLabel(type),
+              onSelect: () => navigate(`/nadbarim/new/${type}`),
+            }))}
+            onClose={() => setTypePickerOpen(false)}
+          />
+        )}
+
         <button
           type="button"
-          onClick={() => navigate('/nadbarim/new')}
+          onClick={() => setTypePickerOpen(true)}
           className="w-full py-4 rounded-2xl border-2 border-dashed border-neutral-300 text-neutral-500 font-semibold text-base active:bg-neutral-100 transition-colors touch-manipulation select-none"
         >
           + הוסף נדבר

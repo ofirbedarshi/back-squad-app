@@ -50,7 +50,7 @@ function AppRoutes() {
             <Route path="/sadap/parisat-dug" element={<SadapParisatDugScreen />} />
             <Route path="/sadap/kipul-dug" element={<SadapKipulDugScreen />} />
             <Route path="/nadbarim" element={<NadbarimScreen />} />
-            <Route path="/nadbarim/new" element={<NadbarNewScreen />} />
+            <Route path="/nadbarim/new/:type" element={<NadbarNewScreen />} />
             <Route path="/nadbarim/:id/edit" element={<NadbarEditScreen />} />
             <Route path="/notes" element={<NotesScreen />} />
             <Route path="/current-position" element={<CurrentPositionScreen />} />

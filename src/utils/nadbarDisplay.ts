@@ -1,9 +1,9 @@
 import type { Nadbar, NadbarType } from '../domain/nadbar.types'
 
 const NADBAR_TYPE_LABELS: Record<NadbarType, string> = {
-  PointerTeam: 'צוות מצביע',
-  Katmam: 'קטמ"מ',
-  TzurPointer: 'צור מצביע',
+  PointerTeam: 'צוות ציון',
+  Katmam: 'נדבר כטמ״מ',
+  TzurPointer: 'נדבר צור מציין',
 }
 
 export function getNadbarCardTitle(nadbar: Nadbar): string {

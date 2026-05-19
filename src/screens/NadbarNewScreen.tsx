@@ -1,7 +1,14 @@
 import { useNavigate } from 'react-router-dom'
+import { useNadbarTypeRouteParam } from '../hooks/useNadbarTypeRouteParam'
+import { getNadbarTypeLabel } from '../utils/nadbarDisplay'
 
 function NadbarNewScreen() {
   const navigate = useNavigate()
+  const nadbarType = useNadbarTypeRouteParam()
+
+  if (!nadbarType) {
+    return null
+  }
 
   return (
     <div dir="rtl" className="flex flex-col bg-neutral-50 min-h-full">
@@ -13,7 +20,9 @@ function NadbarNewScreen() {
         >
           חזור
         </button>
-        <span className="flex-1 text-center font-bold text-lg text-neutral-800">הוסף נדבר</span>
+        <span className="flex-1 text-center font-bold text-lg text-neutral-800">
+          הוסף · {getNadbarTypeLabel(nadbarType)}
+        </span>
         <span className="w-12" />
       </header>
 
