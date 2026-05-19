@@ -1,7 +1,7 @@
 import { useLongPressWithShake } from '../hooks/useLongPressWithShake'
 import { useSuppressNativeTextSelection } from '../hooks/useSuppressNativeTextSelection'
 import type { Nadbar } from '../domain/nadbar.types'
-import { getNadbarCardTitle, getNadbarTypeLabel } from '../utils/nadbarDisplay'
+import { getNadbarCardSubtitle, getNadbarCardTitle } from '../utils/nadbarDisplay'
 
 interface NadbarCardProps {
   nadbar: Nadbar
@@ -21,7 +21,7 @@ function NadbarCard({ nadbar, onClick, onLongPress }: NadbarCardProps) {
       {...longPressProps}
     >
       <div className="font-bold text-neutral-800 text-base">{getNadbarCardTitle(nadbar)}</div>
-      <div className="text-sm text-neutral-500">{getNadbarTypeLabel(nadbar.type)}</div>
+      <div className="text-sm text-neutral-500">{getNadbarCardSubtitle(nadbar)}</div>
     </div>
   )
 }

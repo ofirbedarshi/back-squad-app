@@ -1,3 +1,4 @@
+import { isValidNadbar } from '../domain/nadbar'
 import type { Nadbar } from '../domain/nadbar.types'
 
 const NADBARS_KEY = 'nadbarim'
@@ -6,7 +7,9 @@ function readNadbars(): Nadbar[] {
   const raw = localStorage.getItem(NADBARS_KEY)
   if (!raw) return []
   try {
-    return JSON.parse(raw) as Nadbar[]
+    const parsed: unknown = JSON.parse(raw)
+    if (!Array.isArray(parsed)) return []
+    return parsed.filter(isValidNadbar)
   } catch {
     return []
   }

@@ -1,0 +1,8 @@
+{
+  "messages": [
+    { "source": "They", "content": "צור מציין, דווחו מצב." },
+    { "source": "Me", "content": "צור מציין פה, מוכנים." },
+    { "source": "They", "content": "העבירו נתוני ירי." },
+    { "source": "Me", "content": "נתוני ירי מועברים." }
+  ]
+}

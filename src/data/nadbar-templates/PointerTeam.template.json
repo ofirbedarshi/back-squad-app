@@ -1,0 +1,8 @@
+{
+  "messages": [
+    { "source": "They", "content": "צוות ציון, דווחו מצב." },
+    { "source": "Me", "content": "צוות ציון פה, מוכנים לדיווח." },
+    { "source": "They", "content": "קבלו יעד ותיאום אש." },
+    { "source": "Me", "content": "התקבל, ממתינים לפרטי יעד." }
+  ]
+}

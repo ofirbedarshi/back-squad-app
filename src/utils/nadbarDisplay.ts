@@ -6,8 +6,18 @@ const NADBAR_TYPE_LABELS: Record<NadbarType, string> = {
   TzurPointer: 'נדבר צור מציין',
 }
 
+const MESSAGE_PREVIEW_MAX_LENGTH = 48
+
 export function getNadbarCardTitle(nadbar: Nadbar): string {
-  return `נדבר · ${nadbar.id.slice(0, 8)}`
+  return getNadbarTypeLabel(nadbar.type)
+}
+
+export function getNadbarCardSubtitle(nadbar: Nadbar): string {
+  const firstMessage = nadbar.messages[0]
+  if (!firstMessage) return ''
+  const trimmed = firstMessage.content.trim()
+  if (trimmed.length <= MESSAGE_PREVIEW_MAX_LENGTH) return trimmed
+  return `${trimmed.slice(0, MESSAGE_PREVIEW_MAX_LENGTH)}…`
 }
 
 export function getNadbarTypeLabel(type: NadbarType): string {
