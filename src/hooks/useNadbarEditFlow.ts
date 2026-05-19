@@ -23,6 +23,17 @@ export function useNadbarEditFlow(id: string | undefined) {
     }
   }, [draftNadbar, navigate, triggerError])
 
+  function setUserVar(varName: string, value: string) {
+    setDraftNadbar((current) =>
+      current
+        ? {
+            ...current,
+            messageVars: { ...current.messageVars, [varName]: value },
+          }
+        : current,
+    )
+  }
+
   function updateDraftLinks(links: NadbarLinksUpdate) {
     try {
       setDraftNadbar((current) => (current ? applyNadbarLinksToNadbarUseCase(current, links) : current))
@@ -45,6 +56,7 @@ export function useNadbarEditFlow(id: string | undefined) {
 
   return {
     draftNadbar,
+    setUserVar,
     updateDraftLinks,
     saveNadbar,
   }

@@ -1,4 +1,9 @@
-import type { NadbarMessageResourceKey, NadbarMessageResources } from './nadbarMessageFill.types'
+import type {
+  NadbarMessageResourceKey,
+  NadbarMessageResources,
+  NadbarMessageSegment,
+  NadbarResourceSegmentFill,
+} from './nadbarMessageFill.types'
 import { NADBAR_RESOURCE_LOAD_PROMPTS } from './nadbarMessageFill.types'
 
 const TOKEN_RE = /\{\{([a-zA-Z0-9_.]+)\}\}/g
@@ -31,6 +36,52 @@ function resourceKeyFromToken(tokenKey: string): NadbarMessageResourceKey | unde
 function missingResourcePromptHtml(resourceKey: NadbarMessageResourceKey): string {
   const prompt = NADBAR_RESOURCE_LOAD_PROMPTS[resourceKey]
   return `<span class="text-red-600 font-medium">${escapeHtml(prompt)}</span>`
+}
+
+export function parseNadbarMessageSegments(content: string): NadbarMessageSegment[] {
+  const segments: NadbarMessageSegment[] = []
+  let lastIndex = 0
+
+  for (const match of content.matchAll(TOKEN_RE)) {
+    const tokenKey = match[1]
+    if (!tokenKey || match.index == null) continue
+
+    if (match.index > lastIndex) {
+      segments.push({ type: 'text', text: content.slice(lastIndex, match.index) })
+    }
+
+    if (tokenKey.includes('.')) {
+      segments.push({ type: 'resource', tokenKey })
+    } else {
+      segments.push({ type: 'userVar', varName: tokenKey })
+    }
+
+    lastIndex = match.index + match[0].length
+  }
+
+  if (lastIndex < content.length) {
+    segments.push({ type: 'text', text: content.slice(lastIndex) })
+  }
+
+  return segments
+}
+
+export function resolveResourceSegment(
+  tokenKey: string,
+  resources: NadbarMessageResources,
+): NadbarResourceSegmentFill {
+  const getter = TOKEN_GETTERS[tokenKey]
+  if (!getter) return { type: 'unknown' }
+
+  const value = getter(resources)
+  if (value != null) return { type: 'value', value }
+
+  const resourceKey = resourceKeyFromToken(tokenKey)
+  if (resourceKey != null && resources[resourceKey] == null) {
+    return { type: 'missing', prompt: NADBAR_RESOURCE_LOAD_PROMPTS[resourceKey] }
+  }
+
+  return { type: 'unknown' }
 }
 
 export function fillNadbarMessageContent(

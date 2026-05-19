@@ -25,12 +25,17 @@ export interface Nadbar {
   type: NadbarType
   messages: NadbarMessage[]
   links?: NadbarLinks
+  /** User-filled template fields in Me messages (var name → value) */
+  messageVars?: NadbarMessageUserVars
 }
 
 /** Template JSON shape — no id/timestamps */
 export interface NadbarTemplate {
   messages: NadbarMessage[]
 }
+
+/** Per-nadbar user-filled message field values (keyed by template var name) */
+export type NadbarMessageUserVars = Record<string, string>
 
 /** Partial update for {@link Nadbar.links}; `null` clears a field */
 export interface NadbarLinksUpdate {

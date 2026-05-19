@@ -1,25 +1,42 @@
+import NadbarMeMessageBubble from './NadbarMeMessageBubble'
 import NadbarMessageBubble from './NadbarMessageBubble'
-import { NadbarMessageResourcesProvider } from '../context/NadbarMessageResourcesContext'
-import type { NadbarLinks, NadbarMessage } from '../domain/nadbar.types'
+import type { NadbarLinks, NadbarMessage, NadbarMessageUserVars } from '../domain/nadbar.types'
+import { useNadbarMessageResources } from '../hooks/useNadbarMessageResources'
 
 interface NadbarChatViewProps {
   messages: NadbarMessage[]
   links?: NadbarLinks
+  messageVars?: NadbarMessageUserVars
+  onUserVarChange: (varName: string, value: string) => void
 }
 
-function NadbarChatView({ messages, links }: NadbarChatViewProps) {
+function NadbarChatView({ messages, links, messageVars = {}, onUserVarChange }: NadbarChatViewProps) {
+  const resources = useNadbarMessageResources(links)
+
   return (
-    <NadbarMessageResourcesProvider links={links}>
-      <div
-        className="flex flex-col gap-2 p-4 bg-[#e5ddd5] min-h-full"
-        role="log"
-        aria-label="שיחת נדבר"
-      >
-        {messages.map((message, index) => (
-          <NadbarMessageBubble key={`${message.source}-${index}`} message={message} />
-        ))}
-      </div>
-    </NadbarMessageResourcesProvider>
+    <div
+      className="flex flex-col gap-2 p-4 bg-[#e5ddd5] min-h-full"
+      role="log"
+      aria-label="שיחת נדבר"
+    >
+      {messages.map((message, index) =>
+        message.source === 'Me' ? (
+          <NadbarMeMessageBubble
+            key={`${message.source}-${index}`}
+            message={message}
+            resources={resources}
+            messageVars={messageVars}
+            onUserVarChange={onUserVarChange}
+          />
+        ) : (
+          <NadbarMessageBubble
+            key={`${message.source}-${index}`}
+            message={message}
+            resources={resources}
+          />
+        ),
+      )}
+    </div>
   )
 }
 

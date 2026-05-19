@@ -7,7 +7,7 @@ import { getNadbarTypeLabel } from '../utils/nadbarDisplay'
 function NadbarEditScreen() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
-  const { draftNadbar, updateDraftLinks, saveNadbar } = useNadbarEditFlow(id)
+  const { draftNadbar, setUserVar, updateDraftLinks, saveNadbar } = useNadbarEditFlow(id)
 
   if (!draftNadbar) {
     return null
@@ -27,7 +27,12 @@ function NadbarEditScreen() {
       </p>
 
       <div className="flex-1 overflow-y-auto">
-        <NadbarChatView messages={draftNadbar.messages} links={draftNadbar.links} />
+        <NadbarChatView
+          messages={draftNadbar.messages}
+          links={draftNadbar.links}
+          messageVars={draftNadbar.messageVars}
+          onUserVarChange={setUserVar}
+        />
       </div>
     </div>
   )

@@ -2,7 +2,11 @@ import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
 import type { Indicator } from '../domain/indicator.types'
 import type { Target } from '../domain/target.types'
-import { fillNadbarMessageContent } from './nadbarMessageFill'
+import {
+  fillNadbarMessageContent,
+  parseNadbarMessageSegments,
+  resolveResourceSegment,
+} from './nadbarMessageFill'
 
 const indicator: Indicator = {
   id: 'pointer-1',
@@ -74,5 +78,43 @@ describe('fillNadbarMessageContent', () => {
   it('leaves unknown tokens and plain blanks untouched', () => {
     const content = 'למטרה ____ ו-{{target.unknownField}}'
     assert.equal(fillNadbarMessageContent(content, { indicator, target }), content)
+  })
+
+  it('leaves user var tokens untouched in They fill', () => {
+    const content = 'גור {{gur}} ו-{{indicator.markCode}}'
+    assert.equal(
+      fillNadbarMessageContent(content, { indicator }),
+      'גור {{gur}} ו-<u>42</u>',
+    )
+  })
+})
+
+describe('parseNadbarMessageSegments', () => {
+  it('splits resource and user var tokens', () => {
+    const segments = parseNadbarMessageSegments(
+      'גור {{gur}} קו״צ {{indicator.markCode}}',
+    )
+    assert.deepEqual(segments, [
+      { type: 'text', text: 'גור ' },
+      { type: 'userVar', varName: 'gur' },
+      { type: 'text', text: ' קו״צ ' },
+      { type: 'resource', tokenKey: 'indicator.markCode' },
+    ])
+  })
+})
+
+describe('resolveResourceSegment', () => {
+  it('returns value when resource is loaded', () => {
+    assert.deepEqual(resolveResourceSegment('target.targetName', { target }), {
+      type: 'value',
+      value: '7',
+    })
+  })
+
+  it('returns missing prompt when link resource is absent', () => {
+    assert.deepEqual(resolveResourceSegment('indicator.markCode', {}), {
+      type: 'missing',
+      prompt: 'נא לטעון מציין',
+    })
   })
 })

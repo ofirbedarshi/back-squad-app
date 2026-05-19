@@ -10,6 +10,7 @@ function NadbarNewScreen() {
     targetId,
     positionId,
     draftNadbar,
+    setUserVar,
     updateLinkIds,
     advanceFromLinksStep,
     saveDraftLinks,
@@ -43,6 +44,7 @@ function NadbarNewScreen() {
     <NadbarNewChatStep
       nadbarType={nadbarType}
       draftNadbar={draftNadbar}
+      onUserVarChange={setUserVar}
       onLinksChange={saveDraftLinks}
       onSave={saveNadbar}
     />

@@ -6,11 +6,18 @@ import type { Nadbar, NadbarLinksUpdate, NadbarType } from '../domain/nadbar.typ
 interface NadbarNewChatStepProps {
   nadbarType: NadbarType
   draftNadbar: Nadbar
+  onUserVarChange: (varName: string, value: string) => void
   onLinksChange: (links: NadbarLinksUpdate) => void
   onSave: () => void
 }
 
-function NadbarNewChatStep({ nadbarType, draftNadbar, onLinksChange, onSave }: NadbarNewChatStepProps) {
+function NadbarNewChatStep({
+  nadbarType,
+  draftNadbar,
+  onUserVarChange,
+  onLinksChange,
+  onSave,
+}: NadbarNewChatStepProps) {
   return (
     <div dir="rtl" className="flex flex-col bg-neutral-50 min-h-full">
       <NadbarNewChatStepHeader
@@ -25,7 +32,12 @@ function NadbarNewChatStep({ nadbarType, draftNadbar, onLinksChange, onSave }: N
       <NadbarNewStepBadge stepNumber={2} totalSteps={2} />
 
       <div className="flex-1 overflow-y-auto">
-        <NadbarChatView messages={draftNadbar.messages} links={draftNadbar.links} />
+        <NadbarChatView
+          messages={draftNadbar.messages}
+          links={draftNadbar.links}
+          messageVars={draftNadbar.messageVars}
+          onUserVarChange={onUserVarChange}
+        />
       </div>
     </div>
   )

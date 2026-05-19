@@ -6,6 +6,7 @@ import {
   type NadbarMessageSource,
   type NadbarLinks,
   type NadbarLinksUpdate,
+  type NadbarMessageUserVars,
   type NadbarTemplate,
   type NadbarType,
 } from './nadbar.types'
@@ -20,6 +21,21 @@ function isNadbarMessageSource(value: unknown): value is NadbarMessageSource {
 
 function isOptionalEntityId(value: unknown): boolean {
   return value === undefined || (typeof value === 'string' && value.length > 0)
+}
+
+function isNadbarMessageUserVars(value: unknown): boolean {
+  if (value === undefined) return true
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return false
+  return Object.values(value as Record<string, unknown>).every((entry) => typeof entry === 'string')
+}
+
+function normalizeMessageVars(vars: NadbarMessageUserVars | undefined): NadbarMessageUserVars | undefined {
+  if (!vars) return undefined
+  const next: NadbarMessageUserVars = {}
+  for (const [key, value] of Object.entries(vars)) {
+    if (value !== '') next[key] = value
+  }
+  return Object.keys(next).length > 0 ? next : undefined
 }
 
 function isNadbarLinks(value: unknown): boolean {
@@ -50,23 +66,23 @@ export function normalizeNadbar(nadbar: Nadbar): Nadbar {
   const pointerId = nadbar.links?.pointerId
   const targetId = nadbar.links?.targetId
   const positionId = nadbar.links?.positionId
+  const messageVars = normalizeMessageVars(nadbar.messageVars)
 
-  if (!pointerId && !targetId && !positionId) {
-    return {
-      id: nadbar.id,
-      createdAt: nadbar.createdAt,
-      updatedAt: nadbar.updatedAt,
-      type: nadbar.type,
-      messages: nadbar.messages,
-    }
-  }
-
-  return {
+  const base: Nadbar = {
     id: nadbar.id,
     createdAt: nadbar.createdAt,
     updatedAt: nadbar.updatedAt,
     type: nadbar.type,
     messages: nadbar.messages,
+    ...(messageVars ? { messageVars } : {}),
+  }
+
+  if (!pointerId && !targetId && !positionId) {
+    return base
+  }
+
+  return {
+    ...base,
     links: {
       ...(pointerId ? { pointerId } : {}),
       ...(targetId ? { targetId } : {}),
@@ -170,6 +186,7 @@ export function isValidNadbar(value: unknown): value is Nadbar {
     Array.isArray(record.messages) &&
     record.messages.length > 0 &&
     record.messages.every(isNadbarMessage) &&
-    isNadbarLinks(record.links)
+    isNadbarLinks(record.links) &&
+    isNadbarMessageUserVars(record.messageVars)
   )
 }

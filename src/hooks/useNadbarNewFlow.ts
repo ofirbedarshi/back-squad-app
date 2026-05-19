@@ -45,6 +45,17 @@ export function useNadbarNewFlow() {
     }
   }
 
+  function setUserVar(varName: string, value: string) {
+    setDraftNadbar((current) =>
+      current
+        ? {
+            ...current,
+            messageVars: { ...current.messageVars, [varName]: value },
+          }
+        : current,
+    )
+  }
+
   function saveDraftLinks(links: NadbarLinksUpdate) {
     updateLinkIds(links)
     try {
@@ -73,6 +84,7 @@ export function useNadbarNewFlow() {
     targetId,
     positionId,
     draftNadbar,
+    setUserVar,
     updateLinkIds,
     advanceFromLinksStep,
     saveDraftLinks,
