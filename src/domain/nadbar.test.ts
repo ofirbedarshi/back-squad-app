@@ -3,6 +3,7 @@ import { describe, it } from 'node:test'
 import {
   applyNadbarLinks,
   createNadbarFromTemplate,
+  hasCompleteNadbarLinks,
   isValidNadbar,
   normalizeNadbar,
   parseNadbarTemplate,
@@ -81,6 +82,18 @@ describe('applyNadbarLinks', () => {
     })
     const cleared = applyNadbarLinks(withLinks, { pointerId: null, targetId: null })
     assert.equal(cleared.links, undefined)
+  })
+})
+
+describe('hasCompleteNadbarLinks', () => {
+  it('requires both pointer and target ids', () => {
+    assert.equal(hasCompleteNadbarLinks(undefined), false)
+    assert.equal(hasCompleteNadbarLinks({ pointerId: 'pointer-1' }), false)
+    assert.equal(hasCompleteNadbarLinks({ targetId: 'target-1' }), false)
+    assert.equal(
+      hasCompleteNadbarLinks({ pointerId: 'pointer-1', targetId: 'target-1' }),
+      true,
+    )
   })
 })
 

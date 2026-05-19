@@ -3,6 +3,7 @@ import NoteAddModal from '../components/NoteAddModal'
 import NoteAddTriggerButton from '../components/NoteAddTriggerButton'
 import UserNoteRow from '../components/UserNoteRow'
 import DocFeedbackModal from '../components/base/DocFeedbackModal'
+import HeaderOptionsMenu from '../components/base/HeaderOptionsMenu'
 import notesScreenDocMarkdown from '../../docs/מסך-הערות.md?raw'
 import { formatUserNoteSavedAt, noteLastActivityIso } from '../domain/notes'
 import type { NoteVoicePayload, UserNote } from '../domain/notes.types'
@@ -15,6 +16,7 @@ import { loadNotesUseCase } from '../useCases/loadNotes'
 import { removeNoteUseCase } from '../useCases/removeNote'
 import { removeVoiceFromNoteUseCase } from '../useCases/removeVoiceFromNote'
 import { updateNoteUseCase } from '../useCases/updateNote'
+import { exportNotesCsvUseCase } from '../useCases/exportNotesCsv'
 
 function NotesScreen() {
   const confirm = useConfirm()
@@ -83,6 +85,16 @@ function NotesScreen() {
     }
   }
 
+  function handleExportNotes() {
+    try {
+      const fileName = exportNotesCsvUseCase()
+      notifySuccess(`הקובץ נשמר בתיקיית ההורדות: ${fileName}`)
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : 'ייצוא ההערות נכשל'
+      triggerError(msg)
+    }
+  }
+
   const sorted = [...notes].sort(
     (a, b) =>
       new Date(noteLastActivityIso(b)).getTime() - new Date(noteLastActivityIso(a)).getTime(),
@@ -90,12 +102,20 @@ function NotesScreen() {
 
   return (
     <div dir="rtl" className="relative flex flex-col bg-neutral-50 min-h-full">
-      <header className="grid grid-cols-[auto_1fr_auto] items-center gap-2 py-3 px-3 border-b border-neutral-200 text-neutral-800 bg-white">
+      <header className="relative grid grid-cols-[auto_1fr_auto] items-center gap-2 py-3 px-3 border-b border-neutral-200 text-neutral-800 bg-white">
         <div className="justify-self-start shrink-0">
           <NoteAddTriggerButton layout="header" onClick={() => setAddModalOpen(true)} />
         </div>
         <h1 className="font-bold text-lg text-center min-w-0">הערות</h1>
         <div className="w-24 shrink-0 justify-self-end" aria-hidden />
+        <HeaderOptionsMenu
+          items={[
+            {
+              label: 'ייצוא הערות לקובץ',
+              onSelect: handleExportNotes,
+            },
+          ]}
+        />
       </header>
 
       <div className="flex flex-col gap-3 p-4">
