@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import Modal from '../components/base/Modal'
 import DocFeedbackModal from '../components/base/DocFeedbackModal'
 import HeaderOptionsMenu from '../components/base/HeaderOptionsMenu'
-import OptionsMenu from '../components/base/OptionsMenu'
 import TargetSearchBar from '../components/TargetSearchBar'
 import ReferencePositionSummarySelector from '../components/ReferencePositionSummarySelector'
 import TargetCard from '../components/TargetCard'
@@ -28,8 +27,6 @@ function TargetListScreen() {
   const [advancedFilter, setAdvancedFilter] = useState<TargetAdvancedFilter>(emptyTargetAdvancedFilter)
   const [showForm, setShowForm] = useState(false)
   const [editingItem, setEditingItem] = useState<Target | null>(null)
-  const [menuTarget, setMenuTarget] = useState<Target | null>(null)
-
   const textFilteredTargets = filterByQuery(targets, searchQuery, getTargetSearchFields)
 
   const filteredTargets = filterTargetsByAdvancedFilter(
@@ -128,7 +125,13 @@ function TargetListScreen() {
             key={target.id}
             target={target}
             onClick={() => setEditingItem(target)}
-            onLongPress={() => setMenuTarget(target)}
+            menuItems={[
+              {
+                label: 'מחק מטרה',
+                variant: 'danger',
+                onSelect: () => void handleRemove(target),
+              },
+            ]}
           />
         ))}
 
@@ -142,20 +145,6 @@ function TargetListScreen() {
           <Modal title="עריכת מטרה" onClose={() => setEditingItem(null)}>
             <TargetForm onSubmit={handleEdit} submitLabel="שמור שינויים" initialValues={editingItem} />
           </Modal>
-        )}
-
-        {menuTarget && (
-          <OptionsMenu
-            title={menuTarget.targetName}
-            items={[
-              {
-                label: 'מחק מטרה',
-                variant: 'danger',
-                onSelect: () => handleRemove(menuTarget),
-              },
-            ]}
-            onClose={() => setMenuTarget(null)}
-          />
         )}
 
         {!showForm && (

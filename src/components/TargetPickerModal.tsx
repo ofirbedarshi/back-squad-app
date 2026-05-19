@@ -33,7 +33,7 @@ function TargetPickerModal({
           <p className="text-center text-neutral-500 text-sm py-6">{emptyListMessage}</p>
         ) : (
           targets.map((target) => (
-            <TargetCard key={target.id} target={target} onClick={() => handleCardPick(target)} onLongPress={() => {}} />
+            <TargetCard key={target.id} target={target} onClick={() => handleCardPick(target)} />
           ))
         )}
       </div>
