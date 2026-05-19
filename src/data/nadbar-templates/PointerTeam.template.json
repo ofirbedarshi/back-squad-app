@@ -6,18 +6,18 @@
     { "source": "Me", "content": "קיבלתי, קו״צ {{indicator.markCode}}, גור ____" },
     { "source": "They", "content": "קבל למטרה {{target.targetName}} (מספר שלם) מרעום {{target.coordinates.east}} (ספרה ספרה) צפע {{target.coordinates.north}} (ספרה ספרה)" },
     { "source": "Me", "content": "קיבלתי, למטרה {{target.targetName}} (מספר שלם) מרעום {{target.coordinates.east}} (ספרה ספרה) צפע {{target.coordinates.north}} (ספרה ספרה)" },
-    { "source": "They", "content": "כמו כן, גמל ____ במטרים. (מספר שלם)" },
-    { "source": "Me", "content": "קיבלתי, גמל ____ במטרים. (מספר שלם)" },
-    { "source": "Me", "content": "קבל, למטרה ____ אמורה ____ במעלות. (ספרה ספרה)" },
-    { "source": "They", "content": "קיבלתי, למטרה ____ אמורה ____ במעלות. קבל אמורה תקינה/לא תקינה. *לא תקינה- שפר ל____ במעלות. (ספרה ספרה)" },
+    { "source": "They", "content": "כמו כן, גמל {{target.altitude}} במטרים. (מספר שלם)" },
+    { "source": "Me", "content": "קיבלתי, גמל {{target.altitude}} במטרים. (מספר שלם)" },
+    { "source": "Me", "content": "קבל, למטרה {{target.targetName}} אמורה ____ במעלות. (ספרה ספרה)" },
+    { "source": "They", "content": "קיבלתי, למטרה {{target.targetName}} אמורה ____ במעלות. קבל אמורה תקינה/לא תקינה. *לא תקינה- שפר ל____ במעלות. (ספרה ספרה)" },
     { "source": "Me", "content": "קבל, האם יש הסתרים קרובים באזור המטרה?" },
     { "source": "They", "content": "שלילי/חיובי *במידה וחיובי יש להעביר גובה הסתר ומרחק מהמטרה" },
     { "source": "Me", "content": "האם יש דרישות מיוחדות?" },
     { "source": "They", "content": "שלילי / חיובי *במידה וחיובי יש להעביר דרישות" },
-    { "source": "They", "content": "קבל למטרה ____ הללויה!" },
-    { "source": "Me", "content": "קיבלתי, הללויה קבל למטרה ____ זמן מעוף משוער ____ כמו כן מוקד" },
-    { "source": "They", "content": "למטרה ____ אושר אושר!" },
-    { "source": "Me", "content": "קיבלתי אושר אושר! למטרה ____ טורפדו!!!" },
-    { "source": "They", "content": "קבל למטרה ____ פרגול / הפוכה כמו כן- יש צורך בטוניס/אין צורך בטוניס. קבל נתוני השיגור זהים / שונים (פירוט)." }
+    { "source": "They", "content": "קבל למטרה {{target.targetName}} הללויה!" },
+    { "source": "Me", "content": "קיבלתי, הללויה קבל למטרה {{target.targetName}} זמן מעוף משוער ____ כמו כן מוקד" },
+    { "source": "They", "content": "למטרה {{target.targetName}} אושר אושר!" },
+    { "source": "Me", "content": "קיבלתי אושר אושר! למטרה {{target.targetName}} טורפדו!!!" },
+    { "source": "They", "content": "קבל למטרה {{target.targetName}} פרגול / הפוכה כמו כן- יש צורך בטוניס/אין צורך בטוניס. קבל נתוני השיגור זהים / שונים (פירוט)." }
   ]
 }

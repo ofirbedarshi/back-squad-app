@@ -6,6 +6,8 @@ const TOKEN_GETTERS: Record<string, (resources: NadbarMessageResources) => strin
   'indicator.markCode': (resources) =>
     resources.indicator?.markCode != null ? String(resources.indicator.markCode) : undefined,
   'target.targetName': (resources) => resources.target?.targetName ?? undefined,
+  'target.altitude': (resources) =>
+    resources.target?.altitude != null ? String(resources.target.altitude) : undefined,
   'target.coordinates.east': (resources) => resources.target?.coordinates.east ?? undefined,
   'target.coordinates.north': (resources) => resources.target?.coordinates.north ?? undefined,
 }
