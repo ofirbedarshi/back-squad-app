@@ -13,6 +13,20 @@ Giving a set of tools to artillery unit fighters in the field.
 
 Do not rush to code. First understand the architecture, then plan, then implement.
 
+## V1-only rule (no legacy)
+
+**Status:** Pre-release — no production users, no obligation to keep old behavior.
+
+Until the project owner explicitly switches to a migration/legacy mode:
+
+- **Replace in place.** Update all call sites in the same change. Do not leave parallel old and new APIs.
+- **Do not add** deprecated props, `@deprecated` aliases, compatibility shims, feature flags for “old path”, dual-read/write storage, or “temporary” bridges “for later cleanup”.
+- **Do delete** dead code, unused props, and obsolete files when refactoring — do not comment them out “just in case”.
+- **Storage:** Prefer a single current shape. If a key or schema changes, migrate in place once; do not support reading both old and new formats unless the owner asks.
+- **Docs/comments:** Do not document removed flows as “legacy”; describe only current V1 behavior.
+
+**Only add backward compatibility** when the owner explicitly asks (e.g. “keep legacy”, “migration period”, “support old localStorage”).
+
 ## Architecture rules
 
 - UI code must only handle screens, buttons, forms, and visual state.

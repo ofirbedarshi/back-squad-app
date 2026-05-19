@@ -7,13 +7,12 @@ interface NadbarNewLinksStepHeaderProps {
 
 function NadbarNewLinksStepHeader({ nadbarType }: NadbarNewLinksStepHeaderProps) {
   return (
-    <header className="shrink-0 px-4 pb-2 pt-6 text-center">
-      <p className="mb-2 text-xs font-bold text-blue-600">שלב 1 מתוך 2</p>
-      <h1 className="text-2xl font-bold leading-tight tracking-tight text-neutral-800">
-        קישור מציין, מטרה ועמדה
-      </h1>
-      <p className="mt-2 text-sm text-neutral-500">בחר את כל הישויות כדי להמשיך</p>
-      <p className="mt-1 text-xs text-neutral-400">{getNadbarTypeLabel(nadbarType)}</p>
+    <header className="shrink-0 px-3 pb-0.5 pt-2 text-center">
+      <p className="text-[11px] font-bold text-blue-600">שלב 1 מתוך 2</p>
+      <h1 className="mt-0.5 text-lg font-bold leading-tight text-neutral-800">קישור מציין, מטרה ועמדה</h1>
+      <p className="mt-0.5 truncate text-xs text-neutral-500">
+        בחר את כל הישויות · {getNadbarTypeLabel(nadbarType)}
+      </p>
     </header>
   )
 }

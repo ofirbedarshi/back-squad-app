@@ -41,7 +41,7 @@ function AppRoutes() {
   const location = useLocation()
   return (
     <div className="flex flex-col min-h-svh bg-neutral-50">
-      <main className="flex-1" style={{ paddingBottom: 'calc(4rem + env(safe-area-inset-bottom))' }}>
+      <main className="flex min-h-0 flex-1 flex-col" style={{ paddingBottom: 'calc(4rem + env(safe-area-inset-bottom))' }}>
         <Routes key={location.key}>
             <Route path="/" element={<HomeScreen />} />
             <Route path="/sadap" element={<SadapScreen />} />

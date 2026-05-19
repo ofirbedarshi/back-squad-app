@@ -26,17 +26,18 @@ function NadbarNewLinksStep({
   const canProceed = Boolean(pointerId && targetId && positionId)
 
   return (
-    <div dir="rtl" className="flex flex-col bg-neutral-50 min-h-full">
+    <div dir="rtl" className="flex h-full min-h-0 flex-col bg-neutral-50">
       <NadbarNewLinksStepHeader nadbarType={nadbarType} />
 
-      <div className="flex-1 overflow-y-auto px-3.5 pb-4 pt-2 flex flex-col gap-3">
+      <div className="flex min-h-0 flex-1 flex-col gap-3 px-3 py-2">
         <NadbarLinkPickerSection
+          className="min-h-0 flex-1"
           title="מציין"
           description="בחר מציין מהמאגר"
           isComplete={Boolean(pointerId)}
         >
           <IndicatorLoadButton
-            large
+            variant="section"
             indicatorId={pointerId}
             onSelect={(indicator) => onLinksChange({ pointerId: indicator.id })}
             onClear={() => onLinksChange({ pointerId: null })}
@@ -44,12 +45,13 @@ function NadbarNewLinksStep({
         </NadbarLinkPickerSection>
 
         <NadbarLinkPickerSection
+          className="min-h-0 flex-1"
           title="מטרה"
           description="בחר מטרה ממאגר המטרות"
           isComplete={Boolean(targetId)}
         >
           <TargetLoadButton
-            large
+            variant="section"
             targetId={targetId}
             onSelect={(target) => onLinksChange({ targetId: target.id })}
             onClear={() => onLinksChange({ targetId: null })}
@@ -57,12 +59,13 @@ function NadbarNewLinksStep({
         </NadbarLinkPickerSection>
 
         <NadbarLinkPickerSection
+          className="min-h-0 flex-1"
           title="עמדה"
           description="בחר עמדה ממאגר העמדות"
           isComplete={Boolean(positionId)}
         >
           <PositionLoadButton
-            large
+            variant="section"
             positionId={positionId}
             onSelect={(position) => onLinksChange({ positionId: position.id })}
             onClear={() => onLinksChange({ positionId: null })}

@@ -6,6 +6,7 @@ import PositionCurrentArchiveBadge from './base/PositionCurrentArchiveBadge'
 import PositionPickerModal from './PositionPickerModal'
 import { useCurrentPosition } from '../hooks/useCurrentPosition'
 import type { Position } from '../domain/position.types'
+import type { LoadPickerVariant } from './loadPicker.types'
 import { loadCurrentPositionUseCase } from '../useCases/loadCurrentPosition'
 import { loadPositionsUseCase } from '../useCases/loadPositions'
 
@@ -13,8 +14,7 @@ interface PositionLoadButtonProps {
   positionId?: string
   onSelect: (position: Position) => void
   onClear: () => void
-  compact?: boolean
-  large?: boolean
+  variant?: LoadPickerVariant
   loadLabel?: string
   errorMessage?: string
   /** When true, pre-selects the saved current position on first mount if nothing is selected yet. */
@@ -25,8 +25,7 @@ function PositionLoadButton({
   positionId,
   onSelect,
   onClear,
-  compact = false,
-  large = false,
+  variant = 'default',
   loadLabel = 'טען עמדה',
   errorMessage,
   autoLoadCurrent = true,
@@ -66,7 +65,7 @@ function PositionLoadButton({
   return (
     <>
       {loadedPosition ? (
-        large ? (
+        variant === 'section' ? (
           <LoadPickerLargeSelected
             displayName={loadedPosition.stationName}
             badge={<PositionCurrentArchiveBadge isCurrentStation={isCurrentStation} />}
@@ -77,7 +76,7 @@ function PositionLoadButton({
           <LoadPickerChip
             displayName={loadedPosition.stationName}
             onClear={onClear}
-            compact={compact}
+            compact={variant === 'toolbar'}
             clearAriaLabel="נקה עמדה"
           />
         )
@@ -85,8 +84,7 @@ function PositionLoadButton({
         <LoadPickerEmptyButton
           label={loadLabel}
           onClick={openPicker}
-          compact={compact}
-          large={large}
+          variant={variant}
           errorMessage={errorMessage}
         />
       )}

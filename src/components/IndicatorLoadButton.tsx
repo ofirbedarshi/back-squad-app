@@ -4,14 +4,14 @@ import LoadPickerEmptyButton from './base/LoadPickerEmptyButton'
 import LoadPickerLargeSelected from './base/LoadPickerLargeSelected'
 import IndicatorPickerModal from './IndicatorPickerModal'
 import type { Indicator } from '../domain/indicator.types'
+import type { LoadPickerVariant } from './loadPicker.types'
 import { loadIndicatorsUseCase } from '../useCases/loadIndicators'
 
 interface IndicatorLoadButtonProps {
   indicatorId?: string
   onSelect: (indicator: Indicator) => void
   onClear: () => void
-  compact?: boolean
-  large?: boolean
+  variant?: LoadPickerVariant
   loadLabel?: string
   errorMessage?: string
 }
@@ -20,8 +20,7 @@ function IndicatorLoadButton({
   indicatorId,
   onSelect,
   onClear,
-  compact = false,
-  large = false,
+  variant = 'default',
   loadLabel = 'טען מציין',
   errorMessage,
 }: IndicatorLoadButtonProps) {
@@ -41,7 +40,7 @@ function IndicatorLoadButton({
   return (
     <>
       {loadedIndicator ? (
-        large ? (
+        variant === 'section' ? (
           <LoadPickerLargeSelected
             displayName={loadedIndicator.indicatorName}
             onReplace={openPicker}
@@ -51,7 +50,7 @@ function IndicatorLoadButton({
           <LoadPickerChip
             displayName={loadedIndicator.indicatorName}
             onClear={onClear}
-            compact={compact}
+            compact={variant === 'toolbar'}
             clearAriaLabel="נקה מציין"
           />
         )
@@ -59,8 +58,7 @@ function IndicatorLoadButton({
         <LoadPickerEmptyButton
           label={loadLabel}
           onClick={openPicker}
-          compact={compact}
-          large={large}
+          variant={variant}
           errorMessage={errorMessage}
         />
       )}

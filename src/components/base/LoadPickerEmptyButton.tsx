@@ -1,23 +1,28 @@
+import type { LoadPickerVariant } from '../loadPicker.types'
+
 interface LoadPickerEmptyButtonProps {
   label: string
   onClick: () => void
-  compact?: boolean
-  large?: boolean
+  variant?: LoadPickerVariant
   errorMessage?: string
 }
 
 function LoadPickerEmptyButton({
   label,
   onClick,
-  compact = false,
-  large = false,
+  variant = 'default',
   errorMessage,
 }: LoadPickerEmptyButtonProps) {
+  const sizeClassName =
+    variant === 'section'
+      ? 'min-h-10 shrink-0 rounded-xl px-3.5 py-2 text-xs'
+      : variant === 'toolbar'
+        ? 'shrink-0 rounded-xl px-2.5 py-1 text-xs'
+        : 'shrink-0 rounded-xl px-3 py-1 text-xs'
+
   const className = [
-    large ? 'w-full rounded-2xl' : 'shrink-0 rounded-full',
-    large ? 'text-base' : 'text-xs',
+    sizeClassName,
     'font-semibold touch-manipulation',
-    compact ? 'px-2.5 py-1' : large ? 'px-4 py-3.5' : 'px-3 py-1',
     errorMessage
       ? 'text-red-600 bg-red-50 border border-red-300 active:bg-red-100'
       : 'text-blue-600 bg-blue-50 border border-blue-200 active:bg-blue-100',

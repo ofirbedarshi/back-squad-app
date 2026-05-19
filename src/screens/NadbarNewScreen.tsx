@@ -22,6 +22,7 @@ function NadbarNewScreen() {
 
   if (step === 'links') {
     return (
+      <div className="h-full min-h-0">
       <NadbarNewLinksStep
         nadbarType={nadbarType}
         pointerId={pointerId}
@@ -30,6 +31,7 @@ function NadbarNewScreen() {
         onLinksChange={updateLinkIds}
         onNext={advanceFromLinksStep}
       />
+      </div>
     )
   }
 

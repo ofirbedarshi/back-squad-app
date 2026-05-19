@@ -5,29 +5,37 @@ interface NadbarLinkPickerSectionProps {
   title: string
   description: string
   isComplete?: boolean
+  className?: string
   children: ReactNode
 }
 
-function NadbarLinkPickerSection({ title, description, isComplete = false, children }: NadbarLinkPickerSectionProps) {
-  const completeDescription = 'הישות קושרה בהצלחה'
-
+function NadbarLinkPickerSection({
+  title,
+  description,
+  isComplete = false,
+  className,
+  children,
+}: NadbarLinkPickerSectionProps) {
   return (
     <section
       className={[
-        'rounded-3xl border p-[18px] shadow-sm',
+        'flex flex-col justify-center rounded-2xl border px-3 py-3 shadow-sm',
+        className,
         isComplete
           ? 'border-green-200 bg-gradient-to-b from-white to-green-50/60'
           : 'border-neutral-200/80 bg-white/90',
       ].join(' ')}
     >
-      <div className="flex items-start justify-between gap-2.5">
-        <div className="min-w-0 flex-1">
-          <h2 className="text-xl font-bold tracking-tight text-neutral-800">{title}</h2>
-          <p className="mt-1 text-sm leading-snug text-neutral-500">{isComplete ? completeDescription : description}</p>
+      <div className="flex min-h-11 items-center gap-2">
+        <div className={isComplete ? 'shrink-0' : 'min-w-0 flex-1'}>
+          <div className="flex items-center gap-1.5">
+            <h2 className="text-sm font-bold text-neutral-800">{title}</h2>
+            {isComplete ? <LoadPickerSuccessBadge compact /> : null}
+          </div>
+          {!isComplete ? <p className="truncate text-xs text-neutral-500">{description}</p> : null}
         </div>
-        {isComplete ? <LoadPickerSuccessBadge /> : null}
+        {children}
       </div>
-      <div className="mt-4">{children}</div>
     </section>
   )
 }

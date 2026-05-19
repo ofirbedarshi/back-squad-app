@@ -25,21 +25,21 @@ function NadbarLinksToolbar({
   return (
     <div className="flex items-center gap-1 shrink-0">
       <IndicatorLoadButton
-        compact
+        variant="toolbar"
         loadLabel={indicatorLoadLabel}
         indicatorId={pointerId}
         onSelect={(indicator) => onLinksChange({ pointerId: indicator.id })}
         onClear={() => onLinksChange({ pointerId: null })}
       />
       <TargetLoadButton
-        compact
+        variant="toolbar"
         loadLabel={targetLoadLabel}
         targetId={targetId}
         onSelect={(target) => onLinksChange({ targetId: target.id })}
         onClear={() => onLinksChange({ targetId: null })}
       />
       <PositionLoadButton
-        compact
+        variant="toolbar"
         loadLabel={positionLoadLabel}
         positionId={positionId}
         onSelect={(position) => onLinksChange({ positionId: position.id })}

@@ -4,14 +4,14 @@ import LoadPickerEmptyButton from './base/LoadPickerEmptyButton'
 import LoadPickerLargeSelected from './base/LoadPickerLargeSelected'
 import TargetPickerModal from './TargetPickerModal'
 import type { Target } from '../domain/target.types'
+import type { LoadPickerVariant } from './loadPicker.types'
 import { loadTargetsUseCase } from '../useCases/loadTargets'
 
 interface TargetLoadButtonProps {
   targetId?: string
   onSelect: (target: Target) => void
   onClear: () => void
-  compact?: boolean
-  large?: boolean
+  variant?: LoadPickerVariant
   loadLabel?: string
   errorMessage?: string
 }
@@ -20,8 +20,7 @@ function TargetLoadButton({
   targetId,
   onSelect,
   onClear,
-  compact = false,
-  large = false,
+  variant = 'default',
   loadLabel = 'טען מטרה',
   errorMessage,
 }: TargetLoadButtonProps) {
@@ -41,21 +40,20 @@ function TargetLoadButton({
   return (
     <>
       {loadedTarget ? (
-        large ? (
+        variant === 'section' ? (
           <LoadPickerLargeSelected
             displayName={loadedTarget.targetName}
             onReplace={openPicker}
             onClear={onClear}
           />
         ) : (
-          <LoadPickerChip displayName={loadedTarget.targetName} onClear={onClear} compact={compact} clearAriaLabel="נקה מטרה" />
+          <LoadPickerChip displayName={loadedTarget.targetName} onClear={onClear} compact={variant === 'toolbar'} clearAriaLabel="נקה מטרה" />
         )
       ) : (
         <LoadPickerEmptyButton
           label={loadLabel}
           onClick={openPicker}
-          compact={compact}
-          large={large}
+          variant={variant}
           errorMessage={errorMessage}
         />
       )}
