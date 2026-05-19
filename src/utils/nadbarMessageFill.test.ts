@@ -30,9 +30,12 @@ describe('fillNadbarMessageContent', () => {
     )
   })
 
-  it('keeps token when indicator is missing', () => {
+  it('shows load indicator prompt when indicator is missing', () => {
     const content = 'קיבלתי, קו״צ {{indicator.markCode}}, גור ____'
-    assert.equal(fillNadbarMessageContent(content, {}), content)
+    assert.equal(
+      fillNadbarMessageContent(content, {}),
+      'קיבלתי, קו״צ <span class="text-red-600 font-medium">נא לטעון מציין</span>, גור ____',
+    )
   })
 
   it('replaces target name and coordinates when target is present', () => {
@@ -59,9 +62,13 @@ describe('fillNadbarMessageContent', () => {
     assert.equal(fillNadbarMessageContent(content, { target: targetWithoutAltitude }), content)
   })
 
-  it('keeps target tokens when target is missing', () => {
+  it('shows load target prompt when target is missing', () => {
+    const prompt = '<span class="text-red-600 font-medium">נא לטעון מטרה</span>'
     const content = 'למטרה {{target.targetName}} מרעום {{target.coordinates.east}} צפע {{target.coordinates.north}}'
-    assert.equal(fillNadbarMessageContent(content, {}), content)
+    assert.equal(
+      fillNadbarMessageContent(content, {}),
+      `למטרה ${prompt} מרעום ${prompt} צפע ${prompt}`,
+    )
   })
 
   it('leaves unknown tokens and plain blanks untouched', () => {

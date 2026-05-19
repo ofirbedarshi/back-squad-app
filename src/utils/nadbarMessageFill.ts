@@ -1,6 +1,13 @@
-import type { NadbarMessageResources } from './nadbarMessageFill.types'
+import type { NadbarMessageResourceKey, NadbarMessageResources } from './nadbarMessageFill.types'
+import { NADBAR_RESOURCE_LOAD_PROMPTS } from './nadbarMessageFill.types'
 
 const TOKEN_RE = /\{\{([a-zA-Z0-9_.]+)\}\}/g
+
+const RESOURCE_KEY_BY_TOKEN_PREFIX: Record<string, NadbarMessageResourceKey> = {
+  indicator: 'indicator',
+  target: 'target',
+  position: 'position',
+}
 
 const TOKEN_GETTERS: Record<string, (resources: NadbarMessageResources) => string | undefined> = {
   'indicator.markCode': (resources) =>
@@ -16,6 +23,16 @@ function escapeHtml(text: string): string {
   return text.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')
 }
 
+function resourceKeyFromToken(tokenKey: string): NadbarMessageResourceKey | undefined {
+  const prefix = tokenKey.split('.')[0]
+  return RESOURCE_KEY_BY_TOKEN_PREFIX[prefix]
+}
+
+function missingResourcePromptHtml(resourceKey: NadbarMessageResourceKey): string {
+  const prompt = NADBAR_RESOURCE_LOAD_PROMPTS[resourceKey]
+  return `<span class="text-red-600 font-medium">${escapeHtml(prompt)}</span>`
+}
+
 export function fillNadbarMessageContent(
   content: string,
   resources: NadbarMessageResources,
@@ -25,6 +42,13 @@ export function fillNadbarMessageContent(
     const getter = TOKEN_GETTERS[key]
     if (!getter) return full
     const value = getter(resources)
-    return value != null ? `<u>${escapeHtml(value)}</u>` : full
+    if (value != null) return `<u>${escapeHtml(value)}</u>`
+
+    const resourceKey = resourceKeyFromToken(key)
+    if (resourceKey != null && resources[resourceKey] == null) {
+      return missingResourcePromptHtml(resourceKey)
+    }
+
+    return full
   })
 }
