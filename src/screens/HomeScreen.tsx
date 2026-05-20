@@ -12,6 +12,7 @@ function HomeScreen() {
 
       <div className="flex flex-col gap-3 p-4">
         <MenuButton label="עמדה נוכחית" to="/current-position" primary />
+        <MenuButton label="היתכנות לירי" to="/fire-feasibility" />
         <MenuButton label="מאגרים" to="/maagarim" />
         <MenuButton label="נדברים" to="/nadbarim" />
         <MenuButton label='סדפ"ים' to="/sadap" />
