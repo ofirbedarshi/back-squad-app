@@ -67,21 +67,9 @@ export type FireFeasibilityInput =
 
 export interface FireFeasibilityCategoryResult {
   enabled: boolean
-  blockingReason?: string
-}
-
-export interface FireFeasibilityGenerationMetrics {
-  L: number
-  LPlus: number
-  Low: number
-  F: number
 }
 
 export interface FireFeasibilityResults {
-  obstacles: FireFeasibilityCategoryResult
   clouds: FireFeasibilityCategoryResult
-  concealments: FireFeasibilityCategoryResult
-  generationA: FireFeasibilityGenerationMetrics
-  generationB: FireFeasibilityGenerationMetrics
 }
 

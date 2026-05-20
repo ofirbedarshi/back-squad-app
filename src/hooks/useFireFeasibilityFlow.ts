@@ -19,8 +19,6 @@ export function useFireFeasibilityFlow(mode: FireFeasibilityMode) {
   const [step, setStep] = useState<FireFeasibilityStep>('links')
   const [targetId, setTargetId] = useState<string | undefined>()
   const [positionId, setPositionId] = useState<string | undefined>()
-  const [positionName, setPositionName] = useState('')
-  const [targetName, setTargetName] = useState('')
   const [results, setResults] = useState<FireFeasibilityResults | null>(null)
 
   const [obstacleCoords, setObstacleCoords] = useState('')
@@ -87,10 +85,8 @@ export function useFireFeasibilityFlow(mode: FireFeasibilityMode) {
     }
   }
 
-  function advanceFromLinks(nextPositionName: string, nextTargetName: string) {
+  function advanceFromLinks() {
     if (!targetId || !positionId) return
-    setPositionName(nextPositionName)
-    setTargetName(nextTargetName)
     setStep('form')
   }
 
@@ -116,8 +112,6 @@ export function useFireFeasibilityFlow(mode: FireFeasibilityMode) {
     step,
     targetId,
     positionId,
-    positionName,
-    targetName,
     results,
     coordsFormState,
     distancesHeightsFormState,

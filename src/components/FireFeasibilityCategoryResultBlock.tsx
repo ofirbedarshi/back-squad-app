@@ -20,13 +20,6 @@ function FireFeasibilityCategoryResultBlock({
           <span className="text-red-600">לא מאפשר</span>
         )}
       </div>
-
-      {!result.enabled && result.blockingReason ? (
-        <div className="flex flex-col gap-0.5 text-center text-sm">
-          <span className="font-medium text-neutral-500">מה לא מאפשר</span>
-          <span className="text-neutral-700">{result.blockingReason}</span>
-        </div>
-      ) : null}
     </section>
   )
 }

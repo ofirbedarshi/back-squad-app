@@ -32,7 +32,7 @@ function FireFeasibilityCoordsScreen() {
 
   const handleAdvanceFromLinks = useCallback(() => {
     if (!position || !target) return
-    flow.advanceFromLinks(position.stationName, target.targetName)
+    flow.advanceFromLinks()
   }, [position, target, flow])
 
   const handleCalculate = useCallback(() => {
@@ -92,11 +92,7 @@ function FireFeasibilityCoordsScreen() {
         </header>
 
         <div className="min-h-0 flex-1 overflow-y-auto p-4">
-          <FireFeasibilityResultsView
-            positionName={flow.positionName}
-            targetName={flow.targetName}
-            results={flow.results}
-          />
+          <FireFeasibilityResultsView clouds={flow.results.clouds} />
         </div>
 
         <DocFeedbackModal
