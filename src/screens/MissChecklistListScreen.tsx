@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import MissChecklistCard from '../components/MissChecklistCard'
 import DocFeedbackModal from '../components/base/DocFeedbackModal'
-import OptionsMenu from '../components/base/OptionsMenu'
 import type { MissChecklist } from '../domain/missChecklist.types'
 import { useConfirm } from '../hooks/useConfirm'
 import { useDomainError } from '../hooks/useDomainError'
@@ -13,7 +12,6 @@ import missChecklistDocMarkdown from '../../docs/צקליסט-החטאה.md?raw'
 
 function MissChecklistListScreen() {
   const [items, setItems] = useState<MissChecklist[]>(() => loadMissChecklistsUseCase())
-  const [menuItem, setMenuItem] = useState<MissChecklist | null>(null)
   const navigate = useNavigate()
   const confirm = useConfirm()
   const { triggerError } = useDomainError()
@@ -57,27 +55,15 @@ function MissChecklistListScreen() {
             key={item.id}
             item={item}
             onClick={() => navigate(`/others/miss-checklist/${item.id}/edit`)}
-            onLongPress={() => setMenuItem(item)}
-          />
-        ))}
-
-        {menuItem && (
-          <OptionsMenu
-            title={
-              typeof menuItem.values.targetType === 'string' && menuItem.values.targetType.trim() !== ''
-                ? menuItem.values.targetType
-                : "צ'קליסט החטאה"
-            }
-            items={[
+            menuItems={[
               {
                 label: "מחק צ'קליסט",
                 variant: 'danger',
-                onSelect: () => void handleRemove(menuItem.id),
+                onSelect: () => void handleRemove(item.id),
               },
             ]}
-            onClose={() => setMenuItem(null)}
           />
-        )}
+        ))}
 
         <button
           type="button"

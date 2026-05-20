@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import BachCard from '../components/BachCard'
 import DocFeedbackModal from '../components/base/DocFeedbackModal'
-import OptionsMenu from '../components/base/OptionsMenu'
 import bachDocMarkdown from '../../docs/בדח-תחקור-ותקיפה.md?raw'
 import type { Bach } from '../domain/bach.types'
 import { useConfirm } from '../hooks/useConfirm'
@@ -13,7 +12,6 @@ import { removeBachUseCase } from '../useCases/removeBach'
 
 function BachListScreen() {
   const [bachs, setBachs] = useState<Bach[]>(() => loadBachsUseCase())
-  const [menuBach, setMenuBach] = useState<Bach | null>(null)
   const navigate = useNavigate()
   const confirm = useConfirm()
   const { triggerError } = useDomainError()
@@ -57,30 +55,15 @@ function BachListScreen() {
             key={bach.id}
             bach={bach}
             onClick={() => navigate(`/others/bach/${bach.id}/edit`)}
-            onLongPress={() => setMenuBach(bach)}
-          />
-        ))}
-
-        {menuBach && (
-          <OptionsMenu
-            title={
-              typeof menuBach.values.targetName === 'string' && menuBach.values.targetName.trim() !== ''
-                ? menuBach.values.targetName
-                : typeof menuBach.values.indicatorName === 'string' &&
-                    menuBach.values.indicatorName.trim() !== ''
-                  ? menuBach.values.indicatorName
-                  : 'בדח'
-            }
-            items={[
+            menuItems={[
               {
                 label: 'מחק בדח',
                 variant: 'danger',
-                onSelect: () => void handleRemove(menuBach.id),
+                onSelect: () => void handleRemove(bach.id),
               },
             ]}
-            onClose={() => setMenuBach(null)}
           />
-        )}
+        ))}
 
         <button
           type="button"
