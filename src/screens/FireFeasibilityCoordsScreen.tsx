@@ -49,7 +49,7 @@ function FireFeasibilityCoordsScreen() {
           sections={['target', 'position']}
           header={{
             stepLabel: 'שלב 1 מתוך 3',
-            title: 'נצ',
+            title: 'היתכנות לירי - נ.צ',
             subtitle: 'בחר מטרה ועמדה',
           }}
           targetId={flow.targetId}

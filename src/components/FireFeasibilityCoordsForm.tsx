@@ -40,8 +40,6 @@ function FireFeasibilityCoordsForm({
     onUpdatePositionToTargetRange(metrics?.range ?? null)
   }, [metrics?.range, onUpdatePositionToTargetRange])
 
-  const targetCoordsDisplay = `${target.coordinates.east}/${target.coordinates.north}`
-
   return (
     <div className="flex flex-col gap-4">
       <FormField label="שם עמדה" infoTooltipText={POSITION_FIELD_TOOLTIP}>
@@ -61,7 +59,7 @@ function FireFeasibilityCoordsForm({
       </FormField>
 
       <FormField label='נ"צ מטרה' infoTooltipText={TARGET_FIELD_TOOLTIP}>
-        <Input type="text" value={targetCoordsDisplay} disabled />
+        <CoordinateInput value={target.coordinates} onChange={() => {}} disabled />
       </FormField>
 
       <FormField label="גובה מטרה" infoTooltipText={TARGET_FIELD_TOOLTIP}>
