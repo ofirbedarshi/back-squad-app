@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import Modal from './base/Modal'
 import SegmentedToggle from './base/SegmentedToggle'
+import { CLOUD_HEIGHT_UNIT_OPTIONS } from '../domain/cloudHeight'
 import { saveCloudHeight } from '../useCases/saveCloudHeight'
 import { metersToFeet, feetToMeters } from '../domain/unitConversion'
 import type { CloudHeightSettings, CloudHeightUnit } from '../domain/cloudHeight.types'
@@ -10,11 +11,6 @@ interface CloudHeightModalProps {
   onClose: () => void
   onSaved: (updated: CloudHeightSettings) => void
 }
-
-const UNIT_OPTIONS = [
-  { label: 'מטרים', value: 'meters' },
-  { label: 'רגל', value: 'feet' },
-]
 
 function toDisplayValue(heightMeters: number | null, unit: CloudHeightUnit): string {
   if (heightMeters === null) return ''
@@ -58,7 +54,7 @@ function CloudHeightModal({ current, onClose, onSaved }: CloudHeightModalProps) 
   return (
     <Modal title="גובה בסיס ענן" onClose={onClose} onSave={handleSave} saveDisabled={isSaveDisabled}>
       <div className="flex flex-col gap-5">
-        <SegmentedToggle options={UNIT_OPTIONS} value={unit} onChange={handleUnitChange} />
+        <SegmentedToggle options={[...CLOUD_HEIGHT_UNIT_OPTIONS]} value={unit} onChange={handleUnitChange} />
 
         <div className="flex flex-col gap-2">
           <label className="text-sm font-medium text-neutral-600">

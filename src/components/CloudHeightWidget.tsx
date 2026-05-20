@@ -1,34 +1,10 @@
-import { useState, useEffect } from 'react'
-import { loadCloudHeight } from '../useCases/loadCloudHeight'
-import { metersToFeet } from '../domain/unitConversion'
-import type { CloudHeightSettings } from '../domain/cloudHeight.types'
+import { useState } from 'react'
+import { useCloudHeight } from '../hooks/useCloudHeight'
 import CloudHeightModal from './CloudHeightModal'
 
-function formatHeight(settings: CloudHeightSettings): string {
-  if (settings.heightMeters === null) return '—'
-  const value =
-    settings.displayUnit === 'feet'
-      ? metersToFeet(settings.heightMeters)
-      : settings.heightMeters
-  const rounded = Math.round(value)
-  const unit = settings.displayUnit === 'feet' ? 'רגל' : 'מ׳'
-  return `${rounded.toLocaleString('he-IL')} ${unit}`
-}
-
 function CloudHeightWidget() {
-  const [settings, setSettings] = useState<CloudHeightSettings>(() => loadCloudHeight())
+  const { settings, handleSaved, widgetLabel, hasHeight } = useCloudHeight()
   const [modalOpen, setModalOpen] = useState(false)
-
-  useEffect(() => {
-    setSettings(loadCloudHeight())
-  }, [])
-
-  function handleSaved(updated: CloudHeightSettings) {
-    setSettings(updated)
-  }
-
-  const label = formatHeight(settings)
-  const hasHeight = settings.heightMeters !== null
 
   return (
     <>
@@ -71,7 +47,7 @@ function CloudHeightWidget() {
             fill={hasHeight ? '#1d4ed8' : '#9ca3af'}
             fontFamily="system-ui, sans-serif"
           >
-            {label}
+            {widgetLabel}
           </text>
         </svg>
       </button>

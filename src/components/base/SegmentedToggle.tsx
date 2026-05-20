@@ -9,6 +9,7 @@ interface SegmentedToggleProps {
   onChange: (value: string) => void
   /** When true, tapping active segment clears value (empty string). */
   allowDeselect?: boolean
+  size?: 'default' | 'compact'
 }
 
 function SegmentedToggle({
@@ -16,7 +17,9 @@ function SegmentedToggle({
   value,
   onChange,
   allowDeselect = false,
+  size = 'default',
 }: SegmentedToggleProps) {
+  const isCompact = size === 'compact'
   const selectedValue = value?.trim() ? value : undefined
 
   function handleOptionClick(optionValue: string): void {
@@ -28,7 +31,12 @@ function SegmentedToggle({
   }
 
   return (
-    <div className="flex w-full rounded-2xl border border-neutral-200 bg-neutral-100 p-1 gap-1">
+    <div
+      className={[
+        'flex w-full border border-neutral-200 bg-neutral-100',
+        isCompact ? 'rounded-xl p-0.5 gap-0.5' : 'rounded-2xl p-1 gap-1',
+      ].join(' ')}
+    >
       {options.map((option) => {
         const isActive = selectedValue !== undefined && option.value === selectedValue
         return (
@@ -37,7 +45,8 @@ function SegmentedToggle({
             type="button"
             onClick={() => handleOptionClick(option.value)}
             className={[
-              'flex-1 py-3 rounded-xl text-base font-semibold transition-all touch-manipulation select-none',
+              'flex-1 font-semibold transition-all touch-manipulation select-none',
+              isCompact ? 'py-1.5 rounded-lg text-sm' : 'py-3 rounded-xl text-base',
               isActive
                 ? 'bg-white text-blue-600 shadow-sm'
                 : 'text-neutral-500 active:bg-neutral-200',
