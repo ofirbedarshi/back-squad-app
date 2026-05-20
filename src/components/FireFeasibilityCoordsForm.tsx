@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react'
 import type { Position, PositionCoordinates } from '../domain/position.types'
 import type { Target } from '../domain/target.types'
-import { CLOUD_HEIGHT_UNIT_OPTIONS } from '../domain/cloudHeight'
 import {
-  CLOUD_HEIGHT_FIELD_TOOLTIP,
   FLIGHT_PATH_OPTIONS,
   POSITION_FIELD_TOOLTIP,
   RANGE_COMPUTED_TOOLTIP,
@@ -11,6 +9,7 @@ import {
 } from '../domain/fireFeasibility.constants'
 import { useFireFeasibilityPositionTargetMetrics } from '../hooks/useFireFeasibilityPositionTargetMetrics'
 import CoordinateInput from './base/CoordinateInput'
+import FireFeasibilityCloudHeightField from './FireFeasibilityCloudHeightField'
 import SegmentedToggle from './base/SegmentedToggle'
 import FormField from './FormField'
 import Input from './Input'
@@ -18,18 +17,12 @@ import Input from './Input'
 interface FireFeasibilityCoordsFormProps {
   position: Position
   target: Target
-  cloudHeightValue: string
-  cloudHeightViewUnit: string
-  onCloudHeightViewUnitChange: (unit: string) => void
   onUpdatePositionToTargetRange: (range: number | null) => void
 }
 
 function FireFeasibilityCoordsForm({
   position,
   target,
-  cloudHeightValue,
-  cloudHeightViewUnit,
-  onCloudHeightViewUnitChange,
   onUpdatePositionToTargetRange,
 }: FireFeasibilityCoordsFormProps) {
   const [obstacleCoords, setObstacleCoords] = useState('')
@@ -129,19 +122,7 @@ function FireFeasibilityCoordsForm({
         />
       </FormField>
 
-      <FormField label="גובה עננים מעל פני הים" infoTooltipText={CLOUD_HEIGHT_FIELD_TOOLTIP}>
-        <div className="flex flex-col gap-2">
-          <div className="w-40 self-end">
-            <SegmentedToggle
-              size="compact"
-              options={[...CLOUD_HEIGHT_UNIT_OPTIONS]}
-              value={cloudHeightViewUnit}
-              onChange={onCloudHeightViewUnitChange}
-            />
-          </div>
-          <Input type="number" value={cloudHeightValue} disabled />
-        </div>
-      </FormField>
+      <FireFeasibilityCloudHeightField />
 
       <FormField label="מסלול מעוף">
         <SegmentedToggle

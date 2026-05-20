@@ -5,7 +5,6 @@ import fireFeasibilityDocMarkdown from '../../docs/היתכנות-לירי.md?ra
 import FireFeasibilityCalculateFooter from '../components/FireFeasibilityCalculateFooter'
 import FireFeasibilityDistancesHeightsForm from '../components/FireFeasibilityDistancesHeightsForm'
 import FireFeasibilityResultsView from '../components/FireFeasibilityResultsView'
-import { useCloudHeight } from '../hooks/useCloudHeight'
 import { useEntityLinkResources } from '../hooks/useEntityLinkResources'
 import { useFireFeasibilityFlow } from '../hooks/useFireFeasibilityFlow'
 import { useUIError } from '../hooks/useUIError'
@@ -17,7 +16,6 @@ function FireFeasibilityDistancesHeightsScreen() {
     positionId: flow.positionId,
   })
   const { reportUIError } = useUIError()
-  const { inputValue: cloudHeightValue, viewUnit, setViewUnit } = useCloudHeight()
   const [positionToTargetRange, setPositionToTargetRange] = useState<number | null>(null)
 
   useEffect(() => {
@@ -37,11 +35,8 @@ function FireFeasibilityDistancesHeightsScreen() {
 
   const handleCalculate = useCallback(() => {
     if (!position || !target) return
-    flow.calculate({
-      cloudHeightDisplay: cloudHeightValue,
-      cloudHeightUnit: viewUnit,
-    })
-  }, [position, target, flow, cloudHeightValue, viewUnit])
+    flow.calculate()
+  }, [position, target, flow])
 
   const handleUpdatePositionToTargetRange = useCallback((range: number | null) => {
     setPositionToTargetRange(range)
@@ -104,9 +99,6 @@ function FireFeasibilityDistancesHeightsScreen() {
         <FireFeasibilityDistancesHeightsForm
           position={position}
           target={target}
-          cloudHeightValue={cloudHeightValue}
-          cloudHeightViewUnit={viewUnit}
-          onCloudHeightViewUnitChange={setViewUnit}
           onUpdatePositionToTargetRange={handleUpdatePositionToTargetRange}
         />
       </div>

@@ -7,13 +7,10 @@ import type {
   FireFeasibilityResults,
 } from '../domain/fireFeasibility.types'
 import type { EntityLinksUpdate } from '../domain/entityLinks.types'
+import { formatCloudHeightInputValue } from '../domain/cloudHeight'
 import { computeFireFeasibilityResults } from '../useCases/computeFireFeasibilityResults'
+import { loadCloudHeight } from '../useCases/loadCloudHeight'
 import type { FireFeasibilityStep } from './useFireFeasibilityFlow.types'
-
-interface CalculateParams {
-  cloudHeightDisplay: string
-  cloudHeightUnit: string
-}
 
 export function useFireFeasibilityFlow(mode: FireFeasibilityMode) {
   const [step, setStep] = useState<FireFeasibilityStep>('links')
@@ -90,7 +87,10 @@ export function useFireFeasibilityFlow(mode: FireFeasibilityMode) {
     setStep('form')
   }
 
-  function calculate({ cloudHeightDisplay, cloudHeightUnit }: CalculateParams) {
+  function calculate() {
+    const settings = loadCloudHeight()
+    const cloudHeightDisplay = formatCloudHeightInputValue(settings, settings.displayUnit)
+    const cloudHeightUnit = settings.displayUnit
     const computed =
       mode === 'coords'
         ? computeFireFeasibilityResults(mode, {
