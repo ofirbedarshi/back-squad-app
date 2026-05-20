@@ -1,12 +1,6 @@
-import type { Indicator } from '../domain/indicator.types'
-import type { Position } from '../domain/position.types'
-import type { Target } from '../domain/target.types'
+import type { EntityLinkResources } from '../domain/entityLinks.types'
 
-export interface NadbarMessageResources {
-  indicator?: Indicator
-  target?: Target
-  position?: Position
-}
+export type NadbarMessageResources = EntityLinkResources
 
 export type NadbarMessageResourceKey = keyof NadbarMessageResources
 

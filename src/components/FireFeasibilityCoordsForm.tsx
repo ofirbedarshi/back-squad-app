@@ -1,31 +1,51 @@
+import type { Position } from '../domain/position.types'
+import type { Target } from '../domain/target.types'
 import FormField from './FormField'
 import Input from './Input'
 
-function FireFeasibilityCoordsForm() {
+const POSITION_FIELD_TOOLTIP =
+  'שדה זה מתמלא אוטומטית מהעמדה שנבחרה בשלב הקודם ואינו ניתן לעריכה ידנית'
+
+const TARGET_FIELD_TOOLTIP =
+  'שדה זה מתמלא אוטומטית מהמטרה שנבחרה בשלב הקודם ואינו ניתן לעריכה ידנית'
+
+interface FireFeasibilityCoordsFormProps {
+  position: Position
+  target: Target
+}
+
+function FireFeasibilityCoordsForm({ position, target }: FireFeasibilityCoordsFormProps) {
+  const positionCoordsDisplay = `${position.coordinates.east}/${position.coordinates.north}`
+  const targetCoordsDisplay = `${target.coordinates.east}/${target.coordinates.north}`
+
   return (
     <div className="flex flex-col gap-4">
-      <FormField label="שם עמדה">
-        <Input type="text" placeholder="מטולה" />
+      <FormField label="שם עמדה" infoTooltipText={POSITION_FIELD_TOOLTIP}>
+        <Input type="text" value={position.stationName} disabled />
       </FormField>
 
-      <FormField label='נ"צ עמדה'>
-        <Input type="text" placeholder="627850/465980" />
+      <FormField label='נ"צ עמדה' infoTooltipText={POSITION_FIELD_TOOLTIP}>
+        <Input type="text" value={positionCoordsDisplay} disabled />
       </FormField>
 
-      <FormField label="גובה עמדה">
-        <Input type="number" placeholder="321" />
+      <FormField label="גובה עמדה" infoTooltipText={POSITION_FIELD_TOOLTIP}>
+        <Input type="number" value={String(position.altitude)} disabled />
       </FormField>
 
-      <FormField label="מספר מטרה">
-        <Input type="text" placeholder="T2301" />
+      <FormField label="שם מטרה" infoTooltipText={TARGET_FIELD_TOOLTIP}>
+        <Input type="text" value={target.targetName} disabled />
       </FormField>
 
-      <FormField label='נ"צ מטרה'>
-        <Input type="text" placeholder="620365/456987" />
+      <FormField label='נ"צ מטרה' infoTooltipText={TARGET_FIELD_TOOLTIP}>
+        <Input type="text" value={targetCoordsDisplay} disabled />
       </FormField>
 
-      <FormField label="גובה">
-        <Input type="number" placeholder="321" />
+      <FormField label="גובה מטרה" infoTooltipText={TARGET_FIELD_TOOLTIP}>
+        <Input
+          type="number"
+          value={target.altitude != null ? String(target.altitude) : ''}
+          disabled
+        />
       </FormField>
 
       <FormField label='נ"צ מכשול'>

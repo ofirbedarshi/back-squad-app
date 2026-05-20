@@ -1,3 +1,5 @@
+import type { EntityLinkIds } from './entityLinks.types'
+
 export type NadbarType = 'PointerTeam' | 'Katmam' | 'TzurPointer'
 
 export const NADBAR_TYPES: readonly NadbarType[] = ['PointerTeam', 'Katmam', 'TzurPointer']
@@ -12,11 +14,7 @@ export interface NadbarMessage {
 }
 
 /** Saved indicator (מציין), target, and position references */
-export interface NadbarLinks {
-  pointerId?: string
-  targetId?: string
-  positionId?: string
-}
+export type NadbarLinks = EntityLinkIds
 
 export interface Nadbar {
   id: string

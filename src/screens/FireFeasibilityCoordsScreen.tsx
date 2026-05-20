@@ -1,9 +1,24 @@
+import { useEffect } from 'react'
 import EntityLoadLinksStep from '../components/EntityLoadLinksStep'
 import FireFeasibilityCoordsForm from '../components/FireFeasibilityCoordsForm'
+import { useEntityLinkResources } from '../hooks/useEntityLinkResources'
 import { useFireFeasibilitySubFlow } from '../hooks/useFireFeasibilitySubFlow'
+import { useUIError } from '../hooks/useUIError'
 
 function FireFeasibilityCoordsScreen() {
   const { step, targetId, positionId, updateLinks, advanceFromLinksStep } = useFireFeasibilitySubFlow()
+  const { position, target } = useEntityLinkResources({ targetId, positionId })
+  const { reportUIError } = useUIError()
+
+  useEffect(() => {
+    if (step !== 'content') return
+    if (!positionId || !position) {
+      reportUIError('לא נמצאה עמדה — חזור לשלב הבחירה')
+    }
+    if (!targetId || !target) {
+      reportUIError('לא נמצאה מטרה — חזור לשלב הבחירה')
+    }
+  }, [step, positionId, position, targetId, target, reportUIError])
 
   if (step === 'links') {
     return (
@@ -24,6 +39,10 @@ function FireFeasibilityCoordsScreen() {
     )
   }
 
+  if (!position || !target) {
+    return null
+  }
+
   return (
     <div dir="rtl" className="flex h-full min-h-0 flex-col bg-neutral-50">
       <header className="shrink-0 border-b border-neutral-200 bg-white px-4 py-4 text-center text-lg font-bold text-neutral-800">
@@ -31,7 +50,7 @@ function FireFeasibilityCoordsScreen() {
       </header>
 
       <div className="min-h-0 flex-1 overflow-y-auto p-4">
-        <FireFeasibilityCoordsForm />
+        <FireFeasibilityCoordsForm position={position} target={target} />
       </div>
     </div>
   )

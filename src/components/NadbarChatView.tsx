@@ -1,7 +1,7 @@
 import NadbarMeMessageBubble from './NadbarMeMessageBubble'
 import NadbarMessageBubble from './NadbarMessageBubble'
 import type { NadbarLinks, NadbarMessage, NadbarMessageUserVars } from '../domain/nadbar.types'
-import { useNadbarMessageResources } from '../hooks/useNadbarMessageResources'
+import { useEntityLinkResources } from '../hooks/useEntityLinkResources'
 
 interface NadbarChatViewProps {
   messages: NadbarMessage[]
@@ -11,7 +11,7 @@ interface NadbarChatViewProps {
 }
 
 function NadbarChatView({ messages, links, messageVars = {}, onUserVarChange }: NadbarChatViewProps) {
-  const resources = useNadbarMessageResources(links)
+  const resources = useEntityLinkResources(links)
 
   return (
     <div
