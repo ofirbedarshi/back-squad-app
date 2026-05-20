@@ -1,4 +1,5 @@
 import EntityLoadLinksStep from '../components/EntityLoadLinksStep'
+import FireFeasibilityCoordsForm from '../components/FireFeasibilityCoordsForm'
 import { useFireFeasibilitySubFlow } from '../hooks/useFireFeasibilitySubFlow'
 
 function FireFeasibilityCoordsScreen() {
@@ -24,9 +25,14 @@ function FireFeasibilityCoordsScreen() {
   }
 
   return (
-    <div dir="rtl" className="flex flex-col items-center justify-center h-full gap-3 text-neutral-700">
-      <h2 className="text-2xl font-semibold tracking-tight text-center px-4">נצ</h2>
-      <p className="text-sm text-neutral-400">בקרוב</p>
+    <div dir="rtl" className="flex h-full min-h-0 flex-col bg-neutral-50">
+      <header className="shrink-0 border-b border-neutral-200 bg-white px-4 py-4 text-center text-lg font-bold text-neutral-800">
+        היתכנות לירי - נ.צ
+      </header>
+
+      <div className="min-h-0 flex-1 overflow-y-auto p-4">
+        <FireFeasibilityCoordsForm />
+      </div>
     </div>
   )
 }
