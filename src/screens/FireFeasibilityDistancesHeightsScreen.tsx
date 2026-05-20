@@ -1,5 +1,4 @@
-import { useCallback, useEffect, useMemo } from 'react'
-import type { FireFeasibilityDistancesHeightsFormUiState } from '../domain/fireFeasibility.types'
+import { useCallback, useEffect, useState } from 'react'
 import DocFeedbackModal from '../components/base/DocFeedbackModal'
 import EntityLoadLinksStep from '../components/EntityLoadLinksStep'
 import fireFeasibilityDocMarkdown from '../../docs/היתכנות-לירי.md?raw'
@@ -19,6 +18,7 @@ function FireFeasibilityDistancesHeightsScreen() {
   })
   const { reportUIError } = useUIError()
   const { inputValue: cloudHeightValue, viewUnit, setViewUnit } = useCloudHeight()
+  const [positionToTargetRange, setPositionToTargetRange] = useState<number | null>(null)
 
   useEffect(() => {
     if (flow.step !== 'form') return
@@ -43,27 +43,9 @@ function FireFeasibilityDistancesHeightsScreen() {
     })
   }, [position, target, flow, cloudHeightValue, viewUnit])
 
-  const form = useMemo<FireFeasibilityDistancesHeightsFormUiState>(
-    () => ({
-      ...flow.distancesHeightsFormState,
-      cloudHeightValue,
-      cloudHeightViewUnit: viewUnit,
-    }),
-    [flow.distancesHeightsFormState, cloudHeightValue, viewUnit],
-  )
-
-  const updateForm = useCallback(
-    (patch: Partial<FireFeasibilityDistancesHeightsFormUiState>) => {
-      if (patch.cloudHeightViewUnit !== undefined) {
-        setViewUnit(patch.cloudHeightViewUnit)
-      }
-      const { cloudHeightValue: _cv, cloudHeightViewUnit: _cu, ...distancesPatch } = patch
-      if (Object.keys(distancesPatch).length > 0) {
-        flow.updateDistancesHeightsForm(distancesPatch)
-      }
-    },
-    [flow, setViewUnit],
-  )
+  const handleUpdatePositionToTargetRange = useCallback((range: number | null) => {
+    setPositionToTargetRange(range)
+  }, [])
 
   if (flow.step === 'links') {
     return (
@@ -92,7 +74,10 @@ function FireFeasibilityDistancesHeightsScreen() {
         </header>
 
         <div className="min-h-0 flex-1 overflow-y-auto p-4">
-          <FireFeasibilityResultsView clouds={flow.results.clouds} />
+          <FireFeasibilityResultsView
+            clouds={flow.results.clouds}
+            positionToTargetRange={positionToTargetRange}
+          />
         </div>
 
         <DocFeedbackModal
@@ -119,8 +104,10 @@ function FireFeasibilityDistancesHeightsScreen() {
         <FireFeasibilityDistancesHeightsForm
           position={position}
           target={target}
-          form={form}
-          onUpdateForm={updateForm}
+          cloudHeightValue={cloudHeightValue}
+          cloudHeightViewUnit={viewUnit}
+          onCloudHeightViewUnitChange={setViewUnit}
+          onUpdatePositionToTargetRange={handleUpdatePositionToTargetRange}
         />
       </div>
 

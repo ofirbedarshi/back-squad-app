@@ -1,13 +1,15 @@
-import type { Position } from '../domain/position.types'
+import { useEffect, useState } from 'react'
+import type { Position, PositionCoordinates } from '../domain/position.types'
 import type { Target } from '../domain/target.types'
 import { CLOUD_HEIGHT_UNIT_OPTIONS } from '../domain/cloudHeight'
 import {
   CLOUD_HEIGHT_FIELD_TOOLTIP,
   FLIGHT_PATH_OPTIONS,
   POSITION_FIELD_TOOLTIP,
+  RANGE_COMPUTED_TOOLTIP,
   TARGET_FIELD_TOOLTIP,
 } from '../domain/fireFeasibility.constants'
-import type { FireFeasibilityCoordsFormUiState } from '../domain/fireFeasibility.types'
+import { useFireFeasibilityPositionTargetMetrics } from '../hooks/useFireFeasibilityPositionTargetMetrics'
 import CoordinateInput from './base/CoordinateInput'
 import SegmentedToggle from './base/SegmentedToggle'
 import FormField from './FormField'
@@ -16,16 +18,35 @@ import Input from './Input'
 interface FireFeasibilityCoordsFormProps {
   position: Position
   target: Target
-  form: FireFeasibilityCoordsFormUiState
-  onUpdateForm: (patch: Partial<FireFeasibilityCoordsFormUiState>) => void
+  cloudHeightValue: string
+  cloudHeightViewUnit: string
+  onCloudHeightViewUnitChange: (unit: string) => void
+  onUpdatePositionToTargetRange: (range: number | null) => void
 }
 
 function FireFeasibilityCoordsForm({
   position,
   target,
-  form,
-  onUpdateForm,
+  cloudHeightValue,
+  cloudHeightViewUnit,
+  onCloudHeightViewUnitChange,
+  onUpdatePositionToTargetRange,
 }: FireFeasibilityCoordsFormProps) {
+  const [obstacleCoords, setObstacleCoords] = useState('')
+  const [obstacleHeight, setObstacleHeight] = useState('')
+  const [hide1Coordinates, setHide1Coordinates] = useState<PositionCoordinates | undefined>()
+  const [hide1Height, setHide1Height] = useState('')
+  const [hide2Coordinates, setHide2Coordinates] = useState<PositionCoordinates | undefined>()
+  const [hide2Height, setHide2Height] = useState('')
+  const [flightPath, setFlightPath] = useState('flat')
+
+  const metrics = useFireFeasibilityPositionTargetMetrics(position, target)
+  const rangeDisplay = metrics?.range != null ? metrics.range.toFixed(1) : ''
+
+  useEffect(() => {
+    onUpdatePositionToTargetRange(metrics?.range ?? null)
+  }, [metrics?.range, onUpdatePositionToTargetRange])
+
   const targetCoordsDisplay = `${target.coordinates.east}/${target.coordinates.north}`
 
   return (
@@ -58,49 +79,53 @@ function FireFeasibilityCoordsForm({
         />
       </FormField>
 
+      <FormField label="טווח עמדה מטרה" infoTooltipText={RANGE_COMPUTED_TOOLTIP}>
+        <Input type="number" value={rangeDisplay} disabled />
+      </FormField>
+
       <FormField label='נ"צ מכשול'>
         <Input
           type="text"
-          value={form.obstacleCoords}
-          onChange={(e) => onUpdateForm({ obstacleCoords: e.target.value })}
+          value={obstacleCoords}
+          onChange={(e) => setObstacleCoords(e.target.value)}
         />
       </FormField>
 
       <FormField label="גובה מכשול">
         <Input
           type="number"
-          value={form.obstacleHeight}
-          onChange={(e) => onUpdateForm({ obstacleHeight: e.target.value })}
+          value={obstacleHeight}
+          onChange={(e) => setObstacleHeight(e.target.value)}
         />
       </FormField>
 
       <FormField label='נ"צ הסתר 1'>
         <CoordinateInput
-          value={form.hide1Coordinates}
-          onChange={(value) => onUpdateForm({ hide1Coordinates: value })}
+          value={hide1Coordinates}
+          onChange={setHide1Coordinates}
         />
       </FormField>
 
       <FormField label="גובה הסתר 1">
         <Input
           type="number"
-          value={form.hide1Height}
-          onChange={(e) => onUpdateForm({ hide1Height: e.target.value })}
+          value={hide1Height}
+          onChange={(e) => setHide1Height(e.target.value)}
         />
       </FormField>
 
       <FormField label='נ"צ הסתר 2'>
         <CoordinateInput
-          value={form.hide2Coordinates}
-          onChange={(value) => onUpdateForm({ hide2Coordinates: value })}
+          value={hide2Coordinates}
+          onChange={setHide2Coordinates}
         />
       </FormField>
 
       <FormField label="גובה הסתר 2">
         <Input
           type="number"
-          value={form.hide2Height}
-          onChange={(e) => onUpdateForm({ hide2Height: e.target.value })}
+          value={hide2Height}
+          onChange={(e) => setHide2Height(e.target.value)}
         />
       </FormField>
 
@@ -110,19 +135,19 @@ function FireFeasibilityCoordsForm({
             <SegmentedToggle
               size="compact"
               options={[...CLOUD_HEIGHT_UNIT_OPTIONS]}
-              value={form.cloudHeightViewUnit}
-              onChange={(unit) => onUpdateForm({ cloudHeightViewUnit: unit })}
+              value={cloudHeightViewUnit}
+              onChange={onCloudHeightViewUnitChange}
             />
           </div>
-          <Input type="number" value={form.cloudHeightValue} disabled />
+          <Input type="number" value={cloudHeightValue} disabled />
         </div>
       </FormField>
 
       <FormField label="מסלול מעוף">
         <SegmentedToggle
           options={[...FLIGHT_PATH_OPTIONS]}
-          value={form.flightPath}
-          onChange={(value) => onUpdateForm({ flightPath: value })}
+          value={flightPath}
+          onChange={setFlightPath}
         />
       </FormField>
     </div>

@@ -3,9 +3,13 @@ import FireFeasibilityCategoryResultBlock from './FireFeasibilityCategoryResultB
 
 interface FireFeasibilityResultsViewProps {
   clouds: FireFeasibilityCategoryResult
+  positionToTargetRange: number | null
 }
 
-function FireFeasibilityResultsView({ clouds }: FireFeasibilityResultsViewProps) {
+function FireFeasibilityResultsView({
+  clouds,
+  positionToTargetRange: _positionToTargetRange,
+}: FireFeasibilityResultsViewProps) {
   return (
     <div className="flex flex-col gap-5">
       <FireFeasibilityCategoryResultBlock title="עננים" result={clouds} />
