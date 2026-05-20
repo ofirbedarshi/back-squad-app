@@ -13,5 +13,5 @@ export interface IndicatorInput {
 
 export interface Indicator extends IndicatorInput {
   id: string
-  savedAt: string
+  updatedAt: string
 }

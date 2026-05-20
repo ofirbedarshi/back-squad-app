@@ -6,5 +6,5 @@ export interface MissChecklistInput {
 
 export interface MissChecklist extends MissChecklistInput {
   id: string
-  createdAt: number
+  updatedAt: string
 }

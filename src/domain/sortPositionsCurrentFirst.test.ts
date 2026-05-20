@@ -5,7 +5,7 @@ import type { Position } from './position.types'
 function pos(id: string): Position {
   return {
     id,
-    savedAt: '',
+    updatedAt: '',
     stationName: id,
     coordinates: { east: '0', north: '0', palach: '0' },
     altitude: 0,

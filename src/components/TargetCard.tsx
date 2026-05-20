@@ -2,6 +2,7 @@ import ListCard from './base/ListCard'
 import type { OptionsMenuItem } from './base/OptionsMenu'
 import type { Target } from '../domain/target.types'
 import { useTargetLiveMetrics } from '../hooks/useTargetLiveMetrics'
+import { formatUpdatedAt } from '../domain/formatUpdatedAt'
 
 interface TargetCardProps {
   target: Target
@@ -40,6 +41,7 @@ function TargetCard({ target, onClick, menuItems }: TargetCardProps) {
           ) : null}
         </div>
       }
+      lastUpdatedAt={formatUpdatedAt(target.updatedAt)}
       onClick={onClick}
     />
   )

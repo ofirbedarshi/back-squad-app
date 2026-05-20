@@ -1,4 +1,5 @@
 import { isValidNadbar, normalizeNadbar } from '../domain/nadbar'
+import { nowIsoUtc } from '../domain/nowIsoUtc'
 import type { Nadbar } from '../domain/nadbar.types'
 import { updateNadbar } from '../storage/nadbarStorage'
 import { getNadbarByIdUseCase } from './getNadbarById'
@@ -15,7 +16,7 @@ export function updateNadbarUseCase(nadbar: Nadbar): Nadbar {
 
   const normalized: Nadbar = {
     ...normalizeNadbar(nadbar),
-    updatedAt: new Date().toISOString(),
+    updatedAt: nowIsoUtc(),
   }
   updateNadbar(normalized)
   return normalized

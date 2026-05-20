@@ -6,5 +6,5 @@ export interface BachInput {
 
 export interface Bach extends BachInput {
   id: string
-  createdAt: number
+  updatedAt: string
 }

@@ -1,6 +1,7 @@
 import ListCard from './base/ListCard'
 import type { OptionsMenuItem } from './base/OptionsMenu'
 import type { Indicator } from '../domain/indicator.types'
+import { formatUpdatedAt } from '../domain/formatUpdatedAt'
 
 interface IndicatorCardProps {
   indicator: Indicator
@@ -25,6 +26,7 @@ function IndicatorCard({ indicator, onClick, menuItems }: IndicatorCardProps) {
           {indicator.targetDomain ? <span>תחום מטרות: {indicator.targetDomain}</span> : null}
         </div>
       }
+      lastUpdatedAt={formatUpdatedAt(indicator.updatedAt)}
       onClick={onClick}
     />
   )

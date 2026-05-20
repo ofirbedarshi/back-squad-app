@@ -1,6 +1,7 @@
+import { formatUpdatedAt } from '../domain/formatUpdatedAt'
+import type { Bach } from '../domain/bach.types'
 import { useLongPressWithShake } from '../hooks/useLongPressWithShake'
 import { useSuppressNativeTextSelection } from '../hooks/useSuppressNativeTextSelection'
-import type { Bach } from '../domain/bach.types'
 
 interface BachCardProps {
   bach: Bach
@@ -14,8 +15,6 @@ function BachCard({ bach, onClick, onLongPress }: BachCardProps) {
   const indicatorName = typeof values.indicatorName === 'string' ? values.indicatorName : ''
   const date = typeof values.date === 'string' ? values.date : ''
   const hour = typeof values.hour === 'string' ? values.hour : ''
-
-  const createdDate = new Date(bach.createdAt).toLocaleDateString('he-IL')
 
   const { className: shakeClass, ...longPressProps } = useLongPressWithShake(onLongPress, onClick)
   const rootRef = useSuppressNativeTextSelection<HTMLDivElement>()
@@ -39,7 +38,10 @@ function BachCard({ bach, onClick, onLongPress }: BachCardProps) {
             ) : null}
           </div>
         </div>
-        <span className="text-xs text-neutral-400 shrink-0 self-start pt-0.5">{createdDate}</span>
+        <div className="flex flex-col items-end shrink-0 self-start pt-0.5 gap-0.5">
+          <span className="text-xs text-neutral-400">עודכן לאחרונה</span>
+          <span className="text-xs text-neutral-400 tabular-nums">{formatUpdatedAt(bach.updatedAt)}</span>
+        </div>
       </div>
     </div>
   )

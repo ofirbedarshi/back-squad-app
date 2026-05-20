@@ -4,7 +4,8 @@ import type { Indicator } from '../domain/indicator.types'
 import type { Nadbar } from '../domain/nadbar.types'
 import type { Position } from '../domain/position.types'
 import type { Target } from '../domain/target.types'
-import { formatNadbarUpdatedAt, getNadbarCardDetails, getNadbarCardTitle } from './nadbarDisplay'
+import { formatUpdatedAt } from '../domain/formatUpdatedAt'
+import { getNadbarCardDetails, getNadbarCardTitle } from './nadbarDisplay'
 
 const baseNadbar: Nadbar = {
   id: 'nadbar-1',
@@ -17,6 +18,7 @@ const baseNadbar: Nadbar = {
 const targets: Target[] = [
   {
     id: 'target-1',
+    updatedAt: '2026-05-01T10:00:00.000Z',
     targetName: 'מטרה אלפא',
     coordinates: { easting: 100, northing: 200 },
   },
@@ -25,7 +27,7 @@ const targets: Target[] = [
 const positions: Position[] = [
   {
     id: 'position-1',
-    savedAt: '2026-05-01T10:00:00.000Z',
+    updatedAt: '2026-05-01T10:00:00.000Z',
     stationName: 'עמדה גמא',
     coordinates: { east: '100', north: '200', palach: '300' },
     altitude: 50,
@@ -40,7 +42,7 @@ const indicators: Indicator[] = [
     altitude: 100,
     means: 'שיח',
     markCode: 1,
-    savedAt: '2026-05-01T10:00:00.000Z',
+    updatedAt: '2026-05-01T10:00:00.000Z',
   },
 ]
 
@@ -90,8 +92,8 @@ describe('getNadbarCardDetails', () => {
   })
 })
 
-describe('formatNadbarUpdatedAt', () => {
+describe('formatUpdatedAt', () => {
   it('returns dash for invalid iso', () => {
-    assert.equal(formatNadbarUpdatedAt('not-a-date'), '—')
+    assert.equal(formatUpdatedAt('not-a-date'), '—')
   })
 })

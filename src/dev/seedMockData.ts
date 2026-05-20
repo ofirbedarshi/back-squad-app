@@ -30,7 +30,7 @@ const IDS = {
 const positions = [
   {
     id: IDS.posAlpha,
-    savedAt,
+    updatedAt: savedAt,
     stationName: 'עמדה אלפא',
     coordinates: { east: '345678', north: '3456789', palach: '36' },
     altitude: 420,
@@ -42,14 +42,14 @@ const positions = [
   },
   {
     id: IDS.posBravo,
-    savedAt,
+    updatedAt: savedAt,
     stationName: 'עמדה בראבו',
     coordinates: { east: '456789', north: '4567890', palach: '36' },
     altitude: 380,
   },
   {
     id: IDS.posCharlie,
-    savedAt,
+    updatedAt: savedAt,
     stationName: 'עמדה צ׳ארלי',
     coordinates: { east: '567890', north: '5678901', palach: '36' },
     altitude: 510,
@@ -59,6 +59,7 @@ const positions = [
 const targets = [
   {
     id: IDS.target1,
+    updatedAt: savedAt,
     targetName: 'יעד דמה א׳',
     targetDescription: 'מטרה לאימון',
     coordinates: { east: '400000', north: '4000000', palach: '36' },
@@ -66,12 +67,14 @@ const targets = [
   },
   {
     id: IDS.target2,
+    updatedAt: savedAt,
     targetName: 'יעד דמה ב׳',
     coordinates: { east: '410000', north: '4100000', palach: '36' },
     altitude: 395,
   },
   {
     id: IDS.target3,
+    updatedAt: savedAt,
     targetName: 'יעד דמה ג׳',
     targetDescription: 'מבנה',
     coordinates: { east: '420000', north: '4200000', palach: '36' },
@@ -82,7 +85,7 @@ const targets = [
 const indicators = [
   {
     id: IDS.ind1,
-    savedAt,
+    updatedAt: savedAt,
     indicatorName: 'מציין דמה א׳',
     coordinates: { east: '401234', north: '4012345', palach: '36' },
     altitude: 430,
@@ -92,7 +95,7 @@ const indicators = [
   },
   {
     id: IDS.ind2,
-    savedAt,
+    updatedAt: savedAt,
     indicatorName: 'מציין דמה ב׳',
     coordinates: { east: '402567', north: '4025678', palach: '36' },
     altitude: 400,
@@ -144,7 +147,7 @@ const userNotes = [
 const bachs = [
   {
     id: IDS.bach1,
-    createdAt: 1746784800000,
+    updatedAt: savedAt,
     values: {
       date: '2026-05-09',
       hour: '14:00',
@@ -217,7 +220,7 @@ const bachs = [
   },
   {
     id: IDS.bach2,
-    createdAt: 1746698400000,
+    updatedAt: savedAt,
     values: {
       date: '2026-05-08',
       hour: '09:30',
@@ -265,7 +268,7 @@ const bachs = [
 const missChecklists = [
   {
     id: IDS.missChecklist1,
-    createdAt: 1746698400000,
+    updatedAt: savedAt,
     values: {
       weatherHitNearTarget: 'כן',
       weatherConditionsChecked: 'כן',

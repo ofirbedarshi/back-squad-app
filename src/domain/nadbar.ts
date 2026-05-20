@@ -1,3 +1,4 @@
+import { nowIsoUtc } from './nowIsoUtc'
 import {
   NADBAR_MESSAGE_SOURCES,
   NADBAR_TYPES,
@@ -149,7 +150,7 @@ export function parseNadbarTemplate(raw: unknown): NadbarTemplate {
 export function applyNadbarLinks(nadbar: Nadbar, links: NadbarLinksUpdate): Nadbar {
   const normalized = normalizeNadbar(nadbar)
   const mergedLinks = mergeNadbarLinks(normalized.links, links)
-  const now = new Date().toISOString()
+  const now = nowIsoUtc()
 
   if (!mergedLinks) {
     const { links: _links, ...rest } = normalized
@@ -164,7 +165,7 @@ export function applyNadbarLinks(nadbar: Nadbar, links: NadbarLinksUpdate): Nadb
 }
 
 export function createNadbarFromTemplate(type: NadbarType, template: NadbarTemplate): Nadbar {
-  const now = new Date().toISOString()
+  const now = nowIsoUtc()
   return {
     id: crypto.randomUUID(),
     createdAt: now,

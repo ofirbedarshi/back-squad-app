@@ -38,7 +38,7 @@ export interface PositionInput {
 /** Row from storage: archive-only save may omit current-position fields until completed in UI. */
 export interface Position {
   id: string
-  savedAt: string
+  updatedAt: string
   stationName: string
   coordinates: PositionCoordinates
   altitude: number

@@ -1,6 +1,7 @@
 import ListCard from './base/ListCard'
 import type { OptionsMenuItem } from './base/OptionsMenu'
 import type { Position } from '../domain/position.types'
+import { formatUpdatedAt } from '../domain/formatUpdatedAt'
 
 interface PositionCardProps {
   position: Position
@@ -60,6 +61,7 @@ function PositionCard({
           נ"צ: {east}/{north} | גובה: {position.altitude} מ'
         </span>
       }
+      lastUpdatedAt={formatUpdatedAt(position.updatedAt)}
       onClick={onClick}
     />
   )

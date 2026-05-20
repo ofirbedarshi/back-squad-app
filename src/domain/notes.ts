@@ -1,3 +1,5 @@
+import { formatUpdatedAt } from './formatUpdatedAt'
+import { nowIsoUtc } from './nowIsoUtc'
 import type { UserNote } from './notes.types'
 
 export function assertNoteHasBody(trimmedText: string, hasVoice: boolean): void {
@@ -56,7 +58,7 @@ export function withNoteVoiceAttached(
   if (idx === -1) {
     throw new Error('הערה לא נמצאה')
   }
-  const updatedAtIso = new Date().toISOString()
+  const updatedAtIso = nowIsoUtc()
   return notes.map((n) =>
     n.id === id
       ? {
@@ -75,7 +77,7 @@ export function withNoteVoiceRemoved(notes: readonly UserNote[], id: string): Us
   if (idx === -1) {
     throw new Error('הערה לא נמצאה')
   }
-  const updatedAtIso = new Date().toISOString()
+  const updatedAtIso = nowIsoUtc()
   return notes.map((n) =>
     n.id === id
       ? {
@@ -93,18 +95,8 @@ export function noteLastActivityIso(note: UserNote): string {
   return note.updatedAtIso ?? note.createdAtIso
 }
 
-const NOTE_DATETIME_FORMAT = new Intl.DateTimeFormat('he-IL', {
-  dateStyle: 'short',
-  timeStyle: 'short',
-  timeZone: 'Asia/Jerusalem',
-})
-
 export function formatUserNoteSavedAt(isoUtc: string): string {
-  const d = new Date(isoUtc)
-  if (Number.isNaN(d.getTime())) {
-    return '—'
-  }
-  return NOTE_DATETIME_FORMAT.format(d)
+  return formatUpdatedAt(isoUtc)
 }
 
 export function parseNotesJson(raw: unknown): UserNote[] {

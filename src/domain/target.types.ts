@@ -9,4 +9,5 @@ export interface TargetInput {
 
 export interface Target extends TargetInput {
   id: string
+  updatedAt: string
 }

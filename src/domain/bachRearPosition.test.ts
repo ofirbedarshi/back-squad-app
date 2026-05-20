@@ -5,7 +5,7 @@ import type { Position } from './position.types'
 
 const samplePosition: Position = {
   id: 'aaaaaaaa-aaaa-4aaa-aaaa-aaaaaaaaaaa1',
-  savedAt: '2026-05-10T10:00:00.000Z',
+  updatedAt: '2026-05-10T10:00:00.000Z',
   stationName: 'עמדה אלפא',
   coordinates: { east: '345678', north: '3456789', palach: '36' },
   altitude: 420,

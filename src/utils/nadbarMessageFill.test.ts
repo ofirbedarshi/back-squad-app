@@ -16,11 +16,12 @@ const indicator: Indicator = {
   altitude: 100,
   means: 'שיח',
   markCode: 42,
-  savedAt: '2026-05-01T10:00:00.000Z',
+  updatedAt: '2026-05-01T10:00:00.000Z',
 }
 
 const target: Target = {
   id: 'target-1',
+  updatedAt: '2026-05-01T10:00:00.000Z',
   targetName: '7',
   coordinates: { east: '12', north: '34', palach: '36' },
   altitude: 440,
@@ -28,7 +29,7 @@ const target: Target = {
 
 const position: Position = {
   id: 'position-1',
-  savedAt: '2026-05-01T10:00:00.000Z',
+  updatedAt: '2026-05-01T10:00:00.000Z',
   stationName: 'עמדה אלפא',
   coordinates: { east: '100', north: '200', palach: '36' },
   altitude: 50,
@@ -68,6 +69,7 @@ describe('fillNadbarMessageContent', () => {
   it('keeps target altitude token when altitude is missing', () => {
     const targetWithoutAltitude: Target = {
       id: 'target-2',
+      updatedAt: '2026-05-01T10:00:00.000Z',
       targetName: '8',
       coordinates: { east: '1', north: '2', palach: '36' },
     }

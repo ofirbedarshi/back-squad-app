@@ -1,3 +1,4 @@
+import { formatUpdatedAt } from '../domain/formatUpdatedAt'
 import type { Indicator } from '../domain/indicator.types'
 import type { Nadbar, NadbarType } from '../domain/nadbar.types'
 import type { Position } from '../domain/position.types'
@@ -10,26 +11,12 @@ const NADBAR_TYPE_LABELS: Record<NadbarType, string> = {
   TzurPointer: 'נדבר צור מציין',
 }
 
-const NADBAR_UPDATED_AT_FORMAT = new Intl.DateTimeFormat('he-IL', {
-  dateStyle: 'short',
-  timeStyle: 'short',
-  timeZone: 'Asia/Jerusalem',
-})
-
 export function getNadbarCardTitle(nadbar: Nadbar): string {
   return getNadbarTypeLabel(nadbar.type)
 }
 
 export function getNadbarTypeLabel(type: NadbarType): string {
   return NADBAR_TYPE_LABELS[type]
-}
-
-export function formatNadbarUpdatedAt(isoUtc: string): string {
-  const date = new Date(isoUtc)
-  if (Number.isNaN(date.getTime())) {
-    return '—'
-  }
-  return NADBAR_UPDATED_AT_FORMAT.format(date)
 }
 
 function resolveTargetName(targetId: string | undefined, targets: Target[]): string {
@@ -60,6 +47,6 @@ export function getNadbarCardDetails(
     targetName: resolveTargetName(nadbar.links?.targetId, targets),
     indicatorName: resolveIndicatorName(nadbar.links?.pointerId, indicators),
     positionName: resolvePositionName(nadbar.links?.positionId, positions),
-    updatedAtLabel: formatNadbarUpdatedAt(nadbar.updatedAt),
+    updatedAtLabel: formatUpdatedAt(nadbar.updatedAt),
   }
 }
