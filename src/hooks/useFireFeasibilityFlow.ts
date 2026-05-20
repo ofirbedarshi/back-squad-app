@@ -56,6 +56,16 @@ export function useFireFeasibilityFlow(mode: FireFeasibilityMode) {
     flightPath,
   }
 
+  function updateCoordsForm(patch: Partial<FireFeasibilityCoordsFormFields>) {
+    if (patch.obstacleCoords !== undefined) setObstacleCoords(patch.obstacleCoords)
+    if (patch.obstacleHeight !== undefined) setObstacleHeight(patch.obstacleHeight)
+    if (patch.hide1Coordinates !== undefined) setHide1Coordinates(patch.hide1Coordinates)
+    if (patch.hide1Height !== undefined) setHide1Height(patch.hide1Height)
+    if (patch.hide2Coordinates !== undefined) setHide2Coordinates(patch.hide2Coordinates)
+    if (patch.hide2Height !== undefined) setHide2Height(patch.hide2Height)
+    if (patch.flightPath !== undefined) setFlightPath(patch.flightPath)
+  }
+
   function updateLinks(links: EntityLinksUpdate) {
     if ('targetId' in links) {
       setTargetId(links.targetId ?? undefined)
@@ -99,12 +109,8 @@ export function useFireFeasibilityFlow(mode: FireFeasibilityMode) {
     results,
     coordsFormState,
     distancesHeightsFormState,
-    setObstacleCoords,
+    updateCoordsForm,
     setObstacleHeight,
-    setHide1Coordinates,
-    setHide1Height,
-    setHide2Coordinates,
-    setHide2Height,
     setPositionObstacleRange,
     setHide1Distance,
     setHide1HeightDiff,
