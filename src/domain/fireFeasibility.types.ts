@@ -30,6 +30,13 @@ export interface FireFeasibilityDistancesHeightsFormFields {
   flightPath: string
 }
 
+/** Distances/heights step form state shown in UI (includes read-only cloud height display). */
+export interface FireFeasibilityDistancesHeightsFormUiState
+  extends FireFeasibilityDistancesHeightsFormFields {
+  cloudHeightValue: string
+  cloudHeightViewUnit: string
+}
+
 export interface FireFeasibilityCoordsInput {
   obstacleCoords: string
   obstacleHeight: string

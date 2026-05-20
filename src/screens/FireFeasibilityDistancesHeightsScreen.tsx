@@ -1,4 +1,5 @@
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
+import type { FireFeasibilityDistancesHeightsFormUiState } from '../domain/fireFeasibility.types'
 import DocFeedbackModal from '../components/base/DocFeedbackModal'
 import EntityLoadLinksStep from '../components/EntityLoadLinksStep'
 import fireFeasibilityDocMarkdown from '../../docs/היתכנות-לירי.md?raw'
@@ -41,6 +42,28 @@ function FireFeasibilityDistancesHeightsScreen() {
       cloudHeightUnit: viewUnit,
     })
   }, [position, target, flow, cloudHeightValue, viewUnit])
+
+  const form = useMemo<FireFeasibilityDistancesHeightsFormUiState>(
+    () => ({
+      ...flow.distancesHeightsFormState,
+      cloudHeightValue,
+      cloudHeightViewUnit: viewUnit,
+    }),
+    [flow.distancesHeightsFormState, cloudHeightValue, viewUnit],
+  )
+
+  const updateForm = useCallback(
+    (patch: Partial<FireFeasibilityDistancesHeightsFormUiState>) => {
+      if (patch.cloudHeightViewUnit !== undefined) {
+        setViewUnit(patch.cloudHeightViewUnit)
+      }
+      const { cloudHeightValue: _cv, cloudHeightViewUnit: _cu, ...distancesPatch } = patch
+      if (Object.keys(distancesPatch).length > 0) {
+        flow.updateDistancesHeightsForm(distancesPatch)
+      }
+    },
+    [flow, setViewUnit],
+  )
 
   if (flow.step === 'links') {
     return (
@@ -100,17 +123,8 @@ function FireFeasibilityDistancesHeightsScreen() {
         <FireFeasibilityDistancesHeightsForm
           position={position}
           target={target}
-          formState={flow.distancesHeightsFormState}
-          cloudHeightValue={cloudHeightValue}
-          cloudHeightViewUnit={viewUnit}
-          onCloudHeightViewUnitChange={setViewUnit}
-          onObstacleHeightChange={flow.setObstacleHeight}
-          onPositionObstacleRangeChange={flow.setPositionObstacleRange}
-          onHide1DistanceChange={flow.setHide1Distance}
-          onHide1HeightDiffChange={flow.setHide1HeightDiff}
-          onHide2DistanceChange={flow.setHide2Distance}
-          onHide2HeightDiffChange={flow.setHide2HeightDiff}
-          onFlightPathChange={flow.setFlightPath}
+          form={form}
+          onUpdateForm={updateForm}
         />
       </div>
 

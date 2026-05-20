@@ -66,6 +66,18 @@ export function useFireFeasibilityFlow(mode: FireFeasibilityMode) {
     if (patch.flightPath !== undefined) setFlightPath(patch.flightPath)
   }
 
+  function updateDistancesHeightsForm(patch: Partial<FireFeasibilityDistancesHeightsFormFields>) {
+    if (patch.obstacleHeight !== undefined) setObstacleHeight(patch.obstacleHeight)
+    if (patch.positionObstacleRange !== undefined) {
+      setPositionObstacleRange(patch.positionObstacleRange)
+    }
+    if (patch.hide1Distance !== undefined) setHide1Distance(patch.hide1Distance)
+    if (patch.hide1HeightDiff !== undefined) setHide1HeightDiff(patch.hide1HeightDiff)
+    if (patch.hide2Distance !== undefined) setHide2Distance(patch.hide2Distance)
+    if (patch.hide2HeightDiff !== undefined) setHide2HeightDiff(patch.hide2HeightDiff)
+    if (patch.flightPath !== undefined) setFlightPath(patch.flightPath)
+  }
+
   function updateLinks(links: EntityLinksUpdate) {
     if ('targetId' in links) {
       setTargetId(links.targetId ?? undefined)
@@ -110,13 +122,7 @@ export function useFireFeasibilityFlow(mode: FireFeasibilityMode) {
     coordsFormState,
     distancesHeightsFormState,
     updateCoordsForm,
-    setObstacleHeight,
-    setPositionObstacleRange,
-    setHide1Distance,
-    setHide1HeightDiff,
-    setHide2Distance,
-    setHide2HeightDiff,
-    setFlightPath,
+    updateDistancesHeightsForm,
     updateLinks,
     advanceFromLinks,
     calculate,

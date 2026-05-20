@@ -8,7 +8,7 @@ import {
   RANGE_COMPUTED_TOOLTIP,
   TARGET_FIELD_TOOLTIP,
 } from '../domain/fireFeasibility.constants'
-import type { FireFeasibilityDistancesHeightsFormFields } from '../domain/fireFeasibility.types'
+import type { FireFeasibilityDistancesHeightsFormUiState } from '../domain/fireFeasibility.types'
 import { useFireFeasibilityPositionTargetMetrics } from '../hooks/useFireFeasibilityPositionTargetMetrics'
 import SegmentedToggle from './base/SegmentedToggle'
 import FormField from './FormField'
@@ -17,33 +17,15 @@ import Input from './Input'
 interface FireFeasibilityDistancesHeightsFormProps {
   position: Position
   target: Target
-  formState: FireFeasibilityDistancesHeightsFormFields
-  cloudHeightValue: string
-  cloudHeightViewUnit: string
-  onCloudHeightViewUnitChange: (unit: string) => void
-  onObstacleHeightChange: (value: string) => void
-  onPositionObstacleRangeChange: (value: string) => void
-  onHide1DistanceChange: (value: string) => void
-  onHide1HeightDiffChange: (value: string) => void
-  onHide2DistanceChange: (value: string) => void
-  onHide2HeightDiffChange: (value: string) => void
-  onFlightPathChange: (value: string) => void
+  form: FireFeasibilityDistancesHeightsFormUiState
+  onUpdateForm: (patch: Partial<FireFeasibilityDistancesHeightsFormUiState>) => void
 }
 
 function FireFeasibilityDistancesHeightsForm({
   position,
   target,
-  formState,
-  cloudHeightValue,
-  cloudHeightViewUnit,
-  onCloudHeightViewUnitChange,
-  onObstacleHeightChange,
-  onPositionObstacleRangeChange,
-  onHide1DistanceChange,
-  onHide1HeightDiffChange,
-  onHide2DistanceChange,
-  onHide2HeightDiffChange,
-  onFlightPathChange,
+  form,
+  onUpdateForm,
 }: FireFeasibilityDistancesHeightsFormProps) {
   const metrics = useFireFeasibilityPositionTargetMetrics(position, target)
 
@@ -74,48 +56,48 @@ function FireFeasibilityDistancesHeightsForm({
       <FormField label="גובה מכשול (מעל פני הים)">
         <Input
           type="number"
-          value={formState.obstacleHeight}
-          onChange={(e) => onObstacleHeightChange(e.target.value)}
+          value={form.obstacleHeight}
+          onChange={(e) => onUpdateForm({ obstacleHeight: e.target.value })}
         />
       </FormField>
 
       <FormField label="טווח מכשול עמדה">
         <Input
           type="number"
-          value={formState.positionObstacleRange}
-          onChange={(e) => onPositionObstacleRangeChange(e.target.value)}
+          value={form.positionObstacleRange}
+          onChange={(e) => onUpdateForm({ positionObstacleRange: e.target.value })}
         />
       </FormField>
 
       <FormField label="מרחק הסתר מטרה-1">
         <Input
           type="number"
-          value={formState.hide1Distance}
-          onChange={(e) => onHide1DistanceChange(e.target.value)}
+          value={form.hide1Distance}
+          onChange={(e) => onUpdateForm({ hide1Distance: e.target.value })}
         />
       </FormField>
 
       <FormField label="הפרש גובה הסתר מטרה-1">
         <Input
           type="number"
-          value={formState.hide1HeightDiff}
-          onChange={(e) => onHide1HeightDiffChange(e.target.value)}
+          value={form.hide1HeightDiff}
+          onChange={(e) => onUpdateForm({ hide1HeightDiff: e.target.value })}
         />
       </FormField>
 
       <FormField label="מרחק הסתר מטרה-2">
         <Input
           type="number"
-          value={formState.hide2Distance}
-          onChange={(e) => onHide2DistanceChange(e.target.value)}
+          value={form.hide2Distance}
+          onChange={(e) => onUpdateForm({ hide2Distance: e.target.value })}
         />
       </FormField>
 
       <FormField label="הפרש גובה הסתר מטרה-2">
         <Input
           type="number"
-          value={formState.hide2HeightDiff}
-          onChange={(e) => onHide2HeightDiffChange(e.target.value)}
+          value={form.hide2HeightDiff}
+          onChange={(e) => onUpdateForm({ hide2HeightDiff: e.target.value })}
         />
       </FormField>
 
@@ -125,19 +107,19 @@ function FireFeasibilityDistancesHeightsForm({
             <SegmentedToggle
               size="compact"
               options={[...CLOUD_HEIGHT_UNIT_OPTIONS]}
-              value={cloudHeightViewUnit}
-              onChange={onCloudHeightViewUnitChange}
+              value={form.cloudHeightViewUnit}
+              onChange={(unit) => onUpdateForm({ cloudHeightViewUnit: unit })}
             />
           </div>
-          <Input type="number" value={cloudHeightValue} disabled />
+          <Input type="number" value={form.cloudHeightValue} disabled />
         </div>
       </FormField>
 
       <FormField label="מסלול מעוף">
         <SegmentedToggle
           options={[...FLIGHT_PATH_OPTIONS]}
-          value={formState.flightPath}
-          onChange={onFlightPathChange}
+          value={form.flightPath}
+          onChange={(value) => onUpdateForm({ flightPath: value })}
         />
       </FormField>
     </div>
