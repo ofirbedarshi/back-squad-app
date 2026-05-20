@@ -30,7 +30,23 @@ UI is responsible only for presentation and user interaction.
 
 **Before creating any new component, hook, or UI pattern — search first, build second.**
 
-Do not assume nothing exists. Look for the same behavior, layout, or interaction — not only the same name.
+Do not assume nothing exists. Look for the same **behavior, layout, or interaction** — not only the same name.
+
+### Default: one UI, many flows
+
+If an existing component already renders the UX you need (or a subset of it):
+
+1. **Generalize it** (props, `sections`, header text, optional blocks) and use it from every flow that needs that UX.
+2. **Rename** feature-specific files to neutral names when they serve multiple features (e.g. `NadbarNewLinksStep` → `EntityLoadLinksStep`).
+3. **Delete** the old feature-only duplicate — do not add `FireFeasibilityLinksStep` when the nadbar step is the same screen with fewer sections.
+
+**Sharing markup through a generic component is correct reuse, not “coupling”.** The anti-pattern is **duplicating the same UI** under a second feature-named file to keep flows “separate”.
+
+| Good | Bad |
+|------|-----|
+| One `EntityLoadLinksStep`, nadbar passes 3 sections, fire passes 2 | Copy-paste step + header for fire |
+| Caller passes Hebrew `title` / `subtitle` | Hardcode nadbar-only copy inside shared step |
+| Feature screen composes shared step + its own hook | New `*LinksStep` per menu area with identical layout |
 
 ### 1. Search the codebase
 
@@ -40,20 +56,25 @@ Scan at minimum:
 - `src/hooks/` (flow state, handlers, validation gates)
 - Screens and steps that might already solve the same UX
 
-Search by **behavior** (e.g. “load picker”, “confirm delete”, “empty list CTA”), not only by the name you plan to use.
+Search by **behavior** (e.g. “load picker”, “confirm delete”, “links gate step”), not only by the name you plan to use.
 
 ### 2. Found something similar?
 
-**Do not duplicate silently.** Stop and **ask the user** which path to take:
+**Default action: extend or generalize the existing component.** Implement that unless there is a real reason not to.
+
+**Ask the user only when the tradeoff is unclear**, for example:
 
 | Situation | Ask about |
 |-----------|-----------|
-| Same UI can look the same | Extract or reuse one shared component |
-| Same logic, different layout | Shared hook + separate presentational components |
-| Existing piece almost fits | Extend/generalize existing component vs. new file |
-| Unclear if reuse fits | Present what you found; let user decide |
+| Same logic, **meaningfully different** layout | Shared hook vs separate presentational components |
+| Generalizing would force awkward API or break unrelated callers | Narrow refactor vs split |
+| Truly unclear after search | Present what you found; let user decide |
 
-Example prompt: *“`TargetLoadButton` and `IndicatorLoadButton` share the same picker layout. Reuse `LoadPickerChip` / extract a shared wrapper, or keep separate?”*
+Do **not** ask “duplicate vs share?” when the layout is the same — **share** (generalize).
+
+Example (good default): nadbar links step and fire-feasibility links gate → one configurable links step, no second file.
+
+Example (worth asking): two pickers look similar today but product wants different footers and validation — confirm before one mega-component.
 
 ### 3. No exact match — still look for partial reuse
 
@@ -65,7 +86,7 @@ Even when nothing is identical:
 
 ### 4. After implementing — duplication check
 
-Before finishing UI work: did this introduce a second copy of logic or markup that already exists elsewhere? If yes → flag it and offer consolidation.
+Before finishing UI work: did this introduce a second copy of logic or markup that already exists elsewhere? If yes → **consolidate into the shared component**; do not leave parallel copies “for clarity”.
 
 ---
 
@@ -76,7 +97,7 @@ Before finishing UI work: did this introduce a second copy of logic or markup th
 - Avoid large components
 - **Never define a component inside another file** — every component gets its own file in the appropriate folder under `src/components/`
 - **This applies to ALL reusable UI pieces** — including helper functions that return JSX, class strings, or style logic (e.g. `inputClass`, `buttonClass`). If it controls how a UI element looks or behaves, it is a component and must live in its own file.
-- There are NO exceptions based on size, simplicity, or "tight coupling"
+- “One component per file” does **not** mean “one component per feature” — multiple screens/features must import the **same** file when the UI is the same
 
 ## Extract early — screens compose, components render
 
@@ -84,7 +105,7 @@ Screens and multi-step flows must stay thin. **Extract** instead of growing one 
 
 ### One concern per file
 
-- **Each wizard step / screen section** → its own component (e.g. `NadbarNewLinksStep`, `NadbarNewChatStep` — not both in the screen).
+- **Each wizard step / screen section** → its own component file (e.g. links load step, chat step — not both inlined in the screen). Name by **behavior**, not owning feature, when the step is reused.
 - **Repeated layout blocks** (header, footer, badge, card section) → dedicated components.
 - **Non-trivial UI state and handlers** (step machine, save flow, validation gates) → `src/hooks/` composable (e.g. `useNadbarNewFlow`), not inline in the screen.
 
@@ -133,10 +154,10 @@ If yes → extract now, not later.
 
 Follow **Reuse workflow** above first. Then:
 
-1. If a similar component exists but lacks flexibility → **extend or generalize it** rather than duplicating
+1. If a similar component exists → **extend or generalize it**; do not add a parallel feature-named twin
 2. If the new component is generic (no domain knowledge) → `src/components/base/`
-3. If app-specific → `src/components/`
-4. If reuse is unclear → **ask the user** before adding a parallel implementation
+3. If app-specific but shared across flows → `src/components/` with a **neutral** name
+4. If reuse is unclear after search → **ask the user** (see §2 — not for “same UI, different menu”)
 
 ## Data flow
 

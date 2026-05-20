@@ -1,6 +1,7 @@
 import NadbarNewChatStep from '../components/NadbarNewChatStep'
-import NadbarNewLinksStep from '../components/NadbarNewLinksStep'
+import EntityLoadLinksStep from '../components/EntityLoadLinksStep'
 import { useNadbarNewFlow } from '../hooks/useNadbarNewFlow'
+import { getNadbarTypeLabel } from '../utils/nadbarDisplay'
 
 function NadbarNewScreen() {
   const {
@@ -24,8 +25,13 @@ function NadbarNewScreen() {
   if (step === 'links') {
     return (
       <div className="h-full min-h-0">
-        <NadbarNewLinksStep
-          nadbarType={nadbarType}
+        <EntityLoadLinksStep
+          sections={['indicator', 'target', 'position']}
+          header={{
+            stepLabel: 'שלב 1 מתוך 2',
+            title: 'קישור מציין, מטרה ועמדה',
+            subtitle: `בחר את כל הישויות · ${getNadbarTypeLabel(nadbarType)}`,
+          }}
           pointerId={pointerId}
           targetId={targetId}
           positionId={positionId}

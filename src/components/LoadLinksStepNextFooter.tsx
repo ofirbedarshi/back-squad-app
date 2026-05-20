@@ -1,9 +1,9 @@
-interface NadbarNewStepNextFooterProps {
+interface LoadLinksStepNextFooterProps {
   canProceed: boolean
   onNext: () => void
 }
 
-function NadbarNewStepNextFooter({ canProceed, onNext }: NadbarNewStepNextFooterProps) {
+function LoadLinksStepNextFooter({ canProceed, onNext }: LoadLinksStepNextFooterProps) {
   return (
     <footer className="sticky bottom-0 shrink-0 border-t border-neutral-200/60 bg-neutral-50 px-3 py-2">
       <button
@@ -23,4 +23,4 @@ function NadbarNewStepNextFooter({ canProceed, onNext }: NadbarNewStepNextFooter
   )
 }
 
-export default NadbarNewStepNextFooter
+export default LoadLinksStepNextFooter
