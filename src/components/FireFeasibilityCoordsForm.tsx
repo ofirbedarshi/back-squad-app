@@ -2,28 +2,18 @@ import { useState } from 'react'
 import type { Position } from '../domain/position.types'
 import type { Target } from '../domain/target.types'
 import { CLOUD_HEIGHT_UNIT_OPTIONS } from '../domain/cloudHeight'
+import {
+  CLOUD_HEIGHT_FIELD_TOOLTIP,
+  FLIGHT_PATH_OPTIONS,
+  POSITION_FIELD_TOOLTIP,
+  TARGET_FIELD_TOOLTIP,
+} from '../domain/fireFeasibility.constants'
 import { useCloudHeight } from '../hooks/useCloudHeight'
 import CoordinateInput from './base/CoordinateInput'
 import type { CoordinateValue } from './base/coordinateInput.types'
 import SegmentedToggle from './base/SegmentedToggle'
 import FormField from './FormField'
 import Input from './Input'
-
-const FLIGHT_PATH_OPTIONS = [
-  { label: 'flat', value: 'flat' },
-  { label: 'low', value: 'low' },
-  { label: 'lofted', value: 'lofted' },
-  { label: 'lofted +', value: '+lofted' },
-]
-
-const POSITION_FIELD_TOOLTIP =
-  'שדה זה מתמלא אוטומטית מהעמדה שנבחרה בשלב הקודם ואינו ניתן לעריכה ידנית'
-
-const TARGET_FIELD_TOOLTIP =
-  'שדה זה מתמלא אוטומטית מהמטרה שנבחרה בשלב הקודם ואינו ניתן לעריכה ידנית'
-
-const CLOUD_HEIGHT_FIELD_TOOLTIP =
-  'שדה זה מתמלא אוטומטית מגובה בסיס הענן שנשמר במסך הבית ואינו ניתן לעריכה ידנית'
 
 interface FireFeasibilityCoordsFormProps {
   position: Position
@@ -107,7 +97,7 @@ function FireFeasibilityCoordsForm({ position, target }: FireFeasibilityCoordsFo
       </FormField>
 
       <FormField label="מסלול מעוף">
-        <SegmentedToggle options={FLIGHT_PATH_OPTIONS} value={flightPath} onChange={setFlightPath} />
+        <SegmentedToggle options={[...FLIGHT_PATH_OPTIONS]} value={flightPath} onChange={setFlightPath} />
       </FormField>
     </div>
   )
