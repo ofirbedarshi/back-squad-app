@@ -24,6 +24,10 @@ export function formatCloudHeightInputValue(
   return displayNumber === null ? '' : String(displayNumber)
 }
 
+export function cloudHeightDisplayUnitLabel(unit: CloudHeightUnit): string {
+  return unit === 'feet' ? 'רגל' : 'מטר'
+}
+
 export function formatCloudHeightWidgetLabel(settings: CloudHeightSettings): string {
   const displayNumber = cloudHeightToDisplayNumber(settings)
   if (displayNumber === null) return '—'
