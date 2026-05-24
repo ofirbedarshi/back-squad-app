@@ -1,122 +1,133 @@
 ---
-description: Generate compact high-signal handoff summaries between agent sessions
+description: Generate compact feature-level handoff summaries between agent sessions
 globs:
 alwaysApply: false
 ---
 
-# Agent Handoff Rule
+# Feature Handoff Rule
 
-When the user including this in the chat session, generate a compact and high-signal handoff summary optimized for AI-to-AI continuation.
+When this included in the chat session, generate a SHORT project-level handoff summary.
 
-The goal is to:
+The purpose is NOT to summarize the last feature in detail.
+
+The purpose IS to:
+- transfer overall current feature developing understanding
+- preserve continuity
+- preserve working patterns
+- preserve architectural direction
 - reduce context usage
-- improve focus
-- avoid re-explaining the project
-- maintain continuity across sessions
 - help a fresh agent onboard quickly
 
-## Handoff Requirements
+The handoff should stay relatively stable between sessions.
 
-The handoff should include only information that materially helps future execution.
+Most handoffs should be:
+- mostly identical
+- compact
+- reusable
+- focused on the overall project
 
-Prefer:
-- concise bullets
-- structured sections
-- implementation details
-- architectural reasoning
-- constraints
-- decisions
-- important tradeoffs
+Only a SMALL section should describe the most recent work.
 
-Avoid:
-- long prose
-- marketing language
-- repeating obvious information
-- low-signal history
+---
 
-## Required Sections
+# Handoff Structure
 
-### 1. Project Goal
-- What is being built
-- Why it exists
-- Product/business direction
+## 1. Feature Overview
+Very short explanation of:
+- what we are building
+- main Feature goal
+- overall direction
 
-### 2. Current State
-- What already works
-- What was implemented
-- Important decisions already made
-- Rejected approaches worth knowing
+Keep this high-level and stable.
 
-### 3. Technical Architecture
-- Stack
-- Main flows
-- Important folders/files
-- APIs/services
-- Design patterns
-- Constraints
+---
 
-### 4. Important References
-Include:
-- file paths
-- important functions/classes/components
-- scripts/commands
-- docs/URLs if relevant
+## 2. Technical Structure
+Short summary of:
+- stack
+- architecture style
+- important flows
+- key folders/files
+- important constraints
 
-### 5. Current Task
-- Current objective
-- Blockers
-- Unfinished work
-- Immediate next focus
+Only include things useful for fast onboarding.
 
-### 6. Open Questions / Risks
-- Technical risks
-- Product uncertainty
-- Performance concerns
-- Missing decisions
+---
 
-### 7. Working Rules
-Document important project principles such as:
-- avoid over-engineering
-- deterministic logic
-- do not guess missing data
-- preserve architecture consistency
-- keep functions small
+## 3. Working Style / Collaboration Rules
+Document how the user prefers to work.
+
+Examples:
+- prefers concise answers
+- prefers simple solutions
+- avoid overengineering
+- preserve existing patterns
 - mobile-first
 - RTL support
+- deterministic flows
+- prefers incremental changes
+- asks for Cursor-ready prompts
 - etc.
 
-### 8. Product & UX Context
-- UX philosophy
-- UI expectations
-- User behavior assumptions
-- What should feel simple vs powerful
+This section is IMPORTANT because it preserves collaboration continuity between agents.
 
-### 9. Future Direction
-- Planned features
-- Long-term vision
-- Expansion ideas already discussed
+---
 
-### 10. Quickstart For New Agent
-Provide:
-- fastest onboarding path
-- files to read first
-- commands to run
+## 5. Recent Progress
+Include only SHORT bullets for recent changes.
+
+Example:
+- added X flow
+- simplified Y architecture
+- refactored Z component
+- integrated A into existing system
+
+Keep each bullet extremely short.
+
+Do NOT write long implementation history.
+
+---
+
+## 6. Open Items
+Only important unresolved items:
+- decisions
+- uncertainties
+- pending refactors
+- architectural questions
+
+Keep concise.
+
+---
+
+## 7. Quickstart
+Very short onboarding instructions:
+- files worth reading first
+- commands if relevant
 - areas to avoid touching initially
 
-### 11. Final Recommendations
-Include:
-- recommended next actions
-- recommended order of execution
-- cautions before continuing
+---
 
-## Output Style
+# Output Style
 
-The output must be:
+The output MUST be:
 - compact
+- stable between sessions
 - high signal
+- low noise
 - optimized for AI consumption
-- low-noise
-- structured with headers
-- mostly bullets instead of paragraphs
+- mostly bullets
+- short sections
+- minimal wording
 
-Compress aggressively while preserving critical reasoning and decisions.
+Avoid:
+- long explanations
+- detailed feature history
+- unnecessary implementation details
+- repeating obvious information
+
+The handoff should feel like:
+“persistent project memory for a new agent”
+—not—
+“a detailed changelog of the last task”.
+
+The ideal handoff is short enough to paste frequently without wasting context.

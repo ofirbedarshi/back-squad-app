@@ -1,26 +1,14 @@
 import NadbarMeMessageBubble from './NadbarMeMessageBubble'
 import NadbarMessageBlockFrame from './NadbarMessageBlockFrame'
 import NadbarMessageBubble from './NadbarMessageBubble'
-import type { NadbarMessageBlock, NadbarMessageUserVars, NadbarUserVarFields } from '../domain/nadbar.types'
-import type { NadbarMessageResources } from '../utils/nadbarMessageFill.types'
+import type { NadbarMessageBlock } from '../domain/nadbar.types'
 
 interface NadbarMessageBlockViewProps {
   block: NadbarMessageBlock
   blockIndex: number
-  resources: NadbarMessageResources
-  messageVars: NadbarMessageUserVars
-  userVarFields?: NadbarUserVarFields
-  onUserVarChange: (varName: string, value: string) => void
 }
 
-function NadbarMessageBlockView({
-  block,
-  blockIndex,
-  resources,
-  messageVars,
-  userVarFields,
-  onUserVarChange,
-}: NadbarMessageBlockViewProps) {
+function NadbarMessageBlockView({ block, blockIndex }: NadbarMessageBlockViewProps) {
   return (
     <NadbarMessageBlockFrame>
       {block.messages.map((message, messageIndex) =>
@@ -30,10 +18,6 @@ function NadbarMessageBlockView({
             message={message}
             messages={block.messages}
             messageIndex={messageIndex}
-            resources={resources}
-            messageVars={messageVars}
-            userVarFields={userVarFields}
-            onUserVarChange={onUserVarChange}
           />
         ) : (
           <NadbarMessageBubble
@@ -41,10 +25,6 @@ function NadbarMessageBlockView({
             message={message}
             messages={block.messages}
             messageIndex={messageIndex}
-            resources={resources}
-            messageVars={messageVars}
-            userVarFields={userVarFields}
-            onUserVarChange={onUserVarChange}
           />
         ),
       )}
