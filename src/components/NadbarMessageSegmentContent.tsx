@@ -1,5 +1,7 @@
-import type { NadbarMessageUserVars } from '../domain/nadbar.types'
+import { useMemo } from 'react'
+import type { NadbarMessage, NadbarMessageUserVars } from '../domain/nadbar.types'
 import {
+  buildUserVarFirstMessageIndex,
   parseNadbarMessageSegments,
   resolveResourceSegment,
 } from '../utils/nadbarMessageFill'
@@ -8,8 +10,13 @@ import type { NadbarMessageResources } from '../utils/nadbarMessageFill.types'
 const INLINE_INPUT_CLASS =
   'inline-block min-w-[3rem] max-w-[8rem] border-0 border-b border-neutral-800 bg-transparent px-0.5 py-0 text-sm text-neutral-900 underline decoration-neutral-800 decoration-1 underline-offset-2 outline-none focus:border-blue-500'
 
+const ECHO_EMPTY_LABEL = '(מחושב אוטומטי)'
+const ECHO_VALUE_CLASS = 'inline text-base italic text-neutral-500'
+
 interface NadbarMessageSegmentContentProps {
   content: string
+  messages: readonly NadbarMessage[]
+  messageIndex: number
   resources: NadbarMessageResources
   messageVars: NadbarMessageUserVars
   onUserVarChange: (varName: string, value: string) => void
@@ -17,11 +24,17 @@ interface NadbarMessageSegmentContentProps {
 
 function NadbarMessageSegmentContent({
   content,
+  messages,
+  messageIndex,
   resources,
   messageVars,
   onUserVarChange,
 }: NadbarMessageSegmentContentProps) {
   const segments = parseNadbarMessageSegments(content)
+  const userVarFirstMessageIndex = useMemo(
+    () => buildUserVarFirstMessageIndex(messages),
+    [messages],
+  )
 
   return (
     <p className="whitespace-pre-wrap break-words">
@@ -49,11 +62,34 @@ function NadbarMessageSegmentContent({
           return <span key={index}>{`{{${segment.tokenKey}}}`}</span>
         }
 
+        const value = messageVars[segment.varName] ?? ''
+        const editable = userVarFirstMessageIndex.get(segment.varName) === messageIndex
+
+        if (!editable) {
+          if (!value.trim()) {
+            return (
+              <span
+                key={index}
+                className="inline-block font-medium text-red-600 underline decoration-red-600 underline-offset-2"
+                aria-label={`${segment.varName} — ${ECHO_EMPTY_LABEL}`}
+              >
+                {ECHO_EMPTY_LABEL}
+              </span>
+            )
+          }
+
+          return (
+            <span key={index} className={ECHO_VALUE_CLASS} aria-label={segment.varName}>
+              {value}
+            </span>
+          )
+        }
+
         return (
           <input
             key={index}
             type="text"
-            value={messageVars[segment.varName] ?? ''}
+            value={value}
             onChange={(event) => onUserVarChange(segment.varName, event.target.value)}
             className={INLINE_INPUT_CLASS}
             aria-label={segment.varName}

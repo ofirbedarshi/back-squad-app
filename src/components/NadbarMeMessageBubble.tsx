@@ -4,6 +4,8 @@ import type { NadbarMessageResources } from '../utils/nadbarMessageFill.types'
 
 interface NadbarMeMessageBubbleProps {
   message: NadbarMessage
+  messages: readonly NadbarMessage[]
+  messageIndex: number
   resources: NadbarMessageResources
   messageVars: NadbarMessageUserVars
   onUserVarChange: (varName: string, value: string) => void
@@ -11,6 +13,8 @@ interface NadbarMeMessageBubbleProps {
 
 function NadbarMeMessageBubble({
   message,
+  messages,
+  messageIndex,
   resources,
   messageVars,
   onUserVarChange,
@@ -20,6 +24,8 @@ function NadbarMeMessageBubble({
       <div className="max-w-[80%] rounded-2xl rounded-br-md bg-emerald-100 px-3 py-2 text-sm leading-relaxed text-neutral-900 shadow-sm">
         <NadbarMessageSegmentContent
           content={message.content}
+          messages={messages}
+          messageIndex={messageIndex}
           resources={resources}
           messageVars={messageVars}
           onUserVarChange={onUserVarChange}

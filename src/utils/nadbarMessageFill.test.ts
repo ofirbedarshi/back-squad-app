@@ -3,8 +3,11 @@ import { describe, it } from 'node:test'
 import type { Indicator } from '../domain/indicator.types'
 import type { Position } from '../domain/position.types'
 import type { Target } from '../domain/target.types'
+import type { NadbarMessage } from '../domain/nadbar.types'
 import {
+  buildUserVarFirstMessageIndex,
   fillNadbarMessageContent,
+  isNadbarUserVarEditableAt,
   parseNadbarMessageSegments,
   resolveResourceSegment,
 } from './nadbarMessageFill'
@@ -125,6 +128,32 @@ describe('parseNadbarMessageSegments', () => {
       { type: 'text', text: ' קו״צ ' },
       { type: 'resource', tokenKey: 'indicator.markCode' },
     ])
+  })
+})
+
+const pointerTeamUpdatedEchoMessages: NadbarMessage[] = [
+  { source: 'They', content: '{{openingCallsign1}} מ {{openingCallsign2}} האם אתה מבלה בענבים' },
+  { source: 'Me', content: 'חיובי, מבלה בענבים / שלילי עוד __ קטנות' },
+  { source: 'They', content: 'קבל קוץ {{kutz}} כמו כן גור {{gur}} מעל פני הים' },
+  { source: 'Me', content: 'קיבלתי קוץ {{kutz}} כמו כן גור {{gur}} מעל פני הים' },
+]
+
+describe('buildUserVarFirstMessageIndex', () => {
+  it('records first message index per user var', () => {
+    const index = buildUserVarFirstMessageIndex(pointerTeamUpdatedEchoMessages)
+    assert.equal(index.get('openingCallsign1'), 0)
+    assert.equal(index.get('openingCallsign2'), 0)
+    assert.equal(index.get('kutz'), 2)
+    assert.equal(index.get('gur'), 2)
+  })
+})
+
+describe('isNadbarUserVarEditableAt', () => {
+  it('allows kutz and gur only on first occurrence message', () => {
+    assert.equal(isNadbarUserVarEditableAt(pointerTeamUpdatedEchoMessages, 2, 'kutz'), true)
+    assert.equal(isNadbarUserVarEditableAt(pointerTeamUpdatedEchoMessages, 2, 'gur'), true)
+    assert.equal(isNadbarUserVarEditableAt(pointerTeamUpdatedEchoMessages, 3, 'kutz'), false)
+    assert.equal(isNadbarUserVarEditableAt(pointerTeamUpdatedEchoMessages, 3, 'gur'), false)
   })
 })
 

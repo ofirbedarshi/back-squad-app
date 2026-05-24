@@ -40,7 +40,8 @@ export function useNadbarNewFlow() {
 
     setStep('links')
     setDraftNadbar(null)
-  }, [nadbarType, triggerError])
+    // triggerError intentionally omitted — unstable reference caused draft reset every render
+  }, [nadbarType])
 
   function updateLinkIds(links: NadbarLinksUpdate) {
     if ('pointerId' in links) {
@@ -71,7 +72,7 @@ export function useNadbarNewFlow() {
       current
         ? {
             ...current,
-            messageVars: { ...current.messageVars, [varName]: value },
+            messageVars: { ...(current.messageVars ?? {}), [varName]: value },
           }
         : current,
     )

@@ -1,3 +1,4 @@
+import type { NadbarMessage } from '../domain/nadbar.types'
 import type {
   NadbarMessageResourceKey,
   NadbarMessageResources,
@@ -83,6 +84,38 @@ export function resolveResourceSegment(
   }
 
   return { type: 'unknown' }
+}
+
+export function collectUserVarNamesFromContent(content: string): string[] {
+  const names: string[] = []
+  for (const segment of parseNadbarMessageSegments(content)) {
+    if (segment.type === 'userVar') {
+      names.push(segment.varName)
+    }
+  }
+  return names
+}
+
+export function buildUserVarFirstMessageIndex(
+  messages: readonly NadbarMessage[],
+): ReadonlyMap<string, number> {
+  const firstIndex = new Map<string, number>()
+  messages.forEach((message, index) => {
+    for (const varName of collectUserVarNamesFromContent(message.content)) {
+      if (!firstIndex.has(varName)) {
+        firstIndex.set(varName, index)
+      }
+    }
+  })
+  return firstIndex
+}
+
+export function isNadbarUserVarEditableAt(
+  messages: readonly NadbarMessage[],
+  messageIndex: number,
+  varName: string,
+): boolean {
+  return buildUserVarFirstMessageIndex(messages).get(varName) === messageIndex
 }
 
 export function fillNadbarMessageContent(

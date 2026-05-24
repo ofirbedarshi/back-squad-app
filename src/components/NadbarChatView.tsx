@@ -24,6 +24,8 @@ function NadbarChatView({ messages, links, messageVars = {}, onUserVarChange }: 
           <NadbarMeMessageBubble
             key={`${message.source}-${index}`}
             message={message}
+            messages={messages}
+            messageIndex={index}
             resources={resources}
             messageVars={messageVars}
             onUserVarChange={onUserVarChange}
@@ -32,6 +34,8 @@ function NadbarChatView({ messages, links, messageVars = {}, onUserVarChange }: 
           <NadbarMessageBubble
             key={`${message.source}-${index}`}
             message={message}
+            messages={messages}
+            messageIndex={index}
             resources={resources}
             messageVars={messageVars}
             onUserVarChange={onUserVarChange}
