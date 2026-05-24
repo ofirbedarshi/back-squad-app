@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import { useNadbarBlockChatContext } from './NadbarBlockChatContext'
 import { useNadbarChatContext } from './NadbarChatContext'
 import NadbarUserVarChoiceInput from './NadbarUserVarChoiceInput'
 import type { NadbarMessage } from '../domain/nadbar.types'
@@ -26,7 +27,8 @@ function NadbarMessageSegmentContent({
   messages,
   messageIndex,
 }: NadbarMessageSegmentContentProps) {
-  const { messageVars, userVarFields, resources, onUserVarChange } = useNadbarChatContext()
+  const { messageVars, onUserVarChange } = useNadbarBlockChatContext()
+  const { userVarFields, resources } = useNadbarChatContext()
   const segments = parseNadbarMessageSegments(content)
   const userVarFirstMessageIndex = useMemo(
     () => buildUserVarFirstMessageIndex(messages),

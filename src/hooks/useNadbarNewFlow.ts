@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { nadbarRequiresEntityLinks } from '../domain/nadbar'
+import { getNadbarBlockMessageVars, nadbarRequiresEntityLinks, updateNadbarBlockMessageVar } from '../domain/nadbar'
 import type { Nadbar, NadbarLinksUpdate } from '../domain/nadbar.types'
 import { addNadbarUseCase } from '../useCases/addNadbar'
 import { assertNadbarSaveableUseCase } from '../useCases/assertNadbarSaveable'
@@ -23,7 +23,10 @@ export function useNadbarNewFlow() {
   const [positionId, setPositionId] = useState<string | undefined>()
   const [draftNadbar, setDraftNadbar] = useState<Nadbar | null>(null)
 
-  const getMessageVars = useCallback(() => draftNadbar?.messageVars ?? {}, [draftNadbar])
+  const getMessageVars = useCallback(
+    (blockIndex: number) => (draftNadbar ? getNadbarBlockMessageVars(draftNadbar, blockIndex) : undefined),
+    [draftNadbar],
+  )
   const handleBlockFooterAction = useNadbarBlockFooterActionHandler(getMessageVars)
 
   useEffect(() => {
@@ -71,14 +74,9 @@ export function useNadbarNewFlow() {
     }
   }
 
-  function setUserVar(varName: string, value: string) {
+  function setUserVar(blockIndex: number, varName: string, value: string) {
     setDraftNadbar((current) =>
-      current
-        ? {
-            ...current,
-            messageVars: { ...(current.messageVars ?? {}), [varName]: value },
-          }
-        : current,
+      current ? updateNadbarBlockMessageVar(current, blockIndex, varName, value) : current,
     )
   }
 

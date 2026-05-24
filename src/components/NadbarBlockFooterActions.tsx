@@ -21,7 +21,7 @@ function NadbarBlockFooterActions({ blockIndex }: NadbarBlockFooterActionsProps)
             return (
               <NadbarCreateTargetFromVarsButton
                 key={action}
-                onClick={() => onBlockFooterAction(action)}
+                onClick={() => onBlockFooterAction(blockIndex, action)}
               />
             )
           default:

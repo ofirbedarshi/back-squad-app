@@ -25,7 +25,7 @@ function NadbarEditScreen() {
           nadbarType={draftNadbar.type}
           messageBlocks={draftNadbar.messageBlocks}
           links={draftNadbar.links}
-          messageVars={draftNadbar.messageVars}
+          blockMessageVars={draftNadbar.blockMessageVars}
           onUserVarChange={setUserVar}
           onBlockFooterAction={handleBlockFooterAction}
         />

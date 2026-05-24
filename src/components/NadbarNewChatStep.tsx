@@ -5,10 +5,10 @@ import type { Nadbar, NadbarBlockFooterAction, NadbarLinksUpdate, NadbarType } f
 interface NadbarNewChatStepProps {
   nadbarType: NadbarType
   draftNadbar: Nadbar
-  onUserVarChange: (varName: string, value: string) => void
+  onUserVarChange: (blockIndex: number, varName: string, value: string) => void
   onLinksChange: (links: NadbarLinksUpdate) => void
   onSave: () => void
-  onBlockFooterAction?: (action: NadbarBlockFooterAction) => void
+  onBlockFooterAction?: (blockIndex: number, action: NadbarBlockFooterAction) => void
 }
 
 function NadbarNewChatStep({
@@ -35,7 +35,7 @@ function NadbarNewChatStep({
           nadbarType={nadbarType}
           messageBlocks={draftNadbar.messageBlocks}
           links={draftNadbar.links}
-          messageVars={draftNadbar.messageVars}
+          blockMessageVars={draftNadbar.blockMessageVars}
           onUserVarChange={onUserVarChange}
           onBlockFooterAction={onBlockFooterAction}
         />

@@ -50,8 +50,8 @@ export interface Nadbar {
   type: NadbarType
   messageBlocks: NadbarMessageBlock[]
   links?: NadbarLinks
-  /** User-filled template fields in Me messages (var name → value) */
-  messageVars?: NadbarMessageUserVars
+  /** Per-block user-filled template fields (index aligns with `messageBlocks`) */
+  blockMessageVars?: NadbarMessageUserVars[]
 }
 
 /** Supported input kinds for template user vars (`userVarFields` in template JSON). */

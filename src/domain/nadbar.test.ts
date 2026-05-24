@@ -4,6 +4,7 @@ import {
   applyNadbarLinks,
   assertNadbarLinksForSave,
   createNadbarFromTemplate,
+  getNadbarBlockMessageVars,
   hasCompleteNadbarLinks,
   isNadbarUserVarNumeric,
   isNadbarUserVarChoice,
@@ -11,6 +12,7 @@ import {
   nadbarRequiresEntityLinks,
   NADBAR_SAVE_LINKS_REQUIRED_MESSAGE,
   parseNadbarTemplate,
+  updateNadbarBlockMessageVar,
 } from './nadbar.ts'
 import { getNadbarTemplate } from './nadbarTemplates.ts'
 import { assertNadbarSaveableUseCase } from '../useCases/assertNadbarSaveable.ts'
@@ -207,6 +209,27 @@ describe('createNadbarFromTemplate', () => {
     assert.notEqual(nadbar.messageBlocks[0]?.messages[0], template.blocks[0]?.messages[0])
     assert.ok(isValidNadbar(nadbar))
   })
+
+  it('initializes empty blockMessageVars per template block', () => {
+    const template = getNadbarTemplate('PointerTeamUpdated')
+    const nadbar = createNadbarFromTemplate('PointerTeamUpdated', template)
+    assert.equal(nadbar.blockMessageVars?.length, 3)
+    assert.deepEqual(nadbar.blockMessageVars, [{}, {}, {}])
+    assert.ok(isValidNadbar(nadbar))
+  })
+})
+
+describe('updateNadbarBlockMessageVar', () => {
+  it('updates vars only for the given block index', () => {
+    const template = getNadbarTemplate('PointerTeamUpdated')
+    const nadbar = createNadbarFromTemplate('PointerTeamUpdated', template)
+    const updated = updateNadbarBlockMessageVar(nadbar, 0, 'metara', 'block-0')
+    const alsoUpdated = updateNadbarBlockMessageVar(updated, 1, 'metara', 'block-1')
+
+    assert.equal(getNadbarBlockMessageVars(alsoUpdated, 0).metara, 'block-0')
+    assert.equal(getNadbarBlockMessageVars(alsoUpdated, 1).metara, 'block-1')
+    assert.equal(getNadbarBlockMessageVars(alsoUpdated, 2).metara, undefined)
+  })
 })
 
 describe('getNadbarTemplate', () => {
@@ -394,5 +417,24 @@ describe('isValidNadbar', () => {
       isValidNadbar({ ...nadbar, pointerId: 'pointer-1', targetId: 'target-1' }),
       false,
     )
+  })
+
+  it('rejects legacy flat messageVars', () => {
+    const nadbar = createNadbarFromTemplate(
+      'Katmam',
+      blocksFromMessages([{ source: 'Me', content: 'בדיקה' }]),
+    )
+    assert.equal(
+      isValidNadbar({ ...nadbar, messageVars: { metara: 'legacy' } }),
+      false,
+    )
+  })
+
+  it('rejects blockMessageVars length mismatch', () => {
+    const nadbar = createNadbarFromTemplate(
+      'Katmam',
+      blocksFromMessages([{ source: 'Me', content: 'בדיקה' }]),
+    )
+    assert.equal(isValidNadbar({ ...nadbar, blockMessageVars: [{}, {}] }), false)
   })
 })

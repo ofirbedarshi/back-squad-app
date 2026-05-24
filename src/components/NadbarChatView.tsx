@@ -15,16 +15,16 @@ interface NadbarChatViewProps {
   nadbarType: NadbarType
   messageBlocks: NadbarMessageBlock[]
   links?: NadbarLinks
-  messageVars?: NadbarMessageUserVars
-  onUserVarChange: (varName: string, value: string) => void
-  onBlockFooterAction?: (action: NadbarBlockFooterAction) => void
+  blockMessageVars?: NadbarMessageUserVars[]
+  onUserVarChange: (blockIndex: number, varName: string, value: string) => void
+  onBlockFooterAction?: (blockIndex: number, action: NadbarBlockFooterAction) => void
 }
 
 function NadbarChatView({
   nadbarType,
   messageBlocks,
   links,
-  messageVars = {},
+  blockMessageVars = [],
   onUserVarChange,
   onBlockFooterAction,
 }: NadbarChatViewProps) {
@@ -33,14 +33,12 @@ function NadbarChatView({
 
   const chatContextValue = useMemo(
     () => ({
-      messageVars,
       userVarFields: chatTemplate.userVarFields,
       resources,
-      onUserVarChange,
       blockFooterActions: chatTemplate.blockFooterActions,
       onBlockFooterAction,
     }),
-    [messageVars, chatTemplate, resources, onUserVarChange, onBlockFooterAction],
+    [chatTemplate, resources, onBlockFooterAction],
   )
 
   return (
@@ -51,7 +49,13 @@ function NadbarChatView({
         aria-label="שיחת נדבר"
       >
         {messageBlocks.map((block, blockIndex) => (
-          <NadbarMessageBlockView key={`block-${blockIndex}`} block={block} blockIndex={blockIndex} />
+          <NadbarMessageBlockView
+            key={`block-${blockIndex}`}
+            block={block}
+            blockIndex={blockIndex}
+            blockMessageVars={blockMessageVars[blockIndex] ?? {}}
+            onUserVarChange={(varName, value) => onUserVarChange(blockIndex, varName, value)}
+          />
         ))}
       </div>
     </NadbarChatProvider>

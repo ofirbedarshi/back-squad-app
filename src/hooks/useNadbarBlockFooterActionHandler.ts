@@ -4,15 +4,17 @@ import { createTargetFromNadbarVarsUseCase } from '../useCases/createTargetFromN
 import { useDomainError } from './useDomainError'
 import { useNotification } from './useNotification'
 
-export function useNadbarBlockFooterActionHandler(getMessageVars: () => NadbarMessageUserVars | undefined) {
+export function useNadbarBlockFooterActionHandler(
+  getMessageVars: (blockIndex: number) => NadbarMessageUserVars | undefined,
+) {
   const { notifySuccess } = useNotification()
   const { triggerError } = useDomainError()
 
   return useCallback(
-    (action: NadbarBlockFooterAction) => {
+    (blockIndex: number, action: NadbarBlockFooterAction) => {
       switch (action) {
         case 'createTargetFromVars': {
-          const messageVars = getMessageVars()
+          const messageVars = getMessageVars(blockIndex)
           if (!messageVars) return
           try {
             createTargetFromNadbarVarsUseCase(messageVars)

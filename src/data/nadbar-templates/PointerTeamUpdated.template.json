@@ -4,6 +4,7 @@
     "tsepa": { "input": "numeric" },
     "gamal": { "input": "numeric" },
     "amura": { "input": "numeric" },
+    "gur": { "input": "numeric" },
     "amuraCorrected": { "input": "numeric" },
     "amuraValid": {
       "input": "choice",
@@ -76,7 +77,7 @@
         },
         {
           "source": "They",
-          "content": "קבל למטרה {{metara}} שפר ל {{amuraCorrected}} במעלות",
+          "content": "שפר ל {{amuraCorrected}} במעלות",
           "visibleWhen": { "var": "amuraValid", "equals": "לא תקינה" }
         },
         {

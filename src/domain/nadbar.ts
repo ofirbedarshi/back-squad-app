@@ -33,12 +33,6 @@ function isOptionalEntityId(value: unknown): boolean {
   return value === undefined || (typeof value === 'string' && value.length > 0)
 }
 
-function isNadbarMessageUserVars(value: unknown): boolean {
-  if (value === undefined) return true
-  if (!value || typeof value !== 'object' || Array.isArray(value)) return false
-  return Object.values(value as Record<string, unknown>).every((entry) => typeof entry === 'string')
-}
-
 function normalizeMessageVars(vars: NadbarMessageUserVars | undefined): NadbarMessageUserVars | undefined {
   if (!vars) return undefined
   const next: NadbarMessageUserVars = {}
@@ -46,6 +40,52 @@ function normalizeMessageVars(vars: NadbarMessageUserVars | undefined): NadbarMe
     if (value !== '') next[key] = value
   }
   return Object.keys(next).length > 0 ? next : undefined
+}
+
+function normalizeBlockMessageVars(
+  blockMessageVars: NadbarMessageUserVars[] | undefined,
+  blockCount: number,
+): NadbarMessageUserVars[] | undefined {
+  if (!blockMessageVars) return undefined
+  const normalized = blockMessageVars
+    .slice(0, blockCount)
+    .map((vars) => normalizeMessageVars(vars) ?? {})
+  const hasAnyValues = normalized.some((vars) => Object.keys(vars).length > 0)
+  return hasAnyValues ? normalized : undefined
+}
+
+function isBlockMessageVarsEntry(value: unknown): boolean {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return false
+  return Object.values(value as Record<string, unknown>).every((entry) => typeof entry === 'string')
+}
+
+function isBlockMessageVars(
+  value: unknown,
+  blockCount: number,
+): value is NadbarMessageUserVars[] {
+  if (value === undefined) return true
+  if (!Array.isArray(value) || value.length !== blockCount) return false
+  return value.every(isBlockMessageVarsEntry)
+}
+
+export function getNadbarBlockMessageVars(nadbar: Nadbar, blockIndex: number): NadbarMessageUserVars {
+  return nadbar.blockMessageVars?.[blockIndex] ?? {}
+}
+
+export function updateNadbarBlockMessageVar(
+  nadbar: Nadbar,
+  blockIndex: number,
+  varName: string,
+  value: string,
+): Nadbar {
+  const blockCount = nadbar.messageBlocks.length
+  const current = nadbar.blockMessageVars ?? Array.from({ length: blockCount }, () => ({}))
+  const next = [...current]
+  while (next.length < blockCount) {
+    next.push({})
+  }
+  next[blockIndex] = { ...(next[blockIndex] ?? {}), [varName]: value }
+  return { ...nadbar, blockMessageVars: next }
 }
 
 function isNadbarLinks(value: unknown): boolean {
@@ -82,7 +122,10 @@ export function normalizeNadbar(nadbar: Nadbar): Nadbar {
   const pointerId = nadbar.links?.pointerId
   const targetId = nadbar.links?.targetId
   const positionId = nadbar.links?.positionId
-  const messageVars = normalizeMessageVars(nadbar.messageVars)
+  const blockMessageVars = normalizeBlockMessageVars(
+    nadbar.blockMessageVars,
+    nadbar.messageBlocks.length,
+  )
 
   const base: Nadbar = {
     id: nadbar.id,
@@ -90,7 +133,7 @@ export function normalizeNadbar(nadbar: Nadbar): Nadbar {
     updatedAt: nadbar.updatedAt,
     type: nadbar.type,
     messageBlocks: copyMessageBlocks(nadbar.messageBlocks),
-    ...(messageVars ? { messageVars } : {}),
+    ...(blockMessageVars ? { blockMessageVars } : {}),
   }
 
   if (!pointerId && !targetId && !positionId) {
@@ -321,6 +364,7 @@ export function createNadbarFromTemplate(type: NadbarType, template: NadbarTempl
     updatedAt: now,
     type,
     messageBlocks: copyMessageBlocks(template.blocks),
+    blockMessageVars: template.blocks.map(() => ({})),
   }
 }
 
@@ -331,8 +375,13 @@ export function isValidNadbar(value: unknown): value is Nadbar {
     record.messages !== undefined ||
     record.pointerId !== undefined ||
     record.targetId !== undefined ||
-    record.positionId !== undefined
+    record.positionId !== undefined ||
+    record.messageVars !== undefined
   ) {
+    return false
+  }
+  const messageBlocks = record.messageBlocks
+  if (!Array.isArray(messageBlocks) || messageBlocks.length === 0) {
     return false
   }
   return (
@@ -341,10 +390,8 @@ export function isValidNadbar(value: unknown): value is Nadbar {
     typeof record.updatedAt === 'string' &&
     typeof record.type === 'string' &&
     isNadbarType(record.type) &&
-    Array.isArray(record.messageBlocks) &&
-    record.messageBlocks.length > 0 &&
-    record.messageBlocks.every(isNadbarMessageBlock) &&
+    messageBlocks.every(isNadbarMessageBlock) &&
     isNadbarLinks(record.links) &&
-    isNadbarMessageUserVars(record.messageVars)
+    isBlockMessageVars(record.blockMessageVars, messageBlocks.length)
   )
 }
