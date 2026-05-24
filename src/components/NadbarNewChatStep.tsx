@@ -1,23 +1,23 @@
 import NadbarChatView from './NadbarChatView'
 import NadbarNewChatStepHeader from './NadbarNewChatStepHeader'
-import type { Nadbar, NadbarLinksUpdate, NadbarType, NadbarUserVarFields } from '../domain/nadbar.types'
+import type { Nadbar, NadbarBlockFooterAction, NadbarLinksUpdate, NadbarType } from '../domain/nadbar.types'
 
 interface NadbarNewChatStepProps {
   nadbarType: NadbarType
   draftNadbar: Nadbar
-  userVarFields?: NadbarUserVarFields
   onUserVarChange: (varName: string, value: string) => void
   onLinksChange: (links: NadbarLinksUpdate) => void
   onSave: () => void
+  onBlockFooterAction?: (action: NadbarBlockFooterAction) => void
 }
 
 function NadbarNewChatStep({
   nadbarType,
   draftNadbar,
-  userVarFields,
   onUserVarChange,
   onLinksChange,
   onSave,
+  onBlockFooterAction,
 }: NadbarNewChatStepProps) {
   return (
     <div dir="rtl" className="flex flex-col bg-neutral-50 min-h-full">
@@ -32,11 +32,12 @@ function NadbarNewChatStep({
 
       <div className="flex-1 overflow-y-auto">
         <NadbarChatView
+          nadbarType={nadbarType}
           messageBlocks={draftNadbar.messageBlocks}
           links={draftNadbar.links}
           messageVars={draftNadbar.messageVars}
-          userVarFields={userVarFields}
           onUserVarChange={onUserVarChange}
+          onBlockFooterAction={onBlockFooterAction}
         />
       </div>
     </div>

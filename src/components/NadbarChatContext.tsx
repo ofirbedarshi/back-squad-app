@@ -1,5 +1,9 @@
 import { createContext, useContext } from 'react'
-import type { NadbarMessageUserVars, NadbarUserVarFields } from '../domain/nadbar.types'
+import type {
+  NadbarBlockFooterAction,
+  NadbarMessageUserVars,
+  NadbarUserVarFields,
+} from '../domain/nadbar.types'
 import type { NadbarMessageResources } from '../utils/nadbarMessageFill.types'
 
 export interface NadbarChatContextValue {
@@ -7,6 +11,8 @@ export interface NadbarChatContextValue {
   userVarFields?: NadbarUserVarFields
   resources: NadbarMessageResources
   onUserVarChange: (varName: string, value: string) => void
+  blockFooterActions?: readonly (readonly NadbarBlockFooterAction[] | undefined)[]
+  onBlockFooterAction?: (action: NadbarBlockFooterAction) => void
 }
 
 const NadbarChatContext = createContext<NadbarChatContextValue | null>(null)

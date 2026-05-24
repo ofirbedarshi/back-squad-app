@@ -102,6 +102,34 @@ describe('parseNadbarTemplate', () => {
       /סוג קלט לא נתמך/,
     )
   })
+
+  it('parses block footerActions', () => {
+    const template = parseNadbarTemplate({
+      blocks: [
+        { messages: [{ source: 'They', content: 'א' }] },
+        {
+          footerActions: ['createTargetFromVars'],
+          messages: [{ source: 'They', content: 'ב' }],
+        },
+      ],
+    })
+    assert.deepEqual(template.blocks[1]?.footerActions, ['createTargetFromVars'])
+  })
+
+  it('rejects invalid block footerActions', () => {
+    assert.throws(
+      () =>
+        parseNadbarTemplate({
+          blocks: [
+            {
+              footerActions: ['unknownAction'],
+              messages: [{ source: 'They', content: 'x' }],
+            },
+          ],
+        }),
+      /לא תקינים|לא נתמכת/,
+    )
+  })
 })
 
 describe('createNadbarFromTemplate', () => {
@@ -135,6 +163,7 @@ describe('getNadbarTemplate', () => {
       tsepa: { input: 'numeric' },
       gamal: { input: 'numeric' },
     })
+    assert.deepEqual(template.blocks[1]?.footerActions, ['createTargetFromVars'])
   })
 })
 

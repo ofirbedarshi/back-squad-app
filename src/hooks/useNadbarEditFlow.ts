@@ -1,12 +1,12 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import type { Nadbar, NadbarLinksUpdate } from '../domain/nadbar.types'
 import { applyNadbarLinksToNadbarUseCase } from '../useCases/applyNadbarLinksToNadbar'
 import { assertNadbarSaveableUseCase } from '../useCases/assertNadbarSaveable'
 import { getNadbarByIdUseCase } from '../useCases/getNadbarById'
-import { getNadbarUserVarFieldsUseCase } from '../useCases/getNadbarUserVarFields'
 import { updateNadbarUseCase } from '../useCases/updateNadbar'
 import { useDomainError } from './useDomainError'
+import { useNadbarBlockFooterActionHandler } from './useNadbarBlockFooterActionHandler'
 import { useNotification } from './useNotification'
 
 export function useNadbarEditFlow(id: string | undefined) {
@@ -16,6 +16,9 @@ export function useNadbarEditFlow(id: string | undefined) {
   const [draftNadbar, setDraftNadbar] = useState<Nadbar | undefined>(() =>
     id ? getNadbarByIdUseCase(id) : undefined,
   )
+
+  const getMessageVars = useCallback(() => draftNadbar?.messageVars ?? {}, [draftNadbar])
+  const handleBlockFooterAction = useNadbarBlockFooterActionHandler(getMessageVars)
 
   useEffect(() => {
     if (!draftNadbar) {
@@ -57,9 +60,9 @@ export function useNadbarEditFlow(id: string | undefined) {
 
   return {
     draftNadbar,
-    userVarFields: draftNadbar ? getNadbarUserVarFieldsUseCase(draftNadbar.type) : undefined,
     setUserVar,
     updateDraftLinks,
     saveNadbar,
+    handleBlockFooterAction,
   }
 }

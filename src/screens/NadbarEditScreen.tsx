@@ -5,7 +5,8 @@ import { useNadbarEditFlow } from '../hooks/useNadbarEditFlow'
 
 function NadbarEditScreen() {
   const { id } = useParams<{ id: string }>()
-  const { draftNadbar, userVarFields, setUserVar, updateDraftLinks, saveNadbar } = useNadbarEditFlow(id)
+  const { draftNadbar, setUserVar, updateDraftLinks, saveNadbar, handleBlockFooterAction } =
+    useNadbarEditFlow(id)
 
   if (!draftNadbar) {
     return null
@@ -21,11 +22,12 @@ function NadbarEditScreen() {
 
       <div className="flex-1 overflow-y-auto">
         <NadbarChatView
+          nadbarType={draftNadbar.type}
           messageBlocks={draftNadbar.messageBlocks}
           links={draftNadbar.links}
           messageVars={draftNadbar.messageVars}
-          userVarFields={userVarFields}
           onUserVarChange={setUserVar}
+          onBlockFooterAction={handleBlockFooterAction}
         />
       </div>
     </div>

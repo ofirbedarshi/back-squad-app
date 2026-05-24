@@ -10,8 +10,11 @@ import {
   type NadbarLinksUpdate,
   type NadbarMessageUserVars,
   type NadbarTemplate,
+  type NadbarTemplateBlock,
   type NadbarType,
   type NadbarUserVarFields,
+  NADBAR_BLOCK_FOOTER_ACTIONS,
+  type NadbarBlockFooterAction,
 } from './nadbar.types'
 
 export function isNadbarType(value: string): value is NadbarType {
@@ -182,11 +185,45 @@ export function isNadbarUserVarNumeric(
   return userVarFields?.[varName]?.input === 'numeric'
 }
 
-function parseMessageBlocksFromRecord(record: Record<string, unknown>): NadbarMessageBlock[] {
+function isNadbarBlockFooterAction(value: unknown): value is NadbarBlockFooterAction {
+  return typeof value === 'string' && (NADBAR_BLOCK_FOOTER_ACTIONS as readonly string[]).includes(value)
+}
+
+function parseBlockFooterActions(value: unknown): NadbarBlockFooterAction[] | undefined {
+  if (value === undefined) return undefined
+  if (!Array.isArray(value) || value.length === 0) {
+    throw new Error('תבנית נדבר: footerActions לא תקין')
+  }
+  if (!value.every(isNadbarBlockFooterAction)) {
+    throw new Error('תבנית נדבר: פעולת בלוק לא נתמכת')
+  }
+  return value
+}
+
+function isNadbarTemplateBlock(value: unknown): value is NadbarTemplateBlock {
+  if (!value || typeof value !== 'object') return false
+  const record = value as Record<string, unknown>
+  if (!Array.isArray(record.messages) || record.messages.length === 0) {
+    return false
+  }
+  if (!record.messages.every(isNadbarMessage)) {
+    return false
+  }
+  if (record.footerActions !== undefined) {
+    try {
+      parseBlockFooterActions(record.footerActions)
+    } catch {
+      return false
+    }
+  }
+  return true
+}
+
+function parseMessageBlocksFromRecord(record: Record<string, unknown>): NadbarTemplateBlock[] {
   if (!Array.isArray(record.blocks) || record.blocks.length === 0) {
     throw new Error('תבנית נדבר חייבת לכלול בלוקים')
   }
-  if (!record.blocks.every(isNadbarMessageBlock)) {
+  if (!record.blocks.every(isNadbarTemplateBlock)) {
     throw new Error('תבנית נדבר מכילה בלוקים לא תקינים')
   }
   return record.blocks.map((block) => ({
@@ -194,6 +231,7 @@ function parseMessageBlocksFromRecord(record: Record<string, unknown>): NadbarMe
       source: message.source,
       content: message.content,
     })),
+    ...(block.footerActions ? { footerActions: [...block.footerActions] } : {}),
   }))
 }
 

@@ -1,25 +1,37 @@
 import { useMemo } from 'react'
 import { NadbarChatProvider } from './NadbarChatContext'
 import NadbarMessageBlockView from './NadbarMessageBlockView'
-import type { NadbarLinks, NadbarMessageBlock, NadbarMessageUserVars, NadbarUserVarFields } from '../domain/nadbar.types'
+import type {
+  NadbarBlockFooterAction,
+  NadbarLinks,
+  NadbarMessageBlock,
+  NadbarMessageUserVars,
+  NadbarType,
+} from '../domain/nadbar.types'
 import { useEntityLinkResources } from '../hooks/useEntityLinkResources'
+import { getNadbarBlockFooterActionsUseCase } from '../useCases/getNadbarBlockFooterActions'
+import { getNadbarUserVarFieldsUseCase } from '../useCases/getNadbarUserVarFields'
 
 interface NadbarChatViewProps {
+  nadbarType: NadbarType
   messageBlocks: NadbarMessageBlock[]
   links?: NadbarLinks
   messageVars?: NadbarMessageUserVars
-  userVarFields?: NadbarUserVarFields
   onUserVarChange: (varName: string, value: string) => void
+  onBlockFooterAction?: (action: NadbarBlockFooterAction) => void
 }
 
 function NadbarChatView({
+  nadbarType,
   messageBlocks,
   links,
   messageVars = {},
-  userVarFields,
   onUserVarChange,
+  onBlockFooterAction,
 }: NadbarChatViewProps) {
   const resources = useEntityLinkResources(links)
+  const userVarFields = useMemo(() => getNadbarUserVarFieldsUseCase(nadbarType), [nadbarType])
+  const blockFooterActions = useMemo(() => getNadbarBlockFooterActionsUseCase(nadbarType), [nadbarType])
 
   const chatContextValue = useMemo(
     () => ({
@@ -27,8 +39,10 @@ function NadbarChatView({
       userVarFields,
       resources,
       onUserVarChange,
+      blockFooterActions,
+      onBlockFooterAction,
     }),
-    [messageVars, userVarFields, resources, onUserVarChange],
+    [messageVars, userVarFields, resources, onUserVarChange, blockFooterActions, onBlockFooterAction],
   )
 
   return (

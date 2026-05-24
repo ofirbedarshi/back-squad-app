@@ -12,12 +12,12 @@ function NadbarNewScreen() {
     targetId,
     positionId,
     draftNadbar,
-    userVarFields,
     setUserVar,
     updateLinkIds,
     advanceFromLinksStep,
     saveDraftLinks,
     saveNadbar,
+    handleBlockFooterAction,
   } = useNadbarNewFlow()
 
   if (!nadbarType) {
@@ -52,10 +52,10 @@ function NadbarNewScreen() {
     <NadbarNewChatStep
       nadbarType={nadbarType}
       draftNadbar={draftNadbar}
-      userVarFields={userVarFields}
       onUserVarChange={setUserVar}
       onLinksChange={saveDraftLinks}
       onSave={saveNadbar}
+      onBlockFooterAction={handleBlockFooterAction}
     />
   )
 }

@@ -23,6 +23,16 @@ export interface NadbarMessageBlock {
   messages: NadbarMessage[]
 }
 
+/** Block-level footer actions declared in template JSON (not stored on saved nadbar). */
+export const NADBAR_BLOCK_FOOTER_ACTIONS = ['createTargetFromVars'] as const
+
+export type NadbarBlockFooterAction = (typeof NADBAR_BLOCK_FOOTER_ACTIONS)[number]
+
+/** Block shape in template JSON — may include UI actions beyond messages. */
+export interface NadbarTemplateBlock extends NadbarMessageBlock {
+  footerActions?: NadbarBlockFooterAction[]
+}
+
 /** Saved indicator (מציין), target, and position references */
 export type NadbarLinks = EntityLinkIds
 
@@ -49,7 +59,7 @@ export type NadbarUserVarFields = Record<string, NadbarUserVarFieldSpec>
 
 /** Template JSON shape — no id/timestamps */
 export interface NadbarTemplate {
-  blocks: NadbarMessageBlock[]
+  blocks: NadbarTemplateBlock[]
   userVarFields?: NadbarUserVarFields
 }
 

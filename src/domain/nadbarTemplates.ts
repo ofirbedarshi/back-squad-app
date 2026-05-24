@@ -17,6 +17,7 @@ export function getNadbarTemplate(type: NadbarType): NadbarTemplate {
   return {
     blocks: template.blocks.map((block) => ({
       messages: block.messages.map((message) => ({ ...message })),
+      ...(block.footerActions ? { footerActions: [...block.footerActions] } : {}),
     })),
     ...(template.userVarFields
       ? {

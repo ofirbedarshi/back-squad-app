@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { nadbarRequiresEntityLinks } from '../domain/nadbar'
 import type { Nadbar, NadbarLinksUpdate } from '../domain/nadbar.types'
@@ -6,8 +6,8 @@ import { addNadbarUseCase } from '../useCases/addNadbar'
 import { assertNadbarSaveableUseCase } from '../useCases/assertNadbarSaveable'
 import { applyNadbarLinksToNadbarUseCase } from '../useCases/applyNadbarLinksToNadbar'
 import { createNadbarFromTypeUseCase } from '../useCases/createNadbarFromType'
-import { getNadbarUserVarFieldsUseCase } from '../useCases/getNadbarUserVarFields'
 import { useDomainError } from './useDomainError'
+import { useNadbarBlockFooterActionHandler } from './useNadbarBlockFooterActionHandler'
 import { useNadbarTypeRouteParam } from './useNadbarTypeRouteParam'
 import { useNotification } from './useNotification'
 import type { NewNadbarStep } from './useNadbarNewFlow.types'
@@ -22,6 +22,9 @@ export function useNadbarNewFlow() {
   const [targetId, setTargetId] = useState<string | undefined>()
   const [positionId, setPositionId] = useState<string | undefined>()
   const [draftNadbar, setDraftNadbar] = useState<Nadbar | null>(null)
+
+  const getMessageVars = useCallback(() => draftNadbar?.messageVars ?? {}, [draftNadbar])
+  const handleBlockFooterAction = useNadbarBlockFooterActionHandler(getMessageVars)
 
   useEffect(() => {
     if (!nadbarType) return
@@ -102,7 +105,6 @@ export function useNadbarNewFlow() {
 
   return {
     nadbarType,
-    userVarFields: nadbarType ? getNadbarUserVarFieldsUseCase(nadbarType) : undefined,
     step,
     pointerId,
     targetId,
@@ -113,5 +115,6 @@ export function useNadbarNewFlow() {
     advanceFromLinksStep,
     saveDraftLinks,
     saveNadbar,
+    handleBlockFooterAction,
   }
 }

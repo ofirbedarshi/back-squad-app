@@ -26,6 +26,7 @@
       ]
     },
     {
+      "footerActions": ["createTargetFromVars"],
       "messages": [
         {
           "source": "They",
