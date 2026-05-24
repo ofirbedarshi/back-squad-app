@@ -7,6 +7,7 @@ import FireFeasibilityCoordsForm from '../components/FireFeasibilityCoordsForm'
 import FireFeasibilityResultsView from '../components/FireFeasibilityResultsView'
 import { useEntityLinkResources } from '../hooks/useEntityLinkResources'
 import { useFireFeasibilityFlow } from '../hooks/useFireFeasibilityFlow'
+import { getNextStepAfterForm } from '../hooks/useFireFeasibilityFlow.types'
 import { useUIError } from '../hooks/useUIError'
 
 function FireFeasibilityCoordsScreen() {
@@ -35,7 +36,10 @@ function FireFeasibilityCoordsScreen() {
 
   const handleCalculate = useCallback(() => {
     if (!position || !target) return
-    flow.calculate()
+    const result = flow.calculateResult()
+    if (!result) return
+    flow.setResults(result)
+    flow.setStep(getNextStepAfterForm())
   }, [position, target, flow])
 
   const handleUpdatePositionToTargetRange = useCallback((range: number | null) => {

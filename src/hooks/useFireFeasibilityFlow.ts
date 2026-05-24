@@ -7,7 +7,7 @@ import type {
   FireFeasibilityResults,
 } from '../domain/fireFeasibility.types'
 import type { EntityLinksUpdate } from '../domain/entityLinks.types'
-import { loadCloudHeight } from '../useCases/loadCloudHeight'
+import { calculateFireFeasibility } from '../useCases/calculateFireFeasibility'
 import { useDomainError } from './useDomainError'
 import type { FireFeasibilityStep } from './useFireFeasibilityFlow.types'
 
@@ -87,28 +87,29 @@ export function useFireFeasibilityFlow(mode: FireFeasibilityMode) {
     setStep('form')
   }
 
-  function calculate() {
-    const { heightMeters: cloudHeightMeters } = loadCloudHeight()
-    if (cloudHeightMeters === null) {
-      triggerError('יש להגדיר גובה עננים במסך הבית לפני חישוב')
-      return
+  function calculateResult(): FireFeasibilityResults | null {
+    try {
+      return calculateFireFeasibility()
+    } catch (error) {
+      triggerError(error instanceof Error ? error.message : 'חישוב נכשל')
+      return null
     }
-    setResults({ clouds: { enabled: false } })
-    setStep('results')
   }
 
   return {
     mode,
     step,
+    setStep,
     targetId,
     positionId,
     results,
+    setResults,
     coordsFormState,
     distancesHeightsFormState,
     updateCoordsForm,
     updateDistancesHeightsForm,
     updateLinks,
     advanceFromLinks,
-    calculate,
+    calculateResult,
   }
 }
