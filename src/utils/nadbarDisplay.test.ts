@@ -12,7 +12,7 @@ const baseNadbar: Nadbar = {
   createdAt: '2026-05-01T10:00:00.000Z',
   updatedAt: '2026-05-02T12:30:00.000Z',
   type: 'PointerTeam',
-  messages: [{ source: 'They', content: 'דווחו מצב' }],
+  messageBlocks: [{ messages: [{ source: 'They', content: 'דווחו מצב' }] }],
 }
 
 const targets: Target[] = [

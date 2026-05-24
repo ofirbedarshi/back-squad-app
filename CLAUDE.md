@@ -22,10 +22,10 @@ Until the project owner explicitly switches to a migration/legacy mode:
 - **Replace in place.** Update all call sites in the same change. Do not leave parallel old and new APIs.
 - **Do not add** deprecated props, `@deprecated` aliases, compatibility shims, feature flags for “old path”, dual-read/write storage, or “temporary” bridges “for later cleanup”.
 - **Do delete** dead code, unused props, and obsolete files when refactoring — do not comment them out “just in case”.
-- **Storage:** Prefer a single current shape. If a key or schema changes, migrate in place once; do not support reading both old and new formats unless the owner asks.
+- **Storage:** Single current shape only. When a key or schema changes, ship the new shape and update all readers/writers in the same change — **no** migration helpers, dual-read/write, or load-time conversion from old formats.
 - **Docs/comments:** Do not document removed flows as “legacy”; describe only current V1 behavior.
 
-**Only add backward compatibility** when the owner explicitly asks (e.g. “keep legacy”, “migration period”, “support old localStorage”).
+**Only add backward compatibility or data migration** when the owner explicitly asks (e.g. “keep legacy”, “migration period”, “support old localStorage”, “migrate existing data”).
 
 ## Architecture rules
 

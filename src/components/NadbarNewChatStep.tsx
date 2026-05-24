@@ -30,7 +30,7 @@ function NadbarNewChatStep({
 
       <div className="flex-1 overflow-y-auto">
         <NadbarChatView
-          messages={draftNadbar.messages}
+          messageBlocks={draftNadbar.messageBlocks}
           links={draftNadbar.links}
           messageVars={draftNadbar.messageVars}
           onUserVarChange={onUserVarChange}

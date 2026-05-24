@@ -14,6 +14,8 @@ const TEMPLATES_BY_TYPE: Record<NadbarType, NadbarTemplate> = {
 
 export function getNadbarTemplate(type: NadbarType): NadbarTemplate {
   return {
-    messages: TEMPLATES_BY_TYPE[type].messages.map((message) => ({ ...message })),
+    blocks: TEMPLATES_BY_TYPE[type].blocks.map((block) => ({
+      messages: block.messages.map((message) => ({ ...message })),
+    })),
   }
 }

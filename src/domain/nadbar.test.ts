@@ -12,6 +12,11 @@ import {
 } from './nadbar.ts'
 import { getNadbarTemplate } from './nadbarTemplates.ts'
 import { assertNadbarSaveableUseCase } from '../useCases/assertNadbarSaveable.ts'
+import type { NadbarMessage } from './nadbar.types.ts'
+
+function blocksFromMessages(messages: NadbarMessage[]) {
+  return { blocks: [{ messages }] }
+}
 
 describe('nadbarRequiresEntityLinks', () => {
   it('is false only for PointerTeamUpdated', () => {
@@ -24,17 +29,19 @@ describe('nadbarRequiresEntityLinks', () => {
 
 describe('assertNadbarSaveableUseCase', () => {
   it('allows PointerTeamUpdated without links', () => {
-    const nadbar = createNadbarFromTemplate('PointerTeamUpdated', {
-      messages: [{ source: 'Me', content: 'בדיקה' }],
-    })
+    const nadbar = createNadbarFromTemplate(
+      'PointerTeamUpdated',
+      blocksFromMessages([{ source: 'Me', content: 'בדיקה' }]),
+    )
     assert.equal(nadbar.links, undefined)
     assert.doesNotThrow(() => assertNadbarSaveableUseCase(nadbar))
   })
 
   it('requires links for other types', () => {
-    const nadbar = createNadbarFromTemplate('Katmam', {
-      messages: [{ source: 'Me', content: 'בדיקה' }],
-    })
+    const nadbar = createNadbarFromTemplate(
+      'Katmam',
+      blocksFromMessages([{ source: 'Me', content: 'בדיקה' }]),
+    )
     assert.throws(
       () => assertNadbarSaveableUseCase(nadbar),
       (error: unknown) =>
@@ -44,40 +51,45 @@ describe('assertNadbarSaveableUseCase', () => {
 })
 
 describe('parseNadbarTemplate', () => {
-  it('accepts valid template', () => {
+  it('accepts blocks array', () => {
     const template = parseNadbarTemplate({
-      messages: [
-        { source: 'They', content: 'שלום' },
-        { source: 'Me', content: 'היי' },
+      blocks: [
+        {
+          messages: [{ source: 'Me', content: 'א' }],
+        },
+        {
+          messages: [{ source: 'They', content: 'ב' }],
+        },
       ],
     })
-    assert.equal(template.messages.length, 2)
-    assert.equal(template.messages[0]?.source, 'They')
+    assert.equal(template.blocks.length, 2)
+    assert.equal(template.blocks[1]?.messages[0]?.source, 'They')
   })
 
-  it('rejects empty messages', () => {
-    assert.throws(() => parseNadbarTemplate({ messages: [] }), /הודעות/)
+  it('rejects empty template', () => {
+    assert.throws(() => parseNadbarTemplate({ blocks: [] }), /בלוקים/)
+    assert.throws(() => parseNadbarTemplate({ messages: [] }), /בלוקים/)
   })
 
-  it('rejects invalid source', () => {
+  it('rejects invalid source in block', () => {
     assert.throws(
       () =>
         parseNadbarTemplate({
-          messages: [{ source: 'Other', content: 'x' }],
+          blocks: [{ messages: [{ source: 'Other', content: 'x' }] }],
         }),
-      /לא תקינות/,
+      /לא תקינים/,
     )
   })
 })
 
 describe('createNadbarFromTemplate', () => {
-  it('creates nadbar with id, timestamps, and copied messages', () => {
-    const template = { messages: [{ source: 'Me' as const, content: 'בדיקה' }] }
+  it('creates nadbar with id, timestamps, and copied message blocks', () => {
+    const template = blocksFromMessages([{ source: 'Me' as const, content: 'בדיקה' }])
     const nadbar = createNadbarFromTemplate('Katmam', template)
     assert.ok(nadbar.id)
     assert.equal(nadbar.type, 'Katmam')
-    assert.equal(nadbar.messages[0]?.content, 'בדיקה')
-    assert.notEqual(nadbar.messages[0], template.messages[0])
+    assert.equal(nadbar.messageBlocks[0]?.messages[0]?.content, 'בדיקה')
+    assert.notEqual(nadbar.messageBlocks[0]?.messages[0], template.blocks[0]?.messages[0])
     assert.ok(isValidNadbar(nadbar))
   })
 })
@@ -86,17 +98,25 @@ describe('getNadbarTemplate', () => {
   it('returns template for each type', () => {
     for (const type of ['PointerTeam', 'PointerTeamUpdated', 'Katmam', 'TzurPointer'] as const) {
       const template = getNadbarTemplate(type)
-      assert.ok(template.messages.length > 0)
+      assert.ok(template.blocks.length > 0)
+      assert.ok(template.blocks[0]?.messages.length > 0)
     }
+  })
+
+  it('PointerTeamUpdated has one block with four messages', () => {
+    const template = getNadbarTemplate('PointerTeamUpdated')
+    assert.equal(template.blocks.length, 1)
+    assert.equal(template.blocks[0]?.messages.length, 4)
   })
 })
 
 describe('applyNadbarLinks', () => {
   it('sets pointer, target, and position ids and updates updatedAt', () => {
     const nadbar = {
-      ...createNadbarFromTemplate('Katmam', {
-        messages: [{ source: 'Me', content: 'בדיקה' }],
-      }),
+      ...createNadbarFromTemplate(
+        'Katmam',
+        blocksFromMessages([{ source: 'Me', content: 'בדיקה' }]),
+      ),
       updatedAt: '2020-01-01T00:00:00.000Z',
     }
     const updated = applyNadbarLinks(nadbar, {
@@ -111,9 +131,10 @@ describe('applyNadbarLinks', () => {
   })
 
   it('clears links when passed null', () => {
-    const nadbar = createNadbarFromTemplate('Katmam', {
-      messages: [{ source: 'Me', content: 'בדיקה' }],
-    })
+    const nadbar = createNadbarFromTemplate(
+      'Katmam',
+      blocksFromMessages([{ source: 'Me', content: 'בדיקה' }]),
+    )
     const withLinks = applyNadbarLinks(nadbar, {
       pointerId: 'pointer-1',
       targetId: 'target-1',
@@ -170,9 +191,10 @@ describe('hasCompleteNadbarLinks', () => {
 
 describe('isValidNadbar', () => {
   it('accepts optional pointer and target ids', () => {
-    const nadbar = createNadbarFromTemplate('Katmam', {
-      messages: [{ source: 'Me', content: 'בדיקה' }],
-    })
+    const nadbar = createNadbarFromTemplate(
+      'Katmam',
+      blocksFromMessages([{ source: 'Me', content: 'בדיקה' }]),
+    )
     const withLinks = applyNadbarLinks(nadbar, {
       pointerId: 'pointer-1',
       targetId: 'target-1',
@@ -193,10 +215,26 @@ describe('isValidNadbar', () => {
     )
   })
 
+  it('rejects saved shape with messages instead of messageBlocks', () => {
+    const nadbar = createNadbarFromTemplate(
+      'Katmam',
+      blocksFromMessages([{ source: 'Me', content: 'בדיקה' }]),
+    )
+    assert.equal(
+      isValidNadbar({
+        ...nadbar,
+        messageBlocks: undefined,
+        messages: [{ source: 'Me', content: 'בדיקה' }],
+      }),
+      false,
+    )
+  })
+
   it('rejects top-level link ids outside links', () => {
-    const nadbar = createNadbarFromTemplate('Katmam', {
-      messages: [{ source: 'Me', content: 'בדיקה' }],
-    })
+    const nadbar = createNadbarFromTemplate(
+      'Katmam',
+      blocksFromMessages([{ source: 'Me', content: 'בדיקה' }]),
+    )
     assert.equal(
       isValidNadbar({ ...nadbar, pointerId: 'pointer-1', targetId: 'target-1' }),
       false,

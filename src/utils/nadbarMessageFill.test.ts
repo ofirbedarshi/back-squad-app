@@ -155,6 +155,13 @@ describe('isNadbarUserVarEditableAt', () => {
     assert.equal(isNadbarUserVarEditableAt(pointerTeamUpdatedEchoMessages, 3, 'kutz'), false)
     assert.equal(isNadbarUserVarEditableAt(pointerTeamUpdatedEchoMessages, 3, 'gur'), false)
   })
+
+  it('resets first occurrence per block when using block-local messages', () => {
+    const blockA = [{ source: 'They' as const, content: '{{kutz}}' }]
+    const blockB = [{ source: 'Me' as const, content: '{{kutz}}' }]
+    assert.equal(isNadbarUserVarEditableAt(blockA, 0, 'kutz'), true)
+    assert.equal(isNadbarUserVarEditableAt(blockB, 0, 'kutz'), true)
+  })
 })
 
 describe('resolveResourceSegment', () => {

@@ -18,6 +18,11 @@ export interface NadbarMessage {
   content: string
 }
 
+/** One sub-conversation block inside a nadbar script */
+export interface NadbarMessageBlock {
+  messages: NadbarMessage[]
+}
+
 /** Saved indicator (מציין), target, and position references */
 export type NadbarLinks = EntityLinkIds
 
@@ -26,7 +31,7 @@ export interface Nadbar {
   createdAt: string
   updatedAt: string
   type: NadbarType
-  messages: NadbarMessage[]
+  messageBlocks: NadbarMessageBlock[]
   links?: NadbarLinks
   /** User-filled template fields in Me messages (var name → value) */
   messageVars?: NadbarMessageUserVars
@@ -34,7 +39,7 @@ export interface Nadbar {
 
 /** Template JSON shape — no id/timestamps */
 export interface NadbarTemplate {
-  messages: NadbarMessage[]
+  blocks: NadbarMessageBlock[]
 }
 
 /** Per-nadbar user-filled message field values (keyed by template var name) */

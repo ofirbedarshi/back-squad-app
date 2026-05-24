@@ -4,6 +4,7 @@ import {
   NADBAR_TYPES,
   type Nadbar,
   type NadbarMessage,
+  type NadbarMessageBlock,
   type NadbarMessageSource,
   type NadbarLinks,
   type NadbarLinksUpdate,
@@ -67,6 +68,12 @@ export function assertNadbarLinksForSave(links: NadbarLinks | undefined): void {
   }
 }
 
+function copyMessageBlocks(blocks: readonly NadbarMessageBlock[]): NadbarMessageBlock[] {
+  return blocks.map((block) => ({
+    messages: block.messages.map((message) => ({ ...message })),
+  }))
+}
+
 export function normalizeNadbar(nadbar: Nadbar): Nadbar {
   const pointerId = nadbar.links?.pointerId
   const targetId = nadbar.links?.targetId
@@ -78,7 +85,7 @@ export function normalizeNadbar(nadbar: Nadbar): Nadbar {
     createdAt: nadbar.createdAt,
     updatedAt: nadbar.updatedAt,
     type: nadbar.type,
-    messages: nadbar.messages,
+    messageBlocks: copyMessageBlocks(nadbar.messageBlocks),
     ...(messageVars ? { messageVars } : {}),
   }
 
@@ -132,23 +139,36 @@ function isNadbarMessage(value: unknown): value is NadbarMessage {
   return isNadbarMessageSource(record.source) && typeof record.content === 'string'
 }
 
+function isNadbarMessageBlock(value: unknown): value is NadbarMessageBlock {
+  if (!value || typeof value !== 'object') return false
+  const record = value as Record<string, unknown>
+  return (
+    Array.isArray(record.messages) &&
+    record.messages.length > 0 &&
+    record.messages.every(isNadbarMessage)
+  )
+}
+
+function parseMessageBlocksFromRecord(record: Record<string, unknown>): NadbarMessageBlock[] {
+  if (!Array.isArray(record.blocks) || record.blocks.length === 0) {
+    throw new Error('תבנית נדבר חייבת לכלול בלוקים')
+  }
+  if (!record.blocks.every(isNadbarMessageBlock)) {
+    throw new Error('תבנית נדבר מכילה בלוקים לא תקינים')
+  }
+  return record.blocks.map((block) => ({
+    messages: block.messages.map((message) => ({
+      source: message.source,
+      content: message.content,
+    })),
+  }))
+}
+
 export function parseNadbarTemplate(raw: unknown): NadbarTemplate {
   if (!raw || typeof raw !== 'object') {
     throw new Error('תבנית נדבר לא תקינה')
   }
-  const record = raw as Record<string, unknown>
-  if (!Array.isArray(record.messages) || record.messages.length === 0) {
-    throw new Error('תבנית נדבר חייבת לכלול הודעות')
-  }
-  if (!record.messages.every(isNadbarMessage)) {
-    throw new Error('תבנית נדבר מכילה הודעות לא תקינות')
-  }
-  return {
-    messages: record.messages.map((message) => ({
-      source: message.source,
-      content: message.content,
-    })),
-  }
+  return { blocks: parseMessageBlocksFromRecord(raw as Record<string, unknown>) }
 }
 
 export function applyNadbarLinks(nadbar: Nadbar, links: NadbarLinksUpdate): Nadbar {
@@ -175,22 +195,30 @@ export function createNadbarFromTemplate(type: NadbarType, template: NadbarTempl
     createdAt: now,
     updatedAt: now,
     type,
-    messages: template.messages.map((message) => ({ ...message })),
+    messageBlocks: copyMessageBlocks(template.blocks),
   }
 }
 
 export function isValidNadbar(value: unknown): value is Nadbar {
   if (!value || typeof value !== 'object') return false
   const record = value as Record<string, unknown>
+  if (
+    record.messages !== undefined ||
+    record.pointerId !== undefined ||
+    record.targetId !== undefined ||
+    record.positionId !== undefined
+  ) {
+    return false
+  }
   return (
     typeof record.id === 'string' &&
     typeof record.createdAt === 'string' &&
     typeof record.updatedAt === 'string' &&
     typeof record.type === 'string' &&
     isNadbarType(record.type) &&
-    Array.isArray(record.messages) &&
-    record.messages.length > 0 &&
-    record.messages.every(isNadbarMessage) &&
+    Array.isArray(record.messageBlocks) &&
+    record.messageBlocks.length > 0 &&
+    record.messageBlocks.every(isNadbarMessageBlock) &&
     isNadbarLinks(record.links) &&
     isNadbarMessageUserVars(record.messageVars)
   )

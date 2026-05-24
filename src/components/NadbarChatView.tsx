@@ -1,47 +1,38 @@
-import NadbarMeMessageBubble from './NadbarMeMessageBubble'
-import NadbarMessageBubble from './NadbarMessageBubble'
-import type { NadbarLinks, NadbarMessage, NadbarMessageUserVars } from '../domain/nadbar.types'
+import NadbarMessageBlockView from './NadbarMessageBlockView'
+import type { NadbarLinks, NadbarMessageBlock, NadbarMessageUserVars } from '../domain/nadbar.types'
 import { useEntityLinkResources } from '../hooks/useEntityLinkResources'
 
 interface NadbarChatViewProps {
-  messages: NadbarMessage[]
+  messageBlocks: NadbarMessageBlock[]
   links?: NadbarLinks
   messageVars?: NadbarMessageUserVars
   onUserVarChange: (varName: string, value: string) => void
 }
 
-function NadbarChatView({ messages, links, messageVars = {}, onUserVarChange }: NadbarChatViewProps) {
+function NadbarChatView({
+  messageBlocks,
+  links,
+  messageVars = {},
+  onUserVarChange,
+}: NadbarChatViewProps) {
   const resources = useEntityLinkResources(links)
 
   return (
     <div
-      className="flex flex-col gap-2 p-4 bg-[#e5ddd5] min-h-full"
+      className="flex flex-col gap-4 p-4 bg-[#e5ddd5] min-h-full"
       role="log"
       aria-label="שיחת נדבר"
     >
-      {messages.map((message, index) =>
-        message.source === 'Me' ? (
-          <NadbarMeMessageBubble
-            key={`${message.source}-${index}`}
-            message={message}
-            messages={messages}
-            messageIndex={index}
-            resources={resources}
-            messageVars={messageVars}
-            onUserVarChange={onUserVarChange}
-          />
-        ) : (
-          <NadbarMessageBubble
-            key={`${message.source}-${index}`}
-            message={message}
-            messages={messages}
-            messageIndex={index}
-            resources={resources}
-            messageVars={messageVars}
-            onUserVarChange={onUserVarChange}
-          />
-        ),
-      )}
+      {messageBlocks.map((block, blockIndex) => (
+        <NadbarMessageBlockView
+          key={`block-${blockIndex}`}
+          block={block}
+          blockIndex={blockIndex}
+          resources={resources}
+          messageVars={messageVars}
+          onUserVarChange={onUserVarChange}
+        />
+      ))}
     </div>
   )
 }
