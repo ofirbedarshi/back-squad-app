@@ -28,7 +28,7 @@ export function calculateTargetLiveMetrics(input: TargetLiveMetricsInput): Targe
   if (theta < 0) {
     theta += 2 * Math.PI
   }
-  const azimuth = (theta / (2 * Math.PI)) * 6400
+  const azimuth = (theta / (2 * Math.PI)) * 360
 
   return {
     azimuth,

@@ -16,4 +16,17 @@ describe('calculateTargetLiveMetrics', () => {
     assert.equal(result.range, 500)
     assert.equal(result.altitudeDiff, 100)
   })
+
+  it('azimuth is in degrees from north clockwise', () => {
+    const dueEast = calculateTargetLiveMetrics({
+      sourceEast: '0',
+      sourceNorth: '0',
+      sourceHeight: 0,
+      targetCoordinates: { east: '100', north: '0' },
+      targetHeight: 0,
+    })
+
+    assert.ok(dueEast)
+    assert.equal(dueEast.azimuth, 90)
+  })
 })

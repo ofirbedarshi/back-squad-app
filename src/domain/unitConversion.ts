@@ -1,4 +1,3 @@
-/** Matches azimuth convention used elsewhere (e.g. targetLiveMetrics). */
 const MILS_PER_FULL_CIRCLE = 6400
 
 const METERS_TO_FEET = 3.28083989501312

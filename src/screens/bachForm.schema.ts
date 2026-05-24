@@ -87,7 +87,14 @@ export const bachFormSchema: FormSchema = {
       computedMetric: 'azimuth',
       infoTooltipText: 'ערך מחושב אוטומטית לפי נ"צ וגובה העמדה האחורית והמטרה כששניהם נטענו. לא ניתן לעריכה ידנית.',
     },
-    { type: 'text', key: 'launchRange', label: 'טווח עמדת שיגור' },
+    {
+      type: 'text',
+      key: 'launchRange',
+      label: 'טווח עמדת שיגור',
+      computedFrom: 'positionToTarget',
+      computedMetric: 'range',
+      infoTooltipText: 'ערך מחושב אוטומטית כטווח בין העמדה האחורית למטרה לפי נ"צ וגובה של שניהם כששניהם נטענו. לא ניתן לעריכה ידנית.',
+    },
     { type: 'header', text: 'מאפייני משימה', bold: true },
     {
       type: 'toggle',
@@ -177,10 +184,8 @@ export const bachFormSchema: FormSchema = {
         markCode: 'indicatorKoz',
       },
     },
-    { type: 'row', fields: [
-      { type: 'text', key: 'indicatorName', label: 'שם מציין', lockedByRef: 'indicatorId', infoTooltipText: 'שדה זה מתמלא אוטומטית מהמציין הנטען ואינו ניתן לעריכה ידנית' },
-      { type: 'coords', key: 'indicatorPositionCoords', label: 'נ.צ. מציין', lockedByRef: 'indicatorId', infoTooltipText: 'שדה זה מתמלא אוטומטית מהמציין הנטען ואינו ניתן לעריכה ידנית' },
-    ]},
+    { type: 'text', key: 'indicatorName', label: 'שם מציין', lockedByRef: 'indicatorId', infoTooltipText: 'שדה זה מתמלא אוטומטית מהמציין הנטען ואינו ניתן לעריכה ידנית' },
+    { type: 'coords', key: 'indicatorPositionCoords', label: 'נ.צ. מציין', lockedByRef: 'indicatorId', infoTooltipText: 'שדה זה מתמלא אוטומטית מהמציין הנטען ואינו ניתן לעריכה ידנית' },
     { type: 'row', fields: [
       { type: 'text', key: 'indicatorAltitude', label: 'גובה', lockedByRef: 'indicatorId', infoTooltipText: 'שדה זה מתמלא אוטומטית מהמציין הנטען ואינו ניתן לעריכה ידנית' },
       { type: 'text', key: 'observationMeans', label: 'אמצעי תצפית' },
@@ -225,6 +230,15 @@ export const bachFormSchema: FormSchema = {
     { type: 'text', key: 'renewed', label: 'ירי נוסף – אישור מוכנות מחודש' },
     { type: 'time', key: 'readyTime', label: 'זמן בהיכון לירי' },
     { type: 'text', key: 'malfunctions', label: 'תקלות במהלך או לפני העבודה' },
+
+    { type: 'header', text: 'הערות', bold: true },
+    {
+      type: 'textarea',
+      key: 'comments',
+      label: 'הערות',
+      rows: 5,
+      placeholder: 'כתוב הערות...',
+    },
 
     { type: 'header', text: 'מקרא', bold: true },
     { type: 'note', text: "אלפא – פגע והשמיד, בראבו – פגע ולא השמיד, דלתא – הפוכה ב-ג', אקו – הפוכה לא ב-ג'" },
