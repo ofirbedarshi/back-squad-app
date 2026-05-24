@@ -31,7 +31,9 @@ import BachEditScreen from './screens/BachEditScreen'
 import MissChecklistListScreen from './screens/MissChecklistListScreen'
 import MissChecklistScreen from './screens/MissChecklistScreen'
 import MissChecklistEditScreen from './screens/MissChecklistEditScreen'
+import TargetAidListScreen from './screens/TargetAidListScreen'
 import TargetAidScreen from './screens/TargetAidScreen'
+import TargetAidEditScreen from './screens/TargetAidEditScreen'
 import RshatazimScreen from './screens/RshatazimScreen'
 import RshamatzRehevScreen from './screens/RshamatzRehevScreen'
 import RshamatzEshkolScreen from './screens/RshamatzEshkolScreen'
@@ -79,7 +81,9 @@ function AppRoutes() {
             <Route path="/others/miss-checklist" element={<MissChecklistListScreen />} />
             <Route path="/others/miss-checklist/new" element={<MissChecklistScreen />} />
             <Route path="/others/miss-checklist/:id/edit" element={<MissChecklistEditScreen />} />
-            <Route path="/others/target-aid" element={<TargetAidScreen />} />
+            <Route path="/others/target-aid" element={<TargetAidListScreen />} />
+            <Route path="/others/target-aid/new" element={<TargetAidScreen />} />
+            <Route path="/others/target-aid/:id/edit" element={<TargetAidEditScreen />} />
             <Route path="/others/rshatazim" element={<RshatazimScreen />} />
             <Route path="/others/rshatazim/rehev" element={<RshamatzRehevScreen />} />
             <Route path="/others/rshatazim/eshkol" element={<RshamatzEshkolScreen />} />
