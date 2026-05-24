@@ -11,6 +11,7 @@ import {
   type NadbarMessageUserVars,
   type NadbarTemplate,
   type NadbarType,
+  type NadbarUserVarFields,
 } from './nadbar.types'
 
 export function isNadbarType(value: string): value is NadbarType {
@@ -149,6 +150,38 @@ function isNadbarMessageBlock(value: unknown): value is NadbarMessageBlock {
   )
 }
 
+function parseUserVarFieldsFromRecord(record: Record<string, unknown>): NadbarUserVarFields | undefined {
+  if (record.userVarFields === undefined) return undefined
+  const raw = record.userVarFields
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) {
+    throw new Error('תבנית נדבר: userVarFields לא תקין')
+  }
+
+  const userVarFields: NadbarUserVarFields = {}
+  for (const [varName, spec] of Object.entries(raw as Record<string, unknown>)) {
+    if (!varName) {
+      throw new Error('תבנית נדבר: userVarFields לא תקין')
+    }
+    if (!spec || typeof spec !== 'object' || Array.isArray(spec)) {
+      throw new Error('תבנית נדבר: userVarFields לא תקין')
+    }
+    const input = (spec as Record<string, unknown>).input
+    if (input !== 'numeric') {
+      throw new Error('תבנית נדבר: סוג קלט לא נתמך')
+    }
+    userVarFields[varName] = { input: 'numeric' }
+  }
+
+  return Object.keys(userVarFields).length > 0 ? userVarFields : undefined
+}
+
+export function isNadbarUserVarNumeric(
+  userVarFields: NadbarUserVarFields | undefined,
+  varName: string,
+): boolean {
+  return userVarFields?.[varName]?.input === 'numeric'
+}
+
 function parseMessageBlocksFromRecord(record: Record<string, unknown>): NadbarMessageBlock[] {
   if (!Array.isArray(record.blocks) || record.blocks.length === 0) {
     throw new Error('תבנית נדבר חייבת לכלול בלוקים')
@@ -168,7 +201,10 @@ export function parseNadbarTemplate(raw: unknown): NadbarTemplate {
   if (!raw || typeof raw !== 'object') {
     throw new Error('תבנית נדבר לא תקינה')
   }
-  return { blocks: parseMessageBlocksFromRecord(raw as Record<string, unknown>) }
+  const record = raw as Record<string, unknown>
+  const blocks = parseMessageBlocksFromRecord(record)
+  const userVarFields = parseUserVarFieldsFromRecord(record)
+  return userVarFields ? { blocks, userVarFields } : { blocks }
 }
 
 export function applyNadbarLinks(nadbar: Nadbar, links: NadbarLinksUpdate): Nadbar {

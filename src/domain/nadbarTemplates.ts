@@ -13,9 +13,17 @@ const TEMPLATES_BY_TYPE: Record<NadbarType, NadbarTemplate> = {
 }
 
 export function getNadbarTemplate(type: NadbarType): NadbarTemplate {
+  const template = TEMPLATES_BY_TYPE[type]
   return {
-    blocks: TEMPLATES_BY_TYPE[type].blocks.map((block) => ({
+    blocks: template.blocks.map((block) => ({
       messages: block.messages.map((message) => ({ ...message })),
     })),
+    ...(template.userVarFields
+      ? {
+          userVarFields: Object.fromEntries(
+            Object.entries(template.userVarFields).map(([varName, spec]) => [varName, { ...spec }]),
+          ),
+        }
+      : {}),
   }
 }

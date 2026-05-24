@@ -5,7 +5,7 @@ import { useNadbarEditFlow } from '../hooks/useNadbarEditFlow'
 
 function NadbarEditScreen() {
   const { id } = useParams<{ id: string }>()
-  const { draftNadbar, setUserVar, updateDraftLinks, saveNadbar } = useNadbarEditFlow(id)
+  const { draftNadbar, userVarFields, setUserVar, updateDraftLinks, saveNadbar } = useNadbarEditFlow(id)
 
   if (!draftNadbar) {
     return null
@@ -24,6 +24,7 @@ function NadbarEditScreen() {
           messageBlocks={draftNadbar.messageBlocks}
           links={draftNadbar.links}
           messageVars={draftNadbar.messageVars}
+          userVarFields={userVarFields}
           onUserVarChange={setUserVar}
         />
       </div>

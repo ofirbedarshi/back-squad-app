@@ -37,9 +37,20 @@ export interface Nadbar {
   messageVars?: NadbarMessageUserVars
 }
 
+/** Supported input kinds for template user vars (`userVarFields` in template JSON). */
+export type NadbarUserVarInputKind = 'numeric'
+
+export interface NadbarUserVarFieldSpec {
+  input: NadbarUserVarInputKind
+}
+
+/** Per-var input rules declared in template JSON (not stored on saved nadbar). */
+export type NadbarUserVarFields = Record<string, NadbarUserVarFieldSpec>
+
 /** Template JSON shape — no id/timestamps */
 export interface NadbarTemplate {
   blocks: NadbarMessageBlock[]
+  userVarFields?: NadbarUserVarFields
 }
 
 /** Per-nadbar user-filled message field values (keyed by template var name) */

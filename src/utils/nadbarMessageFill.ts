@@ -5,7 +5,9 @@ import type {
   NadbarMessageSegment,
   NadbarResourceSegmentFill,
 } from './nadbarMessageFill.types'
-import { NADBAR_RESOURCE_LOAD_PROMPTS } from './nadbarMessageFill.types'
+import {
+  NADBAR_RESOURCE_LOAD_PROMPTS,
+} from './nadbarMessageFill.types'
 
 const TOKEN_RE = /\{\{([a-zA-Z0-9_.]+)\}\}/g
 
@@ -116,6 +118,10 @@ export function isNadbarUserVarEditableAt(
   varName: string,
 ): boolean {
   return buildUserVarFirstMessageIndex(messages).get(varName) === messageIndex
+}
+
+export function sanitizeNadbarNumericUserVarInput(value: string): string {
+  return value.replace(/\D/g, '')
 }
 
 export function fillNadbarMessageContent(

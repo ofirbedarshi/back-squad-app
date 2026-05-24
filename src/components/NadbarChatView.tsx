@@ -1,11 +1,12 @@
 import NadbarMessageBlockView from './NadbarMessageBlockView'
-import type { NadbarLinks, NadbarMessageBlock, NadbarMessageUserVars } from '../domain/nadbar.types'
+import type { NadbarLinks, NadbarMessageBlock, NadbarMessageUserVars, NadbarUserVarFields } from '../domain/nadbar.types'
 import { useEntityLinkResources } from '../hooks/useEntityLinkResources'
 
 interface NadbarChatViewProps {
   messageBlocks: NadbarMessageBlock[]
   links?: NadbarLinks
   messageVars?: NadbarMessageUserVars
+  userVarFields?: NadbarUserVarFields
   onUserVarChange: (varName: string, value: string) => void
 }
 
@@ -13,6 +14,7 @@ function NadbarChatView({
   messageBlocks,
   links,
   messageVars = {},
+  userVarFields,
   onUserVarChange,
 }: NadbarChatViewProps) {
   const resources = useEntityLinkResources(links)
@@ -30,6 +32,7 @@ function NadbarChatView({
           blockIndex={blockIndex}
           resources={resources}
           messageVars={messageVars}
+          userVarFields={userVarFields}
           onUserVarChange={onUserVarChange}
         />
       ))}

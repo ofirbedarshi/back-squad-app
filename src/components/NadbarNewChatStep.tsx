@@ -1,10 +1,11 @@
 import NadbarChatView from './NadbarChatView'
 import NadbarNewChatStepHeader from './NadbarNewChatStepHeader'
-import type { Nadbar, NadbarLinksUpdate, NadbarType } from '../domain/nadbar.types'
+import type { Nadbar, NadbarLinksUpdate, NadbarType, NadbarUserVarFields } from '../domain/nadbar.types'
 
 interface NadbarNewChatStepProps {
   nadbarType: NadbarType
   draftNadbar: Nadbar
+  userVarFields?: NadbarUserVarFields
   onUserVarChange: (varName: string, value: string) => void
   onLinksChange: (links: NadbarLinksUpdate) => void
   onSave: () => void
@@ -13,6 +14,7 @@ interface NadbarNewChatStepProps {
 function NadbarNewChatStep({
   nadbarType,
   draftNadbar,
+  userVarFields,
   onUserVarChange,
   onLinksChange,
   onSave,
@@ -33,6 +35,7 @@ function NadbarNewChatStep({
           messageBlocks={draftNadbar.messageBlocks}
           links={draftNadbar.links}
           messageVars={draftNadbar.messageVars}
+          userVarFields={userVarFields}
           onUserVarChange={onUserVarChange}
         />
       </div>

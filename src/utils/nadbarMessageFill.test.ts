@@ -10,6 +10,7 @@ import {
   isNadbarUserVarEditableAt,
   parseNadbarMessageSegments,
   resolveResourceSegment,
+  sanitizeNadbarNumericUserVarInput,
 } from './nadbarMessageFill'
 
 const indicator: Indicator = {
@@ -161,6 +162,14 @@ describe('isNadbarUserVarEditableAt', () => {
     const blockB = [{ source: 'Me' as const, content: '{{kutz}}' }]
     assert.equal(isNadbarUserVarEditableAt(blockA, 0, 'kutz'), true)
     assert.equal(isNadbarUserVarEditableAt(blockB, 0, 'kutz'), true)
+  })
+})
+
+describe('sanitizeNadbarNumericUserVarInput', () => {
+  it('keeps digits only', () => {
+    assert.equal(sanitizeNadbarNumericUserVarInput('123abc456'), '123456')
+    assert.equal(sanitizeNadbarNumericUserVarInput(''), '')
+    assert.equal(sanitizeNadbarNumericUserVarInput('12.34'), '1234')
   })
 })
 

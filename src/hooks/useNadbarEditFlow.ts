@@ -4,6 +4,7 @@ import type { Nadbar, NadbarLinksUpdate } from '../domain/nadbar.types'
 import { applyNadbarLinksToNadbarUseCase } from '../useCases/applyNadbarLinksToNadbar'
 import { assertNadbarSaveableUseCase } from '../useCases/assertNadbarSaveable'
 import { getNadbarByIdUseCase } from '../useCases/getNadbarById'
+import { getNadbarUserVarFieldsUseCase } from '../useCases/getNadbarUserVarFields'
 import { updateNadbarUseCase } from '../useCases/updateNadbar'
 import { useDomainError } from './useDomainError'
 import { useNotification } from './useNotification'
@@ -56,6 +57,7 @@ export function useNadbarEditFlow(id: string | undefined) {
 
   return {
     draftNadbar,
+    userVarFields: draftNadbar ? getNadbarUserVarFieldsUseCase(draftNadbar.type) : undefined,
     setUserVar,
     updateDraftLinks,
     saveNadbar,

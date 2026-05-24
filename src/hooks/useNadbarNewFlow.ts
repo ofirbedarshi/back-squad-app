@@ -6,6 +6,7 @@ import { addNadbarUseCase } from '../useCases/addNadbar'
 import { assertNadbarSaveableUseCase } from '../useCases/assertNadbarSaveable'
 import { applyNadbarLinksToNadbarUseCase } from '../useCases/applyNadbarLinksToNadbar'
 import { createNadbarFromTypeUseCase } from '../useCases/createNadbarFromType'
+import { getNadbarUserVarFieldsUseCase } from '../useCases/getNadbarUserVarFields'
 import { useDomainError } from './useDomainError'
 import { useNadbarTypeRouteParam } from './useNadbarTypeRouteParam'
 import { useNotification } from './useNotification'
@@ -101,6 +102,7 @@ export function useNadbarNewFlow() {
 
   return {
     nadbarType,
+    userVarFields: nadbarType ? getNadbarUserVarFieldsUseCase(nadbarType) : undefined,
     step,
     pointerId,
     targetId,

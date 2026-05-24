@@ -1,5 +1,5 @@
 import NadbarMessageSegmentContent from './NadbarMessageSegmentContent'
-import type { NadbarMessage, NadbarMessageUserVars } from '../domain/nadbar.types'
+import type { NadbarMessage, NadbarMessageUserVars, NadbarUserVarFields } from '../domain/nadbar.types'
 import type { NadbarMessageResources } from '../utils/nadbarMessageFill.types'
 
 interface NadbarMeMessageBubbleProps {
@@ -8,6 +8,7 @@ interface NadbarMeMessageBubbleProps {
   messageIndex: number
   resources: NadbarMessageResources
   messageVars: NadbarMessageUserVars
+  userVarFields?: NadbarUserVarFields
   onUserVarChange: (varName: string, value: string) => void
 }
 
@@ -17,6 +18,7 @@ function NadbarMeMessageBubble({
   messageIndex,
   resources,
   messageVars,
+  userVarFields,
   onUserVarChange,
 }: NadbarMeMessageBubbleProps) {
   return (
@@ -28,6 +30,7 @@ function NadbarMeMessageBubble({
           messageIndex={messageIndex}
           resources={resources}
           messageVars={messageVars}
+          userVarFields={userVarFields}
           onUserVarChange={onUserVarChange}
         />
       </div>

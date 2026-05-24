@@ -1,7 +1,7 @@
 import NadbarMeMessageBubble from './NadbarMeMessageBubble'
 import NadbarMessageBlockFrame from './NadbarMessageBlockFrame'
 import NadbarMessageBubble from './NadbarMessageBubble'
-import type { NadbarMessageBlock, NadbarMessageUserVars } from '../domain/nadbar.types'
+import type { NadbarMessageBlock, NadbarMessageUserVars, NadbarUserVarFields } from '../domain/nadbar.types'
 import type { NadbarMessageResources } from '../utils/nadbarMessageFill.types'
 
 interface NadbarMessageBlockViewProps {
@@ -9,6 +9,7 @@ interface NadbarMessageBlockViewProps {
   blockIndex: number
   resources: NadbarMessageResources
   messageVars: NadbarMessageUserVars
+  userVarFields?: NadbarUserVarFields
   onUserVarChange: (varName: string, value: string) => void
 }
 
@@ -17,6 +18,7 @@ function NadbarMessageBlockView({
   blockIndex,
   resources,
   messageVars,
+  userVarFields,
   onUserVarChange,
 }: NadbarMessageBlockViewProps) {
   return (
@@ -30,6 +32,7 @@ function NadbarMessageBlockView({
             messageIndex={messageIndex}
             resources={resources}
             messageVars={messageVars}
+            userVarFields={userVarFields}
             onUserVarChange={onUserVarChange}
           />
         ) : (
@@ -40,6 +43,7 @@ function NadbarMessageBlockView({
             messageIndex={messageIndex}
             resources={resources}
             messageVars={messageVars}
+            userVarFields={userVarFields}
             onUserVarChange={onUserVarChange}
           />
         ),

@@ -1,9 +1,10 @@
 import { useMemo } from 'react'
-import type { NadbarMessage, NadbarMessageUserVars } from '../domain/nadbar.types'
+import type { NadbarMessage, NadbarMessageUserVars, NadbarUserVarFields } from '../domain/nadbar.types'
 import {
   buildUserVarFirstMessageIndex,
   parseNadbarMessageSegments,
   resolveResourceSegment,
+  sanitizeNadbarNumericUserVarInput,
 } from '../utils/nadbarMessageFill'
 import type { NadbarMessageResources } from '../utils/nadbarMessageFill.types'
 
@@ -19,6 +20,7 @@ interface NadbarMessageSegmentContentProps {
   messageIndex: number
   resources: NadbarMessageResources
   messageVars: NadbarMessageUserVars
+  userVarFields?: NadbarUserVarFields
   onUserVarChange: (varName: string, value: string) => void
 }
 
@@ -28,6 +30,7 @@ function NadbarMessageSegmentContent({
   messageIndex,
   resources,
   messageVars,
+  userVarFields,
   onUserVarChange,
 }: NadbarMessageSegmentContentProps) {
   const segments = parseNadbarMessageSegments(content)
@@ -85,12 +88,21 @@ function NadbarMessageSegmentContent({
           )
         }
 
+        const numeric = userVarFields?.[segment.varName]?.input === 'numeric'
+
         return (
           <input
             key={index}
             type="text"
+            inputMode={numeric ? 'numeric' : undefined}
+            pattern={numeric ? '[0-9]*' : undefined}
             value={value}
-            onChange={(event) => onUserVarChange(segment.varName, event.target.value)}
+            onChange={(event) => {
+              const next = numeric
+                ? sanitizeNadbarNumericUserVarInput(event.target.value)
+                : event.target.value
+              onUserVarChange(segment.varName, next)
+            }}
             className={INLINE_INPUT_CLASS}
             aria-label={segment.varName}
           />

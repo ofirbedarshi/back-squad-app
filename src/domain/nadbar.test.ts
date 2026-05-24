@@ -5,6 +5,7 @@ import {
   assertNadbarLinksForSave,
   createNadbarFromTemplate,
   hasCompleteNadbarLinks,
+  isNadbarUserVarNumeric,
   isValidNadbar,
   nadbarRequiresEntityLinks,
   NADBAR_SAVE_LINKS_REQUIRED_MESSAGE,
@@ -80,6 +81,27 @@ describe('parseNadbarTemplate', () => {
       /לא תקינים/,
     )
   })
+
+  it('parses userVarFields with numeric input', () => {
+    const template = parseNadbarTemplate({
+      userVarFields: {
+        meraom: { input: 'numeric' },
+      },
+      blocks: [{ messages: [{ source: 'They', content: '{{meraom}}' }] }],
+    })
+    assert.deepEqual(template.userVarFields, { meraom: { input: 'numeric' } })
+  })
+
+  it('rejects invalid userVarFields', () => {
+    assert.throws(
+      () =>
+        parseNadbarTemplate({
+          userVarFields: { meraom: { input: 'text' } },
+          blocks: [{ messages: [{ source: 'They', content: 'x' }] }],
+        }),
+      /סוג קלט לא נתמך/,
+    )
+  })
 })
 
 describe('createNadbarFromTemplate', () => {
@@ -103,10 +125,29 @@ describe('getNadbarTemplate', () => {
     }
   })
 
-  it('PointerTeamUpdated has one block with four messages', () => {
+  it('PointerTeamUpdated has two blocks', () => {
     const template = getNadbarTemplate('PointerTeamUpdated')
-    assert.equal(template.blocks.length, 1)
+    assert.equal(template.blocks.length, 2)
     assert.equal(template.blocks[0]?.messages.length, 4)
+    assert.equal(template.blocks[1]?.messages.length, 6)
+    assert.deepEqual(template.userVarFields, {
+      meraom: { input: 'numeric' },
+      tsepa: { input: 'numeric' },
+      gamal: { input: 'numeric' },
+    })
+  })
+})
+
+describe('isNadbarUserVarNumeric', () => {
+  it('is true only when template declares numeric input', () => {
+    const fields = {
+      meraom: { input: 'numeric' as const },
+      metara: { input: 'numeric' as const },
+    }
+    assert.equal(isNadbarUserVarNumeric(fields, 'meraom'), true)
+    assert.equal(isNadbarUserVarNumeric(fields, 'metara'), true)
+    assert.equal(isNadbarUserVarNumeric(fields, 'kutz'), false)
+    assert.equal(isNadbarUserVarNumeric(undefined, 'meraom'), false)
   })
 })
 

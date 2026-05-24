@@ -1,4 +1,9 @@
 {
+  "userVarFields": {
+    "meraom": { "input": "numeric" },
+    "tsepa": { "input": "numeric" },
+    "gamal": { "input": "numeric" }
+  },
   "blocks": [
     {
       "messages": [
@@ -17,6 +22,34 @@
         {
           "source": "Me",
           "content": "קיבלתי קוץ {{kutz}} כמו כן גור {{gur}} מעל פני הים"
+        }
+      ]
+    },
+    {
+      "messages": [
+        {
+          "source": "They",
+          "content": "קבל מטרה {{metara}}, מרעום {{meraom}}"
+        },
+        {
+          "source": "Me",
+          "content": "קיבלתי מטרה {{metara}}, מרעום {{meraom}}"
+        },
+        {
+          "source": "They",
+          "content": "קבל צפע {{tsepa}}"
+        },
+        {
+          "source": "Me",
+          "content": "קיבלתי צפע {{tsepa}}"
+        },
+        {
+          "source": "They",
+          "content": "קבל גמל {{gamal}}"
+        },
+        {
+          "source": "Me",
+          "content": "קיבלתי גמל {{gamal}}"
         }
       ]
     }
