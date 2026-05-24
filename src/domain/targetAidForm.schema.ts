@@ -154,7 +154,7 @@ export const targetAidFormSchema: FormSchema = {
       type: 'toggle',
       key: 'directionality',
       label: 'כיווניות',
-      options: ['ימין', 'שמאל'],
+      options: ['מימין', 'משמאל'],
       required: false,
     },
     {

@@ -52,8 +52,8 @@ function RshamatzRehevScreen() {
   }
 
   return (
-    <div dir="rtl" className="flex flex-col h-full overflow-y-auto">
-      <header className="py-4 px-4 flex items-center justify-between border-b border-neutral-200 text-neutral-800 shrink-0">
+    <div dir="rtl" className="flex flex-col h-full">
+      <header className="sticky top-0 z-10 bg-white py-4 px-4 flex items-center justify-between border-b border-neutral-200 text-neutral-800 shrink-0">
         <span className="w-[4.5rem]" aria-hidden />
         <span className="flex-1 text-center font-bold text-lg">רשמ"צ רכב</span>
         <button
@@ -65,7 +65,7 @@ function RshamatzRehevScreen() {
         </button>
       </header>
 
-      <div className="flex flex-col gap-6 p-4 pb-8">
+      <div className="flex-1 overflow-y-auto flex flex-col gap-6 p-4 pb-8">
         {RSHAMATZ_REHEV_CHECKLIST_SECTIONS.map((section) => (
           <RshamatzChecklistSection
             key={section.id}
