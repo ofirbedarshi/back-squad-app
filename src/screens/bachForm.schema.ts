@@ -110,7 +110,7 @@ export const bachFormSchema: FormSchema = {
       options: ['כן', 'לא'],
       conditions: {
         'כן': [
-          { type: 'toggle', key: 'arcTrackDirection', label: 'כיוון קשת', options: ['ימין', 'שמאל'] },
+          { type: 'toggle', key: 'arcTrackDirection', label: 'כיוון קשת', options: ['מימין', 'משמאל'] },
         ]
       },
     },
@@ -133,19 +133,15 @@ export const bachFormSchema: FormSchema = {
       options: ['כן', 'לא'],
       conditions: {
         כן: [
+          { type: 'header', text: 'הגבהה', bold: false },
           { type: 'row', fields: [
-            {
-              type: 'toggle',
-              key: 'elevation',
-              label: 'הגבהה ',
-              options: ['מחשב', 'בוצע'],
-            },
-            {
-              type: 'toggle',
-              key: 'sizeup',
-              label: 'צידוד ',
-              options: ['מחשב', 'בוצע'],
-            },
+            { type: 'number', key: 'elevationComputer', label: 'מחשב' },
+            { type: 'number', key: 'elevationPerformed', label: 'בוצע' },
+          ]},
+          { type: 'header', text: 'צידוד', bold: false },
+          { type: 'row', fields: [
+            { type: 'number', key: 'sizeupComputer', label: 'מחשב' },
+            { type: 'number', key: 'sizeupPerformed', label: 'בוצע' },
           ]},
         ],
       },
@@ -188,7 +184,6 @@ export const bachFormSchema: FormSchema = {
     { type: 'coords', key: 'indicatorPositionCoords', label: 'נ.צ. מציין', lockedByRef: 'indicatorId', infoTooltipText: 'שדה זה מתמלא אוטומטית מהמציין הנטען ואינו ניתן לעריכה ידנית' },
     { type: 'row', fields: [
       { type: 'text', key: 'indicatorAltitude', label: 'גובה', lockedByRef: 'indicatorId', infoTooltipText: 'שדה זה מתמלא אוטומטית מהמציין הנטען ואינו ניתן לעריכה ידנית' },
-      { type: 'text', key: 'observationMeans', label: 'אמצעי תצפית' },
       { type: 'text', key: 'indicatorMeans', label: 'אמצעי מציין', lockedByRef: 'indicatorId', infoTooltipText: 'שדה זה מתמלא אוטומטית מהמציין הנטען ואינו ניתן לעריכה ידנית' },
     ]},
     { type: 'row', fields: [
@@ -211,6 +206,7 @@ export const bachFormSchema: FormSchema = {
       },
     ]},
     { type: 'row', fields: [
+      { type: 'text', key: 'observationMeans', label: 'אמצעי תצפית' },
       { type: 'text', key: 'indicatorWind', label: 'רוח' },
       { type: 'text', key: 'indicatorClouds', label: 'עננות' },
     ]},

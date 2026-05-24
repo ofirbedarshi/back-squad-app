@@ -14,6 +14,7 @@ import PositionToTargetComputedTextField from './PositionToTargetComputedTextFie
 import type { ComputedTextFieldDef } from './computedTextField.types'
 import type { CoordinateValue, FormFieldDef, FormValues, RowableField, ToggleWithConditionsField } from '../../domain/dynamicForm.types'
 import ToggleWithConditionsRenderer from './ToggleWithConditionsRenderer'
+import { AZIMUTH_DEGREE_MAX, AZIMUTH_DEGREE_MIN } from '../../domain/azimuthDegree'
 import { makeFieldValidator } from '../../domain/dynamicFormValidation'
 
 interface DynamicFormFieldProps {
@@ -148,14 +149,22 @@ function DynamicFormField({
     const validate = field.lockedByRef
       ? undefined
       : makeFieldValidator(field, getValues, parentByKey)
+    const isAzimuthDegree = field.valueKind === 'azimuthDegree'
     return (
       <FormField label={field.label} error={errorMessage} infoTooltipText={field.infoTooltipText}>
         <Input
-          type="text"
+          type={isAzimuthDegree ? 'number' : 'text'}
+          inputMode={isAzimuthDegree ? 'decimal' : undefined}
+          min={isAzimuthDegree ? AZIMUTH_DEGREE_MIN : undefined}
+          max={isAzimuthDegree ? AZIMUTH_DEGREE_MAX : undefined}
+          step={isAzimuthDegree ? 0.1 : undefined}
           placeholder={field.placeholder}
           hasError={!!error}
           disabled={isLocked}
-          {...register(field.key, { validate })}
+          {...register(
+            field.key,
+            isAzimuthDegree ? { validate, valueAsNumber: true } : { validate },
+          )}
         />
       </FormField>
     )
