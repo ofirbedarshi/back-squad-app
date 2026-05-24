@@ -72,3 +72,9 @@ export interface NadbarLinksUpdate {
   targetId?: string | null
   positionId?: string | null
 }
+
+/** Chat UI config resolved from template JSON (not stored on saved nadbar). */
+export interface NadbarChatTemplateConfig {
+  userVarFields?: NadbarUserVarFields
+  blockFooterActions: readonly (readonly NadbarBlockFooterAction[] | undefined)[]
+}

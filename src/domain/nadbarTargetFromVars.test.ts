@@ -1,8 +1,11 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
-import { buildTargetInputFromPointerTeamUpdatedVars, validateTargetInput } from './target.ts'
+import {
+  buildTargetInputFromNadbarMessageVars,
+  validateNadbarTargetFromVarsInput,
+} from './nadbarTargetFromVars.ts'
 
-describe('validateTargetInput', () => {
+describe('validateNadbarTargetFromVarsInput', () => {
   const validInput = {
     targetName: 'מטרה 1',
     coordinates: { east: '123456', north: '3123456', palach: '36' },
@@ -10,12 +13,12 @@ describe('validateTargetInput', () => {
   }
 
   it('accepts valid input', () => {
-    assert.doesNotThrow(() => validateTargetInput(validInput))
+    assert.doesNotThrow(() => validateNadbarTargetFromVarsInput(validInput))
   })
 
   it('rejects empty target name', () => {
     assert.throws(
-      () => validateTargetInput({ ...validInput, targetName: '  ' }),
+      () => validateNadbarTargetFromVarsInput({ ...validInput, targetName: '  ' }),
       /שם מטרה: שדה חובה/,
     )
   })
@@ -23,7 +26,7 @@ describe('validateTargetInput', () => {
   it('rejects invalid east coordinate', () => {
     assert.throws(
       () =>
-        validateTargetInput({
+        validateNadbarTargetFromVarsInput({
           ...validInput,
           coordinates: { ...validInput.coordinates, east: '12345' },
         }),
@@ -34,7 +37,7 @@ describe('validateTargetInput', () => {
   it('rejects invalid north coordinate', () => {
     assert.throws(
       () =>
-        validateTargetInput({
+        validateNadbarTargetFromVarsInput({
           ...validInput,
           coordinates: { ...validInput.coordinates, north: '312345' },
         }),
@@ -44,22 +47,22 @@ describe('validateTargetInput', () => {
 
   it('rejects missing altitude', () => {
     assert.throws(
-      () => validateTargetInput({ ...validInput, altitude: undefined }),
+      () => validateNadbarTargetFromVarsInput({ ...validInput, altitude: undefined }),
       /גובה: שדה חובה/,
     )
   })
 
   it('rejects non-finite altitude', () => {
     assert.throws(
-      () => validateTargetInput({ ...validInput, altitude: Number.NaN }),
+      () => validateNadbarTargetFromVarsInput({ ...validInput, altitude: Number.NaN }),
       /גובה: שדה חובה/,
     )
   })
 })
 
-describe('buildTargetInputFromPointerTeamUpdatedVars', () => {
+describe('buildTargetInputFromNadbarMessageVars', () => {
   it('maps nadbar vars to target input with default palach', () => {
-    const input = buildTargetInputFromPointerTeamUpdatedVars({
+    const input = buildTargetInputFromNadbarMessageVars({
       metara: 'מטרה א',
       meraom: '654321',
       tsepa: '3765432',
@@ -76,7 +79,7 @@ describe('buildTargetInputFromPointerTeamUpdatedVars', () => {
   it('throws when gamal is missing', () => {
     assert.throws(
       () =>
-        buildTargetInputFromPointerTeamUpdatedVars({
+        buildTargetInputFromNadbarMessageVars({
           metara: 'מטרה א',
           meraom: '654321',
           tsepa: '3765432',
@@ -88,7 +91,7 @@ describe('buildTargetInputFromPointerTeamUpdatedVars', () => {
   it('throws when gamal is not a number', () => {
     assert.throws(
       () =>
-        buildTargetInputFromPointerTeamUpdatedVars({
+        buildTargetInputFromNadbarMessageVars({
           metara: 'מטרה א',
           meraom: '654321',
           tsepa: '3765432',

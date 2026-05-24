@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import type { NadbarBlockFooterAction, NadbarMessageUserVars } from '../domain/nadbar.types'
-import { createTargetFromPointerTeamUpdatedVarsUseCase } from '../useCases/createTargetFromPointerTeamUpdatedVars'
+import { createTargetFromNadbarVarsUseCase } from '../useCases/createTargetFromNadbarVars'
 import { useDomainError } from './useDomainError'
 import { useNotification } from './useNotification'
 
@@ -15,7 +15,7 @@ export function useNadbarBlockFooterActionHandler(getMessageVars: () => NadbarMe
           const messageVars = getMessageVars()
           if (!messageVars) return
           try {
-            createTargetFromPointerTeamUpdatedVarsUseCase(messageVars)
+            createTargetFromNadbarVarsUseCase(messageVars)
             notifySuccess('המטרה נוספה בהצלחה')
           } catch (error) {
             triggerError(error instanceof Error ? error.message : 'יצירת המטרה נכשלה')

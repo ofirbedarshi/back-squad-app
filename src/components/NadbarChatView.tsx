@@ -9,8 +9,7 @@ import type {
   NadbarType,
 } from '../domain/nadbar.types'
 import { useEntityLinkResources } from '../hooks/useEntityLinkResources'
-import { getNadbarBlockFooterActionsUseCase } from '../useCases/getNadbarBlockFooterActions'
-import { getNadbarUserVarFieldsUseCase } from '../useCases/getNadbarUserVarFields'
+import { getNadbarChatTemplateUseCase } from '../useCases/getNadbarChatTemplate'
 
 interface NadbarChatViewProps {
   nadbarType: NadbarType
@@ -30,19 +29,18 @@ function NadbarChatView({
   onBlockFooterAction,
 }: NadbarChatViewProps) {
   const resources = useEntityLinkResources(links)
-  const userVarFields = useMemo(() => getNadbarUserVarFieldsUseCase(nadbarType), [nadbarType])
-  const blockFooterActions = useMemo(() => getNadbarBlockFooterActionsUseCase(nadbarType), [nadbarType])
+  const chatTemplate = useMemo(() => getNadbarChatTemplateUseCase(nadbarType), [nadbarType])
 
   const chatContextValue = useMemo(
     () => ({
       messageVars,
-      userVarFields,
+      userVarFields: chatTemplate.userVarFields,
       resources,
       onUserVarChange,
-      blockFooterActions,
+      blockFooterActions: chatTemplate.blockFooterActions,
       onBlockFooterAction,
     }),
-    [messageVars, userVarFields, resources, onUserVarChange, blockFooterActions, onBlockFooterAction],
+    [messageVars, chatTemplate, resources, onUserVarChange, onBlockFooterAction],
   )
 
   return (

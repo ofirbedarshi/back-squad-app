@@ -1,6 +1,6 @@
+import NadbarBlockFooterActions from './NadbarBlockFooterActions'
 import NadbarMeMessageBubble from './NadbarMeMessageBubble'
 import NadbarMessageBlockFrame from './NadbarMessageBlockFrame'
-import NadbarMessageBlockFooter from './NadbarMessageBlockFooter'
 import NadbarMessageBubble from './NadbarMessageBubble'
 import type { NadbarMessageBlock } from '../domain/nadbar.types'
 
@@ -29,7 +29,7 @@ function NadbarMessageBlockView({ block, blockIndex }: NadbarMessageBlockViewPro
           />
         ),
       )}
-      <NadbarMessageBlockFooter blockIndex={blockIndex} />
+      <NadbarBlockFooterActions blockIndex={blockIndex} />
     </NadbarMessageBlockFrame>
   )
 }

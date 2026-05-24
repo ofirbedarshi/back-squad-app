@@ -1,12 +1,18 @@
 import NadbarCreateTargetFromVarsButton from './NadbarCreateTargetFromVarsButton'
-import type { NadbarBlockFooterAction } from '../domain/nadbar.types'
+import { useNadbarChatContext } from './NadbarChatContext'
 
 interface NadbarBlockFooterActionsProps {
-  actions: readonly NadbarBlockFooterAction[]
-  onAction: (action: NadbarBlockFooterAction) => void
+  blockIndex: number
 }
 
-function NadbarBlockFooterActions({ actions, onAction }: NadbarBlockFooterActionsProps) {
+function NadbarBlockFooterActions({ blockIndex }: NadbarBlockFooterActionsProps) {
+  const { blockFooterActions, onBlockFooterAction } = useNadbarChatContext()
+  const actions = blockFooterActions?.[blockIndex]
+
+  if (!actions?.length || !onBlockFooterAction) {
+    return null
+  }
+
   return (
     <div className="flex flex-col gap-2 pt-1">
       {actions.map((action) => {
@@ -15,7 +21,7 @@ function NadbarBlockFooterActions({ actions, onAction }: NadbarBlockFooterAction
             return (
               <NadbarCreateTargetFromVarsButton
                 key={action}
-                onClick={() => onAction(action)}
+                onClick={() => onBlockFooterAction(action)}
               />
             )
           default:
