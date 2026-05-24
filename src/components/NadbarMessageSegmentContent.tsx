@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import { useNadbarChatContext } from './NadbarChatContext'
+import NadbarUserVarChoiceInput from './NadbarUserVarChoiceInput'
 import type { NadbarMessage } from '../domain/nadbar.types'
 import {
   buildUserVarFirstMessageIndex,
@@ -82,6 +83,20 @@ function NadbarMessageSegmentContent({
         }
 
         const numeric = userVarFields?.[segment.varName]?.input === 'numeric'
+        const choiceSpec = userVarFields?.[segment.varName]
+        const isChoice = choiceSpec?.input === 'choice'
+
+        if (isChoice && choiceSpec.options) {
+          return (
+            <NadbarUserVarChoiceInput
+              key={index}
+              options={choiceSpec.options}
+              value={value}
+              onChange={(next) => onUserVarChange(segment.varName, next)}
+              ariaLabel={segment.varName}
+            />
+          )
+        }
 
         return (
           <input

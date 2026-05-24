@@ -137,10 +137,29 @@ function mergeNadbarLinks(current: NadbarLinks | undefined, update: NadbarLinksU
   return next.pointerId || next.targetId || next.positionId ? next : undefined
 }
 
+function isNadbarMessageVisibleWhen(value: unknown): value is NadbarMessage['visibleWhen'] {
+  if (value === undefined) return true
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return false
+  const record = value as Record<string, unknown>
+  return typeof record.var === 'string' && record.var.length > 0 && typeof record.equals === 'string'
+}
+
+function parseMessageVisibleWhen(value: unknown): NadbarMessage['visibleWhen'] {
+  if (value === undefined) return undefined
+  if (!isNadbarMessageVisibleWhen(value)) {
+    throw new Error('תבנית נדבר: visibleWhen לא תקין')
+  }
+  return { var: value.var, equals: value.equals }
+}
+
 function isNadbarMessage(value: unknown): value is NadbarMessage {
   if (!value || typeof value !== 'object') return false
   const record = value as Record<string, unknown>
-  return isNadbarMessageSource(record.source) && typeof record.content === 'string'
+  return (
+    isNadbarMessageSource(record.source) &&
+    typeof record.content === 'string' &&
+    isNadbarMessageVisibleWhen(record.visibleWhen)
+  )
 }
 
 function isNadbarMessageBlock(value: unknown): value is NadbarMessageBlock {
@@ -151,6 +170,19 @@ function isNadbarMessageBlock(value: unknown): value is NadbarMessageBlock {
     record.messages.length > 0 &&
     record.messages.every(isNadbarMessage)
   )
+}
+
+function parseChoiceOptions(value: unknown): readonly string[] {
+  if (!Array.isArray(value) || value.length < 2) {
+    throw new Error('תבנית נדבר: אפשרויות בחירה לא תקינות')
+  }
+  const options = value.map((entry) => {
+    if (typeof entry !== 'string' || entry.trim() === '') {
+      throw new Error('תבנית נדבר: אפשרויות בחירה לא תקינות')
+    }
+    return entry
+  })
+  return options
 }
 
 function parseUserVarFieldsFromRecord(record: Record<string, unknown>): NadbarUserVarFields | undefined {
@@ -168,11 +200,18 @@ function parseUserVarFieldsFromRecord(record: Record<string, unknown>): NadbarUs
     if (!spec || typeof spec !== 'object' || Array.isArray(spec)) {
       throw new Error('תבנית נדבר: userVarFields לא תקין')
     }
-    const input = (spec as Record<string, unknown>).input
-    if (input !== 'numeric') {
-      throw new Error('תבנית נדבר: סוג קלט לא נתמך')
+    const specRecord = spec as Record<string, unknown>
+    const input = specRecord.input
+    if (input === 'numeric') {
+      userVarFields[varName] = { input: 'numeric' }
+      continue
     }
-    userVarFields[varName] = { input: 'numeric' }
+    if (input === 'choice') {
+      const options = parseChoiceOptions(specRecord.options)
+      userVarFields[varName] = { input: 'choice', options }
+      continue
+    }
+    throw new Error('תבנית נדבר: סוג קלט לא נתמך')
   }
 
   return Object.keys(userVarFields).length > 0 ? userVarFields : undefined
@@ -183,6 +222,13 @@ export function isNadbarUserVarNumeric(
   varName: string,
 ): boolean {
   return userVarFields?.[varName]?.input === 'numeric'
+}
+
+export function isNadbarUserVarChoice(
+  userVarFields: NadbarUserVarFields | undefined,
+  varName: string,
+): boolean {
+  return userVarFields?.[varName]?.input === 'choice'
 }
 
 function isNadbarBlockFooterAction(value: unknown): value is NadbarBlockFooterAction {
@@ -227,10 +273,15 @@ function parseMessageBlocksFromRecord(record: Record<string, unknown>): NadbarTe
     throw new Error('תבנית נדבר מכילה בלוקים לא תקינים')
   }
   return record.blocks.map((block) => ({
-    messages: block.messages.map((message) => ({
-      source: message.source,
-      content: message.content,
-    })),
+    messages: block.messages.map((message) => {
+      const rawMessage = message as NadbarMessage & { visibleWhen?: unknown }
+      const visibleWhen = parseMessageVisibleWhen(rawMessage.visibleWhen)
+      return {
+        source: message.source,
+        content: message.content,
+        ...(visibleWhen ? { visibleWhen } : {}),
+      }
+    }),
     ...(block.footerActions ? { footerActions: [...block.footerActions] } : {}),
   }))
 }

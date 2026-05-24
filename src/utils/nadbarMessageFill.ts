@@ -1,4 +1,4 @@
-import type { NadbarMessage } from '../domain/nadbar.types'
+import type { NadbarMessage, NadbarMessageUserVars } from '../domain/nadbar.types'
 import type {
   NadbarMessageResourceKey,
   NadbarMessageResources,
@@ -118,6 +118,21 @@ export function isNadbarUserVarEditableAt(
   varName: string,
 ): boolean {
   return buildUserVarFirstMessageIndex(messages).get(varName) === messageIndex
+}
+
+export function isNadbarMessageVisible(
+  message: NadbarMessage,
+  messageVars: NadbarMessageUserVars,
+): boolean {
+  if (!message.visibleWhen) return true
+  return messageVars[message.visibleWhen.var] === message.visibleWhen.equals
+}
+
+export function filterVisibleNadbarMessages(
+  messages: readonly NadbarMessage[],
+  messageVars: NadbarMessageUserVars,
+): NadbarMessage[] {
+  return messages.filter((message) => isNadbarMessageVisible(message, messageVars))
 }
 
 export function sanitizeNadbarNumericUserVarInput(value: string): string {

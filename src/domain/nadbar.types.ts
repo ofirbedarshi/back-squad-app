@@ -13,9 +13,16 @@ export type NadbarMessageSource = 'Me' | 'They'
 
 export const NADBAR_MESSAGE_SOURCES: readonly NadbarMessageSource[] = ['Me', 'They']
 
+/** Show message only when a user var equals a specific value. */
+export interface NadbarMessageVisibleWhen {
+  var: string
+  equals: string
+}
+
 export interface NadbarMessage {
   source: NadbarMessageSource
   content: string
+  visibleWhen?: NadbarMessageVisibleWhen
 }
 
 /** One sub-conversation block inside a nadbar script */
@@ -48,10 +55,12 @@ export interface Nadbar {
 }
 
 /** Supported input kinds for template user vars (`userVarFields` in template JSON). */
-export type NadbarUserVarInputKind = 'numeric'
+export type NadbarUserVarInputKind = 'numeric' | 'choice'
 
 export interface NadbarUserVarFieldSpec {
   input: NadbarUserVarInputKind
+  /** Required when `input` is `choice`. */
+  options?: readonly string[]
 }
 
 /** Per-var input rules declared in template JSON (not stored on saved nadbar). */

@@ -6,6 +6,7 @@ import {
   createNadbarFromTemplate,
   hasCompleteNadbarLinks,
   isNadbarUserVarNumeric,
+  isNadbarUserVarChoice,
   isValidNadbar,
   nadbarRequiresEntityLinks,
   NADBAR_SAVE_LINKS_REQUIRED_MESSAGE,
@@ -92,6 +93,29 @@ describe('parseNadbarTemplate', () => {
     assert.deepEqual(template.userVarFields, { meraom: { input: 'numeric' } })
   })
 
+  it('parses userVarFields with choice input', () => {
+    const template = parseNadbarTemplate({
+      userVarFields: {
+        amuraValid: { input: 'choice', options: ['תקינה', 'לא תקינה'] },
+      },
+      blocks: [{ messages: [{ source: 'They', content: '{{amuraValid}}' }] }],
+    })
+    assert.deepEqual(template.userVarFields, {
+      amuraValid: { input: 'choice', options: ['תקינה', 'לא תקינה'] },
+    })
+  })
+
+  it('rejects choice userVarFields without valid options', () => {
+    assert.throws(
+      () =>
+        parseNadbarTemplate({
+          userVarFields: { amuraValid: { input: 'choice', options: ['תקינה'] } },
+          blocks: [{ messages: [{ source: 'They', content: 'x' }] }],
+        }),
+      /אפשרויות בחירה לא תקינות/,
+    )
+  })
+
   it('rejects invalid userVarFields', () => {
     assert.throws(
       () =>
@@ -130,6 +154,47 @@ describe('parseNadbarTemplate', () => {
       /לא תקינים|לא נתמכת/,
     )
   })
+
+  it('parses message visibleWhen', () => {
+    const template = parseNadbarTemplate({
+      blocks: [
+        {
+          messages: [
+            { source: 'They', content: 'א' },
+            {
+              source: 'Me',
+              content: 'ב',
+              visibleWhen: { var: 'amuraValid', equals: 'לא תקינה' },
+            },
+          ],
+        },
+      ],
+    })
+    assert.deepEqual(template.blocks[0]?.messages[1]?.visibleWhen, {
+      var: 'amuraValid',
+      equals: 'לא תקינה',
+    })
+  })
+
+  it('rejects invalid message visibleWhen', () => {
+    assert.throws(
+      () =>
+        parseNadbarTemplate({
+          blocks: [
+            {
+              messages: [
+                {
+                  source: 'They',
+                  content: 'x',
+                  visibleWhen: { var: '', equals: 'y' },
+                },
+              ],
+            },
+          ],
+        }),
+      /visibleWhen לא תקין|לא תקינים/,
+    )
+  })
 })
 
 describe('createNadbarFromTemplate', () => {
@@ -153,17 +218,25 @@ describe('getNadbarTemplate', () => {
     }
   })
 
-  it('PointerTeamUpdated has two blocks', () => {
+  it('PointerTeamUpdated has three blocks', () => {
     const template = getNadbarTemplate('PointerTeamUpdated')
-    assert.equal(template.blocks.length, 2)
+    assert.equal(template.blocks.length, 3)
     assert.equal(template.blocks[0]?.messages.length, 4)
     assert.equal(template.blocks[1]?.messages.length, 6)
+    assert.equal(template.blocks[2]?.messages.length, 5)
     assert.deepEqual(template.userVarFields, {
       meraom: { input: 'numeric' },
       tsepa: { input: 'numeric' },
       gamal: { input: 'numeric' },
+      amura: { input: 'numeric' },
+      amuraCorrected: { input: 'numeric' },
+      amuraValid: { input: 'choice', options: ['תקינה', 'לא תקינה'] },
     })
     assert.deepEqual(template.blocks[1]?.footerActions, ['createTargetFromVars'])
+    assert.deepEqual(template.blocks[2]?.messages[3]?.visibleWhen, {
+      var: 'amuraValid',
+      equals: 'לא תקינה',
+    })
   })
 })
 
@@ -177,6 +250,18 @@ describe('isNadbarUserVarNumeric', () => {
     assert.equal(isNadbarUserVarNumeric(fields, 'metara'), true)
     assert.equal(isNadbarUserVarNumeric(fields, 'kutz'), false)
     assert.equal(isNadbarUserVarNumeric(undefined, 'meraom'), false)
+  })
+})
+
+describe('isNadbarUserVarChoice', () => {
+  it('is true only when template declares choice input', () => {
+    const fields = {
+      amuraValid: { input: 'choice' as const, options: ['תקינה', 'לא תקינה'] as const },
+      meraom: { input: 'numeric' as const },
+    }
+    assert.equal(isNadbarUserVarChoice(fields, 'amuraValid'), true)
+    assert.equal(isNadbarUserVarChoice(fields, 'meraom'), false)
+    assert.equal(isNadbarUserVarChoice(undefined, 'amuraValid'), false)
   })
 })
 

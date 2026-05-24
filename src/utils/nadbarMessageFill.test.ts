@@ -7,6 +7,8 @@ import type { NadbarMessage } from '../domain/nadbar.types'
 import {
   buildUserVarFirstMessageIndex,
   fillNadbarMessageContent,
+  filterVisibleNadbarMessages,
+  isNadbarMessageVisible,
   isNadbarUserVarEditableAt,
   parseNadbarMessageSegments,
   resolveResourceSegment,
@@ -170,6 +172,46 @@ describe('sanitizeNadbarNumericUserVarInput', () => {
     assert.equal(sanitizeNadbarNumericUserVarInput('123abc456'), '123456')
     assert.equal(sanitizeNadbarNumericUserVarInput(''), '')
     assert.equal(sanitizeNadbarNumericUserVarInput('12.34'), '1234')
+  })
+})
+
+describe('isNadbarMessageVisible', () => {
+  const conditionalMessage = {
+    source: 'They' as const,
+    content: 'שפר',
+    visibleWhen: { var: 'amuraValid', equals: 'לא תקינה' },
+  }
+
+  it('shows message without visibleWhen', () => {
+    assert.equal(isNadbarMessageVisible({ source: 'They', content: 'x' }, {}), true)
+  })
+
+  it('shows conditional message when var matches', () => {
+    assert.equal(isNadbarMessageVisible(conditionalMessage, { amuraValid: 'לא תקינה' }), true)
+  })
+
+  it('hides conditional message when var does not match', () => {
+    assert.equal(isNadbarMessageVisible(conditionalMessage, { amuraValid: 'תקינה' }), false)
+    assert.equal(isNadbarMessageVisible(conditionalMessage, {}), false)
+  })
+})
+
+describe('filterVisibleNadbarMessages', () => {
+  const messages = [
+    { source: 'They' as const, content: 'א' },
+    {
+      source: 'Me' as const,
+      content: 'ב',
+      visibleWhen: { var: 'amuraValid', equals: 'לא תקינה' },
+    },
+  ]
+
+  it('returns all messages when no conditions apply', () => {
+    assert.equal(filterVisibleNadbarMessages(messages, {}).length, 1)
+  })
+
+  it('includes conditional messages when condition is met', () => {
+    assert.equal(filterVisibleNadbarMessages(messages, { amuraValid: 'לא תקינה' }).length, 2)
   })
 })
 

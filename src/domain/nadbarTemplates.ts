@@ -22,7 +22,10 @@ export function getNadbarTemplate(type: NadbarType): NadbarTemplate {
     ...(template.userVarFields
       ? {
           userVarFields: Object.fromEntries(
-            Object.entries(template.userVarFields).map(([varName, spec]) => [varName, { ...spec }]),
+            Object.entries(template.userVarFields).map(([varName, spec]) => [
+              varName,
+              spec.options ? { ...spec, options: [...spec.options] } : { ...spec },
+            ]),
           ),
         }
       : {}),

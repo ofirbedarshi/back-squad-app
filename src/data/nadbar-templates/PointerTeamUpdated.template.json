@@ -2,7 +2,13 @@
   "userVarFields": {
     "meraom": { "input": "numeric" },
     "tsepa": { "input": "numeric" },
-    "gamal": { "input": "numeric" }
+    "gamal": { "input": "numeric" },
+    "amura": { "input": "numeric" },
+    "amuraCorrected": { "input": "numeric" },
+    "amuraValid": {
+      "input": "choice",
+      "options": ["תקינה", "לא תקינה"]
+    }
   },
   "blocks": [
     {
@@ -51,6 +57,32 @@
         {
           "source": "Me",
           "content": "קיבלתי גמל {{gamal}}"
+        }
+      ]
+    },
+    {
+      "messages": [
+        {
+          "source": "They",
+          "content": "{{openingCallsign1}} מ {{openingCallsign2}} קבל למטרה {{metara}} אמורה {{amura}} במעלות"
+        },
+        {
+          "source": "Me",
+          "content": "קיבלתי למטרה {{metara}} אמורה {{amura}} במעלות"
+        },
+        {
+          "source": "They",
+          "content": "קבל למטרה {{metara}} אמורה {{amuraValid}}"
+        },
+        {
+          "source": "They",
+          "content": "קבל למטרה {{metara}} שפר ל {{amuraCorrected}} במעלות",
+          "visibleWhen": { "var": "amuraValid", "equals": "לא תקינה" }
+        },
+        {
+          "source": "Me",
+          "content": "קיבלתי, למטרה {{metara}} שפרתי ל {{amuraCorrected}} במעלות",
+          "visibleWhen": { "var": "amuraValid", "equals": "לא תקינה" }
         }
       ]
     }
