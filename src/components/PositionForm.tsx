@@ -1,7 +1,7 @@
 import { useForm, FormProvider } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import PositionBaseFields from './PositionBaseFields'
-import { schema, LAUNCHER_TYPES, EMPTY_OBSTACLES, getInitialPlusTenApplied } from './positionForm.schema'
+import { schema, LAUNCHER_TYPES, EMPTY_OBSTACLES } from './positionForm.schema'
 import type { PositionFormValues } from './positionForm.schema'
 import type { PositionFormInitialShape, PositionInput } from '../domain/position.types'
 
@@ -17,13 +17,11 @@ function PositionForm({ onSubmit, submitLabel = 'שמור', initialValues }: Pos
     defaultValues: {
       launcherType: LAUNCHER_TYPES.VEHICLE,
       obstacles: EMPTY_OBSTACLES,
-      plusTenApplied: getInitialPlusTenApplied(initialValues),
       ...initialValues,
     },
   })
 
-  function handleSubmit({ plusTenApplied, ...positionInput }: PositionFormValues) {
-    void plusTenApplied
+  function handleSubmit(positionInput: PositionFormValues) {
     onSubmit(positionInput as PositionInput)
   }
 

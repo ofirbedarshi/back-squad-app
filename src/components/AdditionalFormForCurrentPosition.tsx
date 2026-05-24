@@ -2,6 +2,7 @@ import { useFormContext, Controller } from 'react-hook-form'
 import FormField from './FormField'
 import Input from './Input'
 import PitchRollInput from './PitchRollInput'
+import { pitchRollOpts } from './pitchRollInput.utils'
 import SegmentedToggle from './base/SegmentedToggle'
 import SectorCard from './SectorCard'
 import ObstaclesCard from './ObstaclesCard'
@@ -11,6 +12,8 @@ import type { PositionFormValues } from './positionForm.schema'
 function AdditionalFormForCurrentPosition() {
   const { register, control, watch, formState: { errors } } = useFormContext<PositionFormValues>()
   const isVehicle = watch('launcherType') === LAUNCHER_TYPES.VEHICLE
+  const pitch = watch('pitch')
+  const roll = watch('roll')
 
   return (
     <>
@@ -36,21 +39,19 @@ function AdditionalFormForCurrentPosition() {
 
       <div className="flex gap-3">
         <div className="flex-1">
-          <Controller
-            name="pitch"
-            control={control}
-            render={({ field }) => (
-              <PitchRollInput label="Pitch" value={field.value} onChange={field.onChange} error={errors.pitch?.message} />
-            )}
+          <PitchRollInput
+            label="Pitch"
+            error={errors.pitch?.message}
+            valueForWarning={pitch}
+            {...register('pitch', pitchRollOpts)}
           />
         </div>
         <div className="flex-1">
-          <Controller
-            name="roll"
-            control={control}
-            render={({ field }) => (
-              <PitchRollInput label="Roll" value={field.value} onChange={field.onChange} error={errors.roll?.message} />
-            )}
+          <PitchRollInput
+            label="Roll"
+            error={errors.roll?.message}
+            valueForWarning={roll}
+            {...register('roll', pitchRollOpts)}
           />
         </div>
       </div>

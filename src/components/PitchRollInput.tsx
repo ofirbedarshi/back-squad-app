@@ -1,32 +1,39 @@
+import { forwardRef } from 'react'
 import FormField from './FormField'
 import Input from './Input'
 
-interface PitchRollInputProps {
+interface PitchRollInputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type'> {
   label: string
-  value: number | undefined
-  onChange: (value: number | undefined) => void
   error?: string
+  valueForWarning?: number
 }
 
-function PitchRollInput({ label, value, onChange, error }: PitchRollInputProps) {
-  const isWarning = typeof value === 'number' && !isNaN(value) && value >= 5 && value <= 10
+const PitchRollInput = forwardRef<HTMLInputElement, PitchRollInputProps>(
+  ({ label, error, valueForWarning, onChange, ...inputProps }, ref) => {
+    const isWarning =
+      typeof valueForWarning === 'number' &&
+      !isNaN(valueForWarning) &&
+      valueForWarning >= 5 &&
+      valueForWarning <= 10
 
-  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const raw = e.target.valueAsNumber
-    onChange(isNaN(raw) ? undefined : raw)
-  }
+    return (
+      <FormField label={label} error={error}>
+        <Input
+          ref={ref}
+          type="number"
+          min={0}
+          max={10}
+          step={0.1}
+          hasError={!!error}
+          hasWarning={!error && isWarning}
+          onChange={onChange}
+          {...inputProps}
+        />
+      </FormField>
+    )
+  },
+)
 
-  return (
-    <FormField label={label} error={error}>
-      <Input
-        type="number"
-        value={value ?? ''}
-        onChange={handleChange}
-        hasError={!!error}
-        hasWarning={!error && isWarning}
-      />
-    </FormField>
-  )
-}
+PitchRollInput.displayName = 'PitchRollInput'
 
 export default PitchRollInput

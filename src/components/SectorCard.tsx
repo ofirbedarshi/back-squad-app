@@ -1,9 +1,8 @@
 import { useFormContext } from 'react-hook-form'
 import Input from './Input'
-import PlusNButton from './base/PlusNButton'
+import PlusNLabel from './base/PlusNLabel'
 import { degreeOpts } from './positionForm.schema'
 import type { PositionFormValues } from './positionForm.schema'
-import { usePlusN } from '../hooks/usePlusN'
 
 type SectorErrors = {
   right?: { compass?: { message?: string }; target?: { message?: string } }
@@ -18,12 +17,6 @@ interface SectorCardProps {
 function SectorCard({ title, fieldPrefix }: SectorCardProps) {
   const { register, formState: { errors } } = useFormContext<PositionFormValues>()
   const sectorErrors = (errors[fieldPrefix] ?? {}) as SectorErrors
-
-  const appliedFieldPath =
-    fieldPrefix === 'primarySector'
-      ? 'plusTenApplied.primarySectorLeftTarget'
-      : 'plusTenApplied.secondarySectorLeftTarget'
-  const plusTen = usePlusN(`${fieldPrefix}.left.target`, appliedFieldPath, 10)
 
   const errorMessage =
     sectorErrors?.right?.compass?.message ||
@@ -66,10 +59,9 @@ function SectorCard({ title, fieldPrefix }: SectorCardProps) {
           <Input
             type="number" min={0} max={359.9} step={0.1}
             hasError={!!sectorErrors?.left?.target}
-            {...register(`${fieldPrefix}.left.target` as 'primarySector.left.target', plusTen.registerOptions)}
+            {...register(`${fieldPrefix}.left.target`, degreeOpts)}
           />
-          <input type="hidden" {...register(plusTen.appliedFieldPath as 'plusTenApplied.primarySectorLeftTarget')} />
-          <PlusNButton n={10} isApplied={plusTen.applied} onApply={plusTen.apply} />
+          <PlusNLabel n={10} />
         </div>
         {errorMessage && (
           <span className="block mt-2 text-xs text-red-500 pr-1">{errorMessage}</span>

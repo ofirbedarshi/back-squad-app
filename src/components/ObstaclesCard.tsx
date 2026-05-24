@@ -1,9 +1,9 @@
+import { Fragment } from 'react'
 import { useFormContext } from 'react-hook-form'
 import Input from './Input'
-import PlusNButton from './base/PlusNButton'
+import PlusNLabel from './base/PlusNLabel'
 import { degreeOpts } from './positionForm.schema'
 import type { PositionFormValues } from './positionForm.schema'
-import { usePlusN } from '../hooks/usePlusN'
 
 type ObstacleErrors = Array<
   { compass?: { message?: string }; target?: { message?: string } } | undefined
@@ -12,11 +12,6 @@ type ObstacleErrors = Array<
 function ObstaclesCard() {
   const { register, formState: { errors } } = useFormContext<PositionFormValues>()
   const obstacleErrors = (errors.obstacles ?? []) as unknown as ObstacleErrors
-
-  const plusFive0 = usePlusN('obstacles.0.target', 5)
-  const plusFive1 = usePlusN('obstacles.1.target', 5)
-  const plusFive2 = usePlusN('obstacles.2.target', 5)
-  const plusFive = [plusFive0, plusFive1, plusFive2] as const
 
   const errorMessage = obstacleErrors
     ?.flatMap((e) => [e?.compass?.message, e?.target?.message])
@@ -36,29 +31,22 @@ function ObstaclesCard() {
           <div />
 
           {([0, 1, 2] as const).map((i) => (
-            <>
-              <span key={`label-${i}`} className="text-sm font-medium text-neutral-700 text-start">
+            <Fragment key={i}>
+              <span className="text-sm font-medium text-neutral-700 text-start">
                 .{i + 1}
               </span>
               <Input
-                key={`compass-${i}`}
                 type="number" min={0} max={359.9} step={0.1}
                 hasError={!!obstacleErrors?.[i]?.compass}
                 {...register(`obstacles.${i}.compass`, degreeOpts)}
               />
               <Input
-                key={`target-${i}`}
                 type="number" min={0} max={359.9} step={0.1}
                 hasError={!!obstacleErrors?.[i]?.target}
-                {...register(`obstacles.${i}.target`, plusFive[i].registerOptions)}
+                {...register(`obstacles.${i}.target`, degreeOpts)}
               />
-              <PlusNButton
-                key={`plus-${i}`}
-                n={5}
-                isApplied={plusFive[i].applied}
-                onApply={plusFive[i].apply}
-              />
-            </>
+              <PlusNLabel n={5} />
+            </Fragment>
           ))}
         </div>
         {errorMessage && (

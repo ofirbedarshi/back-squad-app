@@ -4,7 +4,7 @@ import { z } from 'zod'
 import FormField from './FormField'
 import Input from './Input'
 import PitchRollInput from './PitchRollInput'
-import { optionalPitchRollSchema } from './pitchRollInput.utils'
+import { optionalPitchRollSchema, pitchRollOpts } from './pitchRollInput.utils'
 import SegmentedToggle from './base/SegmentedToggle'
 import Checkbox from './base/Checkbox'
 import CoordinateInput from './base/CoordinateInput'
@@ -107,6 +107,8 @@ function AttackLogForm({ onSubmit, submitLabel = 'שמור', initialValues }: At
   })
 
   const wasAttacked = watch('wasAttacked')
+  const pitch = watch('pitch')
+  const roll = watch('roll')
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-4">
@@ -166,30 +168,18 @@ function AttackLogForm({ onSubmit, submitLabel = 'שמור', initialValues }: At
         <Input type="text" hasError={!!errors.aka} {...register('aka')} />
       </FormField>
 
-      <Controller
-        name="pitch"
-        control={control}
-        render={({ field }) => (
-          <PitchRollInput
-            label="פיצ׳"
-            value={field.value}
-            onChange={field.onChange}
-            error={errors.pitch?.message}
-          />
-        )}
+      <PitchRollInput
+        label="פיצ׳"
+        error={errors.pitch?.message}
+        valueForWarning={pitch}
+        {...register('pitch', pitchRollOpts)}
       />
 
-      <Controller
-        name="roll"
-        control={control}
-        render={({ field }) => (
-          <PitchRollInput
-            label="רול"
-            value={field.value}
-            onChange={field.onChange}
-            error={errors.roll?.message}
-          />
-        )}
+      <PitchRollInput
+        label="רול"
+        error={errors.roll?.message}
+        valueForWarning={roll}
+        {...register('roll', pitchRollOpts)}
       />
 
       <FormField label="באמצעות מה הוצפן הרכב?" error={errors.vehicleEncryptionMethod?.message}>
