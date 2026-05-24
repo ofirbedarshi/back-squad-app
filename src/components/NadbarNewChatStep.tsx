@@ -1,6 +1,7 @@
 import NadbarChatView from './NadbarChatView'
 import NadbarNewChatStepHeader from './NadbarNewChatStepHeader'
 import type { Nadbar, NadbarBlockFooterAction, NadbarLinksUpdate, NadbarType } from '../domain/nadbar.types'
+import type { Target } from '../domain/target.types'
 
 interface NadbarNewChatStepProps {
   nadbarType: NadbarType
@@ -9,6 +10,9 @@ interface NadbarNewChatStepProps {
   onLinksChange: (links: NadbarLinksUpdate) => void
   onSave: () => void
   onBlockFooterAction?: (blockIndex: number, action: NadbarBlockFooterAction) => void
+  blockLoadedTargetIds?: Record<number, string | undefined>
+  onBlockLoadTarget?: (blockIndex: number, target: Target) => void
+  onBlockClearLoadedTarget?: (blockIndex: number) => void
 }
 
 function NadbarNewChatStep({
@@ -18,6 +22,9 @@ function NadbarNewChatStep({
   onLinksChange,
   onSave,
   onBlockFooterAction,
+  blockLoadedTargetIds,
+  onBlockLoadTarget,
+  onBlockClearLoadedTarget,
 }: NadbarNewChatStepProps) {
   return (
     <div dir="rtl" className="flex flex-col bg-neutral-50 min-h-full">
@@ -38,6 +45,9 @@ function NadbarNewChatStep({
           blockMessageVars={draftNadbar.blockMessageVars}
           onUserVarChange={onUserVarChange}
           onBlockFooterAction={onBlockFooterAction}
+          blockLoadedTargetIds={blockLoadedTargetIds}
+          onBlockLoadTarget={onBlockLoadTarget}
+          onBlockClearLoadedTarget={onBlockClearLoadedTarget}
         />
       </div>
     </div>

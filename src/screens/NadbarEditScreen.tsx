@@ -5,8 +5,16 @@ import { useNadbarEditFlow } from '../hooks/useNadbarEditFlow'
 
 function NadbarEditScreen() {
   const { id } = useParams<{ id: string }>()
-  const { draftNadbar, setUserVar, updateDraftLinks, saveNadbar, handleBlockFooterAction } =
-    useNadbarEditFlow(id)
+  const {
+    draftNadbar,
+    setUserVar,
+    updateDraftLinks,
+    saveNadbar,
+    handleBlockFooterAction,
+    blockLoadedTargetIds,
+    handleLoadTarget,
+    handleClearLoadedTarget,
+  } = useNadbarEditFlow(id)
 
   if (!draftNadbar) {
     return null
@@ -28,6 +36,9 @@ function NadbarEditScreen() {
           blockMessageVars={draftNadbar.blockMessageVars}
           onUserVarChange={setUserVar}
           onBlockFooterAction={handleBlockFooterAction}
+          blockLoadedTargetIds={blockLoadedTargetIds}
+          onBlockLoadTarget={handleLoadTarget}
+          onBlockClearLoadedTarget={handleClearLoadedTarget}
         />
       </div>
     </div>

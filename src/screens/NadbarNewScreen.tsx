@@ -18,6 +18,9 @@ function NadbarNewScreen() {
     saveDraftLinks,
     saveNadbar,
     handleBlockFooterAction,
+    blockLoadedTargetIds,
+    handleLoadTarget,
+    handleClearLoadedTarget,
   } = useNadbarNewFlow()
 
   if (!nadbarType) {
@@ -56,6 +59,9 @@ function NadbarNewScreen() {
       onLinksChange={saveDraftLinks}
       onSave={saveNadbar}
       onBlockFooterAction={handleBlockFooterAction}
+      blockLoadedTargetIds={blockLoadedTargetIds}
+      onBlockLoadTarget={handleLoadTarget}
+      onBlockClearLoadedTarget={handleClearLoadedTarget}
     />
   )
 }

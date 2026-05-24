@@ -62,6 +62,7 @@
       ]
     },
     {
+      "footerActions": ["loadTarget"],
       "messages": [
         {
           "source": "They",

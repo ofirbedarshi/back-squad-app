@@ -8,6 +8,7 @@ import { applyNadbarLinksToNadbarUseCase } from '../useCases/applyNadbarLinksToN
 import { createNadbarFromTypeUseCase } from '../useCases/createNadbarFromType'
 import { useDomainError } from './useDomainError'
 import { useNadbarBlockFooterActionHandler } from './useNadbarBlockFooterActionHandler'
+import { useNadbarBlockLoadTargetHandler } from './useNadbarBlockLoadTargetHandler'
 import { useNadbarTypeRouteParam } from './useNadbarTypeRouteParam'
 import { useNotification } from './useNotification'
 import type { NewNadbarStep } from './useNadbarNewFlow.types'
@@ -28,6 +29,8 @@ export function useNadbarNewFlow() {
     [draftNadbar],
   )
   const handleBlockFooterAction = useNadbarBlockFooterActionHandler(getMessageVars)
+  const { blockLoadedTargetIds, handleLoadTarget, handleClearLoadedTarget } =
+    useNadbarBlockLoadTargetHandler(draftNadbar, setDraftNadbar)
 
   useEffect(() => {
     if (!nadbarType) return
@@ -114,5 +117,8 @@ export function useNadbarNewFlow() {
     saveDraftLinks,
     saveNadbar,
     handleBlockFooterAction,
+    blockLoadedTargetIds,
+    handleLoadTarget,
+    handleClearLoadedTarget,
   }
 }

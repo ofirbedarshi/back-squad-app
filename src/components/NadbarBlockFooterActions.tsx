@@ -1,4 +1,5 @@
 import NadbarCreateTargetFromVarsButton from './NadbarCreateTargetFromVarsButton'
+import NadbarLoadTargetButton from './NadbarLoadTargetButton'
 import { useNadbarChatContext } from './NadbarChatContext'
 
 interface NadbarBlockFooterActionsProps {
@@ -6,10 +7,16 @@ interface NadbarBlockFooterActionsProps {
 }
 
 function NadbarBlockFooterActions({ blockIndex }: NadbarBlockFooterActionsProps) {
-  const { blockFooterActions, onBlockFooterAction } = useNadbarChatContext()
+  const {
+    blockFooterActions,
+    onBlockFooterAction,
+    blockLoadedTargetIds,
+    onBlockLoadTarget,
+    onBlockClearLoadedTarget,
+  } = useNadbarChatContext()
   const actions = blockFooterActions?.[blockIndex]
 
-  if (!actions?.length || !onBlockFooterAction) {
+  if (!actions?.length) {
     return null
   }
 
@@ -18,10 +25,21 @@ function NadbarBlockFooterActions({ blockIndex }: NadbarBlockFooterActionsProps)
       {actions.map((action) => {
         switch (action) {
           case 'createTargetFromVars':
+            if (!onBlockFooterAction) return null
             return (
               <NadbarCreateTargetFromVarsButton
                 key={action}
                 onClick={() => onBlockFooterAction(blockIndex, action)}
+              />
+            )
+          case 'loadTarget':
+            if (!onBlockLoadTarget || !onBlockClearLoadedTarget) return null
+            return (
+              <NadbarLoadTargetButton
+                key={action}
+                targetId={blockLoadedTargetIds?.[blockIndex]}
+                onSelect={(target) => onBlockLoadTarget(blockIndex, target)}
+                onClear={() => onBlockClearLoadedTarget(blockIndex)}
               />
             )
           default:

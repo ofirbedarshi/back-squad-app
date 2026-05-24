@@ -31,7 +31,7 @@ export interface NadbarMessageBlock {
 }
 
 /** Block-level footer actions declared in template JSON (not stored on saved nadbar). */
-export const NADBAR_BLOCK_FOOTER_ACTIONS = ['createTargetFromVars'] as const
+export const NADBAR_BLOCK_FOOTER_ACTIONS = ['createTargetFromVars', 'loadTarget'] as const
 
 export type NadbarBlockFooterAction = (typeof NADBAR_BLOCK_FOOTER_ACTIONS)[number]
 

@@ -8,6 +8,7 @@ import { getNadbarByIdUseCase } from '../useCases/getNadbarById'
 import { updateNadbarUseCase } from '../useCases/updateNadbar'
 import { useDomainError } from './useDomainError'
 import { useNadbarBlockFooterActionHandler } from './useNadbarBlockFooterActionHandler'
+import { useNadbarBlockLoadTargetHandler } from './useNadbarBlockLoadTargetHandler'
 import { useNotification } from './useNotification'
 
 export function useNadbarEditFlow(id: string | undefined) {
@@ -23,6 +24,8 @@ export function useNadbarEditFlow(id: string | undefined) {
     [draftNadbar],
   )
   const handleBlockFooterAction = useNadbarBlockFooterActionHandler(getMessageVars)
+  const { blockLoadedTargetIds, handleLoadTarget, handleClearLoadedTarget } =
+    useNadbarBlockLoadTargetHandler(draftNadbar, setDraftNadbar)
 
   useEffect(() => {
     if (!draftNadbar) {
@@ -63,5 +66,8 @@ export function useNadbarEditFlow(id: string | undefined) {
     updateDraftLinks,
     saveNadbar,
     handleBlockFooterAction,
+    blockLoadedTargetIds,
+    handleLoadTarget,
+    handleClearLoadedTarget,
   }
 }

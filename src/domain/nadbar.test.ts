@@ -137,9 +137,14 @@ describe('parseNadbarTemplate', () => {
           footerActions: ['createTargetFromVars'],
           messages: [{ source: 'They', content: 'ב' }],
         },
+        {
+          footerActions: ['loadTarget'],
+          messages: [{ source: 'They', content: 'ג' }],
+        },
       ],
     })
     assert.deepEqual(template.blocks[1]?.footerActions, ['createTargetFromVars'])
+    assert.deepEqual(template.blocks[2]?.footerActions, ['loadTarget'])
   })
 
   it('rejects invalid block footerActions', () => {
@@ -256,6 +261,7 @@ describe('getNadbarTemplate', () => {
       amuraValid: { input: 'choice', options: ['תקינה', 'לא תקינה'] },
     })
     assert.deepEqual(template.blocks[1]?.footerActions, ['createTargetFromVars'])
+    assert.deepEqual(template.blocks[2]?.footerActions, ['loadTarget'])
     assert.deepEqual(template.blocks[2]?.messages[3]?.visibleWhen, {
       var: 'amuraValid',
       equals: 'לא תקינה',
