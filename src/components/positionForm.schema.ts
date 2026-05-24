@@ -29,7 +29,6 @@ const sectorSchema = z.object({
 
 const obstacleSchema = z.object({
   compass: optionalDegreeField,
-  target: optionalDegreeField,
 })
 
 export const LAUNCHER_TYPES = {
@@ -85,9 +84,9 @@ export const LAUNCHER_OPTIONS: [{ label: string; value: string }, { label: strin
 ]
 
 export const EMPTY_OBSTACLES = [
-  { compass: undefined, target: undefined },
-  { compass: undefined, target: undefined },
-  { compass: undefined, target: undefined },
+  { compass: undefined },
+  { compass: undefined },
+  { compass: undefined },
 ]
 
 export function parseDegreeInput(v: string): number | undefined {

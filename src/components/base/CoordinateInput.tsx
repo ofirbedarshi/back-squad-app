@@ -57,8 +57,8 @@ function CoordinateInput({ value, onChange, hasError = false, disabled = false }
       ].join(' ')}
       dir="rtl"
     >
-      <div className="flex items-center px-3 py-2 gap-2">
-        <div className="flex-1 min-w-0">
+      <div className="flex items-center px-2 py-2 gap-1">
+        <div className="flex-[1.08] min-w-0">
           <label className="block text-xs text-neutral-500 mb-1 text-right">צפוני</label>
           <div className="flex items-stretch justify-end" dir="ltr">
             <input
@@ -72,7 +72,7 @@ function CoordinateInput({ value, onChange, hasError = false, disabled = false }
               onFocus={handleSelectOnFocus}
               onClick={handleSelectOnFocus}
               disabled={disabled}
-              className="w-10 bg-neutral-200 text-neutral-600 text-base font-semibold text-center outline-none rounded-l-xl disabled:cursor-not-allowed"
+              className="w-8 bg-neutral-200 text-neutral-600 text-base font-semibold text-center outline-none rounded-l-xl disabled:cursor-not-allowed"
               dir="ltr"
             />
             <input
@@ -90,7 +90,7 @@ function CoordinateInput({ value, onChange, hasError = false, disabled = false }
           </div>
         </div>
 
-        <span className="text-base font-semibold text-neutral-400 self-end pb-1">/</span>
+        <span className="shrink-0 w-2 text-center text-base font-semibold text-neutral-400 self-end pb-1">/</span>
 
         <div className="flex-1 min-w-0">
           <label className="block text-xs text-neutral-500 mb-1 text-right">מזרחי</label>
@@ -108,7 +108,7 @@ function CoordinateInput({ value, onChange, hasError = false, disabled = false }
           />
         </div>
 
-        <span className="text-base font-semibold text-neutral-400 self-end pb-1">|</span>
+        <span className="shrink-0 w-2 text-center text-base font-semibold text-neutral-400 self-end pb-1">|</span>
 
         <div className="shrink-0">
           <label className="block text-xs text-neutral-500 mb-1 text-right">פלח</label>
@@ -123,7 +123,7 @@ function CoordinateInput({ value, onChange, hasError = false, disabled = false }
             onFocus={handleSelectOnFocus}
             onClick={handleSelectOnFocus}
             disabled={disabled}
-            className="w-14 bg-neutral-200 text-neutral-600 text-base font-semibold text-center outline-none rounded-xl disabled:cursor-not-allowed"
+            className="w-12 bg-neutral-200 text-neutral-600 text-base font-semibold text-center outline-none rounded-xl disabled:cursor-not-allowed"
             dir="ltr"
           />
         </div>

@@ -18,7 +18,6 @@ export interface Sector {
 
 export interface Obstacle {
   compass?: number
-  target?: number
 }
 
 export interface PositionInput {
