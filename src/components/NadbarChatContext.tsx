@@ -11,6 +11,7 @@ export interface NadbarChatContextValue {
   blockLoadedTargetIds?: Record<number, string | undefined>
   onBlockLoadTarget?: (blockIndex: number, target: Target) => void
   onBlockClearLoadedTarget?: (blockIndex: number) => void
+  onBlockAddObstacle?: (blockIndex: number) => void
 }
 
 const NadbarChatContext = createContext<NadbarChatContextValue | null>(null)

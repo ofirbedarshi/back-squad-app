@@ -13,6 +13,7 @@ interface NadbarNewChatStepProps {
   blockLoadedTargetIds?: Record<number, string | undefined>
   onBlockLoadTarget?: (blockIndex: number, target: Target) => void
   onBlockClearLoadedTarget?: (blockIndex: number) => void
+  onBlockAddObstacle?: (blockIndex: number) => void
 }
 
 function NadbarNewChatStep({
@@ -25,6 +26,7 @@ function NadbarNewChatStep({
   blockLoadedTargetIds,
   onBlockLoadTarget,
   onBlockClearLoadedTarget,
+  onBlockAddObstacle,
 }: NadbarNewChatStepProps) {
   return (
     <div dir="rtl" className="flex flex-col bg-neutral-50 min-h-full">
@@ -48,6 +50,7 @@ function NadbarNewChatStep({
           blockLoadedTargetIds={blockLoadedTargetIds}
           onBlockLoadTarget={onBlockLoadTarget}
           onBlockClearLoadedTarget={onBlockClearLoadedTarget}
+          onBlockAddObstacle={onBlockAddObstacle}
         />
       </div>
     </div>

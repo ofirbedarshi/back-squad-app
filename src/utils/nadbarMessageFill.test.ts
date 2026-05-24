@@ -213,6 +213,26 @@ describe('filterVisibleNadbarMessages', () => {
   it('includes conditional messages when condition is met', () => {
     assert.equal(filterVisibleNadbarMessages(messages, { amuraValid: 'לא תקינה' }).length, 2)
   })
+
+  it('hides extra obstacle messages until activation flags are set', () => {
+    const obstacleMessages = [
+      { source: 'Me' as const, content: 'שאלה {{hasNearbyObstacles}}' },
+      {
+        source: 'They' as const,
+        content: 'הסתר 2 {{obstacleHeight2}}',
+        visibleWhen: { var: 'obstacleActive2', equals: '1' },
+      },
+    ]
+
+    assert.equal(filterVisibleNadbarMessages(obstacleMessages, { hasNearbyObstacles: 'חיובי' }).length, 1)
+    assert.equal(
+      filterVisibleNadbarMessages(obstacleMessages, {
+        hasNearbyObstacles: 'חיובי',
+        obstacleActive2: '1',
+      }).length,
+      2,
+    )
+  })
 })
 
 describe('resolveResourceSegment', () => {

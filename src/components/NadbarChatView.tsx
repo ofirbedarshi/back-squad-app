@@ -22,6 +22,7 @@ interface NadbarChatViewProps {
   blockLoadedTargetIds?: Record<number, string | undefined>
   onBlockLoadTarget?: (blockIndex: number, target: Target) => void
   onBlockClearLoadedTarget?: (blockIndex: number) => void
+  onBlockAddObstacle?: (blockIndex: number) => void
 }
 
 function NadbarChatView({
@@ -34,6 +35,7 @@ function NadbarChatView({
   blockLoadedTargetIds,
   onBlockLoadTarget,
   onBlockClearLoadedTarget,
+  onBlockAddObstacle,
 }: NadbarChatViewProps) {
   const resources = useEntityLinkResources(links)
   const chatTemplate = useMemo(() => getNadbarChatTemplateUseCase(nadbarType), [nadbarType])
@@ -47,8 +49,9 @@ function NadbarChatView({
       blockLoadedTargetIds,
       onBlockLoadTarget,
       onBlockClearLoadedTarget,
+      onBlockAddObstacle,
     }),
-    [chatTemplate, resources, onBlockFooterAction, blockLoadedTargetIds, onBlockLoadTarget, onBlockClearLoadedTarget],
+    [chatTemplate, resources, onBlockFooterAction, blockLoadedTargetIds, onBlockLoadTarget, onBlockClearLoadedTarget, onBlockAddObstacle],
   )
 
   return (

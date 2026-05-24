@@ -1,3 +1,4 @@
+import NadbarAddObstacleButton from './NadbarAddObstacleButton'
 import NadbarCreateTargetFromVarsButton from './NadbarCreateTargetFromVarsButton'
 import NadbarLoadTargetButton from './NadbarLoadTargetButton'
 import { useNadbarChatContext } from './NadbarChatContext'
@@ -13,6 +14,7 @@ function NadbarBlockFooterActions({ blockIndex }: NadbarBlockFooterActionsProps)
     blockLoadedTargetIds,
     onBlockLoadTarget,
     onBlockClearLoadedTarget,
+    onBlockAddObstacle,
   } = useNadbarChatContext()
   const actions = blockFooterActions?.[blockIndex]
 
@@ -40,6 +42,14 @@ function NadbarBlockFooterActions({ blockIndex }: NadbarBlockFooterActionsProps)
                 targetId={blockLoadedTargetIds?.[blockIndex]}
                 onSelect={(target) => onBlockLoadTarget(blockIndex, target)}
                 onClear={() => onBlockClearLoadedTarget(blockIndex)}
+              />
+            )
+          case 'addObstacle':
+            if (!onBlockAddObstacle) return null
+            return (
+              <NadbarAddObstacleButton
+                key={action}
+                onClick={() => onBlockAddObstacle(blockIndex)}
               />
             )
           default:

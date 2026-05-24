@@ -14,6 +14,7 @@ function NadbarEditScreen() {
     blockLoadedTargetIds,
     handleLoadTarget,
     handleClearLoadedTarget,
+    handleAddObstacle,
   } = useNadbarEditFlow(id)
 
   if (!draftNadbar) {
@@ -39,6 +40,7 @@ function NadbarEditScreen() {
           blockLoadedTargetIds={blockLoadedTargetIds}
           onBlockLoadTarget={handleLoadTarget}
           onBlockClearLoadedTarget={handleClearLoadedTarget}
+          onBlockAddObstacle={handleAddObstacle}
         />
       </div>
     </div>

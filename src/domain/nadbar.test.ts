@@ -218,8 +218,8 @@ describe('createNadbarFromTemplate', () => {
   it('initializes empty blockMessageVars per template block', () => {
     const template = getNadbarTemplate('PointerTeamUpdated')
     const nadbar = createNadbarFromTemplate('PointerTeamUpdated', template)
-    assert.equal(nadbar.blockMessageVars?.length, 3)
-    assert.deepEqual(nadbar.blockMessageVars, [{}, {}, {}])
+    assert.equal(nadbar.blockMessageVars?.length, 4)
+    assert.deepEqual(nadbar.blockMessageVars, [{}, {}, {}, {}])
     assert.ok(isValidNadbar(nadbar))
   })
 })
@@ -246,12 +246,13 @@ describe('getNadbarTemplate', () => {
     }
   })
 
-  it('PointerTeamUpdated has three blocks', () => {
+  it('PointerTeamUpdated has four blocks', () => {
     const template = getNadbarTemplate('PointerTeamUpdated')
-    assert.equal(template.blocks.length, 3)
+    assert.equal(template.blocks.length, 4)
     assert.equal(template.blocks[0]?.messages.length, 4)
     assert.equal(template.blocks[1]?.messages.length, 6)
     assert.equal(template.blocks[2]?.messages.length, 5)
+    assert.equal(template.blocks[3]?.messages.length, 9)
     assert.deepEqual(template.userVarFields, {
       meraom: { input: 'numeric' },
       tsepa: { input: 'numeric' },
@@ -259,12 +260,24 @@ describe('getNadbarTemplate', () => {
       amura: { input: 'numeric' },
       amuraCorrected: { input: 'numeric' },
       amuraValid: { input: 'choice', options: ['תקינה', 'לא תקינה'] },
+      hasNearbyObstacles: { input: 'choice', options: ['שלילי', 'חיובי'] },
+      obstacleHeight1: { input: 'numeric' },
+      obstacleDistance1: { input: 'numeric' },
+      obstacleHeight2: { input: 'numeric' },
+      obstacleDistance2: { input: 'numeric' },
+      obstacleHeight3: { input: 'numeric' },
+      obstacleDistance3: { input: 'numeric' },
     })
     assert.deepEqual(template.blocks[1]?.footerActions, ['createTargetFromVars'])
     assert.deepEqual(template.blocks[2]?.footerActions, ['loadTarget'])
+    assert.deepEqual(template.blocks[3]?.footerActions, ['loadTarget', 'addObstacle'])
     assert.deepEqual(template.blocks[2]?.messages[3]?.visibleWhen, {
       var: 'amuraValid',
       equals: 'לא תקינה',
+    })
+    assert.deepEqual(template.blocks[3]?.messages[5]?.visibleWhen, {
+      var: 'obstacleActive2',
+      equals: '1',
     })
   })
 })

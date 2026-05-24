@@ -88,6 +88,21 @@ export function updateNadbarBlockMessageVar(
   return { ...nadbar, blockMessageVars: next }
 }
 
+export function setNadbarBlockMessageVars(
+  nadbar: Nadbar,
+  blockIndex: number,
+  vars: NadbarMessageUserVars,
+): Nadbar {
+  const blockCount = nadbar.messageBlocks.length
+  const current = nadbar.blockMessageVars ?? Array.from({ length: blockCount }, () => ({}))
+  const next = [...current]
+  while (next.length < blockCount) {
+    next.push({})
+  }
+  next[blockIndex] = { ...vars }
+  return { ...nadbar, blockMessageVars: next }
+}
+
 function isNadbarLinks(value: unknown): boolean {
   if (value === undefined) return true
   if (!value || typeof value !== 'object') return false

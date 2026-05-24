@@ -1,14 +1,16 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { getNadbarBlockMessageVars, updateNadbarBlockMessageVar } from '../domain/nadbar'
+import { getNadbarBlockMessageVars } from '../domain/nadbar'
 import type { Nadbar, NadbarLinksUpdate } from '../domain/nadbar.types'
 import { applyNadbarLinksToNadbarUseCase } from '../useCases/applyNadbarLinksToNadbar'
 import { assertNadbarSaveableUseCase } from '../useCases/assertNadbarSaveable'
 import { getNadbarByIdUseCase } from '../useCases/getNadbarById'
 import { updateNadbarUseCase } from '../useCases/updateNadbar'
 import { useDomainError } from './useDomainError'
+import { useNadbarBlockAddObstacleHandler } from './useNadbarBlockAddObstacleHandler'
 import { useNadbarBlockFooterActionHandler } from './useNadbarBlockFooterActionHandler'
 import { useNadbarBlockLoadTargetHandler } from './useNadbarBlockLoadTargetHandler'
+import { useNadbarBlockUserVarChange } from './useNadbarBlockUserVarChange'
 import { useNotification } from './useNotification'
 
 export function useNadbarEditFlow(id: string | undefined) {
@@ -26,6 +28,8 @@ export function useNadbarEditFlow(id: string | undefined) {
   const handleBlockFooterAction = useNadbarBlockFooterActionHandler(getMessageVars)
   const { blockLoadedTargetIds, handleLoadTarget, handleClearLoadedTarget } =
     useNadbarBlockLoadTargetHandler(draftNadbar, setDraftNadbar)
+  const { handleAddObstacle } = useNadbarBlockAddObstacleHandler(draftNadbar, setDraftNadbar)
+  const setUserVar = useNadbarBlockUserVarChange(setDraftNadbar)
 
   useEffect(() => {
     if (!draftNadbar) {
@@ -33,12 +37,6 @@ export function useNadbarEditFlow(id: string | undefined) {
       navigate('/nadbarim', { replace: true })
     }
   }, [draftNadbar, navigate, triggerError])
-
-  function setUserVar(blockIndex: number, varName: string, value: string) {
-    setDraftNadbar((current) =>
-      current ? updateNadbarBlockMessageVar(current, blockIndex, varName, value) : current,
-    )
-  }
 
   function updateDraftLinks(links: NadbarLinksUpdate) {
     try {
@@ -69,5 +67,6 @@ export function useNadbarEditFlow(id: string | undefined) {
     blockLoadedTargetIds,
     handleLoadTarget,
     handleClearLoadedTarget,
+    handleAddObstacle,
   }
 }

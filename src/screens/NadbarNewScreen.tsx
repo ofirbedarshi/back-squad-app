@@ -21,6 +21,7 @@ function NadbarNewScreen() {
     blockLoadedTargetIds,
     handleLoadTarget,
     handleClearLoadedTarget,
+    handleAddObstacle,
   } = useNadbarNewFlow()
 
   if (!nadbarType) {
@@ -62,6 +63,7 @@ function NadbarNewScreen() {
       blockLoadedTargetIds={blockLoadedTargetIds}
       onBlockLoadTarget={handleLoadTarget}
       onBlockClearLoadedTarget={handleClearLoadedTarget}
+      onBlockAddObstacle={handleAddObstacle}
     />
   )
 }
