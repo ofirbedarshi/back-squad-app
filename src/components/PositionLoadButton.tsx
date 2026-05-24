@@ -78,6 +78,11 @@ function PositionLoadButton({
             onClear={onClear}
             dense={variant === 'toolbar'}
             clearAriaLabel="נקה עמדה"
+            badge={
+              variant === 'toolbar'
+                ? undefined
+                : <PositionCurrentArchiveBadge isCurrentStation={isCurrentStation} />
+            }
           />
         )
       ) : (

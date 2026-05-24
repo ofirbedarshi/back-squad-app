@@ -28,7 +28,6 @@ type ValidatableFieldType =
   | 'targetLoader'
   | 'indicatorLoader'
   | 'positionLoader'
-  | 'currentPositionLoader'
 
 function isComputedTextField(field: TextField): boolean {
   return (
@@ -74,7 +73,6 @@ export function isFilledFormValue(
     case 'targetLoader':
     case 'indicatorLoader':
     case 'positionLoader':
-    case 'currentPositionLoader':
       return typeof value === 'string' && value.trim() !== ''
     default:
       return false
@@ -195,8 +193,7 @@ export function validateFieldValue(
   if (
     field.type === 'targetLoader' ||
     field.type === 'indicatorLoader' ||
-    field.type === 'positionLoader' ||
-    field.type === 'currentPositionLoader'
+    field.type === 'positionLoader'
   ) {
     return isFilledFormValue(value, field.type) || REQUIRED_FIELD_MESSAGE
   }

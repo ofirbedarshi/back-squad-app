@@ -54,11 +54,11 @@ export const bachFormSchema: FormSchema = {
     ]},
 
     { type: 'header', text: 'עמדת שיגור', bold: true },
-    { type: 'header', text: 'אחורי', bold: false },
-    { type: 'note', text: '* פרטי העמדה נטענים אוטומטית מהעמדה הנוכחית ואינם ניתנים לעריכה' },
     {
-      type: 'currentPositionLoader',
+      type: 'positionLoader',
       key: 'rearPositionId',
+      text: 'אחורי',
+      bold: false,
       required: true,
       fieldMappings: {
         positionName: 'positionName',
@@ -67,10 +67,10 @@ export const bachFormSchema: FormSchema = {
         aka: 'aka',
       },
     },
-    { type: 'text', key: 'positionName', label: 'שם עמדה', lockedByRef: 'rearPositionId', infoTooltipText: 'שדה זה מתמלא אוטומטית מהעמדה הנוכחית ואינו ניתן לעריכה ידנית' },
-    { type: 'coords', key: 'positionCoords', label: 'נ.צ. עמדה', lockedByRef: 'rearPositionId', infoTooltipText: 'שדה זה מתמלא אוטומטית מהעמדה הנוכחית ואינו ניתן לעריכה ידנית' },
-    { type: 'text', key: 'positionAltitude', label: 'גובה', lockedByRef: 'rearPositionId', infoTooltipText: 'שדה זה מתמלא אוטומטית מהעמדה הנוכחית ואינו ניתן לעריכה ידנית' },
-    { type: 'text', key: 'aka', label: 'אק"א', lockedByRef: 'rearPositionId', infoTooltipText: 'שדה זה מתמלא אוטומטית מהעמדה הנוכחית ואינו ניתן לעריכה ידנית' },
+    { type: 'text', key: 'positionName', label: 'שם עמדה', lockedByRef: 'rearPositionId', infoTooltipText: 'שדה זה מתמלא אוטומטית מהעמדה הנטענת ואינו ניתן לעריכה ידנית' },
+    { type: 'coords', key: 'positionCoords', label: 'נ.צ. עמדה', lockedByRef: 'rearPositionId', infoTooltipText: 'שדה זה מתמלא אוטומטית מהעמדה הנטענת ואינו ניתן לעריכה ידנית' },
+    { type: 'text', key: 'positionAltitude', label: 'גובה', lockedByRef: 'rearPositionId', infoTooltipText: 'שדה זה מתמלא אוטומטית מהעמדה הנטענת ואינו ניתן לעריכה ידנית' },
+    { type: 'text', key: 'aka', label: 'אק"א', lockedByRef: 'rearPositionId', infoTooltipText: 'שדה זה מתמלא אוטומטית מהעמדה הנטענת ואינו ניתן לעריכה ידנית' },
     { type: 'row', fields: [
       { type: 'text', key: 'missileC', label: "צ' הטיל", required: true },
       { type: 'text', key: 'serialNumber', label: "מספר סידורי דוג'", required: false },

@@ -1,12 +1,15 @@
+import type { ReactNode } from 'react'
+
 interface LoadPickerChipProps {
   displayName: string
   onClear: () => void
   /** Toolbar-sized chip (nadbar chat toolbar). */
   dense?: boolean
   clearAriaLabel: string
+  badge?: ReactNode
 }
 
-function LoadPickerChip({ displayName, onClear, dense = false, clearAriaLabel }: LoadPickerChipProps) {
+function LoadPickerChip({ displayName, onClear, dense = false, clearAriaLabel, badge }: LoadPickerChipProps) {
   const chipGap = dense ? 'gap-0.5' : 'gap-1.5'
   const chipMaxW = dense ? 'max-w-[72px]' : 'max-w-[140px]'
 
@@ -17,6 +20,7 @@ function LoadPickerChip({ displayName, onClear, dense = false, clearAriaLabel }:
       >
         {displayName}
       </span>
+      {badge ? <span className="shrink-0">{badge}</span> : null}
       <button
         type="button"
         onClick={onClear}

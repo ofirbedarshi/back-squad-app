@@ -8,7 +8,6 @@ import Checkbox from '../base/Checkbox'
 import CoordinateInput from '../base/CoordinateInput'
 import TargetLoaderField from './TargetLoaderField'
 import IndicatorLoaderField from './IndicatorLoaderField'
-import CurrentPositionLoaderField from './CurrentPositionLoaderField'
 import PositionLoaderField from './PositionLoaderField'
 import IndicatorToTargetComputedTextField from './IndicatorToTargetComputedTextField'
 import PositionToTargetComputedTextField from './PositionToTargetComputedTextField'
@@ -115,21 +114,6 @@ function DynamicFormField({
         currentPositionId={currentPositionId || undefined}
         setValue={setValue}
         register={register}
-        watch={watch}
-        errors={errors}
-        getValues={getValues}
-        parentByKey={parentByKey}
-      />
-    )
-  }
-
-  if (field.type === 'currentPositionLoader') {
-    return (
-      <CurrentPositionLoaderField
-        fieldDef={field}
-        setValue={setValue}
-        register={register}
-        watch={watch}
         errors={errors}
         getValues={getValues}
         parentByKey={parentByKey}

@@ -169,26 +169,12 @@ export interface IndicatorLoaderField {
   }
 }
 
-/** Picked from archive + current; maps Position to form keys like currentPositionLoader. */
+/** Picked from archive + current; auto-loads current position on mount when empty. */
 export interface PositionLoaderField {
   type: 'positionLoader'
   key: string
   text: string
   bold?: boolean
-  required?: boolean
-  fieldMappings: {
-    positionName?: string
-    positionCoords?: string
-    positionAltitude?: string
-    aka?: string
-  }
-}
-
-/** Like targetLoader, but fills mapped fields from current position on mount (no load button). */
-export interface CurrentPositionLoaderField {
-  type: 'currentPositionLoader'
-  /** Form key where the captured position id is stored. */
-  key: string
   required?: boolean
   fieldMappings: {
     positionName?: string
@@ -214,7 +200,6 @@ export type FormFieldDef =
   | TargetLoaderField
   | IndicatorLoaderField
   | PositionLoaderField
-  | CurrentPositionLoaderField
 
 export interface FormSchema {
   fields: FormFieldDef[]
