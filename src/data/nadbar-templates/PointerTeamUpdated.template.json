@@ -1,0 +1,16 @@
+{
+  "messages": [
+    {
+      "source": "They",
+      "content": "{{openingCallsign1}} מ {{openingCallsign2}} האם אתה מבלה בענבים"
+    },
+    {
+      "source": "Me",
+      "content": "חיובי, מבלה בענבים / שלילי עוד __ קטנות"
+    },
+    {
+      "source": "They",
+      "content": "קבל קוץ {{kutz}} כמו כן גור {{gur}} מעל פני הים"
+    }
+  ]
+}

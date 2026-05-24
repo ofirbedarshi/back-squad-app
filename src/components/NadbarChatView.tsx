@@ -33,6 +33,8 @@ function NadbarChatView({ messages, links, messageVars = {}, onUserVarChange }: 
             key={`${message.source}-${index}`}
             message={message}
             resources={resources}
+            messageVars={messageVars}
+            onUserVarChange={onUserVarChange}
           />
         ),
       )}

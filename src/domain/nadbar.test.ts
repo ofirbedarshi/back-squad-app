@@ -6,10 +6,42 @@ import {
   createNadbarFromTemplate,
   hasCompleteNadbarLinks,
   isValidNadbar,
+  nadbarRequiresEntityLinks,
   NADBAR_SAVE_LINKS_REQUIRED_MESSAGE,
   parseNadbarTemplate,
 } from './nadbar.ts'
 import { getNadbarTemplate } from './nadbarTemplates.ts'
+import { assertNadbarSaveableUseCase } from '../useCases/assertNadbarSaveable.ts'
+
+describe('nadbarRequiresEntityLinks', () => {
+  it('is false only for PointerTeamUpdated', () => {
+    assert.equal(nadbarRequiresEntityLinks('PointerTeamUpdated'), false)
+    assert.equal(nadbarRequiresEntityLinks('PointerTeam'), true)
+    assert.equal(nadbarRequiresEntityLinks('Katmam'), true)
+    assert.equal(nadbarRequiresEntityLinks('TzurPointer'), true)
+  })
+})
+
+describe('assertNadbarSaveableUseCase', () => {
+  it('allows PointerTeamUpdated without links', () => {
+    const nadbar = createNadbarFromTemplate('PointerTeamUpdated', {
+      messages: [{ source: 'Me', content: 'בדיקה' }],
+    })
+    assert.equal(nadbar.links, undefined)
+    assert.doesNotThrow(() => assertNadbarSaveableUseCase(nadbar))
+  })
+
+  it('requires links for other types', () => {
+    const nadbar = createNadbarFromTemplate('Katmam', {
+      messages: [{ source: 'Me', content: 'בדיקה' }],
+    })
+    assert.throws(
+      () => assertNadbarSaveableUseCase(nadbar),
+      (error: unknown) =>
+        error instanceof Error && error.message === NADBAR_SAVE_LINKS_REQUIRED_MESSAGE,
+    )
+  })
+})
 
 describe('parseNadbarTemplate', () => {
   it('accepts valid template', () => {
@@ -52,7 +84,7 @@ describe('createNadbarFromTemplate', () => {
 
 describe('getNadbarTemplate', () => {
   it('returns template for each type', () => {
-    for (const type of ['PointerTeam', 'Katmam', 'TzurPointer'] as const) {
+    for (const type of ['PointerTeam', 'PointerTeamUpdated', 'Katmam', 'TzurPointer'] as const) {
       const template = getNadbarTemplate(type)
       assert.ok(template.messages.length > 0)
     }

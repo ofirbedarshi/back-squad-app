@@ -1,0 +1,122 @@
+---
+description: Generate compact high-signal handoff summaries between agent sessions
+globs:
+alwaysApply: false
+---
+
+# Agent Handoff Rule
+
+When the user including this in the chat session, generate a compact and high-signal handoff summary optimized for AI-to-AI continuation.
+
+The goal is to:
+- reduce context usage
+- improve focus
+- avoid re-explaining the project
+- maintain continuity across sessions
+- help a fresh agent onboard quickly
+
+## Handoff Requirements
+
+The handoff should include only information that materially helps future execution.
+
+Prefer:
+- concise bullets
+- structured sections
+- implementation details
+- architectural reasoning
+- constraints
+- decisions
+- important tradeoffs
+
+Avoid:
+- long prose
+- marketing language
+- repeating obvious information
+- low-signal history
+
+## Required Sections
+
+### 1. Project Goal
+- What is being built
+- Why it exists
+- Product/business direction
+
+### 2. Current State
+- What already works
+- What was implemented
+- Important decisions already made
+- Rejected approaches worth knowing
+
+### 3. Technical Architecture
+- Stack
+- Main flows
+- Important folders/files
+- APIs/services
+- Design patterns
+- Constraints
+
+### 4. Important References
+Include:
+- file paths
+- important functions/classes/components
+- scripts/commands
+- docs/URLs if relevant
+
+### 5. Current Task
+- Current objective
+- Blockers
+- Unfinished work
+- Immediate next focus
+
+### 6. Open Questions / Risks
+- Technical risks
+- Product uncertainty
+- Performance concerns
+- Missing decisions
+
+### 7. Working Rules
+Document important project principles such as:
+- avoid over-engineering
+- deterministic logic
+- do not guess missing data
+- preserve architecture consistency
+- keep functions small
+- mobile-first
+- RTL support
+- etc.
+
+### 8. Product & UX Context
+- UX philosophy
+- UI expectations
+- User behavior assumptions
+- What should feel simple vs powerful
+
+### 9. Future Direction
+- Planned features
+- Long-term vision
+- Expansion ideas already discussed
+
+### 10. Quickstart For New Agent
+Provide:
+- fastest onboarding path
+- files to read first
+- commands to run
+- areas to avoid touching initially
+
+### 11. Final Recommendations
+Include:
+- recommended next actions
+- recommended order of execution
+- cautions before continuing
+
+## Output Style
+
+The output must be:
+- compact
+- high signal
+- optimized for AI consumption
+- low-noise
+- structured with headers
+- mostly bullets instead of paragraphs
+
+Compress aggressively while preserving critical reasoning and decisions.

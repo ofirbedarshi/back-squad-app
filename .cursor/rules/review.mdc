@@ -1,0 +1,206 @@
+---
+description: Perform architecture and code design review after implementation changes
+globs:
+alwaysApply: false
+---
+
+# Code Design Review Rule
+
+when including this file in the chat session, perform a focused code design review on all changes before considering the task done.
+
+The purpose of this review is to:
+- maintain clean architecture
+- reduce technical debt
+- prevent unnecessary complexity
+- preserve consistency across the codebase
+- keep the system maintainable over time
+
+This review focuses on:
+- code quality
+- architecture consistency
+- maintainability
+- abstraction quality
+- duplication
+- simplicity
+- reuse
+
+Do NOT focus primarily on:
+- security audits
+- infrastructure
+- deployment
+- scalability theory
+- edge-case paranoia
+unless directly relevant to the implementation.
+
+---
+
+# Review Checklist
+
+## 1. Relevance Cleanup
+
+Check whether the implementation introduced:
+- unused functions
+- dead code
+- obsolete files
+- outdated logic
+- unnecessary abstractions
+- temporary debugging code
+- duplicated utilities/components
+
+Remove anything no longer needed.
+
+Prefer deleting over keeping uncertain legacy code.
+
+---
+
+## 2. Existing System Reuse
+
+Before accepting new code, verify:
+- whether similar logic already exists
+- whether utilities/hooks/services/components can be reused
+- whether new abstractions duplicate existing patterns
+- whether naming and structure align with the current architecture
+
+Prefer extending existing patterns over creating parallel systems.
+
+---
+
+## 3. Simplicity & Overengineering Review
+
+Actively search for:
+- unnecessary abstractions
+- premature generalization
+- deeply nested logic
+- excessive indirection
+- large wrappers for small problems
+- configuration complexity
+- unnecessary state management
+
+Prefer:
+- direct flows
+- obvious logic
+- local reasoning
+- minimal abstractions
+
+The simplest maintainable solution is preferred.
+
+---
+
+## 4. Function & Component Design
+
+Verify that:
+- functions are small and focused
+- components have clear responsibilities
+- names explain intent clearly
+- logic is composable
+- side effects are isolated
+- files are not overloaded with responsibilities
+
+Avoid:
+- giant functions
+- “god components”
+- mixed concerns
+- hidden side effects
+
+---
+
+## 5. Duplication Review
+
+Search for:
+- repeated logic
+- repeated UI structures
+- repeated transformations
+- repeated validation flows
+- repeated constants/types
+
+Extract shared logic only when:
+- duplication is real
+- reuse improves clarity
+- abstraction reduces complexity
+
+Avoid abstracting too early.
+
+---
+
+## 6. Architecture Consistency
+
+Ensure new code matches:
+- existing project conventions
+- folder organization
+- naming conventions
+- typing strategy
+- state management patterns
+- API patterns
+- error handling style
+
+Do not introduce a new pattern unless clearly justified.
+
+---
+
+## 7. Readability Review
+
+Verify:
+- code is easy to scan quickly
+- logic flow is obvious
+- variable names are meaningful
+- files are easy to navigate
+- developers can understand intent without excessive comments
+
+Prefer self-explanatory code over clever code.
+
+---
+
+## 8. Final Self-Question
+
+Before finishing, ask internally:
+
+- “Can this be simpler?”
+- “Does this abstraction actually help?”
+- “Would a new developer understand this quickly?”
+- “Did I create something that already exists?”
+- “Can anything be deleted?”
+- “Is every file/function still justified?”
+
+---
+
+# Output Requirements
+
+At the end of the review, provide a VERY SHORT summary including:
+
+## Review Result
+- PASS / NEEDS ATTENTION
+
+## What Was Improved
+Short bullets of:
+- removed code
+- simplifications
+- deduplications
+- refactors
+- reused existing logic
+
+## Open Questions
+Only include questions if:
+- architectural intent is unclear
+- there are multiple valid approaches
+- deleting/changing something may affect future plans
+
+Keep questions concise and actionable.
+
+---
+
+# Important Philosophy
+
+Favor:
+- clarity
+- simplicity
+- maintainability
+- consistency
+- deletion
+- focused abstractions
+
+Avoid:
+- cleverness
+- abstraction for abstraction’s sake
+- speculative architecture
+- unnecessary extensibility
+- defensive overengineering

@@ -1,10 +1,18 @@
-import { assertNadbarLinksForSave, NADBAR_SAVE_LINKS_REQUIRED_MESSAGE } from '../domain/nadbar'
+import {
+  assertNadbarLinksForSave,
+  nadbarRequiresEntityLinks,
+  NADBAR_SAVE_LINKS_REQUIRED_MESSAGE,
+} from '../domain/nadbar'
 import type { Nadbar } from '../domain/nadbar.types'
 import { loadIndicators } from '../storage/indicatorStorage'
 import { loadPositions } from '../storage/positionStorage'
 import { loadTargets } from '../storage/targetStorage'
 
 export function assertNadbarSaveableUseCase(nadbar: Nadbar): void {
+  if (!nadbarRequiresEntityLinks(nadbar.type)) {
+    return
+  }
+
   assertNadbarLinksForSave(nadbar.links)
 
   const { pointerId, targetId, positionId } = nadbar.links!

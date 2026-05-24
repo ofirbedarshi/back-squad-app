@@ -1,5 +1,6 @@
 import NadbarChatStepHeaderLayout from './NadbarChatStepHeaderLayout'
 import NadbarLinksToolbar from './NadbarLinksToolbar'
+import { nadbarRequiresEntityLinks } from '../domain/nadbar'
 import type { NadbarLinksUpdate, NadbarType } from '../domain/nadbar.types'
 import { getNadbarTypeLabel } from '../utils/nadbarDisplay'
 
@@ -22,12 +23,14 @@ function NadbarNewChatStepHeader({
 }: NadbarNewChatStepHeaderProps) {
   return (
     <NadbarChatStepHeaderLayout title={`הוסף · ${getNadbarTypeLabel(nadbarType)}`} onSave={onSave}>
-      <NadbarLinksToolbar
-        pointerId={pointerId}
-        targetId={targetId}
-        positionId={positionId}
-        onLinksChange={onLinksChange}
-      />
+      {nadbarRequiresEntityLinks(nadbarType) ? (
+        <NadbarLinksToolbar
+          pointerId={pointerId}
+          targetId={targetId}
+          positionId={positionId}
+          onLinksChange={onLinksChange}
+        />
+      ) : null}
     </NadbarChatStepHeaderLayout>
   )
 }

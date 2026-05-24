@@ -19,7 +19,9 @@ function NadbarChatStepHeaderLayout({ title, onSave, children }: NadbarChatStepH
           שמור
         </button>
       </div>
-      <div className="flex w-full min-w-0 items-center justify-center gap-1">{children}</div>
+      {children ? (
+        <div className="flex w-full min-w-0 items-center justify-center gap-1">{children}</div>
+      ) : null}
     </header>
   )
 }

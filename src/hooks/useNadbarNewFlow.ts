@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { nadbarRequiresEntityLinks } from '../domain/nadbar'
 import type { Nadbar, NadbarLinksUpdate } from '../domain/nadbar.types'
 import { addNadbarUseCase } from '../useCases/addNadbar'
 import { assertNadbarSaveableUseCase } from '../useCases/assertNadbarSaveable'
@@ -20,6 +21,26 @@ export function useNadbarNewFlow() {
   const [targetId, setTargetId] = useState<string | undefined>()
   const [positionId, setPositionId] = useState<string | undefined>()
   const [draftNadbar, setDraftNadbar] = useState<Nadbar | null>(null)
+
+  useEffect(() => {
+    if (!nadbarType) return
+
+    if (!nadbarRequiresEntityLinks(nadbarType)) {
+      setStep('chat')
+      setPointerId(undefined)
+      setTargetId(undefined)
+      setPositionId(undefined)
+      try {
+        setDraftNadbar(createNadbarFromTypeUseCase(nadbarType))
+      } catch (error) {
+        triggerError(error instanceof Error ? error.message : 'יצירת הנדבר נכשלה')
+      }
+      return
+    }
+
+    setStep('links')
+    setDraftNadbar(null)
+  }, [nadbarType, triggerError])
 
   function updateLinkIds(links: NadbarLinksUpdate) {
     if ('pointerId' in links) {

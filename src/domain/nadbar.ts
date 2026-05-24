@@ -16,6 +16,10 @@ export function isNadbarType(value: string): value is NadbarType {
   return (NADBAR_TYPES as readonly string[]).includes(value)
 }
 
+export function nadbarRequiresEntityLinks(type: NadbarType): boolean {
+  return type !== 'PointerTeamUpdated'
+}
+
 function isNadbarMessageSource(value: unknown): value is NadbarMessageSource {
   return typeof value === 'string' && (NADBAR_MESSAGE_SOURCES as readonly string[]).includes(value)
 }

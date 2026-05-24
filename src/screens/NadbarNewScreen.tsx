@@ -1,5 +1,6 @@
 import NadbarNewChatStep from '../components/NadbarNewChatStep'
 import EntityLoadLinksStep from '../components/EntityLoadLinksStep'
+import { nadbarRequiresEntityLinks } from '../domain/nadbar'
 import { useNadbarNewFlow } from '../hooks/useNadbarNewFlow'
 import { getNadbarTypeLabel } from '../utils/nadbarDisplay'
 
@@ -22,7 +23,7 @@ function NadbarNewScreen() {
     return null
   }
 
-  if (step === 'links') {
+  if (step === 'links' && nadbarRequiresEntityLinks(nadbarType)) {
     return (
       <div className="h-full min-h-0">
         <EntityLoadLinksStep

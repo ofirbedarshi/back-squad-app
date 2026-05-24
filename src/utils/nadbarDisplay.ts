@@ -7,6 +7,7 @@ import type { NadbarCardDetails } from './nadbarDisplay.types'
 
 const NADBAR_TYPE_LABELS: Record<NadbarType, string> = {
   PointerTeam: 'צוות ציון',
+  PointerTeamUpdated: 'צוות ציון מעודכן',
   Katmam: 'נדבר כטמ״מ',
   TzurPointer: 'נדבר צור מציין',
 }
