@@ -103,6 +103,10 @@ export function setNadbarBlockMessageVars(
   return { ...nadbar, blockMessageVars: next }
 }
 
+export function updateNadbarNotes(nadbar: Nadbar, value: string): Nadbar {
+  return { ...nadbar, notes: value }
+}
+
 function isNadbarLinks(value: unknown): boolean {
   if (value === undefined) return true
   if (!value || typeof value !== 'object') return false
@@ -141,6 +145,8 @@ export function normalizeNadbar(nadbar: Nadbar): Nadbar {
     nadbar.blockMessageVars,
     nadbar.messageBlocks.length,
   )
+  const trimmedNotes = nadbar.notes?.trim()
+  const notes = trimmedNotes && trimmedNotes.length > 0 ? trimmedNotes : undefined
 
   const base: Nadbar = {
     id: nadbar.id,
@@ -149,6 +155,7 @@ export function normalizeNadbar(nadbar: Nadbar): Nadbar {
     type: nadbar.type,
     messageBlocks: copyMessageBlocks(nadbar.messageBlocks),
     ...(blockMessageVars ? { blockMessageVars } : {}),
+    ...(notes ? { notes } : {}),
   }
 
   if (!pointerId && !targetId && !positionId) {
@@ -407,6 +414,7 @@ export function isValidNadbar(value: unknown): value is Nadbar {
     isNadbarType(record.type) &&
     messageBlocks.every(isNadbarMessageBlock) &&
     isNadbarLinks(record.links) &&
-    isBlockMessageVars(record.blockMessageVars, messageBlocks.length)
+    isBlockMessageVars(record.blockMessageVars, messageBlocks.length) &&
+    (record.notes === undefined || typeof record.notes === 'string')
   )
 }

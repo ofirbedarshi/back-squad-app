@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { NadbarChatProvider } from './NadbarChatContext'
 import NadbarMessageBlockView from './NadbarMessageBlockView'
+import NadbarNotesField from './NadbarNotesField'
 import type {
   NadbarBlockFooterAction,
   NadbarLinks,
@@ -17,6 +18,8 @@ interface NadbarChatViewProps {
   messageBlocks: NadbarMessageBlock[]
   links?: NadbarLinks
   blockMessageVars?: NadbarMessageUserVars[]
+  notes?: string
+  onNotesChange: (value: string) => void
   onUserVarChange: (blockIndex: number, varName: string, value: string) => void
   onBlockFooterAction?: (blockIndex: number, action: NadbarBlockFooterAction) => void
   blockLoadedTargetIds?: Record<number, string | undefined>
@@ -30,6 +33,8 @@ function NadbarChatView({
   messageBlocks,
   links,
   blockMessageVars = [],
+  notes = '',
+  onNotesChange,
   onUserVarChange,
   onBlockFooterAction,
   blockLoadedTargetIds,
@@ -70,6 +75,7 @@ function NadbarChatView({
             onUserVarChange={(varName, value) => onUserVarChange(blockIndex, varName, value)}
           />
         ))}
+        <NadbarNotesField value={notes} onChange={onNotesChange} />
       </div>
     </NadbarChatProvider>
   )

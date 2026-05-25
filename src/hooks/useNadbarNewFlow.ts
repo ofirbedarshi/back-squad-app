@@ -11,6 +11,7 @@ import { useNadbarBlockAddObstacleHandler } from './useNadbarBlockAddObstacleHan
 import { useNadbarBlockFooterActionHandler } from './useNadbarBlockFooterActionHandler'
 import { useNadbarBlockLoadTargetHandler } from './useNadbarBlockLoadTargetHandler'
 import { useNadbarBlockUserVarChange } from './useNadbarBlockUserVarChange'
+import { useNadbarNotesChange } from './useNadbarNotesChange'
 import { useNadbarTypeRouteParam } from './useNadbarTypeRouteParam'
 import { useNotification } from './useNotification'
 import type { NewNadbarStep } from './useNadbarNewFlow.types'
@@ -35,6 +36,7 @@ export function useNadbarNewFlow() {
     useNadbarBlockLoadTargetHandler(draftNadbar, setDraftNadbar)
   const { handleAddObstacle } = useNadbarBlockAddObstacleHandler(draftNadbar, setDraftNadbar)
   const setUserVar = useNadbarBlockUserVarChange(setDraftNadbar)
+  const setNotes = useNadbarNotesChange(setDraftNadbar)
 
   useEffect(() => {
     if (!nadbarType) return
@@ -110,6 +112,7 @@ export function useNadbarNewFlow() {
     positionId,
     draftNadbar,
     setUserVar,
+    setNotes,
     updateLinkIds,
     advanceFromLinksStep,
     saveDraftLinks,

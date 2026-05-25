@@ -11,6 +11,7 @@ import { useNadbarBlockAddObstacleHandler } from './useNadbarBlockAddObstacleHan
 import { useNadbarBlockFooterActionHandler } from './useNadbarBlockFooterActionHandler'
 import { useNadbarBlockLoadTargetHandler } from './useNadbarBlockLoadTargetHandler'
 import { useNadbarBlockUserVarChange } from './useNadbarBlockUserVarChange'
+import { useNadbarNotesChange } from './useNadbarNotesChange'
 import { useNotification } from './useNotification'
 
 export function useNadbarEditFlow(id: string | undefined) {
@@ -30,6 +31,7 @@ export function useNadbarEditFlow(id: string | undefined) {
     useNadbarBlockLoadTargetHandler(draftNadbar, setDraftNadbar)
   const { handleAddObstacle } = useNadbarBlockAddObstacleHandler(draftNadbar, setDraftNadbar)
   const setUserVar = useNadbarBlockUserVarChange(setDraftNadbar)
+  const setNotes = useNadbarNotesChange(setDraftNadbar)
 
   useEffect(() => {
     if (!draftNadbar) {
@@ -61,6 +63,7 @@ export function useNadbarEditFlow(id: string | undefined) {
   return {
     draftNadbar,
     setUserVar,
+    setNotes,
     updateDraftLinks,
     saveNadbar,
     handleBlockFooterAction,

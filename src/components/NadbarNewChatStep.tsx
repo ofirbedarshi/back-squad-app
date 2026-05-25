@@ -7,6 +7,7 @@ interface NadbarNewChatStepProps {
   nadbarType: NadbarType
   draftNadbar: Nadbar
   onUserVarChange: (blockIndex: number, varName: string, value: string) => void
+  onNotesChange: (value: string) => void
   onLinksChange: (links: NadbarLinksUpdate) => void
   onSave: () => void
   onBlockFooterAction?: (blockIndex: number, action: NadbarBlockFooterAction) => void
@@ -20,6 +21,7 @@ function NadbarNewChatStep({
   nadbarType,
   draftNadbar,
   onUserVarChange,
+  onNotesChange,
   onLinksChange,
   onSave,
   onBlockFooterAction,
@@ -45,6 +47,8 @@ function NadbarNewChatStep({
           messageBlocks={draftNadbar.messageBlocks}
           links={draftNadbar.links}
           blockMessageVars={draftNadbar.blockMessageVars}
+          notes={draftNadbar.notes ?? ''}
+          onNotesChange={onNotesChange}
           onUserVarChange={onUserVarChange}
           onBlockFooterAction={onBlockFooterAction}
           blockLoadedTargetIds={blockLoadedTargetIds}

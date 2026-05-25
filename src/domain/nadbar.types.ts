@@ -52,6 +52,8 @@ export interface Nadbar {
   links?: NadbarLinks
   /** Per-block user-filled template fields (index aligns with `messageBlocks`) */
   blockMessageVars?: NadbarMessageUserVars[]
+  /** Free-text notes below the conversation (not part of message templates). */
+  notes?: string
 }
 
 /** Supported input kinds for template user vars (`userVarFields` in template JSON). */

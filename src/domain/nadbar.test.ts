@@ -11,8 +11,10 @@ import {
   isValidNadbar,
   nadbarRequiresEntityLinks,
   NADBAR_SAVE_LINKS_REQUIRED_MESSAGE,
+  normalizeNadbar,
   parseNadbarTemplate,
   updateNadbarBlockMessageVar,
+  updateNadbarNotes,
 } from './nadbar.ts'
 import { getNadbarTemplate } from './nadbarTemplates.ts'
 import { assertNadbarSaveableUseCase } from '../useCases/assertNadbarSaveable.ts'
@@ -218,9 +220,28 @@ describe('createNadbarFromTemplate', () => {
   it('initializes empty blockMessageVars per template block', () => {
     const template = getNadbarTemplate('PointerTeamUpdated')
     const nadbar = createNadbarFromTemplate('PointerTeamUpdated', template)
-    assert.equal(nadbar.blockMessageVars?.length, 4)
-    assert.deepEqual(nadbar.blockMessageVars, [{}, {}, {}, {}])
+    assert.equal(nadbar.blockMessageVars?.length, 6)
+    assert.deepEqual(nadbar.blockMessageVars, [{}, {}, {}, {}, {}, {}])
     assert.ok(isValidNadbar(nadbar))
+  })
+})
+
+describe('updateNadbarNotes', () => {
+  it('sets notes on nadbar', () => {
+    const template = getNadbarTemplate('Katmam')
+    const nadbar = createNadbarFromTemplate('Katmam', template)
+    const updated = updateNadbarNotes(nadbar, 'הערה לבדיקה')
+    assert.equal(updated.notes, 'הערה לבדיקה')
+  })
+})
+
+describe('normalizeNadbar notes', () => {
+  it('strips empty and whitespace-only notes', () => {
+    const template = getNadbarTemplate('Katmam')
+    const nadbar = createNadbarFromTemplate('Katmam', template)
+    assert.equal(normalizeNadbar({ ...nadbar, notes: '' }).notes, undefined)
+    assert.equal(normalizeNadbar({ ...nadbar, notes: '   ' }).notes, undefined)
+    assert.equal(normalizeNadbar({ ...nadbar, notes: '  טקסט  ' }).notes, 'טקסט')
   })
 })
 
@@ -254,7 +275,7 @@ describe('getNadbarTemplate', () => {
     assert.equal(template.blocks[2]?.messages.length, 5)
     assert.equal(template.blocks[3]?.messages.length, 9)
     assert.equal(template.blocks[4]?.messages.length, 3)
-    assert.equal(template.blocks[5]?.messages.length, 10)
+    assert.equal(template.blocks[5]?.messages.length, 9)
     assert.deepEqual(template.userVarFields, {
       meraom: { input: 'numeric' },
       tsepa: { input: 'numeric' },
@@ -460,6 +481,15 @@ describe('isValidNadbar', () => {
       isValidNadbar({ ...nadbar, messageVars: { metara: 'legacy' } }),
       false,
     )
+  })
+
+  it('accepts optional notes string', () => {
+    const nadbar = createNadbarFromTemplate(
+      'Katmam',
+      blocksFromMessages([{ source: 'Me', content: 'בדיקה' }]),
+    )
+    assert.ok(isValidNadbar({ ...nadbar, notes: 'הערה' }))
+    assert.equal(isValidNadbar({ ...nadbar, notes: 123 }), false)
   })
 
   it('rejects blockMessageVars length mismatch', () => {

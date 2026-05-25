@@ -13,6 +13,7 @@ function NadbarNewScreen() {
     positionId,
     draftNadbar,
     setUserVar,
+    setNotes,
     updateLinkIds,
     advanceFromLinksStep,
     saveDraftLinks,
@@ -57,6 +58,7 @@ function NadbarNewScreen() {
       nadbarType={nadbarType}
       draftNadbar={draftNadbar}
       onUserVarChange={setUserVar}
+      onNotesChange={setNotes}
       onLinksChange={saveDraftLinks}
       onSave={saveNadbar}
       onBlockFooterAction={handleBlockFooterAction}

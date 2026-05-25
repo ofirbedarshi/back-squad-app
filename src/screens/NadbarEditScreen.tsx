@@ -8,6 +8,7 @@ function NadbarEditScreen() {
   const {
     draftNadbar,
     setUserVar,
+    setNotes,
     updateDraftLinks,
     saveNadbar,
     handleBlockFooterAction,
@@ -35,6 +36,8 @@ function NadbarEditScreen() {
           messageBlocks={draftNadbar.messageBlocks}
           links={draftNadbar.links}
           blockMessageVars={draftNadbar.blockMessageVars}
+          notes={draftNadbar.notes ?? ''}
+          onNotesChange={setNotes}
           onUserVarChange={setUserVar}
           onBlockFooterAction={handleBlockFooterAction}
           blockLoadedTargetIds={blockLoadedTargetIds}
