@@ -102,3 +102,72 @@ export function clearTargetDerivedBlockVars(
   next[blockIndex] = blockVars
   return { ...nadbar, blockMessageVars: next }
 }
+
+export function applyTargetToNadbarBlocksFrom(
+  nadbar: Nadbar,
+  fromBlockIndex: number,
+  target: Target,
+  azimuth?: number,
+): Nadbar {
+  if (!nadbar.messageBlocks[fromBlockIndex]) {
+    throw new Error('בלוק נדבר לא נמצא')
+  }
+
+  let updated = nadbar
+  for (let i = fromBlockIndex; i < nadbar.messageBlocks.length; i++) {
+    updated = applyTargetToNadbarBlock(updated, i, target, azimuth)
+  }
+  return updated
+}
+
+export function clearTargetDerivedBlockVarsFrom(
+  nadbar: Nadbar,
+  fromBlockIndex: number,
+): Nadbar {
+  if (!nadbar.messageBlocks[fromBlockIndex]) {
+    throw new Error('בלוק נדבר לא נמצא')
+  }
+
+  let updated = nadbar
+  for (let i = fromBlockIndex; i < nadbar.messageBlocks.length; i++) {
+    const block = nadbar.messageBlocks[i]!
+    updated = clearTargetDerivedBlockVars(updated, i, block)
+  }
+  return updated
+}
+
+export function propagateTargetDerivedVarsFromBlock(
+  nadbar: Nadbar,
+  fromBlockIndex: number,
+): Nadbar {
+  if (!nadbar.messageBlocks[fromBlockIndex]) {
+    throw new Error('בלוק נדבר לא נמצא')
+  }
+
+  const blockCount = nadbar.messageBlocks.length
+  const current = nadbar.blockMessageVars ?? Array.from({ length: blockCount }, () => ({}))
+  const next = [...current]
+  while (next.length < blockCount) {
+    next.push({})
+  }
+
+  const sourceVars = next[fromBlockIndex] ?? {}
+
+  for (let i = fromBlockIndex + 1; i < blockCount; i++) {
+    const destBlock = nadbar.messageBlocks[i]!
+    const toMerge: NadbarMessageUserVars = {}
+    for (const varName of collectBlockUserVarNames(destBlock)) {
+      if (
+        isNadbarTargetDerivedVarName(varName) &&
+        Object.prototype.hasOwnProperty.call(sourceVars, varName)
+      ) {
+        toMerge[varName] = sourceVars[varName]
+      }
+    }
+    if (Object.keys(toMerge).length > 0) {
+      next[i] = { ...(next[i] ?? {}), ...toMerge }
+    }
+  }
+
+  return { ...nadbar, blockMessageVars: next }
+}

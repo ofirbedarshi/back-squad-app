@@ -5,11 +5,44 @@ import {
   applyTargetToNadbarBlockUseCase,
   clearTargetFromNadbarBlockUseCase,
 } from '../useCases/applyTargetToNadbarBlock'
+import { isNadbarBlockHasLoadTarget, type NadbarBlockFooterActionsByBlock } from '../utils/nadbarMessageFill'
 import { useDomainError } from './useDomainError'
+
+function setLoadTargetIdsFromBlock(
+  ids: Record<number, string | undefined>,
+  blockIndex: number,
+  blockCount: number,
+  blockFooterActions: NadbarBlockFooterActionsByBlock | undefined,
+  targetId: string,
+): Record<number, string | undefined> {
+  const next = { ...ids }
+  for (let i = blockIndex; i < blockCount; i++) {
+    if (isNadbarBlockHasLoadTarget(blockFooterActions, i)) {
+      next[i] = targetId
+    }
+  }
+  return next
+}
+
+function clearLoadTargetIdsFromBlock(
+  ids: Record<number, string | undefined>,
+  blockIndex: number,
+  blockCount: number,
+  blockFooterActions: NadbarBlockFooterActionsByBlock | undefined,
+): Record<number, string | undefined> {
+  const next = { ...ids }
+  for (let i = blockIndex; i < blockCount; i++) {
+    if (isNadbarBlockHasLoadTarget(blockFooterActions, i)) {
+      delete next[i]
+    }
+  }
+  return next
+}
 
 export function useNadbarBlockLoadTargetHandler<T extends Nadbar | null | undefined>(
   draftNadbar: T,
   setDraftNadbar: Dispatch<SetStateAction<T>>,
+  blockFooterActions?: NadbarBlockFooterActionsByBlock,
 ) {
   const { triggerError } = useDomainError()
   const [blockLoadedTargetIds, setBlockLoadedTargetIds] = useState<Record<number, string | undefined>>({})
@@ -24,7 +57,15 @@ export function useNadbarBlockLoadTargetHandler<T extends Nadbar | null | undefi
           target,
         )
         setDraftNadbar(nadbar as T)
-        setBlockLoadedTargetIds((ids) => ({ ...ids, [blockIndex]: target.id }))
+        setBlockLoadedTargetIds((ids) =>
+          setLoadTargetIdsFromBlock(
+            ids,
+            blockIndex,
+            nadbar.messageBlocks.length,
+            blockFooterActions,
+            target.id,
+          ),
+        )
         if (!azimuthComputed) {
           triggerError('לא ניתן לחשב אמורה — אין עמדה נוכחית')
         }
@@ -32,7 +73,7 @@ export function useNadbarBlockLoadTargetHandler<T extends Nadbar | null | undefi
         triggerError(error instanceof Error ? error.message : 'טעינת המטרה נכשלה')
       }
     },
-    [draftNadbar, setDraftNadbar, triggerError],
+    [draftNadbar, setDraftNadbar, blockFooterActions, triggerError],
   )
 
   const handleClearLoadedTarget = useCallback(
@@ -40,16 +81,19 @@ export function useNadbarBlockLoadTargetHandler<T extends Nadbar | null | undefi
       if (!draftNadbar) return
       try {
         setDraftNadbar(clearTargetFromNadbarBlockUseCase(draftNadbar, blockIndex) as T)
-        setBlockLoadedTargetIds((ids) => {
-          const next = { ...ids }
-          delete next[blockIndex]
-          return next
-        })
+        setBlockLoadedTargetIds((ids) =>
+          clearLoadTargetIdsFromBlock(
+            ids,
+            blockIndex,
+            draftNadbar.messageBlocks.length,
+            blockFooterActions,
+          ),
+        )
       } catch (error) {
         triggerError(error instanceof Error ? error.message : 'ניקוי המטרה נכשל')
       }
     },
-    [draftNadbar, setDraftNadbar, triggerError],
+    [draftNadbar, setDraftNadbar, blockFooterActions, triggerError],
   )
 
   return {

@@ -1,4 +1,9 @@
-import type { NadbarMessage, NadbarMessageUserVars } from '../domain/nadbar.types'
+import { isNadbarTargetDerivedVarName } from '../domain/nadbarTargetToVars'
+import type {
+  NadbarBlockFooterAction,
+  NadbarMessage,
+  NadbarMessageUserVars,
+} from '../domain/nadbar.types'
 import type {
   NadbarMessageResourceKey,
   NadbarMessageResources,
@@ -9,7 +14,13 @@ import {
   NADBAR_RESOURCE_LOAD_PROMPTS,
 } from './nadbarMessageFill.types'
 
+export const NADBAR_TARGET_LOAD_EMPTY_LABEL = 'יש לטעון מטרה'
+
 const TOKEN_RE = /\{\{([a-zA-Z0-9_.]+)\}\}/g
+
+export type NadbarBlockFooterActionsByBlock = readonly (
+  readonly NadbarBlockFooterAction[] | undefined
+)[]
 
 const RESOURCE_KEY_BY_TOKEN_PREFIX: Record<string, NadbarMessageResourceKey> = {
   indicator: 'indicator',
@@ -112,11 +123,42 @@ export function buildUserVarFirstMessageIndex(
   return firstIndex
 }
 
+export function isNadbarBlockHasLoadTarget(
+  blockFooterActions: NadbarBlockFooterActionsByBlock | undefined,
+  blockIndex: number,
+): boolean {
+  return blockFooterActions?.[blockIndex]?.includes('loadTarget') ?? false
+}
+
+export function isNadbarTargetVarLoadOnly(
+  blockFooterActions: NadbarBlockFooterActionsByBlock | undefined,
+  blockIndex: number,
+  varName: string,
+): boolean {
+  return (
+    isNadbarBlockHasLoadTarget(blockFooterActions, blockIndex) &&
+    isNadbarTargetDerivedVarName(varName)
+  )
+}
+
+export interface NadbarUserVarEditableAtOptions {
+  blockFooterActions?: NadbarBlockFooterActionsByBlock
+  blockIndex?: number
+}
+
 export function isNadbarUserVarEditableAt(
   messages: readonly NadbarMessage[],
   messageIndex: number,
   varName: string,
+  options?: NadbarUserVarEditableAtOptions,
 ): boolean {
+  if (
+    options?.blockFooterActions != null &&
+    options.blockIndex != null &&
+    isNadbarTargetVarLoadOnly(options.blockFooterActions, options.blockIndex, varName)
+  ) {
+    return false
+  }
   return buildUserVarFirstMessageIndex(messages).get(varName) === messageIndex
 }
 

@@ -1,11 +1,12 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { getNadbarBlockMessageVars, nadbarRequiresEntityLinks } from '../domain/nadbar'
+import { nadbarRequiresEntityLinks } from '../domain/nadbar'
 import type { Nadbar, NadbarLinksUpdate } from '../domain/nadbar.types'
 import { addNadbarUseCase } from '../useCases/addNadbar'
 import { assertNadbarSaveableUseCase } from '../useCases/assertNadbarSaveable'
 import { applyNadbarLinksToNadbarUseCase } from '../useCases/applyNadbarLinksToNadbar'
 import { createNadbarFromTypeUseCase } from '../useCases/createNadbarFromType'
+import { getNadbarChatTemplateUseCase } from '../useCases/getNadbarChatTemplate'
 import { useDomainError } from './useDomainError'
 import { useNadbarBlockAddObstacleHandler } from './useNadbarBlockAddObstacleHandler'
 import { useNadbarBlockFooterActionHandler } from './useNadbarBlockFooterActionHandler'
@@ -27,15 +28,15 @@ export function useNadbarNewFlow() {
   const [positionId, setPositionId] = useState<string | undefined>()
   const [draftNadbar, setDraftNadbar] = useState<Nadbar | null>(null)
 
-  const getMessageVars = useCallback(
-    (blockIndex: number) => (draftNadbar ? getNadbarBlockMessageVars(draftNadbar, blockIndex) : undefined),
-    [draftNadbar],
+  const handleBlockFooterAction = useNadbarBlockFooterActionHandler(draftNadbar, setDraftNadbar)
+  const blockFooterActions = useMemo(
+    () => (nadbarType ? getNadbarChatTemplateUseCase(nadbarType).blockFooterActions : undefined),
+    [nadbarType],
   )
-  const handleBlockFooterAction = useNadbarBlockFooterActionHandler(getMessageVars)
   const { blockLoadedTargetIds, handleLoadTarget, handleClearLoadedTarget } =
-    useNadbarBlockLoadTargetHandler(draftNadbar, setDraftNadbar)
+    useNadbarBlockLoadTargetHandler(draftNadbar, setDraftNadbar, blockFooterActions)
   const { handleAddObstacle } = useNadbarBlockAddObstacleHandler(draftNadbar, setDraftNadbar)
-  const setUserVar = useNadbarBlockUserVarChange(setDraftNadbar)
+  const setUserVar = useNadbarBlockUserVarChange(setDraftNadbar, blockFooterActions)
   const setNotes = useNadbarNotesChange(setDraftNadbar)
 
   useEffect(() => {

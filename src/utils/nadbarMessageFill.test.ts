@@ -4,12 +4,16 @@ import type { Indicator } from '../domain/indicator.types'
 import type { Position } from '../domain/position.types'
 import type { Target } from '../domain/target.types'
 import type { NadbarMessage } from '../domain/nadbar.types'
+import { getNadbarTemplate } from '../domain/nadbarTemplates'
 import {
   buildUserVarFirstMessageIndex,
   fillNadbarMessageContent,
   filterVisibleNadbarMessages,
+  isNadbarBlockHasLoadTarget,
   isNadbarMessageVisible,
+  isNadbarTargetVarLoadOnly,
   isNadbarUserVarEditableAt,
+  NADBAR_TARGET_LOAD_EMPTY_LABEL,
   parseNadbarMessageSegments,
   resolveNadbarUserVarDisplayValue,
   resolveResourceSegment,
@@ -240,6 +244,81 @@ describe('isNadbarUserVarEditableAt', () => {
     const blockB = [{ source: 'Me' as const, content: '{{kutz}}' }]
     assert.equal(isNadbarUserVarEditableAt(blockA, 0, 'kutz'), true)
     assert.equal(isNadbarUserVarEditableAt(blockB, 0, 'kutz'), true)
+  })
+
+  it('disallows target-derived vars on first occurrence in loadTarget blocks', () => {
+    const loadTargetMessages = [
+      {
+        source: 'Me' as const,
+        content: 'למטרה {{metara}}, האם יש הסתרים? {{hasNearbyObstacles}}',
+      },
+    ]
+    const blockFooterActions = [
+      undefined,
+      undefined,
+      undefined,
+      ['loadTarget', 'addObstacle'] as const,
+    ]
+    assert.equal(
+      isNadbarUserVarEditableAt(loadTargetMessages, 0, 'metara', {
+        blockFooterActions,
+        blockIndex: 3,
+      }),
+      false,
+    )
+    assert.equal(
+      isNadbarUserVarEditableAt(loadTargetMessages, 0, 'hasNearbyObstacles', {
+        blockFooterActions,
+        blockIndex: 3,
+      }),
+      true,
+    )
+  })
+})
+
+const pointerTeamUpdatedBlockFooterActions = getNadbarTemplate('PointerTeamUpdated').blocks.map(
+  (block) => block.footerActions,
+)
+
+describe('isNadbarBlockHasLoadTarget', () => {
+  it('is true only for blocks with loadTarget footer action', () => {
+    assert.equal(isNadbarBlockHasLoadTarget(pointerTeamUpdatedBlockFooterActions, 1), false)
+    assert.equal(isNadbarBlockHasLoadTarget(pointerTeamUpdatedBlockFooterActions, 2), true)
+    assert.equal(isNadbarBlockHasLoadTarget(pointerTeamUpdatedBlockFooterActions, 5), true)
+  })
+})
+
+describe('isNadbarTargetVarLoadOnly', () => {
+  it('is true for target-derived vars on loadTarget blocks', () => {
+    assert.equal(
+      isNadbarTargetVarLoadOnly(pointerTeamUpdatedBlockFooterActions, 2, 'metara'),
+      true,
+    )
+    assert.equal(
+      isNadbarTargetVarLoadOnly(pointerTeamUpdatedBlockFooterActions, 2, 'amura'),
+      true,
+    )
+  })
+
+  it('is false without loadTarget block or for non-target vars', () => {
+    assert.equal(
+      isNadbarTargetVarLoadOnly(pointerTeamUpdatedBlockFooterActions, 1, 'metara'),
+      false,
+    )
+    assert.equal(
+      isNadbarTargetVarLoadOnly(pointerTeamUpdatedBlockFooterActions, 5, 'moked'),
+      false,
+    )
+    assert.equal(
+      isNadbarTargetVarLoadOnly(pointerTeamUpdatedBlockFooterActions, 2, 'amuraValid'),
+      false,
+    )
+  })
+})
+
+describe('NADBAR_TARGET_LOAD_EMPTY_LABEL', () => {
+  it('is the load-target empty prompt', () => {
+    assert.equal(NADBAR_TARGET_LOAD_EMPTY_LABEL, 'יש לטעון מטרה')
   })
 })
 

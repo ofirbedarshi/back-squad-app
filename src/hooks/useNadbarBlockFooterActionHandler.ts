@@ -1,11 +1,12 @@
-import { useCallback } from 'react'
-import type { NadbarBlockFooterAction, NadbarMessageUserVars } from '../domain/nadbar.types'
-import { createTargetFromNadbarVarsUseCase } from '../useCases/createTargetFromNadbarVars'
+import { useCallback, type Dispatch, type SetStateAction } from 'react'
+import type { Nadbar, NadbarBlockFooterAction } from '../domain/nadbar.types'
+import { createTargetFromNadbarVarsAndPropagateUseCase } from '../useCases/createTargetFromNadbarVarsAndPropagate'
 import { useDomainError } from './useDomainError'
 import { useNotification } from './useNotification'
 
-export function useNadbarBlockFooterActionHandler(
-  getMessageVars: (blockIndex: number) => NadbarMessageUserVars | undefined,
+export function useNadbarBlockFooterActionHandler<T extends Nadbar | null | undefined>(
+  draftNadbar: T,
+  setDraftNadbar: Dispatch<SetStateAction<T>>,
 ) {
   const { notifySuccess } = useNotification()
   const { triggerError } = useDomainError()
@@ -14,10 +15,10 @@ export function useNadbarBlockFooterActionHandler(
     (blockIndex: number, action: NadbarBlockFooterAction) => {
       switch (action) {
         case 'createTargetFromVars': {
-          const messageVars = getMessageVars(blockIndex)
-          if (!messageVars) return
+          if (!draftNadbar) return
           try {
-            createTargetFromNadbarVarsUseCase(messageVars)
+            const updated = createTargetFromNadbarVarsAndPropagateUseCase(draftNadbar, blockIndex)
+            setDraftNadbar(updated as T)
             notifySuccess('המטרה נוספה בהצלחה')
           } catch (error) {
             triggerError(error instanceof Error ? error.message : 'יצירת המטרה נכשלה')
@@ -26,6 +27,6 @@ export function useNadbarBlockFooterActionHandler(
         }
       }
     },
-    [getMessageVars, notifySuccess, triggerError],
+    [draftNadbar, setDraftNadbar, notifySuccess, triggerError],
   )
 }

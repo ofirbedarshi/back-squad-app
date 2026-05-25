@@ -1,10 +1,10 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { getNadbarBlockMessageVars } from '../domain/nadbar'
 import type { Nadbar, NadbarLinksUpdate } from '../domain/nadbar.types'
 import { applyNadbarLinksToNadbarUseCase } from '../useCases/applyNadbarLinksToNadbar'
 import { assertNadbarSaveableUseCase } from '../useCases/assertNadbarSaveable'
 import { getNadbarByIdUseCase } from '../useCases/getNadbarById'
+import { getNadbarChatTemplateUseCase } from '../useCases/getNadbarChatTemplate'
 import { updateNadbarUseCase } from '../useCases/updateNadbar'
 import { useDomainError } from './useDomainError'
 import { useNadbarBlockAddObstacleHandler } from './useNadbarBlockAddObstacleHandler'
@@ -22,15 +22,16 @@ export function useNadbarEditFlow(id: string | undefined) {
     id ? getNadbarByIdUseCase(id) : undefined,
   )
 
-  const getMessageVars = useCallback(
-    (blockIndex: number) => (draftNadbar ? getNadbarBlockMessageVars(draftNadbar, blockIndex) : undefined),
-    [draftNadbar],
+  const handleBlockFooterAction = useNadbarBlockFooterActionHandler(draftNadbar, setDraftNadbar)
+  const blockFooterActions = useMemo(
+    () =>
+      draftNadbar ? getNadbarChatTemplateUseCase(draftNadbar.type).blockFooterActions : undefined,
+    [draftNadbar?.type],
   )
-  const handleBlockFooterAction = useNadbarBlockFooterActionHandler(getMessageVars)
   const { blockLoadedTargetIds, handleLoadTarget, handleClearLoadedTarget } =
-    useNadbarBlockLoadTargetHandler(draftNadbar, setDraftNadbar)
+    useNadbarBlockLoadTargetHandler(draftNadbar, setDraftNadbar, blockFooterActions)
   const { handleAddObstacle } = useNadbarBlockAddObstacleHandler(draftNadbar, setDraftNadbar)
-  const setUserVar = useNadbarBlockUserVarChange(setDraftNadbar)
+  const setUserVar = useNadbarBlockUserVarChange(setDraftNadbar, blockFooterActions)
   const setNotes = useNadbarNotesChange(setDraftNadbar)
 
   useEffect(() => {

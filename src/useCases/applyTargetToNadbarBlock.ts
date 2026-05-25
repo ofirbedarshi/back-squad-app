@@ -1,4 +1,7 @@
-import { applyTargetToNadbarBlock, clearTargetDerivedBlockVars } from '../domain/nadbarTargetToVars'
+import {
+  applyTargetToNadbarBlocksFrom,
+  clearTargetDerivedBlockVarsFrom,
+} from '../domain/nadbarTargetToVars'
 import { calculateTargetLiveMetrics } from '../domain/targetLiveMetrics'
 import type { Nadbar } from '../domain/nadbar.types'
 import type { Target } from '../domain/target.types'
@@ -33,15 +36,14 @@ export function applyTargetToNadbarBlockUseCase(
     azimuth = metrics?.azimuth
   }
 
-  const updated = applyTargetToNadbarBlock(nadbar, blockIndex, target, azimuth)
+  const updated = applyTargetToNadbarBlocksFrom(nadbar, blockIndex, target, azimuth)
   return { nadbar: updated, azimuthComputed: azimuth != null }
 }
 
 export function clearTargetFromNadbarBlockUseCase(nadbar: Nadbar, blockIndex: number): Nadbar {
-  const block = nadbar.messageBlocks[blockIndex]
-  if (!block) {
+  if (!nadbar.messageBlocks[blockIndex]) {
     throw new Error('בלוק נדבר לא נמצא')
   }
 
-  return clearTargetDerivedBlockVars(nadbar, blockIndex, block)
+  return clearTargetDerivedBlockVarsFrom(nadbar, blockIndex)
 }

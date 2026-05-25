@@ -4,10 +4,13 @@ import { getNadbarTemplate } from './nadbarTemplates.ts'
 import { createNadbarFromTemplate } from './nadbar.ts'
 import {
   applyTargetToNadbarBlock,
+  applyTargetToNadbarBlocksFrom,
   buildBlockMessageVarsFromTarget,
   clearTargetDerivedBlockVars,
+  clearTargetDerivedBlockVarsFrom,
   collectBlockUserVarNames,
   isNadbarTargetDerivedVarName,
+  propagateTargetDerivedVarsFromBlock,
   resolveNadbarVarFromTarget,
 } from './nadbarTargetToVars.ts'
 import type { Target } from './target.types.ts'
@@ -72,6 +75,116 @@ describe('applyTargetToNadbarBlock', () => {
     assert.equal(updated.blockMessageVars?.[2]?.metara, 'מטרה א')
     assert.equal(updated.blockMessageVars?.[2]?.amura, '180')
     assert.equal(updated.blockMessageVars?.[0]?.metara, undefined)
+    assert.equal(updated.blockMessageVars?.[3]?.metara, undefined)
+  })
+})
+
+const targetB: Target = {
+  ...sampleTarget,
+  id: 'target-2',
+  targetName: 'מטרה ב',
+}
+
+describe('applyTargetToNadbarBlocksFrom', () => {
+  it('fills target-derived vars from blockIndex through last block', () => {
+    const template = getNadbarTemplate('PointerTeamUpdated')
+    const nadbar = createNadbarFromTemplate('PointerTeamUpdated', template)
+    const updated = applyTargetToNadbarBlocksFrom(nadbar, 2, sampleTarget, 180)
+
+    assert.equal(updated.blockMessageVars?.[0]?.metara, undefined)
+    assert.equal(updated.blockMessageVars?.[1]?.metara, undefined)
+    assert.equal(updated.blockMessageVars?.[2]?.metara, 'מטרה א')
+    assert.equal(updated.blockMessageVars?.[2]?.amura, '180')
+    assert.equal(updated.blockMessageVars?.[3]?.metara, 'מטרה א')
+    assert.equal(updated.blockMessageVars?.[4]?.metara, 'מטרה א')
+    assert.equal(updated.blockMessageVars?.[5]?.metara, 'מטרה א')
+    assert.equal(updated.blockMessageVars?.[3]?.amura, undefined)
+  })
+
+  it('reload from a later block updates only that block and after', () => {
+    const template = getNadbarTemplate('PointerTeamUpdated')
+    let nadbar = createNadbarFromTemplate('PointerTeamUpdated', template)
+    nadbar = applyTargetToNadbarBlocksFrom(nadbar, 2, sampleTarget, 180)
+    nadbar = applyTargetToNadbarBlocksFrom(nadbar, 4, targetB, 200)
+
+    assert.equal(nadbar.blockMessageVars?.[2]?.metara, 'מטרה א')
+    assert.equal(nadbar.blockMessageVars?.[3]?.metara, 'מטרה א')
+    assert.equal(nadbar.blockMessageVars?.[4]?.metara, 'מטרה ב')
+    assert.equal(nadbar.blockMessageVars?.[5]?.metara, 'מטרה ב')
+  })
+})
+
+describe('clearTargetDerivedBlockVarsFrom', () => {
+  it('clears target-derived vars from blockIndex through last block', () => {
+    const template = getNadbarTemplate('PointerTeamUpdated')
+    let nadbar = createNadbarFromTemplate('PointerTeamUpdated', template)
+    nadbar = applyTargetToNadbarBlocksFrom(nadbar, 2, sampleTarget, 180)
+    nadbar = applyTargetToNadbarBlock(nadbar, 1, sampleTarget)
+
+    const cleared = clearTargetDerivedBlockVarsFrom(nadbar, 3)
+
+    assert.equal(cleared.blockMessageVars?.[1]?.metara, 'מטרה א')
+    assert.equal(cleared.blockMessageVars?.[2]?.metara, 'מטרה א')
+    assert.equal(cleared.blockMessageVars?.[3]?.metara, undefined)
+    assert.equal(cleared.blockMessageVars?.[4]?.metara, undefined)
+    assert.equal(cleared.blockMessageVars?.[5]?.metara, undefined)
+  })
+})
+
+describe('propagateTargetDerivedVarsFromBlock', () => {
+  it('copies target-derived vars from manual entry block to later blocks that use them', () => {
+    const template = getNadbarTemplate('PointerTeamUpdated')
+    const nadbar = createNadbarFromTemplate('PointerTeamUpdated', template)
+    const withSource = {
+      ...nadbar,
+      blockMessageVars: [
+        {},
+        { metara: 'מטרה-7', meraom: '654321', tsepa: '3765432', gamal: '512' },
+        {},
+        {},
+        {},
+        {},
+      ],
+    }
+
+    const propagated = propagateTargetDerivedVarsFromBlock(withSource, 1)
+
+    assert.equal(propagated.blockMessageVars?.[0]?.metara, undefined)
+    assert.equal(propagated.blockMessageVars?.[1]?.metara, 'מטרה-7')
+    assert.equal(propagated.blockMessageVars?.[2]?.metara, 'מטרה-7')
+    assert.equal(propagated.blockMessageVars?.[3]?.metara, 'מטרה-7')
+    assert.equal(propagated.blockMessageVars?.[4]?.metara, 'מטרה-7')
+    assert.equal(propagated.blockMessageVars?.[5]?.metara, 'מטרה-7')
+    assert.equal(propagated.blockMessageVars?.[2]?.meraom, undefined)
+    assert.equal(propagated.blockMessageVars?.[3]?.meraom, undefined)
+    assert.equal(propagated.blockMessageVars?.[2]?.amura, undefined)
+  })
+
+  it('propagates cleared values forward when source block clears a var', () => {
+    const template = getNadbarTemplate('PointerTeamUpdated')
+    let nadbar = createNadbarFromTemplate('PointerTeamUpdated', template)
+    nadbar = propagateTargetDerivedVarsFromBlock(
+      {
+        ...nadbar,
+        blockMessageVars: [{}, { metara: 'מטרה-7' }, { metara: 'מטרה-7' }, { metara: 'מטרה-7' }, {}, {}],
+      },
+      1,
+    )
+    const cleared = propagateTargetDerivedVarsFromBlock(
+      {
+        ...nadbar,
+        blockMessageVars: [
+          {},
+          { metara: '' },
+          ...(nadbar.blockMessageVars ?? []).slice(2),
+        ],
+      },
+      1,
+    )
+
+    assert.equal(cleared.blockMessageVars?.[1]?.metara, '')
+    assert.equal(cleared.blockMessageVars?.[2]?.metara, '')
+    assert.equal(cleared.blockMessageVars?.[5]?.metara, '')
   })
 })
 

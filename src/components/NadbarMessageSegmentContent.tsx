@@ -1,11 +1,12 @@
-import { useMemo } from 'react'
 import { useNadbarBlockChatContext } from './NadbarBlockChatContext'
 import { useNadbarChatContext } from './NadbarChatContext'
 import NadbarInlineUserVarInput from './NadbarInlineUserVarInput'
 import NadbarUserVarChoiceInput from './NadbarUserVarChoiceInput'
 import type { NadbarMessage } from '../domain/nadbar.types'
 import {
-  buildUserVarFirstMessageIndex,
+  isNadbarTargetVarLoadOnly,
+  isNadbarUserVarEditableAt,
+  NADBAR_TARGET_LOAD_EMPTY_LABEL,
   parseNadbarMessageSegments,
   resolveNadbarUserVarDisplayValue,
   resolveResourceSegment,
@@ -27,12 +28,9 @@ function NadbarMessageSegmentContent({
   messageIndex,
 }: NadbarMessageSegmentContentProps) {
   const { blockIndex, allBlockMessageVars, onUserVarChange } = useNadbarBlockChatContext()
-  const { userVarFields, varInitialFromBlock, resources } = useNadbarChatContext()
+  const { userVarFields, varInitialFromBlock, resources, blockFooterActions } =
+    useNadbarChatContext()
   const segments = parseNadbarMessageSegments(content)
-  const userVarFirstMessageIndex = useMemo(
-    () => buildUserVarFirstMessageIndex(messages),
-    [messages],
-  )
 
   return (
     <p className="whitespace-pre-wrap break-words">
@@ -66,17 +64,26 @@ function NadbarMessageSegmentContent({
           allBlockMessageVars,
           varInitialFromBlock,
         )
-        const editable = userVarFirstMessageIndex.get(segment.varName) === messageIndex
+        const loadOnly = isNadbarTargetVarLoadOnly(
+          blockFooterActions,
+          blockIndex,
+          segment.varName,
+        )
+        const editable = isNadbarUserVarEditableAt(messages, messageIndex, segment.varName, {
+          blockFooterActions,
+          blockIndex,
+        })
 
         if (!editable) {
+          const emptyLabel = loadOnly ? NADBAR_TARGET_LOAD_EMPTY_LABEL : ECHO_EMPTY_LABEL
           if (!value.trim()) {
             return (
               <span
                 key={index}
                 className="inline-block font-medium text-red-600 underline decoration-red-600 underline-offset-2"
-                aria-label={`${segment.varName} — ${ECHO_EMPTY_LABEL}`}
+                aria-label={`${segment.varName} — ${emptyLabel}`}
               >
-                {ECHO_EMPTY_LABEL}
+                {emptyLabel}
               </span>
             )
           }
