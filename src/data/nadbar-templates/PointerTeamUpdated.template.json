@@ -1,5 +1,6 @@
 {
   "userVarFields": {
+    "ktanot": { "input": "numeric" },
     "meraom": { "input": "numeric" },
     "tsepa": { "input": "numeric" },
     "gamal": { "input": "numeric" },
@@ -45,7 +46,7 @@
         },
         {
           "source": "Me",
-          "content": "חיובי, מבלה בענבים / שלילי עוד __ קטנות"
+          "content": "חיובי, מבלה בענבים / שלילי עוד {{ktanot}} קטנות"
         },
         {
           "source": "They",

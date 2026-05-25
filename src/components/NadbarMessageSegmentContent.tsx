@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { useNadbarBlockChatContext } from './NadbarBlockChatContext'
 import { useNadbarChatContext } from './NadbarChatContext'
+import NadbarInlineUserVarInput from './NadbarInlineUserVarInput'
 import NadbarUserVarChoiceInput from './NadbarUserVarChoiceInput'
 import type { NadbarMessage } from '../domain/nadbar.types'
 import {
@@ -9,9 +10,6 @@ import {
   resolveResourceSegment,
   sanitizeNadbarNumericUserVarInput,
 } from '../utils/nadbarMessageFill'
-
-const INLINE_INPUT_CLASS =
-  'inline-block min-w-[3rem] max-w-[8rem] border-0 border-b border-neutral-800 bg-transparent px-0.5 py-0 text-sm text-neutral-900 underline decoration-neutral-800 decoration-1 underline-offset-2 outline-none focus:border-blue-500'
 
 const ECHO_EMPTY_LABEL = '(מחושב אוטומטי)'
 const ECHO_VALUE_CLASS = 'inline text-base italic text-neutral-500'
@@ -101,20 +99,17 @@ function NadbarMessageSegmentContent({
         }
 
         return (
-          <input
+          <NadbarInlineUserVarInput
             key={index}
-            type="text"
-            inputMode={numeric ? 'numeric' : undefined}
-            pattern={numeric ? '[0-9]*' : undefined}
             value={value}
+            numeric={numeric}
+            ariaLabel={segment.varName}
             onChange={(event) => {
               const next = numeric
                 ? sanitizeNadbarNumericUserVarInput(event.target.value)
                 : event.target.value
               onUserVarChange(segment.varName, next)
             }}
-            className={INLINE_INPUT_CLASS}
-            aria-label={segment.varName}
           />
         )
       })}
