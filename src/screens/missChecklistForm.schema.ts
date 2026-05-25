@@ -24,6 +24,13 @@ export const missChecklistFormSchema: FormSchema = {
               ],
             },
           },
+          {
+            type: 'toggle',
+            key: 'impactLocationExploded',
+            label: 'האם התפוצץ?',
+            options: ['כן', 'לא'],
+            defaultValue: 'לא',
+          },
         ],
       },
     },
