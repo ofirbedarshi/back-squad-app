@@ -283,6 +283,8 @@ const missChecklists = [
     updatedAt: savedAt,
     values: {
       impactLocationDetected: 'כן',
+      impactLocationKind: 'תיאור מילולי',
+      impactLocationDescription: '3 מטר מזרחה לנ.צ. המטרה',
       targetType: 'מבנה',
       reflectiveTarget: 'לא',
       targetFace: 'חזית דרום',

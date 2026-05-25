@@ -3,11 +3,29 @@ import type { FormSchema } from '../domain/dynamicForm.types'
 export const missChecklistFormSchema: FormSchema = {
   fields: [
     {
-      type: 'toggle',
+      type: 'toggleWithConditions',
       key: 'impactLocationDetected',
       label: 'בדוק האם זוהה מקום הפגיעה',
       options: ['כן', 'לא'],
       defaultValue: 'לא',
+      conditions: {
+        כן: [
+          {
+            type: 'toggleWithConditions',
+            key: 'impactLocationKind',
+            label: 'מהו מיקום הפגיעה?',
+            options: ['קרוב', 'רחוק', 'תיאור מילולי', 'נ.צ.'],
+            conditions: {
+              'תיאור מילולי': [
+                { type: 'text', key: 'impactLocationDescription', label: 'תיאור מיקום הפגיעה' },
+              ],
+              'נ.צ.': [
+                { type: 'coords', key: 'impactLocationCoords', label: 'נ.צ. מקום הפגיעה' },
+              ],
+            },
+          },
+        ],
+      },
     },
     { type: 'text', key: 'targetType', label: 'מה היה סוג המטרה?' },
     {
