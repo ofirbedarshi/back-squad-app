@@ -282,12 +282,7 @@ const missChecklists = [
     id: IDS.missChecklist1,
     updatedAt: savedAt,
     values: {
-      weatherHitNearTarget: 'כן',
-      weatherConditionsChecked: 'כן',
-      positionVerifiedWithIndicator: 'כן',
-      concealmentNearTarget: 'כן',
-      concealmentInMissileDirection: 'לא',
-      kozVideoTaken: 'כן',
+      impactLocationDetected: 'כן',
       targetType: 'מבנה',
       reflectiveTarget: 'לא',
       targetFace: 'חזית דרום',

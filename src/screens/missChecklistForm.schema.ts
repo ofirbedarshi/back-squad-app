@@ -2,47 +2,10 @@ import type { FormSchema } from '../domain/dynamicForm.types'
 
 export const missChecklistFormSchema: FormSchema = {
   fields: [
-    { type: 'header', text: 'מול מציין', bold: true },
-
     {
       type: 'toggle',
-      key: 'weatherHitNearTarget',
-      label: 'האם ווודאו תנאי מזג האוויר בקרבת המטרה ולפניה (עננות? רוח? גשם?)?',
-      options: ['כן', 'לא'],
-      defaultValue: 'לא',
-    },
-    {
-      type: 'toggle',
-      key: 'weatherConditionsChecked',
-      label: 'האם תנאי מזג האוויר וודאו בגבהים שונים של מעוף הטיל?',
-      options: ['כן', 'לא'],
-      defaultValue: 'לא',
-    },
-    {
-      type: 'toggle',
-      key: 'positionVerifiedWithIndicator',
-      label: 'האם נעשה אימות נוסף מול המציין של נתוני העמדה (זווית קודקוד) והמטרה?',
-      options: ['כן', 'לא'],
-      defaultValue: 'לא',
-    },
-    {
-      type: 'toggle',
-      key: 'concealmentNearTarget',
-      label: 'האם היו הסתרים בקרבת המטרה? האם נעשה ווידוא שאין הסתרים גבולים?',
-      options: ['כן', 'לא'],
-      defaultValue: 'לא',
-    },
-    {
-      type: 'toggle',
-      key: 'concealmentInMissileDirection',
-      label: 'בירי כיווני האם היה הסתר בכיוון הגעת הטיל? (לא בהכרח בקו עמדה מטרה)',
-      options: ['כן', 'לא'],
-      defaultValue: 'לא',
-    },
-    {
-      type: 'toggle',
-      key: 'kozVideoTaken',
-      label: 'האם הייתה ווידוא של הקו"צ?',
+      key: 'impactLocationDetected',
+      label: 'בדוק האם זוהה מקום הפגיעה',
       options: ['כן', 'לא'],
       defaultValue: 'לא',
     },

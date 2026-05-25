@@ -1,133 +1,99 @@
 ---
-description: Generate compact feature-level handoff summaries between agent sessions
+description: Generate compact handoff for the active feature only (not whole project)
 globs:
 alwaysApply: false
 ---
 
 # Feature Handoff Rule
 
-When this included in the chat session, generate a SHORT project-level handoff summary.
+When this is included in the chat session, generate a **short handoff for the feature currently in progress** — not a project overview.
 
-The purpose is NOT to summarize the last feature in detail.
+## Scope
 
-The purpose IS to:
-- transfer overall current feature developing understanding
-- preserve continuity
-- preserve working patterns
-- preserve architectural direction
-- reduce context usage
-- help a fresh agent onboard quickly
+**Include only:**
+- The active feature (name, goal, direction)
+- That feature’s user flow (screens/steps, briefly)
+- Files **for this feature only** (schema, screens, domain, storage, use-cases, doc)
+- Incremental plan if work is step-by-step (done steps + **exact next step**)
+- Recent progress on this feature (few bullets)
+- Open items / decisions for this feature
 
-The handoff should stay relatively stable between sessions.
+**Do NOT include** (already in `CLAUDE.md`, `.cursor/rules/`, etc.):
+- Stack, layer diagram, folder map of whole repo
+- Global architecture, offline-first, V1, UI/domain rules
+- Collaboration style, caveman mode, commit preferences
+- Unrelated features (e.g. nadbar) unless they block this feature
 
-Most handoffs should be:
-- mostly identical
-- compact
-- reusable
-- focused on the overall project
-
-Only a SMALL section should describe the most recent work.
+Assume the next agent reads global rules first; handoff = **feature continuity only**.
 
 ---
 
-# Handoff Structure
+# Handoff Structure (output)
 
-## 1. Feature Overview
-Very short explanation of:
-- what we are building
-- main Feature goal
-- overall direction
+## 1. Active Feature
+- Name (Hebrew product name OK)
+- One-line goal
+- Overall direction for this feature
 
-Keep this high-level and stable.
+## 2. Feature Flow
+- List → create → edit (or wizard steps) in user terms
+- No global routing map
 
----
+## 3. Feature Files
+Bullet list of paths that matter **now** (read/edit). Example pattern:
+- `src/screens/*Feature*Screen.tsx`
+- `*Form.schema.ts`
+- `src/domain/*`, `src/storage/*`, `src/useCases/*`
+- `docs/*.md` if exists
 
-## 2. Technical Structure
-Short summary of:
-- stack
-- architecture style
-- important flows
-- key folders/files
-- important constraints
-
-Only include things useful for fast onboarding.
-
----
-
-## 3. Working Style / Collaboration Rules
-Document how the user prefers to work.
-
-Examples:
-- prefers concise answers
-- prefers simple solutions
-- avoid overengineering
-- preserve existing patterns
-- mobile-first
-- RTL support
-- deterministic flows
-- prefers incremental changes
-- asks for Cursor-ready prompts
-- etc.
-
-This section is IMPORTANT because it preserves collaboration continuity between agents.
-
----
+## 4. Plan (if incremental refactor)
+- Numbered steps user agreed on
+- Mark completed steps
+- **Next step** — one clear action for the next agent
 
 ## 5. Recent Progress
-Include only SHORT bullets for recent changes.
-
-Example:
-- added X flow
-- simplified Y architecture
-- refactored Z component
-- integrated A into existing system
-
-Keep each bullet extremely short.
-
-Do NOT write long implementation history.
-
----
+- 2–5 bullets max, this feature only
+- Last session changes only
 
 ## 6. Open Items
-Only important unresolved items:
-- decisions
-- uncertainties
-- pending refactors
-- architectural questions
+- Pending steps, doc updates, product decisions
+- Feature-scoped only
 
-Keep concise.
-
----
-
-## 7. Quickstart
-Very short onboarding instructions:
-- files worth reading first
-- commands if relevant
-- areas to avoid touching initially
+## 7. Feature Conventions (only if relevant)
+- e.g. form schema refactor → keep `src/dev/seedMockData.ts` + `scripts/seed-localStorage.mjs` in sync, run `npm run seed`
+- Do not repeat global conventions
 
 ---
 
 # Output Style
 
-The output MUST be:
-- compact
-- stable between sessions
-- high signal
-- low noise
-- optimized for AI consumption
-- mostly bullets
-- short sections
-- minimal wording
+- Compact, bullets, AI-friendly
+- Stable between sessions **for the same feature**; rewrite when feature changes
+- Next step must be actionable without re-reading full chat
+- No changelog essay
 
-Avoid:
-- long explanations
-- detailed feature history
-- unnecessary implementation details
-- repeating obvious information
+---
 
-The handoff should feel like:
-“persistent project memory for a new agent”
-—not—
-“a detailed changelog of the last task”.
+# Current active feature (update when feature changes)
 
-The ideal handoff is short enough to paste frequently without wasting context.
+**Miss checklist (צ'קליסט החטאה)** — step-by-step refactor of `missChecklistForm.schema.ts`.
+
+When generating a handoff today, use the structure above with this feature. Replace this section when work moves to another feature.
+
+**Flow:** list (`MissChecklistListScreen`) → new (`MissChecklistScreen`) / edit (`MissChecklistEditScreen`) → dynamic form from schema → save via use-cases → `missChecklists` in localStorage.
+
+**Key files:**
+- `src/screens/missChecklistForm.schema.ts` — form definition (refactor target)
+- `src/screens/MissChecklistScreen.tsx`, `MissChecklistEditScreen.tsx`, `MissChecklistListScreen.tsx`
+- `src/domain/missChecklist.types.ts`, `missChecklist.ts`
+- `src/storage/missChecklistStorage.ts`
+- `src/useCases/addMissChecklist.ts`, `updateMissChecklist.ts`, `loadMissChecklists.ts`, `removeMissChecklist.ts`
+- `docs/צקליסט-החטאה.md` — update when fields/rules change
+
+**Refactor plan:** user removes/reorders fields in **steps**; agent applies each step to schema + dev seeds + doc.
+
+**Done:** step 1 — removed header `מול מציין` + 6 toggles before `targetType`; seeds synced.
+
+**Next step:** user gives next cut point in schema (e.g. remove through field X); mirror in seeds + `npm run seed`; trim `docs/צקליסט-החטאה.md` sections for removed fields.
+
+**Seeds (required per schema change):** `src/dev/seedMockData.ts`, `scripts/seed-localStorage.mjs`, then `npm run seed` → `public/dev-seed.html`.
