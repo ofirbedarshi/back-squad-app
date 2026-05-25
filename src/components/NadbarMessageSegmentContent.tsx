@@ -7,6 +7,7 @@ import type { NadbarMessage } from '../domain/nadbar.types'
 import {
   buildUserVarFirstMessageIndex,
   parseNadbarMessageSegments,
+  resolveNadbarUserVarDisplayValue,
   resolveResourceSegment,
   sanitizeNadbarNumericUserVarInput,
 } from '../utils/nadbarMessageFill'
@@ -25,8 +26,8 @@ function NadbarMessageSegmentContent({
   messages,
   messageIndex,
 }: NadbarMessageSegmentContentProps) {
-  const { messageVars, onUserVarChange } = useNadbarBlockChatContext()
-  const { userVarFields, resources } = useNadbarChatContext()
+  const { blockIndex, allBlockMessageVars, onUserVarChange } = useNadbarBlockChatContext()
+  const { userVarFields, varInitialFromBlock, resources } = useNadbarChatContext()
   const segments = parseNadbarMessageSegments(content)
   const userVarFirstMessageIndex = useMemo(
     () => buildUserVarFirstMessageIndex(messages),
@@ -59,7 +60,12 @@ function NadbarMessageSegmentContent({
           return <span key={index}>{`{{${segment.tokenKey}}}`}</span>
         }
 
-        const value = messageVars[segment.varName] ?? ''
+        const value = resolveNadbarUserVarDisplayValue(
+          segment.varName,
+          blockIndex,
+          allBlockMessageVars,
+          varInitialFromBlock,
+        )
         const editable = userVarFirstMessageIndex.get(segment.varName) === messageIndex
 
         if (!editable) {

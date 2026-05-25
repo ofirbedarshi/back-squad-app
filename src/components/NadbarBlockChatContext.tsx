@@ -2,6 +2,8 @@ import { createContext, useContext } from 'react'
 import type { NadbarMessageUserVars } from '../domain/nadbar.types'
 
 export interface NadbarBlockChatContextValue {
+  blockIndex: number
+  allBlockMessageVars: readonly NadbarMessageUserVars[]
   messageVars: NadbarMessageUserVars
   onUserVarChange: (varName: string, value: string) => void
 }

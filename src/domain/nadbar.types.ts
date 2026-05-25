@@ -68,10 +68,14 @@ export interface NadbarUserVarFieldSpec {
 /** Per-var input rules declared in template JSON (not stored on saved nadbar). */
 export type NadbarUserVarFields = Record<string, NadbarUserVarFieldSpec>
 
+/** User var name → block index that seeds initial display value in later blocks. */
+export type NadbarVarInitialFromBlock = Record<string, number>
+
 /** Template JSON shape — no id/timestamps */
 export interface NadbarTemplate {
   blocks: NadbarTemplateBlock[]
   userVarFields?: NadbarUserVarFields
+  varInitialFromBlock?: NadbarVarInitialFromBlock
 }
 
 /** Per-nadbar user-filled message field values (keyed by template var name) */
@@ -87,5 +91,6 @@ export interface NadbarLinksUpdate {
 /** Chat UI config resolved from template JSON (not stored on saved nadbar). */
 export interface NadbarChatTemplateConfig {
   userVarFields?: NadbarUserVarFields
+  varInitialFromBlock?: NadbarVarInitialFromBlock
   blockFooterActions: readonly (readonly NadbarBlockFooterAction[] | undefined)[]
 }

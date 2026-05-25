@@ -11,6 +11,7 @@ import {
   isNadbarMessageVisible,
   isNadbarUserVarEditableAt,
   parseNadbarMessageSegments,
+  resolveNadbarUserVarDisplayValue,
   resolveResourceSegment,
   sanitizeNadbarNumericUserVarInput,
 } from './nadbarMessageFill'
@@ -140,6 +141,81 @@ const pointerTeamUpdatedEchoMessages: NadbarMessage[] = [
   { source: 'They', content: 'קבל קוץ {{kutz}} כמו כן גור {{gur}} מעל פני הים' },
   { source: 'Me', content: 'קיבלתי קוץ {{kutz}} כמו כן גור {{gur}} מעל פני הים' },
 ]
+
+describe('resolveNadbarUserVarDisplayValue', () => {
+  const varInitialFromBlock = { openingCallsign1: 0, openingCallsign2: 0 }
+
+  it('returns empty when no local or source value', () => {
+    assert.equal(
+      resolveNadbarUserVarDisplayValue('openingCallsign1', 2, [{}, {}, {}], varInitialFromBlock),
+      '',
+    )
+  })
+
+  it('falls back to source block when var was never set on current block', () => {
+    const blockMessageVars = [{ openingCallsign1: 'אלפא' }, {}, {}]
+    assert.equal(
+      resolveNadbarUserVarDisplayValue(
+        'openingCallsign1',
+        2,
+        blockMessageVars,
+        varInitialFromBlock,
+      ),
+      'אלפא',
+    )
+  })
+
+  it('does not fall back when user cleared var to empty on current block', () => {
+    const blockMessageVars = [{ openingCallsign1: 'אלפא' }, {}, { openingCallsign1: '' }]
+    assert.equal(
+      resolveNadbarUserVarDisplayValue(
+        'openingCallsign1',
+        2,
+        blockMessageVars,
+        varInitialFromBlock,
+      ),
+      '',
+    )
+  })
+
+  it('prefers local block value over source block', () => {
+    const blockMessageVars = [
+      { openingCallsign1: 'אלפא' },
+      {},
+      { openingCallsign1: 'בטא' },
+    ]
+    assert.equal(
+      resolveNadbarUserVarDisplayValue(
+        'openingCallsign1',
+        2,
+        blockMessageVars,
+        varInitialFromBlock,
+      ),
+      'בטא',
+    )
+  })
+
+  it('does not fall back for unmapped vars', () => {
+    const blockMessageVars = [{ metara: 'מטרה א' }, {}, {}]
+    assert.equal(
+      resolveNadbarUserVarDisplayValue('metara', 2, blockMessageVars, varInitialFromBlock),
+      '',
+    )
+  })
+
+  it('does not read source when source block index equals current block', () => {
+    const blockMessageVars = [{ openingCallsign1: 'אלפא' }]
+    assert.equal(
+      resolveNadbarUserVarDisplayValue(
+        'openingCallsign1',
+        0,
+        blockMessageVars,
+        { openingCallsign1: 0 },
+      ),
+      'אלפא',
+    )
+  })
+})
 
 describe('buildUserVarFirstMessageIndex', () => {
   it('records first message index per user var', () => {

@@ -37,6 +37,10 @@
       "options": ["יש צורך בטוניס", "אין צורך בטוניס"]
     }
   },
+  "varInitialFromBlock": {
+    "openingCallsign1": 0,
+    "openingCallsign2": 0
+  },
   "blocks": [
     {
       "messages": [

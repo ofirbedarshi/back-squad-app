@@ -139,6 +139,23 @@ export function sanitizeNadbarNumericUserVarInput(value: string): string {
   return value.replace(/\D/g, '')
 }
 
+export function resolveNadbarUserVarDisplayValue(
+  varName: string,
+  blockIndex: number,
+  blockMessageVars: readonly NadbarMessageUserVars[],
+  varInitialFromBlock: Readonly<Record<string, number>> | undefined,
+): string {
+  const blockVars = blockMessageVars[blockIndex]
+  if (blockVars != null && Object.prototype.hasOwnProperty.call(blockVars, varName)) {
+    return blockVars[varName] ?? ''
+  }
+
+  const sourceBlockIndex = varInitialFromBlock?.[varName]
+  if (sourceBlockIndex == null || sourceBlockIndex === blockIndex) return ''
+
+  return blockMessageVars[sourceBlockIndex]?.[varName] ?? ''
+}
+
 export function fillNadbarMessageContent(
   content: string,
   resources: NadbarMessageResources,

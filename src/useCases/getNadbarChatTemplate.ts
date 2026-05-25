@@ -5,6 +5,7 @@ export function getNadbarChatTemplateUseCase(type: NadbarType): NadbarChatTempla
   const template = getNadbarTemplate(type)
   return {
     userVarFields: template.userVarFields,
+    varInitialFromBlock: template.varInitialFromBlock,
     blockFooterActions: template.blocks.map((block) =>
       block.footerActions ? [...block.footerActions] : undefined,
     ),

@@ -131,6 +131,45 @@ describe('parseNadbarTemplate', () => {
     )
   })
 
+  it('parses varInitialFromBlock', () => {
+    const template = parseNadbarTemplate({
+      varInitialFromBlock: {
+        openingCallsign1: 0,
+        openingCallsign2: 0,
+      },
+      blocks: [
+        { messages: [{ source: 'They', content: '{{openingCallsign1}}' }] },
+        { messages: [{ source: 'They', content: '{{openingCallsign2}}' }] },
+      ],
+    })
+    assert.deepEqual(template.varInitialFromBlock, {
+      openingCallsign1: 0,
+      openingCallsign2: 0,
+    })
+  })
+
+  it('rejects varInitialFromBlock with out-of-range block index', () => {
+    assert.throws(
+      () =>
+        parseNadbarTemplate({
+          varInitialFromBlock: { openingCallsign1: 2 },
+          blocks: [{ messages: [{ source: 'They', content: 'x' }] }],
+        }),
+      /varInitialFromBlock לא תקין/,
+    )
+  })
+
+  it('rejects invalid varInitialFromBlock shape', () => {
+    assert.throws(
+      () =>
+        parseNadbarTemplate({
+          varInitialFromBlock: [],
+          blocks: [{ messages: [{ source: 'They', content: 'x' }] }],
+        }),
+      /varInitialFromBlock לא תקין/,
+    )
+  })
+
   it('parses block footerActions', () => {
     const template = parseNadbarTemplate({
       blocks: [
@@ -277,10 +316,12 @@ describe('getNadbarTemplate', () => {
     assert.equal(template.blocks[4]?.messages.length, 3)
     assert.equal(template.blocks[5]?.messages.length, 9)
     assert.deepEqual(template.userVarFields, {
+      ktanot: { input: 'numeric' },
       meraom: { input: 'numeric' },
       tsepa: { input: 'numeric' },
       gamal: { input: 'numeric' },
       amura: { input: 'numeric' },
+      gur: { input: 'numeric' },
       amuraCorrected: { input: 'numeric' },
       amuraValid: { input: 'choice', options: ['תקינה', 'לא תקינה'] },
       hasNearbyObstacles: { input: 'choice', options: ['שלילי', 'חיובי'] },
@@ -305,6 +346,10 @@ describe('getNadbarTemplate', () => {
     assert.deepEqual(template.blocks[3]?.footerActions, ['loadTarget', 'addObstacle'])
     assert.deepEqual(template.blocks[4]?.footerActions, ['loadTarget'])
     assert.deepEqual(template.blocks[5]?.footerActions, ['loadTarget'])
+    assert.deepEqual(template.varInitialFromBlock, {
+      openingCallsign1: 0,
+      openingCallsign2: 0,
+    })
     assert.deepEqual(template.blocks[2]?.messages[3]?.visibleWhen, {
       var: 'amuraValid',
       equals: 'לא תקינה',

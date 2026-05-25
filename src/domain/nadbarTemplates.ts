@@ -29,5 +29,8 @@ export function getNadbarTemplate(type: NadbarType): NadbarTemplate {
           ),
         }
       : {}),
+    ...(template.varInitialFromBlock
+      ? { varInitialFromBlock: { ...template.varInitialFromBlock } }
+      : {}),
   }
 }

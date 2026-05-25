@@ -48,6 +48,7 @@ function NadbarChatView({
   const chatContextValue = useMemo(
     () => ({
       userVarFields: chatTemplate.userVarFields,
+      varInitialFromBlock: chatTemplate.varInitialFromBlock,
       resources,
       blockFooterActions: chatTemplate.blockFooterActions,
       onBlockFooterAction,
@@ -71,6 +72,7 @@ function NadbarChatView({
             key={`block-${blockIndex}`}
             block={block}
             blockIndex={blockIndex}
+            allBlockMessageVars={blockMessageVars}
             blockMessageVars={blockMessageVars[blockIndex] ?? {}}
             onUserVarChange={(varName, value) => onUserVarChange(blockIndex, varName, value)}
           />

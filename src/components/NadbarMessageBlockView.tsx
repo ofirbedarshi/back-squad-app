@@ -10,6 +10,7 @@ import { filterVisibleNadbarMessages } from '../utils/nadbarMessageFill'
 interface NadbarMessageBlockViewProps {
   block: NadbarMessageBlock
   blockIndex: number
+  allBlockMessageVars: readonly NadbarMessageUserVars[]
   blockMessageVars: NadbarMessageUserVars
   onUserVarChange: (varName: string, value: string) => void
 }
@@ -17,6 +18,7 @@ interface NadbarMessageBlockViewProps {
 function NadbarMessageBlockView({
   block,
   blockIndex,
+  allBlockMessageVars,
   blockMessageVars,
   onUserVarChange,
 }: NadbarMessageBlockViewProps) {
@@ -26,8 +28,8 @@ function NadbarMessageBlockView({
   )
 
   const blockContextValue = useMemo(
-    () => ({ messageVars: blockMessageVars, onUserVarChange }),
-    [blockMessageVars, onUserVarChange],
+    () => ({ blockIndex, allBlockMessageVars, messageVars: blockMessageVars, onUserVarChange }),
+    [blockIndex, allBlockMessageVars, blockMessageVars, onUserVarChange],
   )
 
   return (

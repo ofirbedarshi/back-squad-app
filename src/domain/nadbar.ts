@@ -13,6 +13,7 @@ import {
   type NadbarTemplateBlock,
   type NadbarType,
   type NadbarUserVarFields,
+  type NadbarVarInitialFromBlock,
   NADBAR_BLOCK_FOOTER_ACTIONS,
   type NadbarBlockFooterAction,
 } from './nadbar.types'
@@ -37,7 +38,7 @@ function normalizeMessageVars(vars: NadbarMessageUserVars | undefined): NadbarMe
   if (!vars) return undefined
   const next: NadbarMessageUserVars = {}
   for (const [key, value] of Object.entries(vars)) {
-    if (value !== '') next[key] = value
+    if (typeof value === 'string') next[key] = value
   }
   return Object.keys(next).length > 0 ? next : undefined
 }
@@ -282,6 +283,35 @@ function parseUserVarFieldsFromRecord(record: Record<string, unknown>): NadbarUs
   return Object.keys(userVarFields).length > 0 ? userVarFields : undefined
 }
 
+function parseVarInitialFromBlockFromRecord(
+  record: Record<string, unknown>,
+  blockCount: number,
+): NadbarVarInitialFromBlock | undefined {
+  if (record.varInitialFromBlock === undefined) return undefined
+  const raw = record.varInitialFromBlock
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) {
+    throw new Error('תבנית נדבר: varInitialFromBlock לא תקין')
+  }
+
+  const varInitialFromBlock: NadbarVarInitialFromBlock = {}
+  for (const [varName, sourceIndex] of Object.entries(raw as Record<string, unknown>)) {
+    if (!varName) {
+      throw new Error('תבנית נדבר: varInitialFromBlock לא תקין')
+    }
+    if (
+      typeof sourceIndex !== 'number' ||
+      !Number.isInteger(sourceIndex) ||
+      sourceIndex < 0 ||
+      sourceIndex >= blockCount
+    ) {
+      throw new Error('תבנית נדבר: varInitialFromBlock לא תקין')
+    }
+    varInitialFromBlock[varName] = sourceIndex
+  }
+
+  return Object.keys(varInitialFromBlock).length > 0 ? varInitialFromBlock : undefined
+}
+
 export function isNadbarUserVarNumeric(
   userVarFields: NadbarUserVarFields | undefined,
   varName: string,
@@ -358,7 +388,12 @@ export function parseNadbarTemplate(raw: unknown): NadbarTemplate {
   const record = raw as Record<string, unknown>
   const blocks = parseMessageBlocksFromRecord(record)
   const userVarFields = parseUserVarFieldsFromRecord(record)
-  return userVarFields ? { blocks, userVarFields } : { blocks }
+  const varInitialFromBlock = parseVarInitialFromBlockFromRecord(record, blocks.length)
+  return {
+    blocks,
+    ...(userVarFields ? { userVarFields } : {}),
+    ...(varInitialFromBlock ? { varInitialFromBlock } : {}),
+  }
 }
 
 export function applyNadbarLinks(nadbar: Nadbar, links: NadbarLinksUpdate): Nadbar {
