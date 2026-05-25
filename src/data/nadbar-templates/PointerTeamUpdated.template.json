@@ -19,7 +19,22 @@
     "obstacleHeight2": { "input": "numeric" },
     "obstacleDistance2": { "input": "numeric" },
     "obstacleHeight3": { "input": "numeric" },
-    "obstacleDistance3": { "input": "numeric" }
+    "obstacleDistance3": { "input": "numeric" },
+    "hasSpecialRequirements": {
+      "input": "choice",
+      "options": ["שלילי", "חיובי"]
+    },
+    "hetSet": { "input": "numeric" },
+    "hashaya": { "input": "numeric" },
+    "flightTime": { "input": "numeric" },
+    "pergolaOrientation": {
+      "input": "choice",
+      "options": ["פרגול", "הפוכה"]
+    },
+    "tunisNeed": {
+      "input": "choice",
+      "options": ["יש צורך בטוניס", "אין צורך בטוניס"]
+    }
   },
   "blocks": [
     {
@@ -144,6 +159,68 @@
           "source": "Me",
           "content": "קיבלתי, הסתר נוסף בגובה {{obstacleHeight3}} במרחק {{obstacleDistance3}}",
           "visibleWhen": { "var": "obstacleActive3", "equals": "1" }
+        }
+      ]
+    },
+    {
+      "footerActions": ["loadTarget"],
+      "messages": [
+        {
+          "source": "Me",
+          "content": "למטרה {{metara}}, האם יש דרישות מיוחדות? {{hasSpecialRequirements}}"
+        },
+        {
+          "source": "They",
+          "content": "קבל למטרה {{metara}} {{hasSpecialRequirements}} הסט {{hetSet}} השהיה {{hashaya}}"
+        },
+        {
+          "source": "Me",
+          "content": "קיבלתי למטרה {{metara}} {{hasSpecialRequirements}} הסט {{hetSet}} השהיה {{hashaya}}"
+        }
+      ]
+    },
+    {
+      "footerActions": ["loadTarget"],
+      "messages": [
+        {
+          "source": "They",
+          "content": "קבל למטרה {{metara}} הללויה!"
+        },
+        {
+          "source": "Me",
+          "content": "קיבלתי למטרה {{metara}} הללויה"
+        },
+        {
+          "source": "Me",
+          "content": "קבל למטרה {{metara}} זמן מעוף משוער {{flightTime}} כמו כן מוקד {{moked}}"
+        },
+        {
+          "source": "They",
+          "content": "קיבלתי למטרה {{metara}} זמן מעוף משוער {{flightTime}} כמו כן מוקד {{moked}}"
+        },
+        {
+          "source": "They",
+          "content": "קבל למטרה {{metara}} אושר אושר"
+        },
+        {
+          "source": "Me",
+          "content": "קיבלתי למטרה {{metara}} אושר אושר"
+        },
+        {
+          "source": "Me",
+          "content": "קבל למטרה {{metara}} טורפדו"
+        },
+        {
+          "source": "They",
+          "content": "קיבלתי למטרה {{metara}} טורפדו"
+        },
+        {
+          "source": "They",
+          "content": "קבל למטרה {{metara}} {{pergolaOrientation}} כמו כן {{tunisNeed}}"
+        },
+        {
+          "source": "They",
+          "content": "הערות {{hearot}}"
         }
       ]
     }

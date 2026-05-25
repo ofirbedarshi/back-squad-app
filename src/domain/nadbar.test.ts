@@ -246,13 +246,15 @@ describe('getNadbarTemplate', () => {
     }
   })
 
-  it('PointerTeamUpdated has four blocks', () => {
+  it('PointerTeamUpdated has six blocks', () => {
     const template = getNadbarTemplate('PointerTeamUpdated')
-    assert.equal(template.blocks.length, 4)
+    assert.equal(template.blocks.length, 6)
     assert.equal(template.blocks[0]?.messages.length, 4)
     assert.equal(template.blocks[1]?.messages.length, 6)
     assert.equal(template.blocks[2]?.messages.length, 5)
     assert.equal(template.blocks[3]?.messages.length, 9)
+    assert.equal(template.blocks[4]?.messages.length, 3)
+    assert.equal(template.blocks[5]?.messages.length, 10)
     assert.deepEqual(template.userVarFields, {
       meraom: { input: 'numeric' },
       tsepa: { input: 'numeric' },
@@ -267,10 +269,21 @@ describe('getNadbarTemplate', () => {
       obstacleDistance2: { input: 'numeric' },
       obstacleHeight3: { input: 'numeric' },
       obstacleDistance3: { input: 'numeric' },
+      hasSpecialRequirements: { input: 'choice', options: ['שלילי', 'חיובי'] },
+      hetSet: { input: 'numeric' },
+      hashaya: { input: 'numeric' },
+      flightTime: { input: 'numeric' },
+      pergolaOrientation: { input: 'choice', options: ['פרגול', 'הפוכה'] },
+      tunisNeed: {
+        input: 'choice',
+        options: ['יש צורך בטוניס', 'אין צורך בטוניס'],
+      },
     })
     assert.deepEqual(template.blocks[1]?.footerActions, ['createTargetFromVars'])
     assert.deepEqual(template.blocks[2]?.footerActions, ['loadTarget'])
     assert.deepEqual(template.blocks[3]?.footerActions, ['loadTarget', 'addObstacle'])
+    assert.deepEqual(template.blocks[4]?.footerActions, ['loadTarget'])
+    assert.deepEqual(template.blocks[5]?.footerActions, ['loadTarget'])
     assert.deepEqual(template.blocks[2]?.messages[3]?.visibleWhen, {
       var: 'amuraValid',
       equals: 'לא תקינה',
