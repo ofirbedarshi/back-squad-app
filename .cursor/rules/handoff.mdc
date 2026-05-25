@@ -74,26 +74,12 @@ Bullet list of paths that matter **now** (read/edit). Example pattern:
 
 ---
 
-# Current active feature (update when feature changes)
+# How to use
 
-**Miss checklist (צ'קליסט החטאה)** — step-by-step refactor of `missChecklistForm.schema.ts`.
+When the user invokes this rule (`@handoff`):
 
-When generating a handoff today, use the structure above with this feature. Replace this section when work moves to another feature.
+1. **Infer the active feature** from the current chat — not from this file. This rule is generic; do not edit it to store feature state.
+2. **Output** a handoff using the structure above (sections 1–7).
+3. **Keep it feature-scoped** — enough for the next agent to continue without re-reading the full thread.
 
-**Flow:** list (`MissChecklistListScreen`) → new (`MissChecklistScreen`) / edit (`MissChecklistEditScreen`) → dynamic form from schema → save via use-cases → `missChecklists` in localStorage.
-
-**Key files:**
-- `src/screens/missChecklistForm.schema.ts` — form definition (refactor target)
-- `src/screens/MissChecklistScreen.tsx`, `MissChecklistEditScreen.tsx`, `MissChecklistListScreen.tsx`
-- `src/domain/missChecklist.types.ts`, `missChecklist.ts`
-- `src/storage/missChecklistStorage.ts`
-- `src/useCases/addMissChecklist.ts`, `updateMissChecklist.ts`, `loadMissChecklists.ts`, `removeMissChecklist.ts`
-- `docs/צקליסט-החטאה.md` — update when fields/rules change
-
-**Refactor plan:** user removes/reorders fields in **steps**; agent applies each step to schema + dev seeds + doc.
-
-**Done:** step 1 — removed header `מול מציין` + 6 toggles before `targetType`; seeds synced.
-
-**Next step:** user gives next cut point in schema (e.g. remove through field X); mirror in seeds + `npm run seed`; trim `docs/צקליסט-החטאה.md` sections for removed fields.
-
-**Seeds (required per schema change):** `src/dev/seedMockData.ts`, `scripts/seed-localStorage.mjs`, then `npm run seed` → `public/dev-seed.html`.
+If no feature is in progress, say so and ask what to hand off.

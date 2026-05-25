@@ -34,6 +34,38 @@ export const missChecklistFormSchema: FormSchema = {
         ],
       },
     },
+    {
+      type: 'checkbox',
+      key: 'indicatorTargetDataComparedWithChecklist',
+      label: 'השווה מול מציין את נתוני המטרה עם הצ\'קליסט',
+      defaultValue: false,
+    },
+    {
+      type: 'checkbox',
+      key: 'indicatorKozEnteredInMeansChecked',
+      label: 'בדוק מול מציין מה הקוץ שמוזן באמצעי',
+      defaultValue: false,
+      visibleWhen: {
+        or: [
+          { field: 'impactLocationDetected', equals: 'לא' },
+          { field: 'impactLocationExploded', equals: 'לא' },
+        ],
+      },
+    },
+    {
+      type: 'toggle',
+      key: 'exitWasValid',
+      label: 'האם היציאה הייתה תקינה',
+      options: ['כן', 'לא'],
+      defaultValue: 'לא',
+      visibleWhen: {
+        or: [
+          { field: 'impactLocationKind', equals: 'רחוק' },
+          { field: 'impactLocationKind', equals: 'תיאור מילולי' },
+          { field: 'impactLocationKind', equals: 'נ.צ.' },
+        ],
+      },
+    },
     { type: 'text', key: 'targetType', label: 'מה היה סוג המטרה?' },
     {
       type: 'toggle',

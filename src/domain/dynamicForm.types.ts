@@ -1,5 +1,6 @@
 export type { CoordinateValue } from '../components/base/coordinateInput.types'
 import type { CoordinateValue } from '../components/base/coordinateInput.types'
+import type { FormFieldVisibleWhen } from './dynamicFormVisibleWhen'
 
 /** Form keys watched for computed position→target metrics. Omitted entries use Bach (עמדה אחורית) defaults. */
 export type PositionToTargetWatchKeyOverrides = Partial<{
@@ -71,6 +72,7 @@ export interface ToggleField {
   options: [string, string, ...string[]]
   required?: boolean
   defaultValue?: string
+  visibleWhen?: FormFieldVisibleWhen
 }
 
 export interface CheckboxField {
@@ -79,6 +81,7 @@ export interface CheckboxField {
   label: string
   required?: boolean
   defaultValue?: boolean
+  visibleWhen?: FormFieldVisibleWhen
 }
 
 export interface NumberField {

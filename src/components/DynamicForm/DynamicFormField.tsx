@@ -15,7 +15,8 @@ import type { ComputedTextFieldDef } from './computedTextField.types'
 import type { CoordinateValue, FormFieldDef, FormValues, RowableField, ToggleWithConditionsField } from '../../domain/dynamicForm.types'
 import ToggleWithConditionsRenderer from './ToggleWithConditionsRenderer'
 import { AZIMUTH_DEGREE_MAX, AZIMUTH_DEGREE_MIN } from '../../domain/azimuthDegree'
-import { makeFieldValidator } from '../../domain/dynamicFormValidation'
+import { collectVisibleWhenWatchKeys } from '../../domain/dynamicFormVisibleWhen'
+import { isFieldVisible, makeFieldValidator } from '../../domain/dynamicFormValidation'
 
 interface DynamicFormFieldProps {
   field: FormFieldDef
@@ -237,6 +238,13 @@ function DynamicFormField({
   }
 
   if (field.type === 'toggle') {
+    if (field.visibleWhen) {
+      watch(collectVisibleWhenWatchKeys(field.visibleWhen))
+    }
+    if (!isFieldVisible(field, getValues(), parentByKey)) {
+      return null
+    }
+
     const error = errors[field.key]
     const errorMessage = error && 'message' in error ? (error.message as string) : undefined
     return (
@@ -260,6 +268,13 @@ function DynamicFormField({
   }
 
   if (field.type === 'checkbox') {
+    if (field.visibleWhen) {
+      watch(collectVisibleWhenWatchKeys(field.visibleWhen))
+    }
+    if (!isFieldVisible(field, getValues(), parentByKey)) {
+      return null
+    }
+
     return (
       <Controller
         name={field.key}

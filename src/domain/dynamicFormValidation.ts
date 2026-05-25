@@ -1,3 +1,4 @@
+import { isFormFieldVisibleWhen } from './dynamicFormVisibleWhen.ts'
 import { validateAzimuthDegreeValue } from './azimuthDegree.ts'
 import type { CoordinateValue } from './dynamicForm.types'
 import type {
@@ -124,6 +125,13 @@ export function isFieldVisible(
   parentByKey: Map<string, ToggleWithConditionsField>,
 ): boolean {
   if (!('key' in field)) return false
+
+  if (
+    (field.type === 'checkbox' || field.type === 'toggle') &&
+    field.visibleWhen
+  ) {
+    if (!isFormFieldVisibleWhen(field.visibleWhen, values)) return false
+  }
 
   const parent = parentByKey.get(field.key)
   if (!parent) return true
