@@ -84,6 +84,15 @@ export interface CheckboxField {
   visibleWhen?: FormFieldVisibleWhen
 }
 
+export interface MultiSelectToggleField {
+  type: 'multiSelectToggle'
+  key: string
+  label: string
+  options: [string, string, ...string[]]
+  required?: boolean
+  defaultValue?: string[]
+}
+
 export interface NumberField {
   type: 'number'
   key: string
@@ -118,6 +127,7 @@ export interface ToggleWithConditionsField {
   options: [string, string, ...string[]]
   required?: boolean
   defaultValue?: string
+  visibleWhen?: FormFieldVisibleWhen
   /** Maps each option value to the fields shown when that option is active. */
   conditions: Partial<Record<string, FormFieldDef[]>>
 }
@@ -199,6 +209,7 @@ export type FormFieldDef =
   | ToggleField
   | ToggleWithConditionsField
   | CheckboxField
+  | MultiSelectToggleField
   | CoordsField
   | TargetLoaderField
   | IndicatorLoaderField
@@ -208,4 +219,4 @@ export interface FormSchema {
   fields: FormFieldDef[]
 }
 
-export type FormValues = Record<string, string | number | boolean | CoordinateValue>
+export type FormValues = Record<string, string | number | boolean | string[] | CoordinateValue>

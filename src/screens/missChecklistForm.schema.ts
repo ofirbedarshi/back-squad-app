@@ -53,7 +53,7 @@ export const missChecklistFormSchema: FormSchema = {
       },
     },
     {
-      type: 'toggle',
+      type: 'toggleWithConditions',
       key: 'exitWasValid',
       label: 'האם היציאה הייתה תקינה',
       options: ['כן', 'לא'],
@@ -63,6 +63,21 @@ export const missChecklistFormSchema: FormSchema = {
           { field: 'impactLocationKind', equals: 'רחוק' },
           { field: 'impactLocationKind', equals: 'תיאור מילולי' },
           { field: 'impactLocationKind', equals: 'נ.צ.' },
+        ],
+      },
+      conditions: {
+        לא: [
+          {
+            type: 'multiSelectToggle',
+            key: 'exitInvalidSigns',
+            label: 'פרט',
+            options: ['מעוף', 'רעש', 'ריח', 'עשן'],
+          },
+          {
+            type: 'text',
+            key: 'exitInvalidDetailsText',
+            label: 'פירוט נוסף',
+          },
         ],
       },
     },

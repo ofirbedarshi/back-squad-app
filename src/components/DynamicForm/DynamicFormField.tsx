@@ -4,6 +4,7 @@ import FormField from '../FormField'
 import Input from '../Input'
 import Textarea from '../base/Textarea'
 import SegmentedToggle from '../base/SegmentedToggle'
+import MultiSelectSegmentedToggle from '../base/MultiSelectSegmentedToggle'
 import Checkbox from '../base/Checkbox'
 import CoordinateInput from '../base/CoordinateInput'
 import TargetLoaderField from './TargetLoaderField'
@@ -292,7 +293,45 @@ function DynamicFormField({
     )
   }
 
+  if (field.type === 'multiSelectToggle') {
+    if (!isFieldVisible(field, getValues(), parentByKey)) {
+      return null
+    }
+
+    const error = errors[field.key]
+    const errorMessage = error && 'message' in error ? (error.message as string) : undefined
+    return (
+      <FormField label={field.label} error={errorMessage}>
+        <Controller
+          name={field.key}
+          control={control}
+          defaultValue={field.defaultValue ?? []}
+          rules={{ validate: makeFieldValidator(field, getValues, parentByKey) }}
+          render={({ field: formField }) => {
+            const selected = Array.isArray(formField.value)
+              ? formField.value.filter((v): v is string => typeof v === 'string')
+              : []
+            return (
+              <MultiSelectSegmentedToggle
+                options={field.options.map((opt) => ({ label: opt, value: opt }))}
+                value={selected}
+                onChange={formField.onChange}
+              />
+            )
+          }}
+        />
+      </FormField>
+    )
+  }
+
   if (field.type === 'toggleWithConditions') {
+    if (field.visibleWhen) {
+      watch(collectVisibleWhenWatchKeys(field.visibleWhen))
+    }
+    if (!isFieldVisible(field, getValues(), parentByKey)) {
+      return null
+    }
+
     return (
       <ToggleWithConditionsRenderer
         field={field}

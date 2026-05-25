@@ -24,11 +24,19 @@ type ValidatableFieldType =
   | 'time'
   | 'toggle'
   | 'toggleWithConditions'
+  | 'multiSelectToggle'
   | 'coords'
   | 'checkbox'
   | 'targetLoader'
   | 'indicatorLoader'
   | 'positionLoader'
+
+function isMultiSelectFilled(value: unknown, options?: readonly string[]): boolean {
+  if (!Array.isArray(value) || value.length === 0) return false
+  return value.every(
+    (item) => typeof item === 'string' && (options === undefined || options.includes(item)),
+  )
+}
 
 function isComputedTextField(field: TextField): boolean {
   return (
@@ -71,6 +79,8 @@ export function isFilledFormValue(
       return isCoordsFilled(value)
     case 'checkbox':
       return value === true
+    case 'multiSelectToggle':
+      return isMultiSelectFilled(value, options)
     case 'targetLoader':
     case 'indicatorLoader':
     case 'positionLoader':
@@ -127,7 +137,9 @@ export function isFieldVisible(
   if (!('key' in field)) return false
 
   if (
-    (field.type === 'checkbox' || field.type === 'toggle') &&
+    (field.type === 'checkbox' ||
+      field.type === 'toggle' ||
+      field.type === 'toggleWithConditions') &&
     field.visibleWhen
   ) {
     if (!isFormFieldVisibleWhen(field.visibleWhen, values)) return false
@@ -135,6 +147,8 @@ export function isFieldVisible(
 
   const parent = parentByKey.get(field.key)
   if (!parent) return true
+
+  if (!isFieldVisible(parent, values, parentByKey)) return false
 
   const parentValue = values[parent.key]
   if (typeof parentValue !== 'string' || parentValue.trim() === '') return false
@@ -197,6 +211,9 @@ export function validateFieldValue(
   }
   if (field.type === 'checkbox') {
     return isFilledFormValue(value, 'checkbox') || REQUIRED_FIELD_MESSAGE
+  }
+  if (field.type === 'multiSelectToggle') {
+    return isFilledFormValue(value, 'multiSelectToggle', field.options) || REQUIRED_FIELD_MESSAGE
   }
   if (
     field.type === 'targetLoader' ||

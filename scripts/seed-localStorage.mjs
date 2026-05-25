@@ -288,6 +288,8 @@ const missChecklists = [
       impactLocationExploded: 'כן',
       indicatorTargetDataComparedWithChecklist: true,
       exitWasValid: 'לא',
+      exitInvalidSigns: ['רעש', 'עשן'],
+      exitInvalidDetailsText: '',
       targetType: 'מבנה',
       reflectiveTarget: 'לא',
       targetFace: 'חזית דרום',

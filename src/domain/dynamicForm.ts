@@ -24,7 +24,11 @@ function collectDefaultFromFormFieldDef(field: FormFieldDef, values: FormValues)
     }
     return
   }
-  collectDefault(field, values)
+  if (field.type === 'multiSelectToggle') {
+    values[field.key] = field.defaultValue ?? []
+    return
+  }
+  collectDefault(field as RowableField, values)
 }
 
 function collectDefault(field: RowableField, values: FormValues): void {

@@ -44,6 +44,13 @@ describe('isFilledFormValue', () => {
     assert.equal(isFilledFormValue(Number.NaN, 'number'), false)
     assert.equal(isFilledFormValue(3, 'number'), true)
   })
+
+  it('multiSelectToggle empty fails, selection passes', () => {
+    const options = ['מעוף', 'רעש'] as const
+    assert.equal(isFilledFormValue([], 'multiSelectToggle', options), false)
+    assert.equal(isFilledFormValue(['רעש'], 'multiSelectToggle', options), true)
+    assert.equal(isFilledFormValue(['invalid'], 'multiSelectToggle', options), false)
+  })
 })
 
 describe('conditional visibility', () => {
