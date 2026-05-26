@@ -26,7 +26,8 @@ export interface CloudsFeasibilityEvaluationInput {
 }
 
 export interface CloudsFeasibilityEvaluationResult {
-  lookupValue: number
-  computed: number
   enabled: boolean
+  notes: string
+  lookupValue?: number
+  computed?: number
 }

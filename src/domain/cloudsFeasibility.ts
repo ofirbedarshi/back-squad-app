@@ -8,6 +8,10 @@ import type {
 
 export const CLOUDS_FEASIBILITY_TOLERANCE_METERS = 100
 
+export const CLOUDS_FLAT_FLIGHT_PATH_NOTE = 'מסלול flat תמיד מאפשר בחישוב עננים'
+
+export const CLOUDS_LOFTED_PLUS_FLIGHT_PATH_NOTE = 'lofted+ לא נתמך בדור א׳'
+
 const { heightBands, rangeBands, lookup } = cloudsFeasibilityLookupData
 
 function findBand(
@@ -33,12 +37,6 @@ export function assertCloudsFlightPath(
 ): asserts flightPath is CloudsFeasibilityTrajectory {
   if (flightPath === 'low' || flightPath === 'lofted') {
     return
-  }
-  if (flightPath === 'flat') {
-    throw new Error('מסלול מעוף "flat" אינו נתמך בחישוב עננים — בחר low או lofted')
-  }
-  if (flightPath === '+lofted') {
-    throw new Error('מסלול מעוף "lofted +" אינו נתמך בחישוב עננים — בחר low או lofted')
   }
   throw new Error('מסלול מעוף לא תקין לחישוב עננים')
 }
@@ -71,6 +69,20 @@ export function lookupCloudsTableValue(
 export function evaluateCloudsFeasibility(
   input: CloudsFeasibilityEvaluationInput,
 ): CloudsFeasibilityEvaluationResult {
+  if (input.flightPath === 'flat') {
+    return {
+      enabled: true,
+      notes: CLOUDS_FLAT_FLIGHT_PATH_NOTE,
+    }
+  }
+
+  if (input.flightPath === '+lofted') {
+    return {
+      enabled: false,
+      notes: CLOUDS_LOFTED_PLUS_FLIGHT_PATH_NOTE,
+    }
+  }
+
   assertCloudsFlightPath(input.flightPath)
   assertFiniteMeters(input.targetHeightMeters, 'גובה מטרה')
   assertFiniteMeters(input.cloudHeightMeters, 'גובה עננים')
@@ -88,5 +100,6 @@ export function evaluateCloudsFeasibility(
     lookupValue,
     computed,
     enabled: computed < input.cloudHeightMeters,
+    notes: '',
   }
 }

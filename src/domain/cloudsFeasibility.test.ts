@@ -2,6 +2,8 @@ import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
 import {
   CLOUDS_FEASIBILITY_TOLERANCE_METERS,
+  CLOUDS_FLAT_FLIGHT_PATH_NOTE,
+  CLOUDS_LOFTED_PLUS_FLIGHT_PATH_NOTE,
   assertCloudsFlightPath,
   evaluateCloudsFeasibility,
   lookupCloudsTableValue,
@@ -39,6 +41,7 @@ describe('evaluateCloudsFeasibility', () => {
     assert.equal(result.lookupValue, 300)
     assert.equal(result.computed, 300 + 200 + CLOUDS_FEASIBILITY_TOLERANCE_METERS)
     assert.equal(result.enabled, true)
+    assert.equal(result.notes, '')
   })
 
   it('enabled false when computed equals cloud height (strict less-than)', () => {
@@ -71,15 +74,20 @@ describe('evaluateCloudsFeasibility', () => {
     assert.equal(result.enabled, true)
   })
 
-  it('throws for flat flight path', () => {
-    assert.throws(() => evaluateCloudsFeasibility(evalInput({ flightPath: 'flat' })), /flat/)
+  it('flat flight path is always enabled with note', () => {
+    const result = evaluateCloudsFeasibility(evalInput({ flightPath: 'flat' }))
+    assert.equal(result.enabled, true)
+    assert.equal(result.notes, CLOUDS_FLAT_FLIGHT_PATH_NOTE)
+    assert.equal(result.lookupValue, undefined)
+    assert.equal(result.computed, undefined)
   })
 
-  it('throws for lofted+ flight path', () => {
-    assert.throws(
-      () => evaluateCloudsFeasibility(evalInput({ flightPath: '+lofted' })),
-      /lofted \+/,
-    )
+  it('lofted+ flight path is disabled with generation-a note', () => {
+    const result = evaluateCloudsFeasibility(evalInput({ flightPath: '+lofted' }))
+    assert.equal(result.enabled, false)
+    assert.equal(result.notes, CLOUDS_LOFTED_PLUS_FLIGHT_PATH_NOTE)
+    assert.equal(result.lookupValue, undefined)
+    assert.equal(result.computed, undefined)
   })
 
   it('throws when range is outside table', () => {

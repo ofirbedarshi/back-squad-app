@@ -13,6 +13,7 @@ export interface FireFeasibilityFormData {
 
 export interface FireFeasibilityCategoryResult {
   enabled: boolean
+  notes: string
 }
 
 export interface FireFeasibilityResults {

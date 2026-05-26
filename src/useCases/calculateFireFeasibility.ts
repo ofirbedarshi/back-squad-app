@@ -26,5 +26,5 @@ export function calculateFireFeasibility(formData: FireFeasibilityFormData): Fir
     cloudHeightMeters,
   })
 
-  return { clouds: { enabled: clouds.enabled } }
+  return { clouds: { enabled: clouds.enabled, notes: clouds.notes } }
 }
