@@ -1,16 +1,17 @@
-import type { FireFeasibilityCategoryResult } from '../domain/fireFeasibility.types'
+import type {
+  FireFeasibilityCategoryResult,
+  FireFeasibilityFormData,
+} from '../domain/fireFeasibility.types'
 import FireFeasibilityCategoryResultBlock from './FireFeasibilityCategoryResultBlock'
 
 interface FireFeasibilityResultsViewProps {
   clouds: FireFeasibilityCategoryResult
-  positionToTargetRange: number | null
-  positionToTargetHeightDifference: number | null
+  formData: FireFeasibilityFormData
 }
 
 function FireFeasibilityResultsView({
   clouds,
-  positionToTargetRange: _positionToTargetRange,
-  positionToTargetHeightDifference: _positionToTargetHeightDifference,
+  formData: _formData,
 }: FireFeasibilityResultsViewProps) {
   return (
     <div className="flex flex-col gap-5">
