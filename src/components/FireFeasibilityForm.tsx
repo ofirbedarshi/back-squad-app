@@ -1,7 +1,11 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import type { Position } from '../domain/position.types'
 import type { Target } from '../domain/target.types'
-import type { FireFeasibilityFormData, FireFeasibilityMode } from '../domain/fireFeasibility.types'
+import type {
+  FireFeasibilityFlightPath,
+  FireFeasibilityFormData,
+  FireFeasibilityMode,
+} from '../domain/fireFeasibility.types'
 import { useFireFeasibilityPositionTargetMetrics } from '../hooks/useFireFeasibilityPositionTargetMetrics'
 import FireFeasibilityCoordsFields from './FireFeasibilityCoordsFields'
 import FireFeasibilityDistancesHeightsFields from './FireFeasibilityDistancesHeightsFields'
@@ -22,13 +26,15 @@ function FireFeasibilityForm({
 }: FireFeasibilityFormProps) {
   const metrics = useFireFeasibilityPositionTargetMetrics(position, target)
   const rangeDisplay = metrics?.range != null ? metrics.range.toFixed(1) : ''
+  const [flightPath, setFlightPath] = useState<FireFeasibilityFlightPath>('flat')
 
   useEffect(() => {
     onUpdateData({
       positionToTargetRange: metrics?.range ?? null,
       positionToTargetHeightDifference: metrics?.altitudeDiff ?? null,
+      flightPath,
     })
-  }, [metrics?.range, metrics?.altitudeDiff, onUpdateData])
+  }, [metrics?.range, metrics?.altitudeDiff, flightPath, onUpdateData])
 
   return (
     <div className="flex flex-col gap-4">
@@ -46,7 +52,10 @@ function FireFeasibilityForm({
         />
       )}
 
-      <FireFeasibilityFormSharedTail />
+      <FireFeasibilityFormSharedTail
+        flightPath={flightPath}
+        onFlightPathChange={setFlightPath}
+      />
     </div>
   )
 }

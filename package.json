@@ -10,6 +10,7 @@
     "build:apk": "bash build.sh",
     "send": "npm run build:apk && npm run build:html && bash scripts/send-artifacts-to-telegram.sh output/back-squad-app.apk output/back-squad-standalone.html",
     "seed": "node scripts/seed-localStorage.mjs",
+    "generate:clouds-lookup": "node scripts/generate-clouds-lookup.mjs",
     "lint": "eslint .",
     "preview": "vite preview"
   },
@@ -38,6 +39,7 @@
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.58.2",
     "vite": "^8.0.10",
-    "vite-plugin-singlefile": "^2.3.3"
+    "vite-plugin-singlefile": "^2.3.3",
+    "xlsx": "^0.18.5"
   }
 }

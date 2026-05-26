@@ -1,12 +1,18 @@
-import { useState } from 'react'
 import { FLIGHT_PATH_OPTIONS } from '../domain/fireFeasibility.constants'
+import type { FireFeasibilityFlightPath } from '../domain/fireFeasibility.types'
 import FireFeasibilityCloudHeightField from './FireFeasibilityCloudHeightField'
 import SegmentedToggle from './base/SegmentedToggle'
 import FormField from './FormField'
 
-function FireFeasibilityFormSharedTail() {
-  const [flightPath, setFlightPath] = useState('flat')
+interface FireFeasibilityFormSharedTailProps {
+  flightPath: FireFeasibilityFlightPath
+  onFlightPathChange: (flightPath: FireFeasibilityFlightPath) => void
+}
 
+function FireFeasibilityFormSharedTail({
+  flightPath,
+  onFlightPathChange,
+}: FireFeasibilityFormSharedTailProps) {
   return (
     <>
       <FireFeasibilityCloudHeightField />
@@ -15,7 +21,7 @@ function FireFeasibilityFormSharedTail() {
         <SegmentedToggle
           options={[...FLIGHT_PATH_OPTIONS]}
           value={flightPath}
-          onChange={setFlightPath}
+          onChange={(value) => onFlightPathChange(value as FireFeasibilityFlightPath)}
         />
       </FormField>
     </>

@@ -22,6 +22,7 @@ export function useFireFeasibilityFlow(mode: FireFeasibilityMode) {
   const [formData, setFormData] = useState<FireFeasibilityFormData>({
     positionToTargetRange: null,
     positionToTargetHeightDifference: null,
+    flightPath: 'flat',
   })
 
   const { position, target } = useEntityLinkResources({
@@ -56,13 +57,13 @@ export function useFireFeasibilityFlow(mode: FireFeasibilityMode) {
   const handleCalculate = useCallback(() => {
     if (!position || !target) return
     try {
-      const result = calculateFireFeasibility()
+      const result = calculateFireFeasibility(formData)
       setResults(result)
       setStep(getNextStepAfterForm())
     } catch (error) {
       triggerError(error instanceof Error ? error.message : 'חישוב נכשל')
     }
-  }, [position, target, triggerError])
+  }, [position, target, formData, triggerError])
 
   const handleUpdateData = useCallback((data: FireFeasibilityFormData) => {
     setFormData(data)
