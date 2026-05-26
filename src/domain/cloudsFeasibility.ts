@@ -5,12 +5,18 @@ import type {
   CloudsFeasibilityNumericBand,
   CloudsFeasibilityTrajectory,
 } from './cloudsFeasibility.types.ts'
+import {
+  CloudsFeasibilityOutOfTableError,
+  isCloudsFeasibilityOutOfTableError,
+} from './errors.ts'
 
 export const CLOUDS_FEASIBILITY_TOLERANCE_METERS = 100
 
 export const CLOUDS_FLAT_FLIGHT_PATH_NOTE = 'מסלול flat תמיד מאפשר בחישוב עננים'
 
 export const CLOUDS_LOFTED_PLUS_FLIGHT_PATH_NOTE = 'lofted+ לא נתמך בדור א׳'
+
+export const CLOUDS_OUT_OF_TABLE_NOTE = 'ערכים מחוץ לטבלת הערכים'
 
 const { heightBands, rangeBands, lookup } = cloudsFeasibilityLookupData
 
@@ -60,7 +66,7 @@ export function lookupCloudsTableValue(
   const cell = lookup[key]
   const value = cell?.[trajectory]
   if (value === undefined) {
-    throw new Error('אין נתון בטבלת עננים לשילוב טווח, הפרש גובה ומסלול מעוף שנבחרו')
+    throw new CloudsFeasibilityOutOfTableError()
   }
 
   return value
@@ -87,19 +93,29 @@ export function evaluateCloudsFeasibility(
   assertFiniteMeters(input.targetHeightMeters, 'גובה מטרה')
   assertFiniteMeters(input.cloudHeightMeters, 'גובה עננים')
 
-  const lookupValue = lookupCloudsTableValue(
-    input.positionToTargetHeightDifferenceMeters,
-    input.positionToTargetRangeMeters,
-    input.flightPath,
-  )
+  try {
+    const lookupValue = lookupCloudsTableValue(
+      input.positionToTargetHeightDifferenceMeters,
+      input.positionToTargetRangeMeters,
+      input.flightPath,
+    )
 
-  const computed =
-    lookupValue + input.targetHeightMeters + CLOUDS_FEASIBILITY_TOLERANCE_METERS
+    const computed =
+      lookupValue + input.targetHeightMeters + CLOUDS_FEASIBILITY_TOLERANCE_METERS
 
-  return {
-    lookupValue,
-    computed,
-    enabled: computed < input.cloudHeightMeters,
-    notes: '',
+    return {
+      lookupValue,
+      computed,
+      enabled: computed < input.cloudHeightMeters,
+      notes: '',
+    }
+  } catch (error) {
+    if (isCloudsFeasibilityOutOfTableError(error)) {
+      return {
+        enabled: true,
+        notes: CLOUDS_OUT_OF_TABLE_NOTE,
+      }
+    }
+    throw error
   }
 }

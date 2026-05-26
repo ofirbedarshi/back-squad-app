@@ -4,10 +4,12 @@ import {
   CLOUDS_FEASIBILITY_TOLERANCE_METERS,
   CLOUDS_FLAT_FLIGHT_PATH_NOTE,
   CLOUDS_LOFTED_PLUS_FLIGHT_PATH_NOTE,
+  CLOUDS_OUT_OF_TABLE_NOTE,
   assertCloudsFlightPath,
   evaluateCloudsFeasibility,
   lookupCloudsTableValue,
 } from './cloudsFeasibility.ts'
+import { CloudsFeasibilityOutOfTableError } from './errors.ts'
 import type { CloudsFeasibilityEvaluationInput } from './cloudsFeasibility.types.ts'
 
 function evalInput(
@@ -30,6 +32,13 @@ describe('lookupCloudsTableValue', () => {
 
   it('returns table value for negative height diff and low trajectory', () => {
     assert.equal(lookupCloudsTableValue(-50, 4500, 'low'), 250)
+  })
+
+  it('throws CloudsFeasibilityOutOfTableError when cell is empty in table', () => {
+    assert.throws(
+      () => lookupCloudsTableValue(850, 4500, 'lofted'),
+      CloudsFeasibilityOutOfTableError,
+    )
   })
 })
 
@@ -97,17 +106,17 @@ describe('evaluateCloudsFeasibility', () => {
     )
   })
 
-  it('throws when cell is empty in table', () => {
-    assert.throws(
-      () =>
-        evaluateCloudsFeasibility(
-          evalInput({
-            positionToTargetHeightDifferenceMeters: 850,
-            positionToTargetRangeMeters: 4500,
-          }),
-        ),
-      /אין נתון בטבלת עננים/,
+  it('enabled true with note when cell is empty in table', () => {
+    const result = evaluateCloudsFeasibility(
+      evalInput({
+        positionToTargetHeightDifferenceMeters: 850,
+        positionToTargetRangeMeters: 4500,
+      }),
     )
+    assert.equal(result.enabled, true)
+    assert.equal(result.notes, CLOUDS_OUT_OF_TABLE_NOTE)
+    assert.equal(result.lookupValue, undefined)
+    assert.equal(result.computed, undefined)
   })
 
   it('throws when target height is not finite', () => {
