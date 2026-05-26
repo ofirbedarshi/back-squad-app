@@ -32,9 +32,10 @@ function FireFeasibilityForm({
     onUpdateData({
       positionToTargetRange: metrics?.range ?? null,
       positionToTargetHeightDifference: metrics?.altitudeDiff ?? null,
+      targetAltitudeMeters: target.altitude ?? null,
       flightPath,
     })
-  }, [metrics?.range, metrics?.altitudeDiff, flightPath, onUpdateData])
+  }, [metrics?.range, metrics?.altitudeDiff, target.altitude, flightPath, onUpdateData])
 
   return (
     <div className="flex flex-col gap-4">

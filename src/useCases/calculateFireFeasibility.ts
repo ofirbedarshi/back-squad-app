@@ -14,11 +14,16 @@ export function calculateFireFeasibility(formData: FireFeasibilityFormData): Fir
   if (formData.positionToTargetHeightDifference === null) {
     throw new Error('חסר הפרש גובה בין עמדה למטרה — ודא שנבחרו עמדה ומטרה עם גובה')
   }
+  if (formData.targetAltitudeMeters === null) {
+    throw new Error('חסר גובה מטרה — ודא שלמטרה שנבחרה הוגדר גובה')
+  }
 
   const clouds = evaluateCloudsFeasibility({
     positionToTargetRangeMeters: formData.positionToTargetRange,
     positionToTargetHeightDifferenceMeters: formData.positionToTargetHeightDifference,
     flightPath: formData.flightPath,
+    targetHeightMeters: formData.targetAltitudeMeters,
+    cloudHeightMeters,
   })
 
   return { clouds: { enabled: clouds.enabled } }

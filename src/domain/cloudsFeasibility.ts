@@ -6,7 +6,7 @@ import type {
   CloudsFeasibilityTrajectory,
 } from './cloudsFeasibility.types.ts'
 
-export const CLOUDS_FEASIBILITY_MIN_LOOKUP_VALUE = 600
+export const CLOUDS_FEASIBILITY_TOLERANCE_METERS = 100
 
 const { heightBands, rangeBands, lookup } = cloudsFeasibilityLookupData
 
@@ -20,6 +20,12 @@ function findBand(
     throw new Error(`${axisLabel} מחוץ לטווח הטבלה`)
   }
   return band
+}
+
+function assertFiniteMeters(value: number, label: string): void {
+  if (!Number.isFinite(value)) {
+    throw new Error(`${label} לא תקין`)
+  }
 }
 
 export function assertCloudsFlightPath(
@@ -66,6 +72,8 @@ export function evaluateCloudsFeasibility(
   input: CloudsFeasibilityEvaluationInput,
 ): CloudsFeasibilityEvaluationResult {
   assertCloudsFlightPath(input.flightPath)
+  assertFiniteMeters(input.targetHeightMeters, 'גובה מטרה')
+  assertFiniteMeters(input.cloudHeightMeters, 'גובה עננים')
 
   const lookupValue = lookupCloudsTableValue(
     input.positionToTargetHeightDifferenceMeters,
@@ -73,8 +81,12 @@ export function evaluateCloudsFeasibility(
     input.flightPath,
   )
 
+  const computed =
+    lookupValue + input.targetHeightMeters + CLOUDS_FEASIBILITY_TOLERANCE_METERS
+
   return {
     lookupValue,
-    enabled: lookupValue > CLOUDS_FEASIBILITY_MIN_LOOKUP_VALUE,
+    computed,
+    enabled: computed < input.cloudHeightMeters,
   }
 }

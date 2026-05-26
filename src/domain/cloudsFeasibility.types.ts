@@ -21,9 +21,12 @@ export interface CloudsFeasibilityEvaluationInput {
   positionToTargetRangeMeters: number
   positionToTargetHeightDifferenceMeters: number
   flightPath: string
+  targetHeightMeters: number
+  cloudHeightMeters: number
 }
 
 export interface CloudsFeasibilityEvaluationResult {
   lookupValue: number
+  computed: number
   enabled: boolean
 }

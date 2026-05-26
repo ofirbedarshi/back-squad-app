@@ -7,6 +7,7 @@ export type FireFeasibilityFlightPath = (typeof FLIGHT_PATH_OPTIONS)[number]['va
 export interface FireFeasibilityFormData {
   positionToTargetRange: number | null
   positionToTargetHeightDifference: number | null
+  targetAltitudeMeters: number | null
   flightPath: FireFeasibilityFlightPath
 }
 

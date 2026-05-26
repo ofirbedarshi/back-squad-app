@@ -1,10 +1,25 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
 import {
+  CLOUDS_FEASIBILITY_TOLERANCE_METERS,
   assertCloudsFlightPath,
   evaluateCloudsFeasibility,
   lookupCloudsTableValue,
 } from './cloudsFeasibility.ts'
+import type { CloudsFeasibilityEvaluationInput } from './cloudsFeasibility.types.ts'
+
+function evalInput(
+  overrides: Partial<CloudsFeasibilityEvaluationInput>,
+): CloudsFeasibilityEvaluationInput {
+  return {
+    positionToTargetHeightDifferenceMeters: 750,
+    positionToTargetRangeMeters: 7200,
+    flightPath: 'lofted',
+    targetHeightMeters: 200,
+    cloudHeightMeters: 700,
+    ...overrides,
+  }
+}
 
 describe('lookupCloudsTableValue', () => {
   it('returns table value for known height diff, range, and lofted', () => {
@@ -17,68 +32,59 @@ describe('lookupCloudsTableValue', () => {
 })
 
 describe('evaluateCloudsFeasibility', () => {
-  it('enabled false when lookup value is at most 600', () => {
-    const result = evaluateCloudsFeasibility({
-      positionToTargetHeightDifferenceMeters: 750,
-      positionToTargetRangeMeters: 7200,
-      flightPath: 'lofted',
-    })
+  it('enabled true when computed is strictly below cloud height', () => {
+    const result = evaluateCloudsFeasibility(
+      evalInput({ targetHeightMeters: 200, cloudHeightMeters: 700 }),
+    )
     assert.equal(result.lookupValue, 300)
-    assert.equal(result.enabled, false)
-  })
-
-  it('enabled true when lookup value is above 600', () => {
-    const result = evaluateCloudsFeasibility({
-      positionToTargetHeightDifferenceMeters: -950,
-      positionToTargetRangeMeters: 4200,
-      flightPath: 'lofted',
-    })
-    assert.equal(result.lookupValue, 1050)
+    assert.equal(result.computed, 300 + 200 + CLOUDS_FEASIBILITY_TOLERANCE_METERS)
     assert.equal(result.enabled, true)
   })
 
-  it('enabled false when lookup value equals 600 (threshold is strict greater-than)', () => {
-    const result = evaluateCloudsFeasibility({
-      positionToTargetHeightDifferenceMeters: -550,
-      positionToTargetRangeMeters: 5500,
-      flightPath: 'low',
-    })
-    assert.equal(result.lookupValue, 600)
+  it('enabled false when computed equals cloud height (strict less-than)', () => {
+    const result = evaluateCloudsFeasibility(
+      evalInput({ targetHeightMeters: 200, cloudHeightMeters: 600 }),
+    )
+    assert.equal(result.computed, 600)
     assert.equal(result.enabled, false)
   })
 
-  it('throws for flat flight path', () => {
-    assert.throws(
-      () =>
-        evaluateCloudsFeasibility({
-          positionToTargetHeightDifferenceMeters: 750,
-          positionToTargetRangeMeters: 7200,
-          flightPath: 'flat',
-        }),
-      /flat/,
+  it('enabled false when computed is above cloud height', () => {
+    const result = evaluateCloudsFeasibility(
+      evalInput({ targetHeightMeters: 500, cloudHeightMeters: 700 }),
     )
+    assert.equal(result.computed, 900)
+    assert.equal(result.enabled, false)
+  })
+
+  it('enabled true when high lookup and low target still fit under cloud', () => {
+    const result = evaluateCloudsFeasibility(
+      evalInput({
+        positionToTargetHeightDifferenceMeters: -950,
+        positionToTargetRangeMeters: 4200,
+        targetHeightMeters: 50,
+        cloudHeightMeters: 1500,
+      }),
+    )
+    assert.equal(result.lookupValue, 1050)
+    assert.equal(result.computed, 1050 + 50 + CLOUDS_FEASIBILITY_TOLERANCE_METERS)
+    assert.equal(result.enabled, true)
+  })
+
+  it('throws for flat flight path', () => {
+    assert.throws(() => evaluateCloudsFeasibility(evalInput({ flightPath: 'flat' })), /flat/)
   })
 
   it('throws for lofted+ flight path', () => {
     assert.throws(
-      () =>
-        evaluateCloudsFeasibility({
-          positionToTargetHeightDifferenceMeters: 750,
-          positionToTargetRangeMeters: 7200,
-          flightPath: '+lofted',
-        }),
+      () => evaluateCloudsFeasibility(evalInput({ flightPath: '+lofted' })),
       /lofted \+/,
     )
   })
 
   it('throws when range is outside table', () => {
     assert.throws(
-      () =>
-        evaluateCloudsFeasibility({
-          positionToTargetHeightDifferenceMeters: 750,
-          positionToTargetRangeMeters: 3000,
-          flightPath: 'lofted',
-        }),
+      () => evaluateCloudsFeasibility(evalInput({ positionToTargetRangeMeters: 3000 })),
       /טווח מחוץ/,
     )
   })
@@ -86,12 +92,20 @@ describe('evaluateCloudsFeasibility', () => {
   it('throws when cell is empty in table', () => {
     assert.throws(
       () =>
-        evaluateCloudsFeasibility({
-          positionToTargetHeightDifferenceMeters: 850,
-          positionToTargetRangeMeters: 4500,
-          flightPath: 'lofted',
-        }),
+        evaluateCloudsFeasibility(
+          evalInput({
+            positionToTargetHeightDifferenceMeters: 850,
+            positionToTargetRangeMeters: 4500,
+          }),
+        ),
       /אין נתון בטבלת עננים/,
+    )
+  })
+
+  it('throws when target height is not finite', () => {
+    assert.throws(
+      () => evaluateCloudsFeasibility(evalInput({ targetHeightMeters: Number.NaN })),
+      /גובה מטרה/,
     )
   })
 })

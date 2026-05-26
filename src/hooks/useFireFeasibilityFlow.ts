@@ -22,6 +22,7 @@ export function useFireFeasibilityFlow(mode: FireFeasibilityMode) {
   const [formData, setFormData] = useState<FireFeasibilityFormData>({
     positionToTargetRange: null,
     positionToTargetHeightDifference: null,
+    targetAltitudeMeters: null,
     flightPath: 'flat',
   })
 
