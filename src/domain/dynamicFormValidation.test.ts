@@ -136,6 +136,43 @@ describe('areAllRowableFieldsFilled', () => {
       true,
     )
   })
+
+  it('does not throw for nested coords in toggleWithConditions branch', () => {
+    const fields: RowableField[] = [
+      {
+        type: 'toggleWithConditions',
+        key: 'impactLocationDetected',
+        label: 'תשובה',
+        options: ['כן', 'לא'],
+        conditions: {
+          כן: [
+            {
+              type: 'toggleWithConditions',
+              key: 'impactLocationKind',
+              label: 'מהו מיקום הפגיעה?',
+              options: ['קרוב', 'רחוק', 'תיאור מילולי', 'נ.צ.'],
+              conditions: {
+                'נ.צ.': [
+                  { type: 'coords', key: 'impactLocationCoords', label: 'נ.צ. מקום הפגיעה' },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    ]
+    assert.equal(
+      areAllRowableFieldsFilled(
+        {
+          impactLocationDetected: 'כן',
+          impactLocationKind: 'נ.צ.',
+          impactLocationCoords: { east: '', north: '', palach: '' },
+        },
+        fields,
+      ),
+      false,
+    )
+  })
 })
 
 describe('azimuth degree validation', () => {

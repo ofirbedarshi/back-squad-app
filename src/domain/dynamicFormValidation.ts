@@ -140,6 +140,8 @@ function isRowableFieldFilledForAutoCheck(
       return isFilledFormValue(value, 'toggle', field.options)
     case 'toggleWithConditions':
       return isToggleWithConditionsBranchFilledForAutoCheck(field, values)
+    case 'coords':
+      return isFilledFormValue(value, 'coords')
     case 'checkbox':
       return true
     default:

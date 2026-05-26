@@ -6,14 +6,12 @@ export const missChecklistFormSchema: FormSchema = {
       type: 'checkboxWithFields',
       key: 'impactLocationDetectedChecked',
       label: 'בדוק האם זוהה מקום הפגיעה',
-      defaultValue: false,
       fields: [
         {
           type: 'toggleWithConditions',
           key: 'impactLocationDetected',
           label: 'תשובה',
           options: ['כן', 'לא'],
-          defaultValue: 'לא',
           conditions: {
             כן: [
               {
@@ -39,7 +37,6 @@ export const missChecklistFormSchema: FormSchema = {
                 key: 'impactLocationExploded',
                 label: 'האם התפוצץ?',
                 options: ['כן', 'לא'],
-                defaultValue: 'לא',
               },
             ],
           },
@@ -50,13 +47,11 @@ export const missChecklistFormSchema: FormSchema = {
       type: 'checkbox',
       key: 'indicatorTargetDataComparedWithChecklist',
       label: 'השווה מול מציין את נתוני המטרה עם הצ\'קליסט',
-      defaultValue: false,
     },
     {
       type: 'checkbox',
       key: 'indicatorKozEnteredInMeansChecked',
       label: 'בדוק מול מציין מה הקוץ שמוזן באמצעי',
-      defaultValue: false,
       visibleWhen: {
         or: [
           { field: 'impactLocationDetected', equals: 'לא' },
@@ -69,7 +64,6 @@ export const missChecklistFormSchema: FormSchema = {
       key: 'exitWasValid',
       label: 'האם היציאה הייתה תקינה',
       options: ['כן', 'לא'],
-      defaultValue: 'לא',
       visibleWhen: {
         or: [
           { field: 'impactLocationKind', equals: 'רחוק' },
@@ -97,13 +91,11 @@ export const missChecklistFormSchema: FormSchema = {
       type: 'checkbox',
       key: 'indicatorNameAndDirectionCodeMatchMissionChecked',
       label: 'וודא כי שם המצין וקוד הציון תואמים למשימה במחשב',
-      defaultValue: false,
     },
     {
       type: 'checkboxWithFields',
       key: 'indicatorNearTargetWeatherConditionsChecked',
       label: 'בדוק עם המציין תנאי מז"א בקרבת המטרה',
-      defaultValue: false,
       highlightBorderWhen: [
         { field: 'nearTargetWeatherWind', equals: 'כן' },
         { field: 'nearTargetWeatherCloudsOrHaze', equals: 'כן' },
@@ -115,21 +107,18 @@ export const missChecklistFormSchema: FormSchema = {
           key: 'nearTargetWeatherWind',
           label: 'רוח',
           options: ['כן', 'לא'],
-          defaultValue: 'לא',
         },
         {
           type: 'toggle',
           key: 'nearTargetWeatherCloudsOrHaze',
           label: 'עננים או אובך',
           options: ['כן', 'לא'],
-          defaultValue: 'לא',
         },
         {
           type: 'toggle',
           key: 'nearTargetWeatherRain',
           label: 'גשם',
           options: ['כן', 'לא'],
-          defaultValue: 'לא',
         },
       ],
     },
@@ -137,7 +126,6 @@ export const missChecklistFormSchema: FormSchema = {
       type: 'checkboxWithFields',
       key: 'attackCellFlightAltitudeWeatherConditionsChecked',
       label: 'בדוק עם תא תקיפה תנאי מז"א בגובה המעוף',
-      defaultValue: false,
       highlightBorderWhen: [
         { field: 'attackCellFlightAltitudeWeatherValid', equals: 'לא' },
       ],
@@ -147,7 +135,6 @@ export const missChecklistFormSchema: FormSchema = {
           key: 'attackCellFlightAltitudeWeatherValid',
           label: 'תקין',
           options: ['כן', 'לא'],
-          defaultValue: 'לא',
         },
       ],
     },
@@ -155,7 +142,6 @@ export const missChecklistFormSchema: FormSchema = {
       type: 'checkboxWithFields',
       key: 'indicatorAmuraApexAngleAsked',
       label: 'העבר למציין אמורה – שאל מה זווית הקודקוד להזין',
-      defaultValue: false,
       highlightBorderWhen: [{ field: 'indicatorAmuraApexAngle', greaterThan: 55 }],
       fields: [
         { type: 'number', key: 'indicatorAmuraApexAngle', label: 'זווית קודקוד' },
@@ -170,7 +156,6 @@ export const missChecklistFormSchema: FormSchema = {
       type: 'checkboxWithFields',
       key: 'indicatorNearTargetObstaclesAsked',
       label: 'שאל שוב את המציין אם יש הסתרים בקרבת המטרה',
-      defaultValue: false,
       highlightBorderWhen: [{ field: 'indicatorNearTargetObstacles', equals: 'יש' }],
       fields: [
         {
@@ -178,14 +163,12 @@ export const missChecklistFormSchema: FormSchema = {
           key: 'indicatorNearTargetObstacles',
           label: 'יש הסתרים?',
           options: ['יש', 'אין'],
-          defaultValue: 'אין',
           conditions: {
             יש: [
               {
                 type: 'checkbox',
                 key: 'indicatorNearTargetObstaclesRecalculateChecked',
                 label: 'חשב מחדש',
-                defaultValue: false,
               },
             ],
           },
@@ -196,20 +179,17 @@ export const missChecklistFormSchema: FormSchema = {
       type: 'checkbox',
       key: 'targetOrMissionNumberDuplicateFilterChecked',
       label: 'וודא כי אין כפילות במספר מטרה ו/או משימה – בצע "סינון"',
-      defaultValue: false,
     },
     {
       type: 'checkboxWithFields',
       key: 'northSourceMethodChecked',
       label: 'כיצד הוזנה האק"א?',
-      defaultValue: false,
       fields: [
         {
           type: 'toggleWithConditions',
           key: 'northSourceMethod',
           label: 'אופן ההזנה',
           options: ['מוצא צפון', 'טימאפס', 'מצפן'],
-          defaultValue: 'מוצא צפון',
           conditions: {
             'מוצא צפון': [],
             טימאפס: [],
@@ -218,7 +198,6 @@ export const missChecklistFormSchema: FormSchema = {
                 type: 'checkbox',
                 key: 'indicatorRecheckAkaAfterCompass',
                 label: 'בדוק אק"א מחדש',
-                defaultValue: false,
                 visibleWhen: {
                   or: [
                     { field: 'impactLocationDetected', equals: 'לא' },
@@ -235,7 +214,6 @@ export const missChecklistFormSchema: FormSchema = {
       type: 'checkboxWithFields',
       key: 'missionDataEnteredChecked',
       label: 'הזן נתוני משימה',
-      defaultValue: false,
       fields: [
         { type: 'number', key: 'missionRangeMeters', label: 'טווח (מטרים)' },
         { type: 'number', key: 'missionHeightDiff', label: 'הפרש גובה' },
@@ -251,7 +229,6 @@ export const missChecklistFormSchema: FormSchema = {
       type: 'checkboxWithFields',
       key: 'directionalShootingChecked',
       label: 'בדוק אם היה ירי בכיווניות',
-      defaultValue: false,
       highlightBorderWhenAll: [
         { field: 'hadDirectionalShooting', equals: 'כן' },
         { field: 'missionRangeMeters', greaterThan: 8000 },
@@ -262,7 +239,6 @@ export const missChecklistFormSchema: FormSchema = {
           key: 'hadDirectionalShooting',
           label: 'האם היה ירי בכיווניות?',
           options: ['כן', 'לא'],
-          defaultValue: 'לא',
           conditions: {
             כן: [
               {
@@ -274,7 +250,6 @@ export const missChecklistFormSchema: FormSchema = {
                 type: 'checkbox',
                 key: 'directionalShootingRecheckObstaclesChecked',
                 label: 'בדוק מחדש מכשולים והסתרים מכיוון מעוף הטיל',
-                defaultValue: false,
               },
             ],
             לא: [],
@@ -286,14 +261,12 @@ export const missChecklistFormSchema: FormSchema = {
       type: 'checkboxWithFields',
       key: 'targetTypeChecked',
       label: 'מה היה סוג המטרה?',
-      defaultValue: false,
       fields: [{ type: 'text', key: 'targetType', label: 'סוג המטרה' }],
     },
     {
       type: 'checkboxWithFields',
       key: 'reflectiveTargetChecked',
       label: 'בדוק אם המטרה הייתה רפלקטיבית או בקרבת משטחים רפלקטיביים',
-      defaultValue: false,
       highlightBorderWhen: [{ field: 'reflectiveTarget', equals: 'כן' }],
       fields: [
         {
@@ -301,7 +274,6 @@ export const missChecklistFormSchema: FormSchema = {
           key: 'reflectiveTarget',
           label: 'תשובה',
           options: ['כן', 'לא'],
-          defaultValue: 'לא',
         },
       ],
     },
@@ -309,14 +281,12 @@ export const missChecklistFormSchema: FormSchema = {
       type: 'checkboxWithFields',
       key: 'targetFaceChecked',
       label: 'מה היה מפנה המטרה? (חזית וכיוון החזית? גג?)',
-      defaultValue: false,
       fields: [{ type: 'text', key: 'targetFace', label: 'מפנה המטרה' }],
     },
     {
       type: 'checkboxWithFields',
       key: 'multipleSpotsChecked',
       label: 'בדוק אם היה ריבוי כתמים',
-      defaultValue: false,
       highlightBorderWhen: [{ field: 'multipleSpots', equals: 'כן' }],
       fields: [
         {
@@ -324,7 +294,6 @@ export const missChecklistFormSchema: FormSchema = {
           key: 'multipleSpots',
           label: 'היה ריבוי כתמים?',
           options: ['כן', 'לא'],
-          defaultValue: 'לא',
         },
       ],
     },
@@ -332,7 +301,6 @@ export const missChecklistFormSchema: FormSchema = {
       type: 'checkboxWithFields',
       key: 'spotBouncedChecked',
       label: 'בדוק אם בוצעה הקפצת כתם',
-      defaultValue: false,
       highlightBorderWhen: [{ field: 'spotBounced', equals: 'כן' }],
       fields: [
         {
@@ -340,7 +308,6 @@ export const missChecklistFormSchema: FormSchema = {
           key: 'spotBounced',
           label: 'בוצעה הקפצת כתם?',
           options: ['כן', 'לא'],
-          defaultValue: 'לא',
         },
       ],
     },
@@ -348,14 +315,12 @@ export const missChecklistFormSchema: FormSchema = {
       type: 'checkboxWithFields',
       key: 'deflectionDoneChecked',
       label: 'בדוק אם הייתה הסטה',
-      defaultValue: false,
       fields: [
         {
           type: 'toggle',
           key: 'deflectionDone',
           label: 'הייתה הסטה?',
           options: ['כן', 'לא'],
-          defaultValue: 'לא',
         },
       ],
     },
@@ -363,14 +328,12 @@ export const missChecklistFormSchema: FormSchema = {
       type: 'checkboxWithFields',
       key: 'crossPositionChecked',
       label: 'בדוק את מיקום הצלב ביחס לנקודת הפגיעה הרצויה',
-      defaultValue: false,
       fields: [{ type: 'text', key: 'crossPosition', label: 'מיקום הצלב' }],
     },
     {
       type: 'checkboxWithFields',
       key: 'missileImpactRelativeToCrossChecked',
       label: 'היכן פגע הטיל ביחס לצלב?',
-      defaultValue: false,
       fields: [
         { type: 'text', key: 'missileImpactRelativeToCross', label: 'מיקום הפגיעה' },
       ],
@@ -379,7 +342,6 @@ export const missChecklistFormSchema: FormSchema = {
       type: 'checkboxWithFields',
       key: 'spotSlidingChecked',
       label: 'בדוק אם הייתה גלישה של הכתם (גלישה מהחזית? גלישה לתוך חלון? וכו\')',
-      defaultValue: false,
       highlightBorderWhen: [{ field: 'spotSliding', equals: 'כן' }],
       fields: [
         {
@@ -387,7 +349,6 @@ export const missChecklistFormSchema: FormSchema = {
           key: 'spotSliding',
           label: 'תשובה',
           options: ['כן', 'לא'],
-          defaultValue: 'לא',
         },
       ],
     },
@@ -395,7 +356,6 @@ export const missChecklistFormSchema: FormSchema = {
       type: 'checkboxWithFields',
       key: 'spotSizeWithSpreadChecked',
       label: 'בדוק מה גודל הכתם (כולל מריחה)',
-      defaultValue: false,
       fields: [
         { type: 'text', key: 'spotSizeWithSpread', label: 'גודל הכתם (כולל מריחה)' },
       ],
@@ -404,7 +364,6 @@ export const missChecklistFormSchema: FormSchema = {
       type: 'checkboxWithFields',
       key: 'spotDriftChecked',
       label: 'בדוק אם הייתה בליעה של הכתם',
-      defaultValue: false,
       highlightBorderWhen: [{ field: 'spotDrift', equals: 'כן' }],
       fields: [
         {
@@ -412,7 +371,6 @@ export const missChecklistFormSchema: FormSchema = {
           key: 'spotDrift',
           label: 'תשובה',
           options: ['כן', 'לא'],
-          defaultValue: 'לא',
         },
       ],
     },
@@ -423,7 +381,6 @@ export const missChecklistFormSchema: FormSchema = {
       type: 'checkboxWithFields',
       key: 'fallingIndicatorsOkChecked',
       label: 'בדוק את מצייני הנפילה בהוצאת הטילים מהמזוודות',
-      defaultValue: false,
       highlightBorderWhen: [{ field: 'fallingIndicatorsOk', equals: 'לא' }],
       fields: [
         {
@@ -431,7 +388,6 @@ export const missChecklistFormSchema: FormSchema = {
           key: 'fallingIndicatorsOk',
           label: 'תשובה',
           options: ['כן', 'לא'],
-          defaultValue: 'לא',
         },
       ],
     },
@@ -439,7 +395,6 @@ export const missChecklistFormSchema: FormSchema = {
       type: 'checkboxWithFields',
       key: 'hiveOkChecked',
       label: 'בדוק את מצב הכוורת (פרפרים סגורות? חנוכיות תקניות? מחברים תקינים? הכוורת לא מעוקמת?  ראצ\'טים משוחררים?)',
-      defaultValue: false,
       highlightBorderWhen: [{ field: 'hiveOk', equals: 'לא' }],
       fields: [
         {
@@ -447,7 +402,6 @@ export const missChecklistFormSchema: FormSchema = {
           key: 'hiveOk',
           label: 'תקין?',
           options: ['כן', 'לא'],
-          defaultValue: 'לא',
         },
       ],
     },

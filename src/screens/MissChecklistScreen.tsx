@@ -8,6 +8,9 @@ import { missChecklistFormSchema } from './missChecklistForm.schema'
 import missChecklistDocMarkdown from '../../docs/צקליסט-החטאה.md?raw'
 
 function MissChecklistScreen() {
+  // #region agent log
+  fetch('http://127.0.0.1:7426/ingest/4a83feaa-631d-41d5-8558-e70907ee82ba',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'16f59f'},body:JSON.stringify({sessionId:'16f59f',location:'MissChecklistScreen.tsx:mount',message:'MissChecklistScreen render',data:{},timestamp:Date.now(),hypothesisId:'H-C'})}).catch(()=>{});
+  // #endregion
   const { notifySuccess } = useNotification()
   const navigate = useNavigate()
 
