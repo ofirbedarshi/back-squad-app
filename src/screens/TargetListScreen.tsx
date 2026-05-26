@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import Modal from '../components/base/Modal'
-import DocFeedbackModal from '../components/base/DocFeedbackModal'
 import HeaderOptionsMenu from '../components/base/HeaderOptionsMenu'
 import TargetSearchBar from '../components/TargetSearchBar'
 import ReferencePositionSummarySelector from '../components/ReferencePositionSummarySelector'
@@ -19,7 +18,6 @@ import { getTargetSearchFields, filterTargetsByAdvancedFilter } from '../utils/t
 import type { TargetAdvancedFilter } from '../utils/targetSearch.types'
 import { emptyTargetAdvancedFilter } from '../utils/targetSearch.types'
 import { calculateTargetLiveMetricsUseCase } from '../useCases/calculateTargetLiveMetrics'
-import targetsDocMarkdown from '../../docs/מטרות.md?raw'
 
 function TargetListScreen() {
   const [targets, setTargets] = useState<Target[]>(() => loadTargetsUseCase())
@@ -157,12 +155,6 @@ function TargetListScreen() {
           </button>
         )}
       </div>
-      <DocFeedbackModal
-        markdown={targetsDocMarkdown}
-        modalTitle="מידע על מסך מטרות"
-        shareTitle="מסך מטרות"
-        openButtonAriaLabel="פתח מידע על מסך מטרות"
-      />
     </div>
   )
 }

@@ -1,14 +1,12 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import MissChecklistCard from '../components/MissChecklistCard'
-import DocFeedbackModal from '../components/base/DocFeedbackModal'
 import type { MissChecklist } from '../domain/missChecklist.types'
 import { useConfirm } from '../hooks/useConfirm'
 import { useDomainError } from '../hooks/useDomainError'
 import { useNotification } from '../hooks/useNotification'
 import { loadMissChecklistsUseCase } from '../useCases/loadMissChecklists'
 import { removeMissChecklistUseCase } from '../useCases/removeMissChecklist'
-import missChecklistDocMarkdown from '../../docs/צקליסט-החטאה.md?raw'
 
 function MissChecklistListScreen() {
   const [items, setItems] = useState<MissChecklist[]>(() => loadMissChecklistsUseCase())
@@ -73,12 +71,6 @@ function MissChecklistListScreen() {
           + הוסף צ'קליסט
         </button>
       </div>
-      <DocFeedbackModal
-        markdown={missChecklistDocMarkdown}
-        modalTitle="מידע על צ'קליסט החטאה"
-        shareTitle="צ'קליסט החטאה"
-        openButtonAriaLabel="פתח מידע על צ'קליסט החטאה"
-      />
     </div>
   )
 }

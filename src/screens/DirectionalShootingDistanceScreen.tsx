@@ -1,10 +1,8 @@
 import { useMemo, useState } from 'react'
 import DirectionalShootingResultCard from '../components/DirectionalShootingResultCard'
-import DocFeedbackModal from '../components/base/DocFeedbackModal'
 import SegmentedToggle from '../components/base/SegmentedToggle'
 import Stepper from '../components/base/Stepper'
 import { calculateDirectionalShootingDistanceFromInputs } from '../useCases/calculateDirectionalShootingDistanceFromInputs'
-import directionalShootingDocMarkdown from '../../docs/מרחק-בירי-כיווניות.md?raw'
 import type {
   DirectionalShootingTargetRangeM,
   DirectionalShootingTrajectory,
@@ -30,7 +28,7 @@ function DirectionalShootingDistanceScreen() {
   )
 
   return (
-    <div dir="rtl" className="relative flex flex-col h-full overflow-y-auto bg-neutral-50">
+    <div dir="rtl" className="flex flex-col h-full overflow-y-auto bg-neutral-50">
       <header className="py-4 px-4 text-center font-bold text-lg border-b border-neutral-200 text-neutral-800 shrink-0">
         מרחק בירי כיווניות
       </header>
@@ -89,13 +87,6 @@ function DirectionalShootingDistanceScreen() {
           ]}
         />
       </div>
-
-      <DocFeedbackModal
-        markdown={directionalShootingDocMarkdown}
-        modalTitle="מידע על מרחק בירי כיווניות"
-        shareTitle="מרחק בירי כיווניות"
-        openButtonAriaLabel="פתח מידע על מרחק בירי כיווניות"
-      />
     </div>
   )
 }

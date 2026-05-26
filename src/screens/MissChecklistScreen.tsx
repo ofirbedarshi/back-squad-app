@@ -1,11 +1,9 @@
 import { useNavigate } from 'react-router-dom'
-import DocFeedbackModal from '../components/base/DocFeedbackModal'
 import DynamicForm from '../components/DynamicForm/DynamicForm'
 import { useNotification } from '../hooks/useNotification'
 import type { FormValues } from '../domain/dynamicForm.types'
 import { addMissChecklistUseCase } from '../useCases/addMissChecklist'
 import { missChecklistFormSchema } from './missChecklistForm.schema'
-import missChecklistDocMarkdown from '../../docs/צקליסט-החטאה.md?raw'
 
 function MissChecklistScreen() {
   const { notifySuccess } = useNotification()
@@ -37,12 +35,6 @@ function MissChecklistScreen() {
           onSubmit={handleSubmit}
         />
       </div>
-      <DocFeedbackModal
-        markdown={missChecklistDocMarkdown}
-        modalTitle="מידע על צ'קליסט החטאה"
-        shareTitle="צ'קליסט החטאה"
-        openButtonAriaLabel="פתח מידע על צ'קליסט החטאה"
-      />
     </div>
   )
 }

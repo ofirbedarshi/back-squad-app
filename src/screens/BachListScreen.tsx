@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import BachCard from '../components/BachCard'
-import DocFeedbackModal from '../components/base/DocFeedbackModal'
-import bachDocMarkdown from '../../docs/בדח-תחקור-ותקיפה.md?raw'
 import type { Bach } from '../domain/bach.types'
 import { useConfirm } from '../hooks/useConfirm'
 import { useDomainError } from '../hooks/useDomainError'
@@ -73,12 +71,6 @@ function BachListScreen() {
           + הוסף בדח
         </button>
       </div>
-      <DocFeedbackModal
-        markdown={bachDocMarkdown}
-        modalTitle="מידע על בדח תחקור ותקיפה"
-        shareTitle="בדח תחקור ותקיפה"
-        openButtonAriaLabel="פתח מידע על בדח תחקור ותקיפה"
-      />
     </div>
   )
 }

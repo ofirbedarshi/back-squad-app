@@ -1,11 +1,9 @@
 import { useNavigate } from 'react-router-dom'
-import DocFeedbackModal from '../components/base/DocFeedbackModal'
 import DynamicForm from '../components/DynamicForm/DynamicForm'
 import { useNotification } from '../hooks/useNotification'
 import type { FormValues } from '../domain/dynamicForm.types'
 import { addBachUseCase } from '../useCases/addBach'
 import { bachFormSchema } from './bachForm.schema'
-import bachDocMarkdown from '../../docs/בדח-תחקור-ותקיפה.md?raw'
 
 function BachScreen() {
   const { notifySuccess } = useNotification()
@@ -37,12 +35,6 @@ function BachScreen() {
           onSubmit={handleSubmit}
         />
       </div>
-      <DocFeedbackModal
-        markdown={bachDocMarkdown}
-        modalTitle="מידע על בדח תחקור ותקיפה"
-        shareTitle="בדח תחקור ותקיפה"
-        openButtonAriaLabel="פתח מידע על בדח תחקור ותקיפה"
-      />
     </div>
   )
 }

@@ -1,10 +1,8 @@
 import { useMemo, useState } from 'react'
-import DocFeedbackModal from '../components/base/DocFeedbackModal'
 import HitPenetrationResultCard from '../components/HitPenetrationResultCard'
 import HitPenetrationSelect from '../components/HitPenetrationSelect'
 import Input from '../components/Input'
 import { calculateHitPenetrationFromInputs } from '../useCases/calculateHitPenetrationFromInputs'
-import hitPenetrationDocMarkdown from '../../docs/מחשבון-פגיעה-וחדירה.md?raw'
 import type {
   HitPenetrationDelay,
   HitPenetrationImpactFace,
@@ -95,7 +93,7 @@ function HitPenetrationCalculatorScreen() {
   )
 
   return (
-    <div dir="rtl" className="relative flex flex-col h-full overflow-y-auto bg-neutral-50">
+    <div dir="rtl" className="flex flex-col h-full overflow-y-auto bg-neutral-50">
       <header className="py-4 px-4 text-center font-bold text-lg border-b border-neutral-200 text-neutral-800 shrink-0">
         מחשבון פגיעה וחדירה
       </header>
@@ -267,13 +265,6 @@ function HitPenetrationCalculatorScreen() {
           <p className="text-center text-sm text-neutral-400">הכנס נתונים תקינים בטווח 0-90 מעלות לקבלת תוצאה</p>
         )}
       </div>
-
-      <DocFeedbackModal
-        markdown={hitPenetrationDocMarkdown}
-        modalTitle="מידע על מחשבון פגיעה וחדירה"
-        shareTitle="מחשבון פגיעה וחדירה"
-        openButtonAriaLabel="פתח מידע על מחשבון פגיעה וחדירה"
-      />
     </div>
   )
 }

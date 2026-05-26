@@ -1,6 +1,4 @@
-import DocFeedbackModal from '../components/base/DocFeedbackModal'
 import EntityLoadLinksStep from '../components/EntityLoadLinksStep'
-import fireFeasibilityDocMarkdown from '../../docs/היתכנות-לירי.md?raw'
 import FireFeasibilityCalculateFooter from '../components/FireFeasibilityCalculateFooter'
 import FireFeasibilityForm from '../components/FireFeasibilityForm'
 import FireFeasibilityResultsView from '../components/FireFeasibilityResultsView'
@@ -48,7 +46,7 @@ function FireFeasibilityFlowScreen({ mode }: FireFeasibilityFlowScreenProps) {
 
   if (flow.step === 'results' && flow.results) {
     return (
-      <div dir="rtl" className="relative flex h-full min-h-0 flex-col bg-neutral-50">
+      <div dir="rtl" className="flex h-full min-h-0 flex-col bg-neutral-50">
         <header className="shrink-0 border-b border-neutral-200 bg-white px-4 py-4 text-center text-lg font-bold text-neutral-800">
           {FIRE_FEASIBILITY_RESULTS_TITLE}
         </header>
@@ -59,13 +57,6 @@ function FireFeasibilityFlowScreen({ mode }: FireFeasibilityFlowScreenProps) {
             positionToTargetRange={formData.positionToTargetRange}
           />
         </div>
-
-        <DocFeedbackModal
-          markdown={fireFeasibilityDocMarkdown}
-          modalTitle="מידע על היתכנות לירי"
-          shareTitle="היתכנות לירי"
-          openButtonAriaLabel="פתח מידע על היתכנות לירי"
-        />
       </div>
     )
   }
@@ -75,7 +66,7 @@ function FireFeasibilityFlowScreen({ mode }: FireFeasibilityFlowScreenProps) {
   }
 
   return (
-    <div dir="rtl" className="relative flex h-full min-h-0 flex-col bg-neutral-50">
+    <div dir="rtl" className="flex h-full min-h-0 flex-col bg-neutral-50">
       <header className="shrink-0 border-b border-neutral-200 bg-white px-4 py-4 text-center text-lg font-bold text-neutral-800">
         {config.formTitle}
       </header>
@@ -90,13 +81,6 @@ function FireFeasibilityFlowScreen({ mode }: FireFeasibilityFlowScreenProps) {
       </div>
 
       <FireFeasibilityCalculateFooter onCalculate={handleCalculate} />
-
-      <DocFeedbackModal
-        markdown={fireFeasibilityDocMarkdown}
-        modalTitle="מידע על היתכנות לירי"
-        shareTitle="היתכנות לירי"
-        openButtonAriaLabel="פתח מידע על היתכנות לירי"
-      />
     </div>
   )
 }

@@ -3,9 +3,7 @@ import NoteAddModal from '../components/NoteAddModal'
 import NoteAddTriggerButton from '../components/NoteAddTriggerButton'
 import NoteEditModal from '../components/NoteEditModal'
 import UserNoteRow from '../components/UserNoteRow'
-import DocFeedbackModal from '../components/base/DocFeedbackModal'
 import HeaderOptionsMenu from '../components/base/HeaderOptionsMenu'
-import notesScreenDocMarkdown from '../../docs/מסך-הערות.md?raw'
 import { formatUserNoteSavedAt, noteLastActivityIso } from '../domain/notes'
 import type { NoteVoicePayload, UserNote } from '../domain/notes.types'
 import { useConfirm } from '../hooks/useConfirm'
@@ -103,7 +101,7 @@ function NotesScreen() {
   )
 
   return (
-    <div dir="rtl" className="relative flex flex-col bg-neutral-50 min-h-full">
+    <div dir="rtl" className="flex flex-col bg-neutral-50 min-h-full">
       <header className="relative grid grid-cols-[auto_1fr_auto] items-center gap-2 py-3 px-3 border-b border-neutral-200 text-neutral-800 bg-white">
         <div className="justify-self-start shrink-0">
           <NoteAddTriggerButton layout="header" onClick={() => setAddModalOpen(true)} />
@@ -162,13 +160,6 @@ function NotesScreen() {
           onMicError={triggerError}
         />
       )}
-
-      <DocFeedbackModal
-        markdown={notesScreenDocMarkdown}
-        modalTitle="מידע על מסך הערות"
-        shareTitle="מסך הערות"
-        openButtonAriaLabel="פתח מידע על מסך ההערות"
-      />
     </div>
   )
 }
