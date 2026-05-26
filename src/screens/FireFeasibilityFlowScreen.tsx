@@ -1,11 +1,8 @@
 import EntityLoadLinksStep from '../components/EntityLoadLinksStep'
 import FireFeasibilityCalculateFooter from '../components/FireFeasibilityCalculateFooter'
 import FireFeasibilityForm from '../components/FireFeasibilityForm'
-import FireFeasibilityResultsView from '../components/FireFeasibilityResultsView'
-import {
-  FIRE_FEASIBILITY_MODE_CONFIG,
-  FIRE_FEASIBILITY_RESULTS_TITLE,
-} from '../domain/fireFeasibilityModeConfig'
+import FireFeasibilityResultsStep from '../components/FireFeasibilityResultsStep'
+import { FIRE_FEASIBILITY_MODE_CONFIG } from '../domain/fireFeasibilityModeConfig'
 import type { FireFeasibilityMode } from '../domain/fireFeasibility.types'
 import { useFireFeasibilityFlow } from '../hooks/useFireFeasibilityFlow'
 
@@ -23,10 +20,10 @@ function FireFeasibilityFlowScreen({ mode }: FireFeasibilityFlowScreenProps) {
     updateLinks,
     position,
     target,
-    formData,
     handleAdvanceFromLinks,
     handleCalculate,
     handleUpdateData,
+    handleSaveResults,
   } = useFireFeasibilityFlow(mode)
 
   if (step === 'links') {
@@ -49,17 +46,7 @@ function FireFeasibilityFlowScreen({ mode }: FireFeasibilityFlowScreenProps) {
   }
 
   if (step === 'results' && results) {
-    return (
-      <div dir="rtl" className="flex h-full min-h-0 flex-col bg-neutral-50">
-        <header className="shrink-0 border-b border-neutral-200 bg-white px-4 py-4 text-center text-lg font-bold text-neutral-800">
-          {FIRE_FEASIBILITY_RESULTS_TITLE}
-        </header>
-
-        <div className="min-h-0 flex-1 overflow-y-auto p-4">
-          <FireFeasibilityResultsView results={results} formData={formData} />
-        </div>
-      </div>
-    )
+    return <FireFeasibilityResultsStep results={results} onSave={handleSaveResults} />
   }
 
   if (!position || !target) {

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import type {
   FireFeasibilityFormData,
   FireFeasibilityMode,
@@ -6,15 +7,19 @@ import type {
 } from '../domain/fireFeasibility.types'
 import type { EntityLinksUpdate } from '../domain/entityLinks.types'
 import { calculateFireFeasibility } from '../useCases/calculateFireFeasibility'
+import { saveFireFeasibilityRecordUseCase } from '../useCases/saveFireFeasibilityRecord'
 import { useDomainError } from './useDomainError'
 import { useEntityLinkResources } from './useEntityLinkResources'
 import { getNextStepAfterForm } from './useFireFeasibilityFlow.types'
 import type { FireFeasibilityStep } from './useFireFeasibilityFlow.types'
+import { useNotification } from './useNotification'
 import { useUIError } from './useUIError'
 
 export function useFireFeasibilityFlow(mode: FireFeasibilityMode) {
+  const navigate = useNavigate()
   const { triggerError } = useDomainError()
   const { reportUIError } = useUIError()
+  const { notifySuccess } = useNotification()
   const [step, setStep] = useState<FireFeasibilityStep>('links')
   const [targetId, setTargetId] = useState<string | undefined>()
   const [positionId, setPositionId] = useState<string | undefined>()
@@ -70,6 +75,25 @@ export function useFireFeasibilityFlow(mode: FireFeasibilityMode) {
     setFormData(data)
   }, [])
 
+  const handleSaveResults = useCallback(() => {
+    if (!results || !targetId || !positionId) {
+      reportUIError('לא ניתן לשמור — חסרים נתונים')
+      return
+    }
+    try {
+      saveFireFeasibilityRecordUseCase({
+        mode,
+        targetId,
+        positionId,
+        results,
+      })
+      notifySuccess('התוצאות נשמרו')
+      navigate('/fire-feasibility/saved')
+    } catch (error) {
+      triggerError(error instanceof Error ? error.message : 'שמירת התוצאות נכשלה')
+    }
+  }, [results, targetId, positionId, mode, notifySuccess, navigate, reportUIError, triggerError])
+
   return {
     mode,
     step,
@@ -83,5 +107,6 @@ export function useFireFeasibilityFlow(mode: FireFeasibilityMode) {
     handleAdvanceFromLinks,
     handleCalculate,
     handleUpdateData,
+    handleSaveResults,
   }
 }

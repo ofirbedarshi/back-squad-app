@@ -40,6 +40,8 @@ import RshamatzEshkolScreen from './screens/RshamatzEshkolScreen'
 import NotesScreen from './screens/NotesScreen'
 import FireFeasibilityScreen from './screens/FireFeasibilityScreen'
 import FireFeasibilityFlowScreen from './screens/FireFeasibilityFlowScreen'
+import FireFeasibilitySavedListScreen from './screens/FireFeasibilitySavedListScreen'
+import FireFeasibilitySavedDetailScreen from './screens/FireFeasibilitySavedDetailScreen'
 
 function AppRoutes() {
   const location = useLocation()
@@ -64,6 +66,8 @@ function AppRoutes() {
               path="/fire-feasibility/distances-heights"
               element={<FireFeasibilityFlowScreen mode="distances-heights" />}
             />
+            <Route path="/fire-feasibility/saved" element={<FireFeasibilitySavedListScreen />} />
+            <Route path="/fire-feasibility/saved/:id" element={<FireFeasibilitySavedDetailScreen />} />
             <Route path="/calculator" element={<CalculatorScreen />} />
             <Route path="/calculator/hit-penetration" element={<HitPenetrationCalculatorScreen />} />
             <Route path="/calculator/unit-conversion" element={<UnitConversionCalculatorScreen />} />

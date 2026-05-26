@@ -37,3 +37,15 @@ export interface FireFeasibilityResults {
   flightPaths: FireFeasibilityFlightPathResultsByGeneration
 }
 
+export interface FireFeasibilityRecordInput {
+  mode: FireFeasibilityMode
+  targetId: string
+  positionId: string
+  results: FireFeasibilityResults
+}
+
+export interface FireFeasibilityRecord extends FireFeasibilityRecordInput {
+  id: string
+  savedAt: string
+}
+

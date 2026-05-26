@@ -10,6 +10,7 @@ function FireFeasibilityScreen() {
       <div className="flex flex-col gap-3 p-4">
         <MenuButton label="נצ" to="/fire-feasibility/coords" />
         <MenuButton label="מרחקים וגבהים" to="/fire-feasibility/distances-heights" />
+        <MenuButton label="תוצאות שמורות" to="/fire-feasibility/saved" />
       </div>
     </div>
   )

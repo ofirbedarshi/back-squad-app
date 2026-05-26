@@ -6,7 +6,17 @@ import type {
   FireFeasibilityCategoryResultsByGeneration,
   FireFeasibilityFlightPathPercentByPath,
   FireFeasibilityFlightPathResultsByGeneration,
+  FireFeasibilityRecord,
+  FireFeasibilityRecordInput,
 } from './fireFeasibility.types'
+
+export function createFireFeasibilityRecord(input: FireFeasibilityRecordInput): FireFeasibilityRecord {
+  return {
+    ...input,
+    id: crypto.randomUUID(),
+    savedAt: new Date().toISOString(),
+  }
+}
 
 export function createNotImplementedCategoryResultsByGeneration(): FireFeasibilityCategoryResultsByGeneration {
   return {

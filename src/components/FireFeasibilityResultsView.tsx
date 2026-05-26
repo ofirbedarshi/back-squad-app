@@ -1,17 +1,13 @@
 import { FIRE_FEASIBILITY_CATEGORY_TITLES } from '../domain/fireFeasibility.constants'
-import type { FireFeasibilityFormData, FireFeasibilityResults } from '../domain/fireFeasibility.types'
+import type { FireFeasibilityResults } from '../domain/fireFeasibility.types'
 import FireFeasibilityCategoryResultsSection from './FireFeasibilityCategoryResultsSection'
 import FireFeasibilityFlightPathResultsGrid from './FireFeasibilityFlightPathResultsGrid'
 
 interface FireFeasibilityResultsViewProps {
   results: FireFeasibilityResults
-  formData: FireFeasibilityFormData
 }
 
-function FireFeasibilityResultsView({
-  results,
-  formData: _formData,
-}: FireFeasibilityResultsViewProps) {
+function FireFeasibilityResultsView({ results }: FireFeasibilityResultsViewProps) {
   return (
     <div className="flex flex-col gap-5">
       <FireFeasibilityCategoryResultsSection
