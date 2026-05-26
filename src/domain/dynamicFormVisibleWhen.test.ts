@@ -23,6 +23,23 @@ describe('isFormFieldVisibleWhen', () => {
     )
   })
 
+  it('matches greaterThan condition', () => {
+    assert.equal(
+      isFormFieldVisibleWhen(
+        { field: 'indicatorAmuraApexAngle', greaterThan: 55 },
+        { indicatorAmuraApexAngle: 56 },
+      ),
+      true,
+    )
+    assert.equal(
+      isFormFieldVisibleWhen(
+        { field: 'indicatorAmuraApexAngle', greaterThan: 55 },
+        { indicatorAmuraApexAngle: 55 },
+      ),
+      false,
+    )
+  })
+
   it('matches or conditions', () => {
     const visibleWhen = {
       or: [

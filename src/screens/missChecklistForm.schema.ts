@@ -104,6 +104,11 @@ export const missChecklistFormSchema: FormSchema = {
       key: 'indicatorNearTargetWeatherConditionsChecked',
       label: 'בדוק עם המציין תנאי מז"א בקרבת המטרה',
       defaultValue: false,
+      highlightBorderWhen: [
+        { field: 'nearTargetWeatherWind', equals: 'כן' },
+        { field: 'nearTargetWeatherCloudsOrHaze', equals: 'כן' },
+        { field: 'nearTargetWeatherRain', equals: 'כן' },
+      ],
       fields: [
         {
           type: 'toggle',
@@ -133,6 +138,9 @@ export const missChecklistFormSchema: FormSchema = {
       key: 'attackCellFlightAltitudeWeatherConditionsChecked',
       label: 'בדוק עם תא תקיפה תנאי מז"א בגובה המעוף',
       defaultValue: false,
+      highlightBorderWhen: [
+        { field: 'attackCellFlightAltitudeWeatherValid', equals: 'לא' },
+      ],
       fields: [
         {
           type: 'toggle',
@@ -148,8 +156,14 @@ export const missChecklistFormSchema: FormSchema = {
       key: 'indicatorAmuraApexAngleAsked',
       label: 'העבר למציין אמורה – שאל מה זווית הקודקוד להזין',
       defaultValue: false,
+      highlightBorderWhen: [{ field: 'indicatorAmuraApexAngle', greaterThan: 55 }],
       fields: [
         { type: 'number', key: 'indicatorAmuraApexAngle', label: 'זווית קודקוד' },
+        {
+          type: 'note',
+          text: '*הערך מעל 55',
+          visibleWhen: { field: 'indicatorAmuraApexAngle', greaterThan: 55 },
+        },
       ],
     },
     {
@@ -157,13 +171,17 @@ export const missChecklistFormSchema: FormSchema = {
       key: 'indicatorNearTargetObstaclesAsked',
       label: 'שאל שוב את המציין אם יש הסתרים בקרבת המטרה',
       defaultValue: false,
+      highlightBorderWhen: [{ field: 'indicatorNearTargetObstacles', equals: 'יש' }],
       fields: [
         {
-          type: 'toggle',
+          type: 'toggleWithConditions',
           key: 'indicatorNearTargetObstacles',
           label: 'יש הסתרים?',
           options: ['יש', 'אין'],
           defaultValue: 'אין',
+          conditions: {
+            יש: [{ type: 'note', text: 'חשב מחדש' }],
+          },
         },
       ],
     },

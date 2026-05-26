@@ -1,9 +1,8 @@
 import type { FormValues } from './dynamicForm.types'
 
-export interface FormFieldVisibleCondition {
-  field: string
-  equals: string | boolean
-}
+export type FormFieldVisibleCondition =
+  | { field: string; equals: string | boolean }
+  | { field: string; greaterThan: number }
 
 export interface FormFieldVisibleWhenOr {
   or: FormFieldVisibleCondition[]
@@ -15,7 +14,13 @@ function matchesVisibleCondition(
   condition: FormFieldVisibleCondition,
   values: FormValues,
 ): boolean {
-  return values[condition.field] === condition.equals
+  const value = values[condition.field]
+  if ('equals' in condition) {
+    return value === condition.equals
+  }
+  const numeric =
+    typeof value === 'number' ? value : typeof value === 'string' ? Number(value) : NaN
+  return Number.isFinite(numeric) && numeric > condition.greaterThan
 }
 
 export function isFormFieldVisibleWhen(

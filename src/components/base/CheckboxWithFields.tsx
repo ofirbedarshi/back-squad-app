@@ -7,6 +7,7 @@ interface CheckboxWithFieldsProps {
   onChange: (checked: boolean) => void
   /** When true and checked is false, component calls onChange(true). */
   allInputsFilled: boolean
+  highlightBorder?: boolean
   children: ReactNode
 }
 
@@ -15,6 +16,7 @@ function CheckboxWithFields({
   checked,
   onChange,
   allInputsFilled,
+  highlightBorder = false,
   children,
 }: CheckboxWithFieldsProps) {
   useEffect(() => {
@@ -24,7 +26,13 @@ function CheckboxWithFields({
   }, [allInputsFilled, checked, onChange])
 
   return (
-    <div className="w-full rounded-2xl border border-neutral-200 bg-neutral-50">
+    <div
+      className={`w-full rounded-2xl border ${
+        highlightBorder
+          ? 'border-red-400 bg-red-50'
+          : 'border-neutral-200 bg-neutral-50'
+      }`}
+    >
       <button
         type="button"
         onClick={() => onChange(!checked)}

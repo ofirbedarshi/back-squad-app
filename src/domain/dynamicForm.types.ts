@@ -84,6 +84,11 @@ export interface CheckboxField {
   visibleWhen?: FormFieldVisibleWhen
 }
 
+/** When any rule matches form values, the outer card border turns red. */
+export type CheckboxWithFieldsBorderHighlightRule =
+  | { field: string; equals: string }
+  | { field: string; greaterThan: number }
+
 /** Checkbox with nested fields; checkbox auto-checks when all nested fields are filled. */
 export interface CheckboxWithFieldsField {
   type: 'checkboxWithFields'
@@ -92,6 +97,8 @@ export interface CheckboxWithFieldsField {
   required?: boolean
   defaultValue?: boolean
   visibleWhen?: FormFieldVisibleWhen
+  /** When any rule matches form values, the outer card border turns red. */
+  highlightBorderWhen?: CheckboxWithFieldsBorderHighlightRule[]
   fields: RowableField[]
 }
 
@@ -128,6 +135,7 @@ export interface CoordsField {
 export interface NoteField {
   type: 'note'
   text: string
+  visibleWhen?: FormFieldVisibleWhen
 }
 
 /** A toggle that reveals different child fields depending on which option is selected. */

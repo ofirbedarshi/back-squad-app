@@ -17,7 +17,10 @@ import type { CoordinateValue, FormFieldDef, FormValues, RowableField, ToggleWit
 import ToggleWithConditionsRenderer from './ToggleWithConditionsRenderer'
 import CheckboxWithFieldsRenderer from './CheckboxWithFieldsRenderer'
 import { AZIMUTH_DEGREE_MAX, AZIMUTH_DEGREE_MIN } from '../../domain/azimuthDegree'
-import { collectVisibleWhenWatchKeys } from '../../domain/dynamicFormVisibleWhen'
+import {
+  collectVisibleWhenWatchKeys,
+  isFormFieldVisibleWhen,
+} from '../../domain/dynamicFormVisibleWhen'
 import { isFieldVisible, makeFieldValidator } from '../../domain/dynamicFormValidation'
 
 interface DynamicFormFieldProps {
@@ -67,6 +70,12 @@ function DynamicFormField({
   }
 
   if (field.type === 'note') {
+    if (field.visibleWhen) {
+      watch(collectVisibleWhenWatchKeys(field.visibleWhen))
+      if (!isFormFieldVisibleWhen(field.visibleWhen, getValues())) {
+        return null
+      }
+    }
     return (
       <p className="text-sm text-amber-800 bg-amber-100 rounded-xl px-3 py-2 leading-relaxed whitespace-pre-line">
         {field.text}
