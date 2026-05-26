@@ -7,6 +7,7 @@ import {
   CLOUDS_OUT_OF_TABLE_NOTE,
   assertCloudsFlightPath,
   evaluateCloudsFeasibility,
+  evaluateCloudsFeasibilityGenB,
   lookupCloudsTableValue,
 } from './cloudsFeasibility.ts'
 import { CloudsFeasibilityOutOfTableError } from './errors.ts'
@@ -124,6 +125,14 @@ describe('evaluateCloudsFeasibility', () => {
       () => evaluateCloudsFeasibility(evalInput({ targetHeightMeters: Number.NaN })),
       /גובה מטרה/,
     )
+  })
+})
+
+describe('evaluateCloudsFeasibilityGenB', () => {
+  it('is always enabled with empty notes', () => {
+    const result = evaluateCloudsFeasibilityGenB(evalInput({ flightPath: '+lofted' }))
+    assert.equal(result.enabled, true)
+    assert.equal(result.notes, '')
   })
 })
 

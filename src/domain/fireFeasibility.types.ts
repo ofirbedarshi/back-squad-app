@@ -16,7 +16,14 @@ export interface FireFeasibilityCategoryResult {
   notes: string
 }
 
+export type FireFeasibilityGeneration = 'a' | 'b'
+
+export type FireFeasibilityCloudsResults = Record<
+  FireFeasibilityGeneration,
+  FireFeasibilityCategoryResult
+>
+
 export interface FireFeasibilityResults {
-  clouds: FireFeasibilityCategoryResult
+  clouds: FireFeasibilityCloudsResults
 }
 

@@ -1,4 +1,5 @@
-import { evaluateCloudsFeasibility } from '../domain/cloudsFeasibility'
+import { evaluateCloudsFeasibility, evaluateCloudsFeasibilityGenB } from '../domain/cloudsFeasibility'
+import type { CloudsFeasibilityEvaluationInput } from '../domain/cloudsFeasibility.types'
 import type { FireFeasibilityFormData, FireFeasibilityResults } from '../domain/fireFeasibility.types'
 import { loadCloudHeight } from './loadCloudHeight'
 
@@ -18,13 +19,21 @@ export function calculateFireFeasibility(formData: FireFeasibilityFormData): Fir
     throw new Error('חסר גובה מטרה — ודא שלמטרה שנבחרה הוגדר גובה')
   }
 
-  const clouds = evaluateCloudsFeasibility({
+  const cloudsInput: CloudsFeasibilityEvaluationInput = {
     positionToTargetRangeMeters: formData.positionToTargetRange,
     positionToTargetHeightDifferenceMeters: formData.positionToTargetHeightDifference,
     flightPath: formData.flightPath,
     targetHeightMeters: formData.targetAltitudeMeters,
     cloudHeightMeters,
-  })
+  }
 
-  return { clouds: { enabled: clouds.enabled, notes: clouds.notes } }
+  const genA = evaluateCloudsFeasibility(cloudsInput)
+  const genB = evaluateCloudsFeasibilityGenB(cloudsInput)
+
+  return {
+    clouds: {
+      a: { enabled: genA.enabled, notes: genA.notes },
+      b: { enabled: genB.enabled, notes: genB.notes },
+    },
+  }
 }

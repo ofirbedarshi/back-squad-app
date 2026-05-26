@@ -1,3 +1,10 @@
+import type { FireFeasibilityGeneration } from './fireFeasibility.types'
+
+export const FIRE_FEASIBILITY_GENERATION_LABELS: Record<FireFeasibilityGeneration, string> = {
+  a: 'דור א׳',
+  b: 'דור ב׳',
+}
+
 export const FLIGHT_PATH_OPTIONS = [
   { label: 'flat', value: 'flat' },
   { label: 'low', value: 'low' },

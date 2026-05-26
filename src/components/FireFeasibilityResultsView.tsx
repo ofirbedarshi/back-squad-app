@@ -1,11 +1,11 @@
 import type {
-  FireFeasibilityCategoryResult,
+  FireFeasibilityCloudsResults,
   FireFeasibilityFormData,
 } from '../domain/fireFeasibility.types'
-import FireFeasibilityCategoryResultBlock from './FireFeasibilityCategoryResultBlock'
+import FireFeasibilityCloudsResultsBlock from './FireFeasibilityCloudsResultsBlock'
 
 interface FireFeasibilityResultsViewProps {
-  clouds: FireFeasibilityCategoryResult
+  clouds: FireFeasibilityCloudsResults
   formData: FireFeasibilityFormData
 }
 
@@ -15,7 +15,7 @@ function FireFeasibilityResultsView({
 }: FireFeasibilityResultsViewProps) {
   return (
     <div className="flex flex-col gap-5">
-      <FireFeasibilityCategoryResultBlock title="עננים" result={clouds} />
+      <FireFeasibilityCloudsResultsBlock clouds={clouds} />
     </div>
   )
 }

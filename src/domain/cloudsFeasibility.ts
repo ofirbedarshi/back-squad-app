@@ -27,7 +27,7 @@ function findBand(
 ): CloudsFeasibilityNumericBand {
   const band = bands.find((b) => valueMeters >= b.min && valueMeters < b.max)
   if (!band) {
-    throw new Error(`${axisLabel} מחוץ לטווח הטבלה`)
+    throw new CloudsFeasibilityOutOfTableError()
   }
   return band
 }
@@ -72,6 +72,7 @@ export function lookupCloudsTableValue(
   return value
 }
 
+// דור א׳ — lookup table from clouds-generation-a.xlsx
 export function evaluateCloudsFeasibility(
   input: CloudsFeasibilityEvaluationInput,
 ): CloudsFeasibilityEvaluationResult {
@@ -118,4 +119,10 @@ export function evaluateCloudsFeasibility(
     }
     throw error
   }
+}
+
+export function evaluateCloudsFeasibilityGenB(
+  _input: CloudsFeasibilityEvaluationInput,
+): CloudsFeasibilityEvaluationResult {
+  return { enabled: true, notes: '' }
 }
