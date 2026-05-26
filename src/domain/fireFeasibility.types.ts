@@ -18,12 +18,14 @@ export interface FireFeasibilityCategoryResult {
 
 export type FireFeasibilityGeneration = 'a' | 'b'
 
-export type FireFeasibilityCloudsResults = Record<
+export type FireFeasibilityCategoryResultsByGeneration = Record<
   FireFeasibilityGeneration,
   FireFeasibilityCategoryResult
 >
 
 export interface FireFeasibilityResults {
-  clouds: FireFeasibilityCloudsResults
+  clouds: FireFeasibilityCategoryResultsByGeneration
+  obstacles: FireFeasibilityCategoryResultsByGeneration
+  concealment: FireFeasibilityCategoryResultsByGeneration
 }
 

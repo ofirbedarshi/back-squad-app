@@ -56,7 +56,7 @@ function FireFeasibilityFlowScreen({ mode }: FireFeasibilityFlowScreenProps) {
         </header>
 
         <div className="min-h-0 flex-1 overflow-y-auto p-4">
-          <FireFeasibilityResultsView clouds={results.clouds} formData={formData} />
+          <FireFeasibilityResultsView results={results} formData={formData} />
         </div>
       </div>
     )

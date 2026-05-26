@@ -1,21 +1,30 @@
-import type {
-  FireFeasibilityCloudsResults,
-  FireFeasibilityFormData,
-} from '../domain/fireFeasibility.types'
-import FireFeasibilityCloudsResultsBlock from './FireFeasibilityCloudsResultsBlock'
+import { FIRE_FEASIBILITY_CATEGORY_TITLES } from '../domain/fireFeasibility.constants'
+import type { FireFeasibilityFormData, FireFeasibilityResults } from '../domain/fireFeasibility.types'
+import FireFeasibilityCategoryResultsSection from './FireFeasibilityCategoryResultsSection'
 
 interface FireFeasibilityResultsViewProps {
-  clouds: FireFeasibilityCloudsResults
+  results: FireFeasibilityResults
   formData: FireFeasibilityFormData
 }
 
 function FireFeasibilityResultsView({
-  clouds,
+  results,
   formData: _formData,
 }: FireFeasibilityResultsViewProps) {
   return (
     <div className="flex flex-col gap-5">
-      <FireFeasibilityCloudsResultsBlock clouds={clouds} />
+      <FireFeasibilityCategoryResultsSection
+        title={FIRE_FEASIBILITY_CATEGORY_TITLES.clouds}
+        results={results.clouds}
+      />
+      <FireFeasibilityCategoryResultsSection
+        title={FIRE_FEASIBILITY_CATEGORY_TITLES.obstacles}
+        results={results.obstacles}
+      />
+      <FireFeasibilityCategoryResultsSection
+        title={FIRE_FEASIBILITY_CATEGORY_TITLES.concealment}
+        results={results.concealment}
+      />
     </div>
   )
 }

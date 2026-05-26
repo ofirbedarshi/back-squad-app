@@ -5,6 +5,14 @@ export const FIRE_FEASIBILITY_GENERATION_LABELS: Record<FireFeasibilityGeneratio
   b: 'דור ב׳',
 }
 
+export const FIRE_FEASIBILITY_CATEGORY_TITLES = {
+  clouds: 'עננים',
+  obstacles: 'מכשולים',
+  concealment: 'הסתרים',
+} as const
+
+export const FIRE_FEASIBILITY_NOT_IMPLEMENTED_NOTE = 'טרם מומש'
+
 export const FLIGHT_PATH_OPTIONS = [
   { label: 'flat', value: 'flat' },
   { label: 'low', value: 'low' },
