@@ -1,6 +1,6 @@
 import { forwardRef } from 'react'
 import FormField from './FormField'
-import Input from './Input'
+import { inputFieldClassName } from './inputFieldClassName'
 
 interface PitchRollInputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type'> {
   label: string
@@ -9,7 +9,7 @@ interface PitchRollInputProps extends Omit<React.InputHTMLAttributes<HTMLInputEl
 }
 
 const PitchRollInput = forwardRef<HTMLInputElement, PitchRollInputProps>(
-  ({ label, error, valueForWarning, onChange, ...inputProps }, ref) => {
+  ({ label, error, valueForWarning, className, ...inputProps }, ref) => {
     const isWarning =
       typeof valueForWarning === 'number' &&
       !isNaN(valueForWarning) &&
@@ -18,15 +18,13 @@ const PitchRollInput = forwardRef<HTMLInputElement, PitchRollInputProps>(
 
     return (
       <FormField label={label} error={error}>
-        <Input
+        <input
           ref={ref}
           type="number"
           min={0}
           max={10}
           step={0.1}
-          hasError={!!error}
-          hasWarning={!error && isWarning}
-          onChange={onChange}
+          className={inputFieldClassName(!!error, !error && isWarning, false, className)}
           {...inputProps}
         />
       </FormField>

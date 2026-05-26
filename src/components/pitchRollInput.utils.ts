@@ -5,20 +5,18 @@ const pitchRollNumber = z
   .min(0, 'ערך מינימלי הוא 0')
   .max(10, 'ערך מקסימלי הוא 10')
 
-const nullablePitchRollInput = z.union([z.null(), pitchRollNumber])
+const pitchRollInput = z.union([z.undefined(), pitchRollNumber])
 
-export const pitchRollSchema = nullablePitchRollInput
-  .refine((v): v is number => v !== null, { message: 'יש להזין מספר' })
+export const pitchRollSchema = pitchRollInput
+  .refine((v): v is number => v !== undefined, { message: 'יש להזין מספר' })
   .transform((v) => v)
 
-export const optionalPitchRollSchema = nullablePitchRollInput
-  .transform((v): number | undefined => (v === null ? undefined : v))
-  .optional()
+export const optionalPitchRollSchema = pitchRollInput.optional()
 
-export function parsePitchRollInput(v: string): number | null {
-  if (v === '' || v === null || v === undefined) return null
+export function parsePitchRollInput(v: string): number | undefined {
+  if (v === '' || v === null || v === undefined) return undefined
   const n = parseFloat(v)
-  return isNaN(n) ? null : n
+  return isNaN(n) ? undefined : n
 }
 
 export const pitchRollOpts = { setValueAs: parsePitchRollInput }

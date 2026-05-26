@@ -68,7 +68,8 @@ export function applyTargetToNadbarBlock(
   }
 
   const blockCount = nadbar.messageBlocks.length
-  const current = nadbar.blockMessageVars ?? Array.from({ length: blockCount }, () => ({}))
+  const current: NadbarMessageUserVars[] =
+    nadbar.blockMessageVars ?? Array.from({ length: blockCount }, (): NadbarMessageUserVars => ({}))
   const next = [...current]
   while (next.length < blockCount) {
     next.push({})
@@ -86,7 +87,8 @@ export function clearTargetDerivedBlockVars(
   block: NadbarMessageBlock,
 ): Nadbar {
   const blockCount = nadbar.messageBlocks.length
-  const current = nadbar.blockMessageVars ?? Array.from({ length: blockCount }, () => ({}))
+  const current: NadbarMessageUserVars[] =
+    nadbar.blockMessageVars ?? Array.from({ length: blockCount }, (): NadbarMessageUserVars => ({}))
   const next = [...current]
   while (next.length < blockCount) {
     next.push({})
@@ -145,13 +147,14 @@ export function propagateTargetDerivedVarsFromBlock(
   }
 
   const blockCount = nadbar.messageBlocks.length
-  const current = nadbar.blockMessageVars ?? Array.from({ length: blockCount }, () => ({}))
+  const current: NadbarMessageUserVars[] =
+    nadbar.blockMessageVars ?? Array.from({ length: blockCount }, (): NadbarMessageUserVars => ({}))
   const next = [...current]
   while (next.length < blockCount) {
     next.push({})
   }
 
-  const sourceVars = next[fromBlockIndex] ?? {}
+  const sourceVars: NadbarMessageUserVars = next[fromBlockIndex] ?? {}
 
   for (let i = fromBlockIndex + 1; i < blockCount; i++) {
     const destBlock = nadbar.messageBlocks[i]!

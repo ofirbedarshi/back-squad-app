@@ -1,4 +1,4 @@
-import { useForm, FormProvider } from 'react-hook-form'
+import { useForm, FormProvider, type Resolver } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import PositionBaseFields from './PositionBaseFields'
 import { schema, LAUNCHER_TYPES, EMPTY_OBSTACLES } from './positionForm.schema'
@@ -13,7 +13,7 @@ interface PositionFormProps {
 
 function PositionForm({ onSubmit, submitLabel = 'שמור', initialValues }: PositionFormProps) {
   const methods = useForm<PositionFormValues>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(schema) as Resolver<PositionFormValues>,
     defaultValues: {
       launcherType: LAUNCHER_TYPES.VEHICLE,
       obstacles: EMPTY_OBSTACLES,
