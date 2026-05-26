@@ -23,7 +23,7 @@ const { heightBands, rangeBands, lookup } = cloudsFeasibilityLookupData
 function findBand(
   bands: CloudsFeasibilityNumericBand[],
   valueMeters: number,
-  axisLabel: string,
+  _axisLabel: string,
 ): CloudsFeasibilityNumericBand {
   const band = bands.find((b) => valueMeters >= b.min && valueMeters < b.max)
   if (!band) {

@@ -23,9 +23,17 @@ export type FireFeasibilityCategoryResultsByGeneration = Record<
   FireFeasibilityCategoryResult
 >
 
+export type FireFeasibilityFlightPathPercentByPath = Record<FireFeasibilityFlightPath, number>
+
+export type FireFeasibilityFlightPathResultsByGeneration = Record<
+  FireFeasibilityGeneration,
+  FireFeasibilityFlightPathPercentByPath
+>
+
 export interface FireFeasibilityResults {
   clouds: FireFeasibilityCategoryResultsByGeneration
   obstacles: FireFeasibilityCategoryResultsByGeneration
   concealment: FireFeasibilityCategoryResultsByGeneration
+  flightPaths: FireFeasibilityFlightPathResultsByGeneration
 }
 

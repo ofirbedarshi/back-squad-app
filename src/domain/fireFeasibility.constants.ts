@@ -20,6 +20,16 @@ export const FLIGHT_PATH_OPTIONS = [
   { label: 'lofted +', value: '+lofted' },
 ] as const
 
+export const FIRE_FEASIBILITY_FLIGHT_PATH_RESULT_ROWS = [
+  { label: 'L', value: 'lofted' },
+  { label: 'L+', value: '+lofted' },
+  { label: 'Low', value: 'low' },
+  { label: 'F', value: 'flat' },
+] as const
+
+export type FireFeasibilityFlightPathResultRow =
+  (typeof FIRE_FEASIBILITY_FLIGHT_PATH_RESULT_ROWS)[number]
+
 export const POSITION_FIELD_TOOLTIP =
   'שדה זה מתמלא אוטומטית מהעמדה שנבחרה בשלב הקודם ואינו ניתן לעריכה ידנית'
 

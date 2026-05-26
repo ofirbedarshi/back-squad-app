@@ -1,5 +1,8 @@
 import { evaluateCloudsFeasibility, evaluateCloudsFeasibilityGenB } from '../domain/cloudsFeasibility'
-import { createNotImplementedCategoryResultsByGeneration } from '../domain/fireFeasibility'
+import {
+  createMockFlightPathResultsByGeneration,
+  createNotImplementedCategoryResultsByGeneration,
+} from '../domain/fireFeasibility'
 import type { CloudsFeasibilityEvaluationInput } from '../domain/cloudsFeasibility.types'
 import type { FireFeasibilityFormData, FireFeasibilityResults } from '../domain/fireFeasibility.types'
 import { loadCloudHeight } from './loadCloudHeight'
@@ -38,5 +41,6 @@ export function calculateFireFeasibility(formData: FireFeasibilityFormData): Fir
     },
     obstacles: createNotImplementedCategoryResultsByGeneration(),
     concealment: createNotImplementedCategoryResultsByGeneration(),
+    flightPaths: createMockFlightPathResultsByGeneration(0),
   }
 }

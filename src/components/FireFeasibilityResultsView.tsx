@@ -1,6 +1,7 @@
 import { FIRE_FEASIBILITY_CATEGORY_TITLES } from '../domain/fireFeasibility.constants'
 import type { FireFeasibilityFormData, FireFeasibilityResults } from '../domain/fireFeasibility.types'
 import FireFeasibilityCategoryResultsSection from './FireFeasibilityCategoryResultsSection'
+import FireFeasibilityFlightPathResultsGrid from './FireFeasibilityFlightPathResultsGrid'
 
 interface FireFeasibilityResultsViewProps {
   results: FireFeasibilityResults
@@ -25,6 +26,7 @@ function FireFeasibilityResultsView({
         title={FIRE_FEASIBILITY_CATEGORY_TITLES.concealment}
         results={results.concealment}
       />
+      <FireFeasibilityFlightPathResultsGrid results={results.flightPaths} />
     </div>
   )
 }
