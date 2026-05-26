@@ -1,7 +1,8 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
-import type { FormSchema } from './dynamicForm.types.ts'
+import type { FormSchema, RowableField } from './dynamicForm.types.ts'
 import {
+  areAllRowableFieldsFilled,
   isFilledFormValue,
   isFieldVisible,
   shouldValidateField,
@@ -95,6 +96,47 @@ const azimuthSchema: FormSchema = {
     { type: 'text', key: 'optionalAz', label: 'אופציונלי', required: false, valueKind: 'azimuthDegree' },
   ],
 }
+
+describe('areAllRowableFieldsFilled', () => {
+  const nestedToggleFields: RowableField[] = [
+    {
+      type: 'toggleWithConditions',
+      key: 'northSourceMethod',
+      label: 'אופן ההזנה',
+      options: ['מוצא צפון', 'טימאפס', 'מצפן'],
+      defaultValue: 'מוצא צפון',
+      conditions: {
+        'מוצא צפון': [],
+        טימאפס: [],
+        מצפן: [
+          {
+            type: 'checkbox',
+            key: 'indicatorRecheckAkaAfterCompass',
+            label: 'בדוק אק"א מחדש',
+            defaultValue: false,
+          },
+        ],
+      },
+    },
+  ]
+
+  it('does not throw for toggleWithConditions with optional checkbox branch', () => {
+    assert.equal(
+      areAllRowableFieldsFilled(
+        { northSourceMethod: 'מצפן', indicatorRecheckAkaAfterCompass: false },
+        nestedToggleFields,
+      ),
+      true,
+    )
+  })
+
+  it('empty branch passes when toggle is set', () => {
+    assert.equal(
+      areAllRowableFieldsFilled({ northSourceMethod: 'מוצא צפון' }, nestedToggleFields),
+      true,
+    )
+  })
+})
 
 describe('azimuth degree validation', () => {
   it('rejects out-of-range required azimuth on save', () => {

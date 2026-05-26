@@ -90,6 +90,65 @@ export function isFilledFormValue(
   }
 }
 
+function isToggleWithConditionsBranchFilledForAutoCheck(
+  field: ToggleWithConditionsField,
+  values: FormValues,
+): boolean {
+  const selected = values[field.key]
+  if (!isFilledFormValue(selected, 'toggle', field.options)) return false
+
+  const branch =
+    typeof selected === 'string' ? (field.conditions[selected] ?? []) : []
+  if (branch.length === 0) return true
+
+  return branch.every((nested) => isConditionalFieldFilledForAutoCheck(nested, values))
+}
+
+function isConditionalFieldFilledForAutoCheck(
+  field: FormFieldDef,
+  values: FormValues,
+): boolean {
+  if (field.type === 'checkbox') return true
+  if (field.type === 'row') {
+    return field.fields
+      .filter((child): child is RowableField & { key: string } => 'key' in child)
+      .every((child) => isRowableFieldFilledForAutoCheck(child, values))
+  }
+  if (field.type === 'toggleWithConditions') {
+    return isToggleWithConditionsBranchFilledForAutoCheck(field, values)
+  }
+  if ('key' in field) {
+    return isRowableFieldFilledForAutoCheck(field as RowableField & { key: string }, values)
+  }
+  return true
+}
+
+function isRowableFieldFilledForAutoCheck(
+  field: RowableField & { key: string },
+  values: FormValues,
+): boolean {
+  const value = values[field.key]
+  switch (field.type) {
+    case 'text':
+    case 'textarea':
+    case 'date':
+    case 'time':
+      return isFilledFormValue(value, field.type)
+    case 'number':
+      return isFilledFormValue(value, 'number')
+    case 'toggle':
+      return isFilledFormValue(value, 'toggle', field.options)
+    case 'toggleWithConditions':
+      return isToggleWithConditionsBranchFilledForAutoCheck(field, values)
+    case 'checkbox':
+      return true
+    default:
+      throw new Error(
+        `areAllRowableFieldsFilled: unsupported nested field type "${field.type}"`,
+      )
+  }
+}
+
 export function areAllRowableFieldsFilled(
   values: FormValues,
   fields: RowableField[],
@@ -99,24 +158,7 @@ export function areAllRowableFieldsFilled(
   )
   if (fillable.length === 0) return true
 
-  return fillable.every((child) => {
-    const value = values[child.key]
-    switch (child.type) {
-      case 'text':
-      case 'textarea':
-      case 'date':
-      case 'time':
-        return isFilledFormValue(value, child.type)
-      case 'number':
-        return isFilledFormValue(value, 'number')
-      case 'toggle':
-        return isFilledFormValue(value, 'toggle', child.options)
-      default:
-        throw new Error(
-          `areAllRowableFieldsFilled: unsupported nested field type "${child.type}"`,
-        )
-    }
-  })
+  return fillable.every((child) => isRowableFieldFilledForAutoCheck(child, values))
 }
 
 function getToggleWithConditionsParentKeys(

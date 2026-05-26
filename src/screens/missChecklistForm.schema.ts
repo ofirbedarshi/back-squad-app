@@ -168,11 +168,71 @@ export const missChecklistFormSchema: FormSchema = {
       defaultValue: false,
       fields: [
         {
-          type: 'toggle',
+          type: 'toggleWithConditions',
           key: 'northSourceMethod',
           label: 'אופן ההזנה',
           options: ['מוצא צפון', 'טימאפס', 'מצפן'],
           defaultValue: 'מוצא צפון',
+          conditions: {
+            'מוצא צפון': [],
+            טימאפס: [],
+            מצפן: [
+              {
+                type: 'checkbox',
+                key: 'indicatorRecheckAkaAfterCompass',
+                label: 'בדוק אק"א מחדש',
+                defaultValue: false,
+                visibleWhen: {
+                  or: [
+                    { field: 'impactLocationDetected', equals: 'לא' },
+                    { field: 'impactLocationKind', equals: 'רחוק' },
+                  ],
+                },
+              },
+            ],
+          },
+        },
+      ],
+    },
+    {
+      type: 'checkboxWithFields',
+      key: 'missionDataEnteredChecked',
+      label: 'הזן נתוני משימה',
+      defaultValue: false,
+      fields: [
+        { type: 'number', key: 'missionRangeMeters', label: 'טווח (מטרים)' },
+        { type: 'number', key: 'missionHeightDiff', label: 'הפרש גובה' },
+        {
+          type: 'toggle',
+          key: 'missionFlightPath',
+          label: 'מסלול',
+          options: ['+lofted', 'lofted', 'low', 'flat'],
+        },
+      ],
+    },
+    {
+      type: 'checkboxWithFields',
+      key: 'directionalShootingChecked',
+      label: 'ירי בכיווניות',
+      defaultValue: false,
+      fields: [
+        {
+          type: 'toggleWithConditions',
+          key: 'hadDirectionalShooting',
+          label: 'האם היה ירי בכיווניות?',
+          options: ['כן', 'לא'],
+          defaultValue: 'לא',
+          conditions: {
+            כן: [
+              {
+                type: 'checkbox',
+                key: 'directionalShootingRecheckObstaclesChecked',
+                label: 'בדוק מחדש מכשולים והסתרים מכיוון מעוף הטיל',
+                defaultValue: false,
+              },
+            ],
+            לא: [],
+          },
         },
       ],
     },
