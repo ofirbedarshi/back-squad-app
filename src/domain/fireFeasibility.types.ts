@@ -2,6 +2,7 @@ export type FireFeasibilityMode = 'coords' | 'distances-heights'
 
 export interface FireFeasibilityFormData {
   positionToTargetRange: number | null
+  positionToTargetHeightDifference: number | null
 }
 
 export interface FireFeasibilityCategoryResult {

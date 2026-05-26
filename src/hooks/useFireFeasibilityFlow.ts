@@ -1,16 +1,43 @@
-import { useState } from 'react'
-import type { FireFeasibilityMode, FireFeasibilityResults } from '../domain/fireFeasibility.types'
+import { useCallback, useEffect, useState } from 'react'
+import type {
+  FireFeasibilityFormData,
+  FireFeasibilityMode,
+  FireFeasibilityResults,
+} from '../domain/fireFeasibility.types'
 import type { EntityLinksUpdate } from '../domain/entityLinks.types'
 import { calculateFireFeasibility } from '../useCases/calculateFireFeasibility'
 import { useDomainError } from './useDomainError'
+import { useEntityLinkResources } from './useEntityLinkResources'
+import { getNextStepAfterForm } from './useFireFeasibilityFlow.types'
 import type { FireFeasibilityStep } from './useFireFeasibilityFlow.types'
+import { useUIError } from './useUIError'
 
 export function useFireFeasibilityFlow(mode: FireFeasibilityMode) {
   const { triggerError } = useDomainError()
+  const { reportUIError } = useUIError()
   const [step, setStep] = useState<FireFeasibilityStep>('links')
   const [targetId, setTargetId] = useState<string | undefined>()
   const [positionId, setPositionId] = useState<string | undefined>()
   const [results, setResults] = useState<FireFeasibilityResults | null>(null)
+  const [formData, setFormData] = useState<FireFeasibilityFormData>({
+    positionToTargetRange: null,
+    positionToTargetHeightDifference: null,
+  })
+
+  const { position, target } = useEntityLinkResources({
+    targetId,
+    positionId,
+  })
+
+  useEffect(() => {
+    if (step !== 'form') return
+    if (!positionId || !position) {
+      reportUIError('לא נמצאה עמדה — חזור לשלב הבחירה')
+    }
+    if (!targetId || !target) {
+      reportUIError('לא נמצאה מטרה — חזור לשלב הבחירה')
+    }
+  }, [step, positionId, position, targetId, target, reportUIError])
 
   function updateLinks(links: EntityLinksUpdate) {
     if ('targetId' in links) {
@@ -21,30 +48,38 @@ export function useFireFeasibilityFlow(mode: FireFeasibilityMode) {
     }
   }
 
-  function advanceFromLinks() {
-    if (!targetId || !positionId) return
+  const handleAdvanceFromLinks = useCallback(() => {
+    if (!position || !target || !targetId || !positionId) return
     setStep('form')
-  }
+  }, [position, target, targetId, positionId])
 
-  function calculateResult(): FireFeasibilityResults | null {
+  const handleCalculate = useCallback(() => {
+    if (!position || !target) return
     try {
-      return calculateFireFeasibility()
+      const result = calculateFireFeasibility()
+      setResults(result)
+      setStep(getNextStepAfterForm())
     } catch (error) {
       triggerError(error instanceof Error ? error.message : 'חישוב נכשל')
-      return null
     }
-  }
+  }, [position, target, triggerError])
+
+  const handleUpdateData = useCallback((data: FireFeasibilityFormData) => {
+    setFormData(data)
+  }, [])
 
   return {
     mode,
     step,
-    setStep,
     targetId,
     positionId,
     results,
-    setResults,
     updateLinks,
-    advanceFromLinks,
-    calculateResult,
+    position,
+    target,
+    formData,
+    handleAdvanceFromLinks,
+    handleCalculate,
+    handleUpdateData,
   }
 }

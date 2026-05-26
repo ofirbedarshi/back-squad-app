@@ -4,11 +4,13 @@ import FireFeasibilityCategoryResultBlock from './FireFeasibilityCategoryResultB
 interface FireFeasibilityResultsViewProps {
   clouds: FireFeasibilityCategoryResult
   positionToTargetRange: number | null
+  positionToTargetHeightDifference: number | null
 }
 
 function FireFeasibilityResultsView({
   clouds,
   positionToTargetRange: _positionToTargetRange,
+  positionToTargetHeightDifference: _positionToTargetHeightDifference,
 }: FireFeasibilityResultsViewProps) {
   return (
     <div className="flex flex-col gap-5">

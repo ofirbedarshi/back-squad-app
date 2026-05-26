@@ -7,7 +7,7 @@ import {
   FIRE_FEASIBILITY_RESULTS_TITLE,
 } from '../domain/fireFeasibilityModeConfig'
 import type { FireFeasibilityMode } from '../domain/fireFeasibility.types'
-import { useFireFeasibilityScreen } from '../hooks/useFireFeasibilityScreen'
+import { useFireFeasibilityFlow } from '../hooks/useFireFeasibilityFlow'
 
 interface FireFeasibilityFlowScreenProps {
   mode: FireFeasibilityMode
@@ -16,16 +16,20 @@ interface FireFeasibilityFlowScreenProps {
 function FireFeasibilityFlowScreen({ mode }: FireFeasibilityFlowScreenProps) {
   const config = FIRE_FEASIBILITY_MODE_CONFIG[mode]
   const {
-    flow,
+    step,
+    targetId,
+    positionId,
+    results,
+    updateLinks,
     position,
     target,
     formData,
     handleAdvanceFromLinks,
     handleCalculate,
     handleUpdateData,
-  } = useFireFeasibilityScreen(mode)
+  } = useFireFeasibilityFlow(mode)
 
-  if (flow.step === 'links') {
+  if (step === 'links') {
     return (
       <div className="h-full min-h-0">
         <EntityLoadLinksStep
@@ -35,16 +39,16 @@ function FireFeasibilityFlowScreen({ mode }: FireFeasibilityFlowScreenProps) {
             title: config.linksTitle,
             subtitle: config.linksSubtitle,
           }}
-          targetId={flow.targetId}
-          positionId={flow.positionId}
-          onLinksChange={flow.updateLinks}
+          targetId={targetId}
+          positionId={positionId}
+          onLinksChange={updateLinks}
           onNext={handleAdvanceFromLinks}
         />
       </div>
     )
   }
 
-  if (flow.step === 'results' && flow.results) {
+  if (step === 'results' && results) {
     return (
       <div dir="rtl" className="flex h-full min-h-0 flex-col bg-neutral-50">
         <header className="shrink-0 border-b border-neutral-200 bg-white px-4 py-4 text-center text-lg font-bold text-neutral-800">
@@ -53,8 +57,9 @@ function FireFeasibilityFlowScreen({ mode }: FireFeasibilityFlowScreenProps) {
 
         <div className="min-h-0 flex-1 overflow-y-auto p-4">
           <FireFeasibilityResultsView
-            clouds={flow.results.clouds}
+            clouds={results.clouds}
             positionToTargetRange={formData.positionToTargetRange}
+            positionToTargetHeightDifference={formData.positionToTargetHeightDifference}
           />
         </div>
       </div>

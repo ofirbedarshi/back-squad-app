@@ -24,8 +24,11 @@ function FireFeasibilityForm({
   const rangeDisplay = metrics?.range != null ? metrics.range.toFixed(1) : ''
 
   useEffect(() => {
-    onUpdateData({ positionToTargetRange: metrics?.range ?? null })
-  }, [metrics?.range, onUpdateData])
+    onUpdateData({
+      positionToTargetRange: metrics?.range ?? null,
+      positionToTargetHeightDifference: metrics?.altitudeDiff ?? null,
+    })
+  }, [metrics?.range, metrics?.altitudeDiff, onUpdateData])
 
   return (
     <div className="flex flex-col gap-4">
