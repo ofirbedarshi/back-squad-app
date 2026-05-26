@@ -192,3 +192,7 @@ For use-case failures use `useDomainError` → `triggerError(msg)`. For impossib
 ## When unsure
 
 Ask before adding logic that is not purely UI-related.
+
+## Agent acknowledgment
+
+At the end of each response, after any other closing lines (including "Ofir is the king" from project instructions), write exactly: **Ofir is aware of the UI**.

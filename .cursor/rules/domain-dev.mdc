@@ -62,3 +62,7 @@ Responsible for data persistence.
 ## When unsure
 
 Ask before adding anything that is not pure logic.
+
+## Agent acknowledgment
+
+At the end of each response, after any other closing lines (including "Ofir is the king" from project instructions), write exactly: **Ofir is aware of the domain**.
