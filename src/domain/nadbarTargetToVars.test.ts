@@ -29,7 +29,8 @@ describe('resolveNadbarVarFromTarget', () => {
     assert.equal(resolveNadbarVarFromTarget('meraom', sampleTarget), '654321')
     assert.equal(resolveNadbarVarFromTarget('tsepa', sampleTarget), '3765432')
     assert.equal(resolveNadbarVarFromTarget('gamal', sampleTarget), '512')
-    assert.equal(resolveNadbarVarFromTarget('amura', sampleTarget, 127.4), '127')
+    assert.equal(resolveNadbarVarFromTarget('amura', sampleTarget, 127.4), '127.4')
+    assert.equal(resolveNadbarVarFromTarget('amura', sampleTarget, 90.04), '90.0')
   })
 
   it('returns undefined for unknown var names', () => {
@@ -44,7 +45,7 @@ describe('buildBlockMessageVarsFromTarget', () => {
     const vars = buildBlockMessageVarsFromTarget(block3, sampleTarget, 90)
 
     assert.equal(vars.metara, 'מטרה א')
-    assert.equal(vars.amura, '90')
+    assert.equal(vars.amura, '90.0')
     assert.equal(vars.meraom, undefined)
     assert.equal(vars.tsepa, undefined)
     assert.equal(vars.gamal, undefined)
@@ -73,7 +74,7 @@ describe('applyTargetToNadbarBlock', () => {
 
     assert.equal(updated.blockMessageVars?.[1]?.metara, 'מטרה א')
     assert.equal(updated.blockMessageVars?.[2]?.metara, 'מטרה א')
-    assert.equal(updated.blockMessageVars?.[2]?.amura, '180')
+    assert.equal(updated.blockMessageVars?.[2]?.amura, '180.0')
     assert.equal(updated.blockMessageVars?.[0]?.metara, undefined)
     assert.equal(updated.blockMessageVars?.[3]?.metara, undefined)
   })
@@ -94,7 +95,7 @@ describe('applyTargetToNadbarBlocksFrom', () => {
     assert.equal(updated.blockMessageVars?.[0]?.metara, undefined)
     assert.equal(updated.blockMessageVars?.[1]?.metara, undefined)
     assert.equal(updated.blockMessageVars?.[2]?.metara, 'מטרה א')
-    assert.equal(updated.blockMessageVars?.[2]?.amura, '180')
+    assert.equal(updated.blockMessageVars?.[2]?.amura, '180.0')
     assert.equal(updated.blockMessageVars?.[3]?.metara, 'מטרה א')
     assert.equal(updated.blockMessageVars?.[4]?.metara, 'מטרה א')
     assert.equal(updated.blockMessageVars?.[5]?.metara, 'מטרה א')

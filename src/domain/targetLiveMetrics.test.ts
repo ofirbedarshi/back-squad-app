@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
-import { calculateTargetLiveMetrics } from './targetLiveMetrics.ts'
+import { calculateTargetLiveMetrics, formatLiveMetricOneDecimal } from './targetLiveMetrics.ts'
 
 describe('calculateTargetLiveMetrics', () => {
   it('range is horizontal distance only, not slant range', () => {
@@ -28,5 +28,18 @@ describe('calculateTargetLiveMetrics', () => {
 
     assert.ok(dueEast)
     assert.equal(dueEast.azimuth, 90)
+  })
+})
+
+describe('formatLiveMetricOneDecimal', () => {
+  it('formats to one decimal place', () => {
+    assert.equal(formatLiveMetricOneDecimal(127.44), '127.4')
+    assert.equal(formatLiveMetricOneDecimal(90), '90.0')
+    assert.equal(formatLiveMetricOneDecimal(90.04), '90.0')
+  })
+
+  it('throws for non-finite values', () => {
+    assert.throws(() => formatLiveMetricOneDecimal(Number.NaN), /לא תקין/)
+    assert.throws(() => formatLiveMetricOneDecimal(Number.POSITIVE_INFINITY), /לא תקין/)
   })
 })

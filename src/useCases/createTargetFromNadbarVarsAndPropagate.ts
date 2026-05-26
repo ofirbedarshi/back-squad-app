@@ -1,5 +1,6 @@
 import { getNadbarBlockMessageVars, updateNadbarBlockMessageVar } from '../domain/nadbar'
 import { propagateTargetDerivedVarsFromBlock } from '../domain/nadbarTargetToVars'
+import { formatLiveMetricOneDecimal } from '../domain/targetLiveMetrics'
 import type { Nadbar } from '../domain/nadbar.types'
 import { computeTargetAzimuthFromCurrentPositionUseCase } from './computeTargetAzimuthFromCurrentPosition'
 import { createTargetFromNadbarVarsUseCase } from './createTargetFromNadbarVars'
@@ -21,7 +22,7 @@ export function createTargetFromNadbarVarsAndPropagateUseCase(
       nadbar,
       blockIndex,
       'amura',
-      String(Math.round(azimuth)),
+      formatLiveMetricOneDecimal(azimuth),
     )
   }
   return propagateTargetDerivedVarsFromBlock(withAmura, blockIndex)

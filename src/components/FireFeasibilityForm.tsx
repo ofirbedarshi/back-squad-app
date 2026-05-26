@@ -6,6 +6,7 @@ import type {
   FireFeasibilityFormData,
   FireFeasibilityMode,
 } from '../domain/fireFeasibility.types'
+import { formatLiveMetricOneDecimal } from '../domain/targetLiveMetrics'
 import { useFireFeasibilityPositionTargetMetrics } from '../hooks/useFireFeasibilityPositionTargetMetrics'
 import FireFeasibilityCoordsFields from './FireFeasibilityCoordsFields'
 import FireFeasibilityDistancesHeightsFields from './FireFeasibilityDistancesHeightsFields'
@@ -25,7 +26,7 @@ function FireFeasibilityForm({
   onUpdateData,
 }: FireFeasibilityFormProps) {
   const metrics = useFireFeasibilityPositionTargetMetrics(position, target)
-  const rangeDisplay = metrics?.range != null ? metrics.range.toFixed(1) : ''
+  const rangeDisplay = metrics?.range != null ? formatLiveMetricOneDecimal(metrics.range) : ''
   const [flightPath, setFlightPath] = useState<FireFeasibilityFlightPath>('flat')
 
   useEffect(() => {

@@ -5,6 +5,7 @@ import FormField from './FormField'
 import Input from './Input'
 import ReferencePositionSummarySelector from './ReferencePositionSummarySelector'
 import type { TargetInput } from '../domain/target.types'
+import { formatLiveMetricOneDecimal } from '../domain/targetLiveMetrics'
 import { useTargetLiveMetrics } from '../hooks/useTargetLiveMetrics'
 import CoordinateInput from './base/CoordinateInput'
 import { coordinateValueSchema } from './base/coordinateInput.utils'
@@ -45,9 +46,9 @@ function TargetForm({ onSubmit, submitLabel = 'שמור', initialValues }: Targe
 
   const liveMetrics = useTargetLiveMetrics(watchedCoordinates, watchedAltitude)
 
-  const displayAzimuth = liveMetrics ? liveMetrics.azimuth.toFixed(1) : ''
-  const displayRange = liveMetrics ? liveMetrics.range.toFixed(1) : ''
-  const displayAltitudeDiff = liveMetrics ? liveMetrics.altitudeDiff.toFixed(1) : ''
+  const displayAzimuth = liveMetrics ? formatLiveMetricOneDecimal(liveMetrics.azimuth) : ''
+  const displayRange = liveMetrics ? formatLiveMetricOneDecimal(liveMetrics.range) : ''
+  const displayAltitudeDiff = liveMetrics ? formatLiveMetricOneDecimal(liveMetrics.altitudeDiff) : ''
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-4">

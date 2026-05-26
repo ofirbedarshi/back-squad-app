@@ -1,5 +1,6 @@
 import type { Nadbar, NadbarMessageBlock, NadbarMessageUserVars } from './nadbar.types'
 import type { Target } from './target.types'
+import { formatLiveMetricOneDecimal } from './targetLiveMetrics'
 import { collectUserVarNamesFromContent } from '../utils/nadbarMessageFill'
 
 const TARGET_DERIVED_VAR_NAMES = ['metara', 'meraom', 'tsepa', 'gamal', 'amura'] as const
@@ -35,7 +36,7 @@ export function resolveNadbarVarFromTarget(
     case 'gamal':
       return target.altitude != null ? String(Math.round(target.altitude)) : undefined
     case 'amura':
-      return azimuth != null ? String(Math.round(azimuth)) : undefined
+      return azimuth != null ? formatLiveMetricOneDecimal(azimuth) : undefined
     default:
       return undefined
   }

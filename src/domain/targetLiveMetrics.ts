@@ -1,5 +1,14 @@
 import type { TargetLiveMetrics, TargetLiveMetricsInput } from './targetLiveMetrics.types'
 
+export const LIVE_METRIC_DISPLAY_DECIMALS = 1
+
+export function formatLiveMetricOneDecimal(value: number): string {
+  if (!Number.isFinite(value)) {
+    throw new Error('ערך מטריקה לא תקין')
+  }
+  return value.toFixed(LIVE_METRIC_DISPLAY_DECIMALS)
+}
+
 export function calculateTargetLiveMetrics(input: TargetLiveMetricsInput): TargetLiveMetrics | null {
   if (input.targetHeight === undefined || Number.isNaN(input.targetHeight)) {
     return null
