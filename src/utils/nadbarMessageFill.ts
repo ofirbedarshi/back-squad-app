@@ -9,6 +9,7 @@ import type {
   NadbarMessageResources,
   NadbarMessageSegment,
   NadbarResourceSegmentFill,
+  NadbarUserVarFallbackDisplay,
 } from './nadbarMessageFill.types'
 import {
   NADBAR_RESOURCE_LOAD_PROMPTS,
@@ -16,7 +17,7 @@ import {
 
 export const NADBAR_TARGET_LOAD_EMPTY_LABEL = 'יש לטעון מטרה'
 
-const TOKEN_RE = /\{\{([a-zA-Z0-9_.]+)\}\}/g
+const TOKEN_RE = /\{\{([a-zA-Z0-9_.]+)(?:\|([a-zA-Z0-9_]+))?\}\}/g
 
 export type NadbarBlockFooterActionsByBlock = readonly (
   readonly NadbarBlockFooterAction[] | undefined
@@ -59,13 +60,16 @@ export function parseNadbarMessageSegments(content: string): NadbarMessageSegmen
 
   for (const match of content.matchAll(TOKEN_RE)) {
     const tokenKey = match[1]
+    const fallbackKey = match[2]
     if (!tokenKey || match.index == null) continue
 
     if (match.index > lastIndex) {
       segments.push({ type: 'text', text: content.slice(lastIndex, match.index) })
     }
 
-    if (tokenKey.includes('.')) {
+    if (fallbackKey) {
+      segments.push({ type: 'userVarFallback', primary: tokenKey, fallback: fallbackKey })
+    } else if (tokenKey.includes('.')) {
       segments.push({ type: 'resource', tokenKey })
     } else {
       segments.push({ type: 'userVar', varName: tokenKey })
@@ -104,6 +108,8 @@ export function collectUserVarNamesFromContent(content: string): string[] {
   for (const segment of parseNadbarMessageSegments(content)) {
     if (segment.type === 'userVar') {
       names.push(segment.varName)
+    } else if (segment.type === 'userVarFallback') {
+      names.push(segment.primary, segment.fallback)
     }
   }
   return names
@@ -196,6 +202,32 @@ export function resolveNadbarUserVarDisplayValue(
   if (sourceBlockIndex == null || sourceBlockIndex === blockIndex) return ''
 
   return blockMessageVars[sourceBlockIndex]?.[varName] ?? ''
+}
+
+export function resolveNadbarUserVarFallbackDisplayValue(
+  primary: string,
+  fallback: string,
+  blockIndex: number,
+  blockMessageVars: readonly NadbarMessageUserVars[],
+  varInitialFromBlock: Readonly<Record<string, number>> | undefined,
+): NadbarUserVarFallbackDisplay {
+  const primaryValue = resolveNadbarUserVarDisplayValue(
+    primary,
+    blockIndex,
+    blockMessageVars,
+    varInitialFromBlock,
+  )
+  if (primaryValue.trim()) {
+    return { value: primaryValue, activeVar: primary }
+  }
+
+  const fallbackValue = resolveNadbarUserVarDisplayValue(
+    fallback,
+    blockIndex,
+    blockMessageVars,
+    varInitialFromBlock,
+  )
+  return { value: fallbackValue, activeVar: fallback }
 }
 
 export function fillNadbarMessageContent(

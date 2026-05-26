@@ -5,6 +5,7 @@
     "tsepa": { "input": "numeric" },
     "gamal": { "input": "numeric" },
     "amura": { "input": "numeric" },
+    "amuraManual": { "input": "numeric" },
     "gur": { "input": "numeric" },
     "amuraCorrected": { "input": "numeric" },
     "amuraValid": {
@@ -95,12 +96,12 @@
       "footerActions": ["loadTarget"],
       "messages": [
         {
-          "source": "They",
-          "content": "{{openingCallsign1}} מ {{openingCallsign2}} קבל למטרה {{metara}} אמורה {{amura}} במעלות"
+          "source": "Me",
+          "content": "{{openingCallsign2}} מ {{openingCallsign1}} קבל למטרה {{metara}} אמורה {{amura}} במעלות (אמורה ידני {{amuraManual}})"
         },
         {
-          "source": "Me",
-          "content": "קיבלתי למטרה {{metara}} אמורה {{amura}} במעלות"
+          "source": "They",
+          "content": "קיבלתי למטרה {{metara}} אמורה {{amuraManual|amura}} במעלות"
         },
         {
           "source": "They",

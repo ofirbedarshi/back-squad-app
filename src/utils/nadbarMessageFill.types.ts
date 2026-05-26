@@ -13,11 +13,22 @@ export const NADBAR_RESOURCE_LOAD_PROMPTS: Record<NadbarMessageResourceKey, stri
 export type NadbarMessageTextSegment = { type: 'text'; text: string }
 export type NadbarMessageResourceSegment = { type: 'resource'; tokenKey: string }
 export type NadbarMessageUserVarSegment = { type: 'userVar'; varName: string }
+export type NadbarMessageUserVarFallbackSegment = {
+  type: 'userVarFallback'
+  primary: string
+  fallback: string
+}
 
 export type NadbarMessageSegment =
   | NadbarMessageTextSegment
   | NadbarMessageResourceSegment
   | NadbarMessageUserVarSegment
+  | NadbarMessageUserVarFallbackSegment
+
+export type NadbarUserVarFallbackDisplay = {
+  value: string
+  activeVar: string
+}
 
 export type NadbarResourceSegmentFill =
   | { type: 'value'; value: string }

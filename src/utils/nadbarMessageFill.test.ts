@@ -7,6 +7,7 @@ import type { NadbarMessage } from '../domain/nadbar.types'
 import { getNadbarTemplate } from '../domain/nadbarTemplates'
 import {
   buildUserVarFirstMessageIndex,
+  collectUserVarNamesFromContent,
   fillNadbarMessageContent,
   filterVisibleNadbarMessages,
   isNadbarBlockHasLoadTarget,
@@ -16,6 +17,7 @@ import {
   NADBAR_TARGET_LOAD_EMPTY_LABEL,
   parseNadbarMessageSegments,
   resolveNadbarUserVarDisplayValue,
+  resolveNadbarUserVarFallbackDisplayValue,
   resolveResourceSegment,
   sanitizeNadbarNumericUserVarInput,
 } from './nadbarMessageFill'
@@ -136,6 +138,67 @@ describe('parseNadbarMessageSegments', () => {
       { type: 'text', text: ' קו״צ ' },
       { type: 'resource', tokenKey: 'indicator.markCode' },
     ])
+  })
+
+  it('parses user var fallback tokens', () => {
+    const segments = parseNadbarMessageSegments('אמורה {{amuraManual|amura}} במעלות')
+    assert.deepEqual(segments, [
+      { type: 'text', text: 'אמורה ' },
+      { type: 'userVarFallback', primary: 'amuraManual', fallback: 'amura' },
+      { type: 'text', text: ' במעלות' },
+    ])
+  })
+})
+
+describe('collectUserVarNamesFromContent', () => {
+  it('includes both names from fallback tokens', () => {
+    assert.deepEqual(
+      collectUserVarNamesFromContent('{{amuraManual|amura}}'),
+      ['amuraManual', 'amura'],
+    )
+  })
+})
+
+describe('resolveNadbarUserVarFallbackDisplayValue', () => {
+  it('prefers primary when set', () => {
+    const blockMessageVars = [{ amuraManual: '45', amura: '90' }]
+    assert.deepEqual(
+      resolveNadbarUserVarFallbackDisplayValue(
+        'amuraManual',
+        'amura',
+        0,
+        blockMessageVars,
+        undefined,
+      ),
+      { value: '45', activeVar: 'amuraManual' },
+    )
+  })
+
+  it('uses fallback when primary is empty', () => {
+    const blockMessageVars = [{ amuraManual: '', amura: '90' }]
+    assert.deepEqual(
+      resolveNadbarUserVarFallbackDisplayValue(
+        'amuraManual',
+        'amura',
+        0,
+        blockMessageVars,
+        undefined,
+      ),
+      { value: '90', activeVar: 'amura' },
+    )
+  })
+
+  it('returns empty when both are empty', () => {
+    assert.deepEqual(
+      resolveNadbarUserVarFallbackDisplayValue(
+        'amuraManual',
+        'amura',
+        0,
+        [{}],
+        undefined,
+      ),
+      { value: '', activeVar: 'amura' },
+    )
   })
 })
 

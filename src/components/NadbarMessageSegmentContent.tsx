@@ -9,6 +9,7 @@ import {
   NADBAR_TARGET_LOAD_EMPTY_LABEL,
   parseNadbarMessageSegments,
   resolveNadbarUserVarDisplayValue,
+  resolveNadbarUserVarFallbackDisplayValue,
   resolveResourceSegment,
   sanitizeNadbarNumericUserVarInput,
 } from '../utils/nadbarMessageFill'
@@ -56,6 +57,79 @@ function NadbarMessageSegmentContent({
             )
           }
           return <span key={index}>{`{{${segment.tokenKey}}}`}</span>
+        }
+
+        if (segment.type === 'userVarFallback') {
+          const { value, activeVar } = resolveNadbarUserVarFallbackDisplayValue(
+            segment.primary,
+            segment.fallback,
+            blockIndex,
+            allBlockMessageVars,
+            varInitialFromBlock,
+          )
+          const loadOnly = isNadbarTargetVarLoadOnly(
+            blockFooterActions,
+            blockIndex,
+            activeVar,
+          )
+          const editable = isNadbarUserVarEditableAt(
+            messages,
+            messageIndex,
+            segment.primary,
+            { blockFooterActions, blockIndex },
+          )
+
+          if (!editable) {
+            const emptyLabel = loadOnly ? NADBAR_TARGET_LOAD_EMPTY_LABEL : ECHO_EMPTY_LABEL
+            if (!value.trim()) {
+              return (
+                <span
+                  key={index}
+                  className="inline-block font-medium text-red-600 underline decoration-red-600 underline-offset-2"
+                  aria-label={`${activeVar} — ${emptyLabel}`}
+                >
+                  {emptyLabel}
+                </span>
+              )
+            }
+
+            return (
+              <span key={index} className={ECHO_VALUE_CLASS} aria-label={activeVar}>
+                {value}
+              </span>
+            )
+          }
+
+          const numeric = userVarFields?.[segment.primary]?.input === 'numeric'
+          const choiceSpec = userVarFields?.[segment.primary]
+          const isChoice = choiceSpec?.input === 'choice'
+
+          if (isChoice && choiceSpec.options) {
+            return (
+              <NadbarUserVarChoiceInput
+                key={index}
+                options={choiceSpec.options}
+                value={value}
+                onChange={(next) => onUserVarChange(segment.primary, next)}
+                ariaLabel={segment.primary}
+              />
+            )
+          }
+
+          return (
+            <NadbarInlineUserVarInput
+              key={index}
+              value={value}
+              numeric={numeric}
+              ariaLabel={segment.primary}
+              onChange={(event) => {
+                const next = numeric
+                  ? sanitizeNadbarNumericUserVarInput(event.target.value)
+                  : event.target.value
+                onUserVarChange(segment.primary, next)
+              }}
+            />
+          )
         }
 
         const value = resolveNadbarUserVarDisplayValue(
