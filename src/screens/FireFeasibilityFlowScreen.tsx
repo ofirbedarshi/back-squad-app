@@ -1,50 +1,31 @@
-import { useCallback, useEffect, useState } from 'react'
 import DocFeedbackModal from '../components/base/DocFeedbackModal'
 import EntityLoadLinksStep from '../components/EntityLoadLinksStep'
 import fireFeasibilityDocMarkdown from '../../docs/היתכנות-לירי.md?raw'
 import FireFeasibilityCalculateFooter from '../components/FireFeasibilityCalculateFooter'
-import FireFeasibilityCoordsForm from '../components/FireFeasibilityCoordsForm'
+import FireFeasibilityForm from '../components/FireFeasibilityForm'
 import FireFeasibilityResultsView from '../components/FireFeasibilityResultsView'
-import { useEntityLinkResources } from '../hooks/useEntityLinkResources'
-import { useFireFeasibilityFlow } from '../hooks/useFireFeasibilityFlow'
-import { getNextStepAfterForm } from '../hooks/useFireFeasibilityFlow.types'
-import { useUIError } from '../hooks/useUIError'
+import {
+  FIRE_FEASIBILITY_MODE_CONFIG,
+  FIRE_FEASIBILITY_RESULTS_TITLE,
+} from '../domain/fireFeasibilityModeConfig'
+import type { FireFeasibilityMode } from '../domain/fireFeasibility.types'
+import { useFireFeasibilityScreen } from '../hooks/useFireFeasibilityScreen'
 
-function FireFeasibilityCoordsScreen() {
-  const flow = useFireFeasibilityFlow('coords')
-  const { position, target } = useEntityLinkResources({
-    targetId: flow.targetId,
-    positionId: flow.positionId,
-  })
-  const { reportUIError } = useUIError()
-  const [positionToTargetRange, setPositionToTargetRange] = useState<number | null>(null)
+interface FireFeasibilityFlowScreenProps {
+  mode: FireFeasibilityMode
+}
 
-  useEffect(() => {
-    if (flow.step !== 'form') return
-    if (!flow.positionId || !position) {
-      reportUIError('לא נמצאה עמדה — חזור לשלב הבחירה')
-    }
-    if (!flow.targetId || !target) {
-      reportUIError('לא נמצאה מטרה — חזור לשלב הבחירה')
-    }
-  }, [flow.step, flow.positionId, position, flow.targetId, target, reportUIError])
-
-  const handleAdvanceFromLinks = useCallback(() => {
-    if (!position || !target) return
-    flow.advanceFromLinks()
-  }, [position, target, flow])
-
-  const handleCalculate = useCallback(() => {
-    if (!position || !target) return
-    const result = flow.calculateResult()
-    if (!result) return
-    flow.setResults(result)
-    flow.setStep(getNextStepAfterForm())
-  }, [position, target, flow])
-
-  const handleUpdatePositionToTargetRange = useCallback((range: number | null) => {
-    setPositionToTargetRange(range)
-  }, [])
+function FireFeasibilityFlowScreen({ mode }: FireFeasibilityFlowScreenProps) {
+  const config = FIRE_FEASIBILITY_MODE_CONFIG[mode]
+  const {
+    flow,
+    position,
+    target,
+    formData,
+    handleAdvanceFromLinks,
+    handleCalculate,
+    handleUpdateData,
+  } = useFireFeasibilityScreen(mode)
 
   if (flow.step === 'links') {
     return (
@@ -53,8 +34,8 @@ function FireFeasibilityCoordsScreen() {
           sections={['target', 'position']}
           header={{
             stepLabel: 'שלב 1 מתוך 3',
-            title: 'היתכנות לירי - נ.צ',
-            subtitle: 'בחר מטרה ועמדה',
+            title: config.linksTitle,
+            subtitle: config.linksSubtitle,
           }}
           targetId={flow.targetId}
           positionId={flow.positionId}
@@ -69,13 +50,13 @@ function FireFeasibilityCoordsScreen() {
     return (
       <div dir="rtl" className="relative flex h-full min-h-0 flex-col bg-neutral-50">
         <header className="shrink-0 border-b border-neutral-200 bg-white px-4 py-4 text-center text-lg font-bold text-neutral-800">
-          היתכנות לירי — תוצאות
+          {FIRE_FEASIBILITY_RESULTS_TITLE}
         </header>
 
         <div className="min-h-0 flex-1 overflow-y-auto p-4">
           <FireFeasibilityResultsView
             clouds={flow.results.clouds}
-            positionToTargetRange={positionToTargetRange}
+            positionToTargetRange={formData.positionToTargetRange}
           />
         </div>
 
@@ -96,14 +77,15 @@ function FireFeasibilityCoordsScreen() {
   return (
     <div dir="rtl" className="relative flex h-full min-h-0 flex-col bg-neutral-50">
       <header className="shrink-0 border-b border-neutral-200 bg-white px-4 py-4 text-center text-lg font-bold text-neutral-800">
-        היתכנות לירי - נ.צ
+        {config.formTitle}
       </header>
 
       <div className="min-h-0 flex-1 overflow-y-auto p-4">
-        <FireFeasibilityCoordsForm
+        <FireFeasibilityForm
+          mode={mode}
           position={position}
           target={target}
-          onUpdatePositionToTargetRange={handleUpdatePositionToTargetRange}
+          onUpdateData={handleUpdateData}
         />
       </div>
 
@@ -119,4 +101,4 @@ function FireFeasibilityCoordsScreen() {
   )
 }
 
-export default FireFeasibilityCoordsScreen
+export default FireFeasibilityFlowScreen

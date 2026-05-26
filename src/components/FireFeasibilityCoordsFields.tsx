@@ -1,47 +1,35 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import type { Position, PositionCoordinates } from '../domain/position.types'
 import type { Target } from '../domain/target.types'
 import {
-  FLIGHT_PATH_OPTIONS,
   POSITION_FIELD_TOOLTIP,
-  RANGE_COMPUTED_TOOLTIP,
   TARGET_FIELD_TOOLTIP,
 } from '../domain/fireFeasibility.constants'
-import { useFireFeasibilityPositionTargetMetrics } from '../hooks/useFireFeasibilityPositionTargetMetrics'
 import CoordinateInput from './base/CoordinateInput'
-import FireFeasibilityCloudHeightField from './FireFeasibilityCloudHeightField'
-import SegmentedToggle from './base/SegmentedToggle'
+import FireFeasibilityRangeField from './FireFeasibilityRangeField'
 import FormField from './FormField'
 import Input from './Input'
 
-interface FireFeasibilityCoordsFormProps {
+interface FireFeasibilityCoordsFieldsProps {
   position: Position
   target: Target
-  onUpdatePositionToTargetRange: (range: number | null) => void
+  rangeDisplay: string
 }
 
-function FireFeasibilityCoordsForm({
+function FireFeasibilityCoordsFields({
   position,
   target,
-  onUpdatePositionToTargetRange,
-}: FireFeasibilityCoordsFormProps) {
+  rangeDisplay,
+}: FireFeasibilityCoordsFieldsProps) {
   const [obstacleCoords, setObstacleCoords] = useState('')
   const [obstacleHeight, setObstacleHeight] = useState('')
   const [hide1Coordinates, setHide1Coordinates] = useState<PositionCoordinates | undefined>()
   const [hide1Height, setHide1Height] = useState('')
   const [hide2Coordinates, setHide2Coordinates] = useState<PositionCoordinates | undefined>()
   const [hide2Height, setHide2Height] = useState('')
-  const [flightPath, setFlightPath] = useState('flat')
-
-  const metrics = useFireFeasibilityPositionTargetMetrics(position, target)
-  const rangeDisplay = metrics?.range != null ? metrics.range.toFixed(1) : ''
-
-  useEffect(() => {
-    onUpdatePositionToTargetRange(metrics?.range ?? null)
-  }, [metrics?.range, onUpdatePositionToTargetRange])
 
   return (
-    <div className="flex flex-col gap-4">
+    <>
       <FormField label="שם עמדה" infoTooltipText={POSITION_FIELD_TOOLTIP}>
         <Input type="text" value={position.stationName} disabled />
       </FormField>
@@ -70,9 +58,7 @@ function FireFeasibilityCoordsForm({
         />
       </FormField>
 
-      <FormField label="טווח עמדה מטרה" infoTooltipText={RANGE_COMPUTED_TOOLTIP}>
-        <Input type="number" value={rangeDisplay} disabled />
-      </FormField>
+      <FireFeasibilityRangeField rangeDisplay={rangeDisplay} />
 
       <FormField label='נ"צ מכשול'>
         <Input
@@ -91,10 +77,7 @@ function FireFeasibilityCoordsForm({
       </FormField>
 
       <FormField label='נ"צ הסתר 1'>
-        <CoordinateInput
-          value={hide1Coordinates}
-          onChange={setHide1Coordinates}
-        />
+        <CoordinateInput value={hide1Coordinates} onChange={setHide1Coordinates} />
       </FormField>
 
       <FormField label="גובה הסתר 1">
@@ -106,10 +89,7 @@ function FireFeasibilityCoordsForm({
       </FormField>
 
       <FormField label='נ"צ הסתר 2'>
-        <CoordinateInput
-          value={hide2Coordinates}
-          onChange={setHide2Coordinates}
-        />
+        <CoordinateInput value={hide2Coordinates} onChange={setHide2Coordinates} />
       </FormField>
 
       <FormField label="גובה הסתר 2">
@@ -119,18 +99,8 @@ function FireFeasibilityCoordsForm({
           onChange={(e) => setHide2Height(e.target.value)}
         />
       </FormField>
-
-      <FireFeasibilityCloudHeightField />
-
-      <FormField label="מסלול מעוף">
-        <SegmentedToggle
-          options={[...FLIGHT_PATH_OPTIONS]}
-          value={flightPath}
-          onChange={setFlightPath}
-        />
-      </FormField>
-    </div>
+    </>
   )
 }
 
-export default FireFeasibilityCoordsForm
+export default FireFeasibilityCoordsFields

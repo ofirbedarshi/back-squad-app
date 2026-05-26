@@ -39,8 +39,7 @@ import RshamatzRehevScreen from './screens/RshamatzRehevScreen'
 import RshamatzEshkolScreen from './screens/RshamatzEshkolScreen'
 import NotesScreen from './screens/NotesScreen'
 import FireFeasibilityScreen from './screens/FireFeasibilityScreen'
-import FireFeasibilityCoordsScreen from './screens/FireFeasibilityCoordsScreen'
-import FireFeasibilityDistancesHeightsScreen from './screens/FireFeasibilityDistancesHeightsScreen'
+import FireFeasibilityFlowScreen from './screens/FireFeasibilityFlowScreen'
 
 function AppRoutes() {
   const location = useLocation()
@@ -60,8 +59,11 @@ function AppRoutes() {
             <Route path="/notes" element={<NotesScreen />} />
             <Route path="/current-position" element={<CurrentPositionScreen />} />
             <Route path="/fire-feasibility" element={<FireFeasibilityScreen />} />
-            <Route path="/fire-feasibility/coords" element={<FireFeasibilityCoordsScreen />} />
-            <Route path="/fire-feasibility/distances-heights" element={<FireFeasibilityDistancesHeightsScreen />} />
+            <Route path="/fire-feasibility/coords" element={<FireFeasibilityFlowScreen mode="coords" />} />
+            <Route
+              path="/fire-feasibility/distances-heights"
+              element={<FireFeasibilityFlowScreen mode="distances-heights" />}
+            />
             <Route path="/calculator" element={<CalculatorScreen />} />
             <Route path="/calculator/hit-penetration" element={<HitPenetrationCalculatorScreen />} />
             <Route path="/calculator/unit-conversion" element={<UnitConversionCalculatorScreen />} />
