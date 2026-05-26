@@ -4,7 +4,8 @@ import { useCallback, useLayoutEffect, useRef } from 'react'
 const INLINE_INPUT_MIN_PX = 32
 
 function adjustInputWidth(el: HTMLInputElement) {
-  el.style.width = '0px'
+  // Shrink to min before measure — never 0px (breaks controlled input on WebView)
+  el.style.width = `${INLINE_INPUT_MIN_PX}px`
   el.style.width = `${Math.max(INLINE_INPUT_MIN_PX, el.scrollWidth)}px`
 }
 

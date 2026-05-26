@@ -16,7 +16,7 @@ function NadbarInlineUserVarInput({
   ariaLabel,
   numeric = false,
 }: NadbarInlineUserVarInputProps) {
-  const { setRef, onInput, syncWidth } = useAutoGrowInputWidth(null, value)
+  const { setRef, onInput } = useAutoGrowInputWidth(null, value)
 
   return (
     <input
@@ -25,10 +25,7 @@ function NadbarInlineUserVarInput({
       inputMode={numeric ? 'numeric' : undefined}
       pattern={numeric ? '[0-9]*' : undefined}
       value={value}
-      onChange={(event) => {
-        syncWidth()
-        onChange(event)
-      }}
+      onChange={onChange}
       onInput={onInput}
       className={INLINE_INPUT_CLASS}
       aria-label={ariaLabel}
