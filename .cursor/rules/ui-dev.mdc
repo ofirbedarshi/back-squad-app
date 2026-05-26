@@ -1,5 +1,6 @@
 ---
-alwaysApply: false
+description: UI layer rules — presentation, components, screens, hooks
+alwaysApply: true
 ---
 
 # UI rules

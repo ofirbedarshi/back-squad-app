@@ -86,7 +86,7 @@ No unexpected behavior is ever ignored.
 
 ## Layer-specific rules (Cursor)
 
-When you work mainly on **UI** or **domain** logic, include the matching rule in Agent chat: **`@ui-dev`** or **`@domain-dev`** (files under `.cursor/rules/`).
+**UI** and **domain** layer rules (`.cursor/rules/ui-dev.mdc`, `domain-dev.mdc`) are always applied in Agent — no need to `@` them manually.
 
 ## Destructive action rule
 

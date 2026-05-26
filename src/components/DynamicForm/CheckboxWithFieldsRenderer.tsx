@@ -1,6 +1,9 @@
 import { Controller } from 'react-hook-form'
 import CheckboxWithFields from '../base/CheckboxWithFields'
-import { shouldHighlightCheckboxWithFieldsBorder } from '../../domain/dynamicFormHighlight'
+import {
+  collectHighlightBorderWatchKeys,
+  shouldHighlightCheckboxWithFieldsBorder,
+} from '../../domain/dynamicFormHighlight'
 import {
   areAllRowableFieldsFilled,
   makeFieldValidator,
@@ -13,13 +16,6 @@ function getNestedFieldKeys(fields: CheckboxWithFieldsRendererProps['field']['fi
   )
 }
 
-function getHighlightBorderWatchKeys(
-  highlightBorderWhen: CheckboxWithFieldsRendererProps['field']['highlightBorderWhen'],
-): string[] {
-  if (!highlightBorderWhen?.length) return []
-  return [...new Set(highlightBorderWhen.map((rule) => rule.field))]
-}
-
 export default function CheckboxWithFieldsRenderer({
   field,
   control,
@@ -29,12 +25,16 @@ export default function CheckboxWithFieldsRenderer({
   renderNestedField,
 }: CheckboxWithFieldsRendererProps) {
   const nestedKeys = getNestedFieldKeys(field.fields)
-  const highlightWatchKeys = getHighlightBorderWatchKeys(field.highlightBorderWhen)
+  const highlightWatchKeys = collectHighlightBorderWatchKeys(
+    field.highlightBorderWhen,
+    field.highlightBorderWhenAll,
+  )
   watch([...nestedKeys, ...highlightWatchKeys])
 
   const highlightBorder = shouldHighlightCheckboxWithFieldsBorder(
-    field.highlightBorderWhen,
     getValues(),
+    field.highlightBorderWhen,
+    field.highlightBorderWhenAll,
   )
 
   return (

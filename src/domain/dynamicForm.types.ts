@@ -99,6 +99,8 @@ export interface CheckboxWithFieldsField {
   visibleWhen?: FormFieldVisibleWhen
   /** When any rule matches form values, the outer card border turns red. */
   highlightBorderWhen?: CheckboxWithFieldsBorderHighlightRule[]
+  /** When every rule matches form values, the outer card border turns red. */
+  highlightBorderWhenAll?: CheckboxWithFieldsBorderHighlightRule[]
   fields: RowableField[]
 }
 

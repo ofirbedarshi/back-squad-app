@@ -15,10 +15,20 @@ function ruleMatches(rule: CheckboxWithFieldsBorderHighlightRule, values: FormVa
   return Number.isFinite(numeric) && numeric > rule.greaterThan
 }
 
+export function collectHighlightBorderWatchKeys(
+  when?: CheckboxWithFieldsBorderHighlightRule[],
+  whenAll?: CheckboxWithFieldsBorderHighlightRule[],
+): string[] {
+  const keys = [...(when ?? []), ...(whenAll ?? [])].map((rule) => rule.field)
+  return [...new Set(keys)]
+}
+
 export function shouldHighlightCheckboxWithFieldsBorder(
-  rules: CheckboxWithFieldsBorderHighlightRule[] | undefined,
   values: FormValues,
+  when?: CheckboxWithFieldsBorderHighlightRule[],
+  whenAll?: CheckboxWithFieldsBorderHighlightRule[],
 ): boolean {
-  if (!rules?.length) return false
-  return rules.some((rule) => ruleMatches(rule, values))
+  const anyMatch = when?.some((rule) => ruleMatches(rule, values)) ?? false
+  const allMatch = whenAll?.length ? whenAll.every((rule) => ruleMatches(rule, values)) : false
+  return anyMatch || allMatch
 }

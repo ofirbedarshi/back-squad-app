@@ -180,7 +180,14 @@ export const missChecklistFormSchema: FormSchema = {
           options: ['יש', 'אין'],
           defaultValue: 'אין',
           conditions: {
-            יש: [{ type: 'note', text: 'חשב מחדש' }],
+            יש: [
+              {
+                type: 'checkbox',
+                key: 'indicatorNearTargetObstaclesRecalculateChecked',
+                label: 'חשב מחדש',
+                defaultValue: false,
+              },
+            ],
           },
         },
       ],
@@ -243,8 +250,12 @@ export const missChecklistFormSchema: FormSchema = {
     {
       type: 'checkboxWithFields',
       key: 'directionalShootingChecked',
-      label: 'ירי בכיווניות',
+      label: 'בדוק אם היה ירי בכיווניות',
       defaultValue: false,
+      highlightBorderWhenAll: [
+        { field: 'hadDirectionalShooting', equals: 'כן' },
+        { field: 'missionRangeMeters', greaterThan: 8000 },
+      ],
       fields: [
         {
           type: 'toggleWithConditions',
@@ -254,6 +265,11 @@ export const missChecklistFormSchema: FormSchema = {
           defaultValue: 'לא',
           conditions: {
             כן: [
+              {
+                type: 'note',
+                text: '*ירי בכיווניות והטווח במשימה מעל 8000 מטר',
+                visibleWhen: { field: 'missionRangeMeters', greaterThan: 8000 },
+              },
               {
                 type: 'checkbox',
                 key: 'directionalShootingRecheckObstaclesChecked',
@@ -276,8 +292,9 @@ export const missChecklistFormSchema: FormSchema = {
     {
       type: 'checkboxWithFields',
       key: 'reflectiveTargetChecked',
-      label: 'האם המטרה הייתה רפלקטיבית או בקרבת משטחים רפלקטיביים?',
+      label: 'בדוק אם המטרה הייתה רפלקטיבית או בקרבת משטחים רפלקטיביים',
       defaultValue: false,
+      highlightBorderWhen: [{ field: 'reflectiveTarget', equals: 'כן' }],
       fields: [
         {
           type: 'toggle',
@@ -298,13 +315,14 @@ export const missChecklistFormSchema: FormSchema = {
     {
       type: 'checkboxWithFields',
       key: 'multipleSpotsChecked',
-      label: 'האם היה ריבוי כתמים?',
+      label: 'בדוק אם היה ריבוי כתמים',
       defaultValue: false,
+      highlightBorderWhen: [{ field: 'multipleSpots', equals: 'כן' }],
       fields: [
         {
           type: 'toggle',
           key: 'multipleSpots',
-          label: 'תשובה',
+          label: 'היה ריבוי כתמים?',
           options: ['כן', 'לא'],
           defaultValue: 'לא',
         },
@@ -313,13 +331,14 @@ export const missChecklistFormSchema: FormSchema = {
     {
       type: 'checkboxWithFields',
       key: 'spotBouncedChecked',
-      label: 'האם בוצעה הקפצת כתם?',
+      label: 'בדוק אם בוצעה הקפצת כתם',
       defaultValue: false,
+      highlightBorderWhen: [{ field: 'spotBounced', equals: 'כן' }],
       fields: [
         {
           type: 'toggle',
           key: 'spotBounced',
-          label: 'תשובה',
+          label: 'בוצעה הקפצת כתם?',
           options: ['כן', 'לא'],
           defaultValue: 'לא',
         },
@@ -328,13 +347,13 @@ export const missChecklistFormSchema: FormSchema = {
     {
       type: 'checkboxWithFields',
       key: 'deflectionDoneChecked',
-      label: 'האם הייתה הסטה?',
+      label: 'בדוק אם הייתה הסטה',
       defaultValue: false,
       fields: [
         {
           type: 'toggle',
           key: 'deflectionDone',
-          label: 'תשובה',
+          label: 'הייתה הסטה?',
           options: ['כן', 'לא'],
           defaultValue: 'לא',
         },
@@ -343,7 +362,7 @@ export const missChecklistFormSchema: FormSchema = {
     {
       type: 'checkboxWithFields',
       key: 'crossPositionChecked',
-      label: 'מה מיקום הצלב ביחס לנקודת הפגיעה הרצויה?',
+      label: 'בדוק את מיקום הצלב ביחס לנקודת הפגיעה הרצויה',
       defaultValue: false,
       fields: [{ type: 'text', key: 'crossPosition', label: 'מיקום הצלב' }],
     },
@@ -359,8 +378,9 @@ export const missChecklistFormSchema: FormSchema = {
     {
       type: 'checkboxWithFields',
       key: 'spotSlidingChecked',
-      label: 'האם הייתה גלישה של הכתם (גלישה מהחזית? גלישה לתוך חלון? וכו\')?',
+      label: 'בדוק אם הייתה גלישה של הכתם (גלישה מהחזית? גלישה לתוך חלון? וכו\')',
       defaultValue: false,
+      highlightBorderWhen: [{ field: 'spotSliding', equals: 'כן' }],
       fields: [
         {
           type: 'toggle',
@@ -373,9 +393,19 @@ export const missChecklistFormSchema: FormSchema = {
     },
     {
       type: 'checkboxWithFields',
-      key: 'spotDriftChecked',
-      label: 'האם הייתה בליעה של הכתם?',
+      key: 'spotSizeWithSpreadChecked',
+      label: 'בדוק מה גודל הכתם (כולל מריחה)',
       defaultValue: false,
+      fields: [
+        { type: 'text', key: 'spotSizeWithSpread', label: 'גודל הכתם (כולל מריחה)' },
+      ],
+    },
+    {
+      type: 'checkboxWithFields',
+      key: 'spotDriftChecked',
+      label: 'בדוק אם הייתה בליעה של הכתם',
+      defaultValue: false,
+      highlightBorderWhen: [{ field: 'spotDrift', equals: 'כן' }],
       fields: [
         {
           type: 'toggle',
@@ -392,8 +422,9 @@ export const missChecklistFormSchema: FormSchema = {
     {
       type: 'checkboxWithFields',
       key: 'fallingIndicatorsOkChecked',
-      label: 'האם בהוצאת הטילים מהמזוודות מצייני הנפילה היו תקינים?',
+      label: 'בדוק את מצייני הנפילה בהוצאת הטילים מהמזוודות',
       defaultValue: false,
+      highlightBorderWhen: [{ field: 'fallingIndicatorsOk', equals: 'לא' }],
       fields: [
         {
           type: 'toggle',
@@ -407,13 +438,14 @@ export const missChecklistFormSchema: FormSchema = {
     {
       type: 'checkboxWithFields',
       key: 'hiveOkChecked',
-      label: 'האם הכוורת תקינה (פרפרים סגורות? חנוכיות תקניות? מחברים תקינים? הכוורת לא מעוקמת? ראצ\'טים משוחררים? סגר מסע פתוח?)',
+      label: 'בדוק את מצב הכוורת (פרפרים סגורות? חנוכיות תקניות? מחברים תקינים? הכוורת לא מעוקמת?  ראצ\'טים משוחררים?)',
       defaultValue: false,
+      highlightBorderWhen: [{ field: 'hiveOk', equals: 'לא' }],
       fields: [
         {
           type: 'toggle',
           key: 'hiveOk',
-          label: 'תשובה',
+          label: 'תקין?',
           options: ['כן', 'לא'],
           defaultValue: 'לא',
         },

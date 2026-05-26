@@ -1,5 +1,6 @@
 ---
-alwaysApply: false
+description: Domain and use-case layer rules — pure logic, storage boundaries
+alwaysApply: true
 ---
 
 # Domain rules

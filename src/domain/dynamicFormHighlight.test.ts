@@ -4,15 +4,15 @@ import { shouldHighlightCheckboxWithFieldsBorder } from './dynamicFormHighlight.
 
 describe('shouldHighlightCheckboxWithFieldsBorder', () => {
   it('returns false when rules are undefined or empty', () => {
-    assert.equal(shouldHighlightCheckboxWithFieldsBorder(undefined, {}), false)
-    assert.equal(shouldHighlightCheckboxWithFieldsBorder([], {}), false)
+    assert.equal(shouldHighlightCheckboxWithFieldsBorder({}), false)
+    assert.equal(shouldHighlightCheckboxWithFieldsBorder({}, [], []), false)
   })
 
   it('returns false when no rule matches', () => {
     assert.equal(
       shouldHighlightCheckboxWithFieldsBorder(
-        [{ field: 'nearTargetWeatherWind', equals: 'כן' }],
         { nearTargetWeatherWind: 'לא' },
+        [{ field: 'nearTargetWeatherWind', equals: 'כן' }],
       ),
       false,
     )
@@ -21,8 +21,8 @@ describe('shouldHighlightCheckboxWithFieldsBorder', () => {
   it('returns true when a single rule matches', () => {
     assert.equal(
       shouldHighlightCheckboxWithFieldsBorder(
-        [{ field: 'attackCellFlightAltitudeWeatherValid', equals: 'לא' }],
         { attackCellFlightAltitudeWeatherValid: 'לא' },
+        [{ field: 'attackCellFlightAltitudeWeatherValid', equals: 'לא' }],
       ),
       true,
     )
@@ -35,19 +35,25 @@ describe('shouldHighlightCheckboxWithFieldsBorder', () => {
       { field: 'nearTargetWeatherRain', equals: 'כן' },
     ]
     assert.equal(
-      shouldHighlightCheckboxWithFieldsBorder(rules, {
-        nearTargetWeatherWind: 'לא',
-        nearTargetWeatherCloudsOrHaze: 'כן',
-        nearTargetWeatherRain: 'לא',
-      }),
+      shouldHighlightCheckboxWithFieldsBorder(
+        {
+          nearTargetWeatherWind: 'לא',
+          nearTargetWeatherCloudsOrHaze: 'כן',
+          nearTargetWeatherRain: 'לא',
+        },
+        rules,
+      ),
       true,
     )
     assert.equal(
-      shouldHighlightCheckboxWithFieldsBorder(rules, {
-        nearTargetWeatherWind: 'לא',
-        nearTargetWeatherCloudsOrHaze: 'לא',
-        nearTargetWeatherRain: 'לא',
-      }),
+      shouldHighlightCheckboxWithFieldsBorder(
+        {
+          nearTargetWeatherWind: 'לא',
+          nearTargetWeatherCloudsOrHaze: 'לא',
+          nearTargetWeatherRain: 'לא',
+        },
+        rules,
+      ),
       false,
     )
   })
@@ -55,22 +61,53 @@ describe('shouldHighlightCheckboxWithFieldsBorder', () => {
   it('returns true when numeric value is greater than threshold', () => {
     assert.equal(
       shouldHighlightCheckboxWithFieldsBorder(
-        [{ field: 'indicatorAmuraApexAngle', greaterThan: 55 }],
         { indicatorAmuraApexAngle: 56 },
+        [{ field: 'indicatorAmuraApexAngle', greaterThan: 55 }],
       ),
       true,
     )
     assert.equal(
       shouldHighlightCheckboxWithFieldsBorder(
-        [{ field: 'indicatorAmuraApexAngle', greaterThan: 55 }],
         { indicatorAmuraApexAngle: 55 },
+        [{ field: 'indicatorAmuraApexAngle', greaterThan: 55 }],
       ),
       false,
     )
     assert.equal(
       shouldHighlightCheckboxWithFieldsBorder(
-        [{ field: 'indicatorAmuraApexAngle', greaterThan: 55 }],
         { indicatorAmuraApexAngle: '' },
+        [{ field: 'indicatorAmuraApexAngle', greaterThan: 55 }],
+      ),
+      false,
+    )
+  })
+
+  it('returns true only when all rules in whenAll match', () => {
+    const allRules = [
+      { field: 'hadDirectionalShooting', equals: 'כן' },
+      { field: 'missionRangeMeters', greaterThan: 8000 },
+    ]
+    assert.equal(
+      shouldHighlightCheckboxWithFieldsBorder(
+        { hadDirectionalShooting: 'כן', missionRangeMeters: 8001 },
+        undefined,
+        allRules,
+      ),
+      true,
+    )
+    assert.equal(
+      shouldHighlightCheckboxWithFieldsBorder(
+        { hadDirectionalShooting: 'כן', missionRangeMeters: 8000 },
+        undefined,
+        allRules,
+      ),
+      false,
+    )
+    assert.equal(
+      shouldHighlightCheckboxWithFieldsBorder(
+        { hadDirectionalShooting: 'לא', missionRangeMeters: 9000 },
+        undefined,
+        allRules,
       ),
       false,
     )

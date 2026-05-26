@@ -314,6 +314,8 @@ const missChecklists = [
       missileImpactRelativeToCross: '3 מטר ימינה',
       spotSlidingChecked: true,
       spotSliding: 'לא',
+      spotSizeWithSpreadChecked: true,
+      spotSizeWithSpread: '12×8',
       spotDriftChecked: true,
       spotDrift: 'לא',
       northSourceMethod: 'מוצא צפון',
