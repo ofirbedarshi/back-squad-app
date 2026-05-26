@@ -28,6 +28,15 @@ function collectDefaultFromFormFieldDef(field: FormFieldDef, values: FormValues)
     values[field.key] = field.defaultValue ?? []
     return
   }
+  if (field.type === 'checkboxWithFields') {
+    if (field.defaultValue !== undefined) {
+      values[field.key] = field.defaultValue
+    }
+    for (const child of field.fields) {
+      collectDefault(child, values)
+    }
+    return
+  }
   collectDefault(field as RowableField, values)
 }
 

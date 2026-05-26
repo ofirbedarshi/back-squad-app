@@ -15,6 +15,7 @@ import PositionToTargetComputedTextField from './PositionToTargetComputedTextFie
 import type { ComputedTextFieldDef } from './computedTextField.types'
 import type { CoordinateValue, FormFieldDef, FormValues, RowableField, ToggleWithConditionsField } from '../../domain/dynamicForm.types'
 import ToggleWithConditionsRenderer from './ToggleWithConditionsRenderer'
+import CheckboxWithFieldsRenderer from './CheckboxWithFieldsRenderer'
 import { AZIMUTH_DEGREE_MAX, AZIMUTH_DEGREE_MIN } from '../../domain/azimuthDegree'
 import { collectVisibleWhenWatchKeys } from '../../domain/dynamicFormVisibleWhen'
 import { isFieldVisible, makeFieldValidator } from '../../domain/dynamicFormValidation'
@@ -265,6 +266,32 @@ function DynamicFormField({
           )}
         />
       </FormField>
+    )
+  }
+
+  if (field.type === 'checkboxWithFields') {
+    if (field.visibleWhen) {
+      watch(collectVisibleWhenWatchKeys(field.visibleWhen))
+    }
+    if (!isFieldVisible(field, getValues(), parentByKey)) {
+      return null
+    }
+
+    return (
+      <CheckboxWithFieldsRenderer
+        field={field}
+        control={control}
+        getValues={getValues}
+        watch={watch}
+        parentByKey={parentByKey}
+        renderNestedField={(child, index) => (
+          <DynamicFormField
+            key={'key' in child ? child.key : `nested-${field.key}-${index}`}
+            field={child as FormFieldDef}
+            {...sharedChildProps}
+          />
+        )}
+      />
     )
   }
 

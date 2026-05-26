@@ -90,6 +90,35 @@ export function isFilledFormValue(
   }
 }
 
+export function areAllRowableFieldsFilled(
+  values: FormValues,
+  fields: RowableField[],
+): boolean {
+  const fillable = fields.filter(
+    (field): field is RowableField & { key: string } => 'key' in field,
+  )
+  if (fillable.length === 0) return true
+
+  return fillable.every((child) => {
+    const value = values[child.key]
+    switch (child.type) {
+      case 'text':
+      case 'textarea':
+      case 'date':
+      case 'time':
+        return isFilledFormValue(value, child.type)
+      case 'number':
+        return isFilledFormValue(value, 'number')
+      case 'toggle':
+        return isFilledFormValue(value, 'toggle', child.options)
+      default:
+        throw new Error(
+          `areAllRowableFieldsFilled: unsupported nested field type "${child.type}"`,
+        )
+    }
+  })
+}
+
 function getToggleWithConditionsParentKeys(
   schema: FormSchema,
 ): Map<string, ToggleWithConditionsField> {
@@ -138,6 +167,7 @@ export function isFieldVisible(
 
   if (
     (field.type === 'checkbox' ||
+      field.type === 'checkboxWithFields' ||
       field.type === 'toggle' ||
       field.type === 'toggleWithConditions') &&
     field.visibleWhen
@@ -209,7 +239,7 @@ export function validateFieldValue(
   if (field.type === 'coords') {
     return isFilledFormValue(value, 'coords') || REQUIRED_FIELD_MESSAGE
   }
-  if (field.type === 'checkbox') {
+  if (field.type === 'checkbox' || field.type === 'checkboxWithFields') {
     return isFilledFormValue(value, 'checkbox') || REQUIRED_FIELD_MESSAGE
   }
   if (field.type === 'multiSelectToggle') {
@@ -274,6 +304,11 @@ export function validateFormValues(
           for (const child of branch) walk(child)
         }
       }
+      return
+    }
+    if (field.type === 'checkboxWithFields') {
+      validateField(field)
+      for (const child of field.fields) validateField(child)
       return
     }
     validateField(field)

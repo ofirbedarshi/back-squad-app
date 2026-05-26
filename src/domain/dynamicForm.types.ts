@@ -84,6 +84,17 @@ export interface CheckboxField {
   visibleWhen?: FormFieldVisibleWhen
 }
 
+/** Checkbox with nested fields; checkbox auto-checks when all nested fields are filled. */
+export interface CheckboxWithFieldsField {
+  type: 'checkboxWithFields'
+  key: string
+  label: string
+  required?: boolean
+  defaultValue?: boolean
+  visibleWhen?: FormFieldVisibleWhen
+  fields: RowableField[]
+}
+
 export interface MultiSelectToggleField {
   type: 'multiSelectToggle'
   key: string
@@ -209,6 +220,7 @@ export type FormFieldDef =
   | ToggleField
   | ToggleWithConditionsField
   | CheckboxField
+  | CheckboxWithFieldsField
   | MultiSelectToggleField
   | CoordsField
   | TargetLoaderField
