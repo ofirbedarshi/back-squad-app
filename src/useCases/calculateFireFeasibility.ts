@@ -36,8 +36,8 @@ export function calculateFireFeasibility(formData: FireFeasibilityFormData): Fir
 
   return {
     clouds: {
-      a: { enabled: genA.enabled, notes: genA.notes },
-      b: { enabled: genB.enabled, notes: genB.notes },
+      a: { enabled: genA.enabled, notes: genA.notes, logs: genA.logs },
+      b: { enabled: genB.enabled, notes: genB.notes, logs: genB.logs },
     },
     obstacles: createNotImplementedCategoryResultsByGeneration(),
     concealment: createNotImplementedCategoryResultsByGeneration(),

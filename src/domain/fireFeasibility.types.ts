@@ -14,6 +14,7 @@ export interface FireFeasibilityFormData {
 export interface FireFeasibilityCategoryResult {
   enabled: boolean
   notes: string
+  logs: string[]
 }
 
 export type FireFeasibilityGeneration = 'a' | 'b'

@@ -19,6 +19,12 @@ export interface CloudsFeasibilityLookupData {
   lookup: Record<string, CloudsFeasibilityLookupCells>
 }
 
+export interface CloudsTableLookupContext {
+  value: number
+  heightBand: CloudsFeasibilityNumericBand
+  rangeBand: CloudsFeasibilityNumericBand
+}
+
 export interface CloudsFeasibilityEvaluationInput {
   positionToTargetRangeMeters: number
   positionToTargetHeightDifferenceMeters: number
@@ -30,6 +36,7 @@ export interface CloudsFeasibilityEvaluationInput {
 export interface CloudsFeasibilityEvaluationResult {
   enabled: boolean
   notes: string
+  logs: string[]
   lookupValue?: number
   computed?: number
 }

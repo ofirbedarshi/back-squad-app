@@ -11,6 +11,8 @@ function FireFeasibilityCategoryResultBlock({
   generationLabel,
   result,
 }: FireFeasibilityCategoryResultBlockProps) {
+  const logLines = result.logs ?? []
+
   return (
     <section className="flex flex-col gap-2">
       {title ? (
@@ -30,6 +32,13 @@ function FireFeasibilityCategoryResultBlock({
         </div>
         {result.notes ? (
           <p className="text-sm font-medium text-neutral-600 leading-relaxed">{result.notes}</p>
+        ) : null}
+        {logLines.length > 0 ? (
+          <ul className="list-disc list-inside text-sm font-medium text-neutral-600 leading-relaxed text-start space-y-1">
+            {logLines.map((line) => (
+              <li key={line}>{line}</li>
+            ))}
+          </ul>
         ) : null}
       </div>
     </section>

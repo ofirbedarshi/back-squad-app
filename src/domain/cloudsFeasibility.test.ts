@@ -32,6 +32,12 @@ describe('evaluateCloudsFeasibility', () => {
     assert.equal(result.computed, 300 + 200 + CLOUDS_FEASIBILITY_TOLERANCE_METERS)
     assert.equal(result.enabled, true)
     assert.equal(result.notes, '')
+    assert.ok(result.logs.length > 0)
+    assert.ok(result.logs.some((l) => l.includes('הפרש גבהים')))
+    assert.ok(result.logs.some((l) => l.includes('טווח בין עמדה למטרה')))
+    assert.ok(result.logs.some((l) => l.includes('מסלול מעוף')))
+    assert.ok(result.logs.some((l) => l.includes('טולרנס')))
+    assert.ok(result.logs.some((l) => l.includes('מאפשר')))
   })
 
   it('enabled false when computed equals cloud height (strict less-than)', () => {
@@ -40,6 +46,7 @@ describe('evaluateCloudsFeasibility', () => {
     )
     assert.equal(result.computed, 600)
     assert.equal(result.enabled, false)
+    assert.ok(result.logs.some((l) => l.includes('לא מאפשר')))
   })
 
   it('enabled false when computed is above cloud height', () => {
@@ -85,6 +92,7 @@ describe('evaluateCloudsFeasibility', () => {
     assert.equal(result.notes, CLOUDS_FLAT_FLIGHT_PATH_NOTE)
     assert.equal(result.lookupValue, undefined)
     assert.equal(result.computed, undefined)
+    assert.ok(result.logs.some((l) => l.includes(CLOUDS_FLAT_FLIGHT_PATH_NOTE)))
   })
 
   it('lofted+ flight path is disabled with generation-a note', () => {
@@ -93,6 +101,7 @@ describe('evaluateCloudsFeasibility', () => {
     assert.equal(result.notes, CLOUDS_LOFTED_PLUS_FLIGHT_PATH_NOTE)
     assert.equal(result.lookupValue, undefined)
     assert.equal(result.computed, undefined)
+    assert.ok(result.logs.some((l) => l.includes(CLOUDS_LOFTED_PLUS_FLIGHT_PATH_NOTE)))
   })
 
   it('enabled true with note when range is outside table', () => {
@@ -103,6 +112,7 @@ describe('evaluateCloudsFeasibility', () => {
     assert.equal(result.notes, CLOUDS_OUT_OF_TABLE_NOTE)
     assert.equal(result.lookupValue, undefined)
     assert.equal(result.computed, undefined)
+    assert.ok(result.logs.some((l) => l.includes(CLOUDS_OUT_OF_TABLE_NOTE)))
   })
 
   it('enabled true with note when cell is empty in table', () => {
@@ -167,6 +177,7 @@ describe('evaluateCloudsFeasibilityGenB', () => {
     assert.equal(loftedPlus.lookupValue, 150)
     assert.equal(lofted.computed, 480)
     assert.equal(loftedPlus.computed, 450)
+    assert.ok(loftedPlus.logs.some((l) => l.includes('עמודה L+')))
   })
 
   it('lofted+ can be enabled when lofted is disabled at same cloud height', () => {

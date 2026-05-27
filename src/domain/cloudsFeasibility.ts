@@ -1,11 +1,16 @@
 import { cloudsFeasibilityLookupData } from './cloudsFeasibilityLookup.generated.ts'
 import { cloudsFeasibilityGenBLookupData } from './cloudsFeasibilityGenBLookup.generated.ts'
+import {
+  buildCloudsNoteLogs,
+  buildCloudsTableSuccessLogs,
+} from './cloudsFeasibilityLogs.ts'
 import type {
   CloudsFeasibilityEvaluationInput,
   CloudsFeasibilityEvaluationResult,
   CloudsFeasibilityLookupData,
   CloudsFeasibilityNumericBand,
   CloudsFeasibilityTableTrajectory,
+  CloudsTableLookupContext,
 } from './cloudsFeasibility.types.ts'
 import {
   CloudsFeasibilityOutOfTableError,
@@ -50,12 +55,12 @@ function resolveCloudsTableTrajectory(
   return null
 }
 
-function lookupCloudsTableValue(
+function lookupCloudsTableCell(
   data: CloudsFeasibilityLookupData,
   heightDifferenceMeters: number,
   rangeMeters: number,
   trajectory: CloudsFeasibilityTableTrajectory,
-): number {
+): CloudsTableLookupContext {
   if (!Number.isFinite(heightDifferenceMeters)) {
     throw new Error('הפרש גובה לא תקין')
   }
@@ -73,7 +78,7 @@ function lookupCloudsTableValue(
     throw new CloudsFeasibilityOutOfTableError()
   }
 
-  return value
+  return { value, heightBand, rangeBand }
 }
 
 function evaluateCloudsFromLookup(
@@ -85,6 +90,7 @@ function evaluateCloudsFromLookup(
     return {
       enabled: true,
       notes: CLOUDS_FLAT_FLIGHT_PATH_NOTE,
+      logs: buildCloudsNoteLogs(input, CLOUDS_FLAT_FLIGHT_PATH_NOTE),
     }
   }
 
@@ -92,6 +98,7 @@ function evaluateCloudsFromLookup(
     return {
       enabled: false,
       notes: CLOUDS_LOFTED_PLUS_FLIGHT_PATH_NOTE,
+      logs: buildCloudsNoteLogs(input, CLOUDS_LOFTED_PLUS_FLIGHT_PATH_NOTE),
     }
   }
 
@@ -104,7 +111,7 @@ function evaluateCloudsFromLookup(
   assertFiniteMeters(input.cloudHeightMeters, 'גובה עננים')
 
   try {
-    const lookupValue = lookupCloudsTableValue(
+    const lookup = lookupCloudsTableCell(
       data,
       input.positionToTargetHeightDifferenceMeters,
       input.positionToTargetRangeMeters,
@@ -112,19 +119,29 @@ function evaluateCloudsFromLookup(
     )
 
     const computed =
-      lookupValue + input.targetHeightMeters + CLOUDS_FEASIBILITY_TOLERANCE_METERS
+      lookup.value + input.targetHeightMeters + CLOUDS_FEASIBILITY_TOLERANCE_METERS
+    const enabled = computed < input.cloudHeightMeters
 
     return {
-      lookupValue,
+      lookupValue: lookup.value,
       computed,
-      enabled: computed < input.cloudHeightMeters,
+      enabled,
       notes: '',
+      logs: buildCloudsTableSuccessLogs(
+        input,
+        lookup,
+        trajectory,
+        computed,
+        enabled,
+        CLOUDS_FEASIBILITY_TOLERANCE_METERS,
+      ),
     }
   } catch (error) {
     if (isCloudsFeasibilityOutOfTableError(error)) {
       return {
         enabled: true,
         notes: CLOUDS_OUT_OF_TABLE_NOTE,
+        logs: buildCloudsNoteLogs(input, CLOUDS_OUT_OF_TABLE_NOTE),
       }
     }
     throw error
