@@ -1,6 +1,6 @@
 import { getNadbarBlockMessageVars, updateNadbarBlockMessageVar } from '../domain/nadbar'
 import { propagateTargetDerivedVarsFromBlock } from '../domain/nadbarTargetToVars'
-import { formatLiveMetric } from '../domain/targetLiveMetrics'
+import { formatMetric } from '../utils/metricRounding'
 import type { Nadbar } from '../domain/nadbar.types'
 import { computeTargetAzimuthFromCurrentPositionUseCase } from './computeTargetAzimuthFromCurrentPosition'
 import { createTargetFromNadbarVarsUseCase } from './createTargetFromNadbarVars'
@@ -22,7 +22,7 @@ export function createTargetFromNadbarVarsAndPropagateUseCase(
       nadbar,
       blockIndex,
       'amura',
-      formatLiveMetric(azimuth),
+      formatMetric(azimuth),
     )
   }
   return propagateTargetDerivedVarsFromBlock(withAmura, blockIndex)

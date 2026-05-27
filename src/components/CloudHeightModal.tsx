@@ -44,8 +44,7 @@ function CloudHeightModal({ current, onClose, onSaved }: CloudHeightModalProps) 
           ? feetToMeters(parsed)
           : parsed
 
-    saveCloudHeight(heightMeters, unit)
-    onSaved({ heightMeters, displayUnit: unit })
+    onSaved(saveCloudHeight(heightMeters, unit))
     onClose()
   }
 

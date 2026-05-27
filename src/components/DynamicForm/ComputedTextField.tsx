@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from 'react'
 import FormField from '../FormField'
 import Input from '../Input'
-import { formatLiveMetric } from '../../domain/targetLiveMetrics'
+import { formatMetric } from '../../utils/metricRounding'
 import type { ComputedTextFieldProps } from './computedTextField.types'
 
 function ComputedTextField({ field, metrics, setValue }: ComputedTextFieldProps) {
@@ -9,7 +9,7 @@ function ComputedTextField({ field, metrics, setValue }: ComputedTextFieldProps)
     if (!metrics) {
       return ''
     }
-    return formatLiveMetric(metrics[field.computedMetric])
+    return formatMetric(metrics[field.computedMetric])
   }, [metrics, field.computedMetric])
 
   useEffect(() => {

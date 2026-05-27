@@ -1,5 +1,19 @@
-import { metersToFeet } from './unitConversion'
+import { roundMetric } from '../utils/metricRounding.ts'
+import { metersToFeet } from './unitConversion.ts'
 import type { CloudHeightSettings, CloudHeightUnit } from './cloudHeight.types'
+
+/** Same 2-decimal rounding as azimuth, range, and other live metrics. */
+export function normalizeCloudHeightMeters(heightMeters: number | null): number | null {
+  if (heightMeters === null) return null
+  return roundMetric(heightMeters)
+}
+
+export function normalizeCloudHeightSettings(settings: CloudHeightSettings): CloudHeightSettings {
+  return {
+    ...settings,
+    heightMeters: normalizeCloudHeightMeters(settings.heightMeters),
+  }
+}
 
 export const CLOUD_HEIGHT_UNIT_OPTIONS = [
   { label: 'מטרים', value: 'meters' },
@@ -10,9 +24,9 @@ export function cloudHeightToDisplayNumber(
   settings: CloudHeightSettings,
   displayUnit: CloudHeightUnit = settings.displayUnit,
 ): number | null {
-  if (settings.heightMeters === null) return null
-  const value =
-    displayUnit === 'feet' ? metersToFeet(settings.heightMeters) : settings.heightMeters
+  const heightMeters = normalizeCloudHeightMeters(settings.heightMeters)
+  if (heightMeters === null) return null
+  const value = displayUnit === 'feet' ? metersToFeet(heightMeters) : heightMeters
   return Math.round(value)
 }
 

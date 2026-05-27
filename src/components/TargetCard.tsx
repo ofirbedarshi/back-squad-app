@@ -1,7 +1,7 @@
 import ListCard from './base/ListCard'
 import type { OptionsMenuItem } from './base/OptionsMenu'
 import type { Target } from '../domain/target.types'
-import { formatLiveMetric } from '../domain/targetLiveMetrics'
+import { formatMetric } from '../utils/metricRounding'
 import { useTargetLiveMetrics } from '../hooks/useTargetLiveMetrics'
 import { formatUpdatedAt } from '../domain/formatUpdatedAt'
 
@@ -28,15 +28,15 @@ function TargetCard({ target, onClick, menuItems }: TargetCardProps) {
             <div className="flex gap-3">
               <span className="text-neutral-600">
                 <span className="text-neutral-400 text-xs">אזימוט </span>
-                {formatLiveMetric(metrics.azimuth)}
+                {formatMetric(metrics.azimuth)}
               </span>
               <span className="text-neutral-600">
                 <span className="text-neutral-400 text-xs">טווח </span>
-                {formatLiveMetric(metrics.range)}
+                {formatMetric(metrics.range)}
               </span>
               <span className="text-neutral-600">
                 <span className="text-neutral-400 text-xs">הפרש גובה </span>
-                {formatLiveMetric(metrics.altitudeDiff)}
+                {formatMetric(metrics.altitudeDiff)}
               </span>
             </div>
           ) : null}

@@ -1,5 +1,5 @@
 import { FLIGHT_PATH_OPTIONS } from './fireFeasibility.constants.ts'
-import { formatLiveMetric, roundLiveMetric } from './targetLiveMetrics.ts'
+import { formatMetric, roundMetric } from '../utils/metricRounding.ts'
 import type {
   CloudsFeasibilityEvaluationInput,
   CloudsFeasibilityTableTrajectory,
@@ -7,12 +7,12 @@ import type {
 } from './cloudsFeasibility.types.ts'
 
 function formatMeters(valueMeters: number): string {
-  return `${valueMeters} מ׳`
+  return `${formatMetric(valueMeters)} מ׳`
 }
 
 function formatPositionToTargetRangeMeters(valueMeters: number): string {
-  const km = roundLiveMetric(valueMeters / 1000)
-  return `${formatLiveMetric(valueMeters)} מ׳ (${formatLiveMetric(km)} ק״מ)`
+  const km = roundMetric(valueMeters / 1000)
+  return `${formatMetric(valueMeters)} מ׳ (${formatMetric(km)} ק״מ)`
 }
 
 function flightPathLabel(flightPath: string): string {

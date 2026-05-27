@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
-import { calculateTargetLiveMetrics, formatLiveMetric, roundLiveMetric } from './targetLiveMetrics.ts'
+import { calculateTargetLiveMetrics } from './targetLiveMetrics.ts'
 
 describe('calculateTargetLiveMetrics', () => {
   it('range is horizontal distance only, not slant range', () => {
@@ -42,28 +42,5 @@ describe('calculateTargetLiveMetrics', () => {
     assert.ok(result)
     assert.equal(result.range, 3.16)
     assert.equal(result.azimuth, 18.43)
-  })
-})
-
-describe('roundLiveMetric', () => {
-  it('rounds to two decimal places', () => {
-    assert.equal(roundLiveMetric(127.444), 127.44)
-    assert.equal(roundLiveMetric(127.446), 127.45)
-    assert.equal(roundLiveMetric(90), 90)
-    assert.equal(roundLiveMetric(90.046), 90.05)
-  })
-
-  it('throws for non-finite values', () => {
-    assert.throws(() => roundLiveMetric(Number.NaN), /לא תקין/)
-    assert.throws(() => roundLiveMetric(Number.POSITIVE_INFINITY), /לא תקין/)
-  })
-})
-
-describe('formatLiveMetric', () => {
-  it('uses same rounding as roundLiveMetric and drops trailing zeros', () => {
-    assert.equal(formatLiveMetric(127.444), '127.44')
-    assert.equal(formatLiveMetric(90), '90')
-    assert.equal(formatLiveMetric(90.1), '90.1')
-    assert.equal(formatLiveMetric(90.046), '90.05')
   })
 })
