@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import FireFeasibilityCloudsMockModal from '../components/FireFeasibilityCloudsMockModal'
+import HeaderOptionsMenu from '../components/base/HeaderOptionsMenu'
 import ListCard from '../components/base/ListCard'
 import type {
   FireFeasibilityFlightPath,
@@ -15,6 +16,7 @@ import { createCloudsFeasibilityMockUseCase } from '../useCases/createCloudsFeas
 import { loadFireFeasibilityRecordsUseCase } from '../useCases/loadFireFeasibilityRecords'
 import { loadPositionsUseCase } from '../useCases/loadPositions'
 import { loadTargetsUseCase } from '../useCases/loadTargets'
+import { removeAllFireFeasibilityRecordsUseCase } from '../useCases/removeAllFireFeasibilityRecords'
 import { removeFireFeasibilityRecordUseCase } from '../useCases/removeFireFeasibilityRecord'
 import { getFireFeasibilityCardDetails, getFireFeasibilityCardTitle } from '../utils/fireFeasibilityDisplay'
 
@@ -53,6 +55,24 @@ function FireFeasibilitySavedListScreen() {
     }
   }
 
+  async function handleRemoveAll() {
+    const confirmed = await confirm({
+      title: 'מחיקת כל התוצאות',
+      message: 'פעולה זו תמחק את כל התוצאות השמורות ללא אפשרות שחזור.',
+      confirmLabel: 'מחק הכל',
+      cancelLabel: 'ביטול',
+      variant: 'danger',
+    })
+    if (!confirmed) return
+    try {
+      removeAllFireFeasibilityRecordsUseCase()
+      resetResources()
+      notifySuccess('כל התוצאות נמחקו')
+    } catch {
+      triggerError('מחיקת כל התוצאות נכשלה')
+    }
+  }
+
   async function handleRemove(record: FireFeasibilityRecord) {
     const confirmed = await confirm({
       title: 'מחיקת תוצאות',
@@ -73,8 +93,17 @@ function FireFeasibilitySavedListScreen() {
 
   return (
     <div dir="rtl" className="flex min-h-full flex-col bg-neutral-50">
-      <header className="border-b border-neutral-200 bg-white px-4 py-4 text-center text-lg font-bold text-neutral-800">
+      <header className="relative border-b border-neutral-200 bg-white px-4 py-4 text-center text-lg font-bold text-neutral-800">
         תוצאות שמורות
+        <HeaderOptionsMenu
+          items={[
+            {
+              label: 'מחק את כל התוצאות',
+              variant: 'danger',
+              onSelect: handleRemoveAll,
+            },
+          ]}
+        />
       </header>
 
       <div className="flex flex-col gap-3 p-4">

@@ -33,3 +33,7 @@ export function getFireFeasibilityRecordById(id: string): FireFeasibilityRecord 
 export function removeFireFeasibilityRecord(id: string): void {
   writeRecords(readRecords().filter((record) => record.id !== id))
 }
+
+export function removeAllFireFeasibilityRecords(): void {
+  writeRecords([])
+}
