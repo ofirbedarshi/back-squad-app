@@ -1,4 +1,5 @@
 import { FLIGHT_PATH_OPTIONS } from './fireFeasibility.constants.ts'
+import { formatLiveMetric, roundLiveMetric } from './targetLiveMetrics.ts'
 import type {
   CloudsFeasibilityEvaluationInput,
   CloudsFeasibilityTableTrajectory,
@@ -7,6 +8,11 @@ import type {
 
 function formatMeters(valueMeters: number): string {
   return `${valueMeters} מ׳`
+}
+
+function formatPositionToTargetRangeMeters(valueMeters: number): string {
+  const km = roundLiveMetric(valueMeters / 1000)
+  return `${formatLiveMetric(valueMeters)} מ׳ (${formatLiveMetric(km)} ק״מ)`
 }
 
 function flightPathLabel(flightPath: string): string {
@@ -23,7 +29,7 @@ function trajectoryColumnLabel(trajectory: CloudsFeasibilityTableTrajectory): st
 export function buildCloudsInputLogs(input: CloudsFeasibilityEvaluationInput): string[] {
   return [
     `הפרש גבהים: ${formatMeters(input.positionToTargetHeightDifferenceMeters)}`,
-    `טווח בין עמדה למטרה: ${formatMeters(input.positionToTargetRangeMeters)}`,
+    `טווח בין עמדה למטרה: ${formatPositionToTargetRangeMeters(input.positionToTargetRangeMeters)}`,
     `מסלול מעוף: ${flightPathLabel(input.flightPath)}`,
   ]
 }
