@@ -15,11 +15,12 @@ import type { FireFeasibilityStep } from './useFireFeasibilityFlow.types'
 import { useNotification } from './useNotification'
 import { useUIError } from './useUIError'
 
-export function useFireFeasibilityFlow(mode: FireFeasibilityMode) {
+export function useFireFeasibilityFlow() {
   const navigate = useNavigate()
   const { triggerError } = useDomainError()
   const { reportUIError } = useUIError()
   const { notifySuccess } = useNotification()
+  const [mode, setMode] = useState<FireFeasibilityMode>('coords')
   const [step, setStep] = useState<FireFeasibilityStep>('links')
   const [targetId, setTargetId] = useState<string | undefined>()
   const [positionId, setPositionId] = useState<string | undefined>()
@@ -88,7 +89,7 @@ export function useFireFeasibilityFlow(mode: FireFeasibilityMode) {
         results,
       })
       notifySuccess('התוצאות נשמרו')
-      navigate('/fire-feasibility/saved')
+      navigate('/fire-feasibility')
     } catch (error) {
       triggerError(error instanceof Error ? error.message : 'שמירת התוצאות נכשלה')
     }
@@ -96,6 +97,7 @@ export function useFireFeasibilityFlow(mode: FireFeasibilityMode) {
 
   return {
     mode,
+    setMode,
     step,
     targetId,
     positionId,

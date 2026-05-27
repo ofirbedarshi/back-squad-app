@@ -20,7 +20,7 @@ import { removeAllFireFeasibilityRecordsUseCase } from '../useCases/removeAllFir
 import { removeFireFeasibilityRecordUseCase } from '../useCases/removeFireFeasibilityRecord'
 import { getFireFeasibilityCardDetails, getFireFeasibilityCardTitle } from '../utils/fireFeasibilityDisplay'
 
-function FireFeasibilitySavedListScreen() {
+function FireFeasibilityListScreen() {
   const [records, setRecords] = useState<FireFeasibilityRecord[]>([])
   const [targets, setTargets] = useState<Target[]>([])
   const [positions, setPositions] = useState<Position[]>([])
@@ -94,7 +94,7 @@ function FireFeasibilitySavedListScreen() {
   return (
     <div dir="rtl" className="flex min-h-full flex-col bg-neutral-50">
       <header className="relative border-b border-neutral-200 bg-white px-4 py-4 text-center text-lg font-bold text-neutral-800">
-        תוצאות שמורות
+        היתכנות לירי
         <HeaderOptionsMenu
           items={[
             {
@@ -116,7 +116,7 @@ function FireFeasibilitySavedListScreen() {
         </button>
 
         {records.length === 0 && (
-          <p className="py-8 text-center text-neutral-400">אין תוצאות שמורות</p>
+          <p className="py-8 text-center text-neutral-400">אין היתכנויות לירי שמורות</p>
         )}
 
         {records.map((record) => {
@@ -150,6 +150,14 @@ function FireFeasibilitySavedListScreen() {
             />
           )
         })}
+
+        <button
+          type="button"
+          onClick={() => navigate('/fire-feasibility/new')}
+          className="w-full py-4 rounded-2xl border-2 border-dashed border-neutral-300 text-neutral-500 font-semibold text-base active:bg-neutral-100 transition-colors touch-manipulation select-none"
+        >
+          + הוסף היתכנות לירי
+        </button>
       </div>
 
       {showCloudsMockModal && (
@@ -162,4 +170,4 @@ function FireFeasibilitySavedListScreen() {
   )
 }
 
-export default FireFeasibilitySavedListScreen
+export default FireFeasibilityListScreen

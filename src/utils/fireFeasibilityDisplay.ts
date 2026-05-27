@@ -16,7 +16,7 @@ function resolvePositionName(positionId: string, positions: Position[]): string 
 }
 
 export function getFireFeasibilityCardTitle(record: FireFeasibilityRecord): string {
-  return FIRE_FEASIBILITY_MODE_CONFIG[record.mode].formTitle
+  return FIRE_FEASIBILITY_MODE_CONFIG[record.mode].modeLabel
 }
 
 export function getFireFeasibilityCardDetails(

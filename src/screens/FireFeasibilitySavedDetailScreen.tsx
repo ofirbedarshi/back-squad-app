@@ -15,14 +15,14 @@ function FireFeasibilitySavedDetailScreen() {
   useEffect(() => {
     if (!id) {
       reportUIError('מזהה רשומה חסר')
-      navigate('/fire-feasibility/saved')
+      navigate('/fire-feasibility')
       return
     }
 
     const loaded = getFireFeasibilityRecordByIdUseCase(id)
     if (!loaded) {
       reportUIError('הרשומה לא נמצאה')
-      navigate('/fire-feasibility/saved')
+      navigate('/fire-feasibility')
       return
     }
 
