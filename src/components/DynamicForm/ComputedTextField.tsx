@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from 'react'
 import FormField from '../FormField'
 import Input from '../Input'
-import { formatLiveMetricOneDecimal } from '../../domain/targetLiveMetrics'
+import { formatLiveMetric } from '../../domain/targetLiveMetrics'
 import type { ComputedTextFieldProps } from './computedTextField.types'
 
 function ComputedTextField({ field, metrics, setValue }: ComputedTextFieldProps) {
@@ -9,7 +9,7 @@ function ComputedTextField({ field, metrics, setValue }: ComputedTextFieldProps)
     if (!metrics) {
       return ''
     }
-    return formatLiveMetricOneDecimal(metrics[field.computedMetric])
+    return formatLiveMetric(metrics[field.computedMetric])
   }, [metrics, field.computedMetric])
 
   useEffect(() => {

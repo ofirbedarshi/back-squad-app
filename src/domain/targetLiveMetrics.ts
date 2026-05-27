@@ -1,12 +1,20 @@
 import type { TargetLiveMetrics, TargetLiveMetricsInput } from './targetLiveMetrics.types'
 
-export const LIVE_METRIC_DISPLAY_DECIMALS = 1
+export const LIVE_METRIC_DECIMALS = 2
 
-export function formatLiveMetricOneDecimal(value: number): string {
+/** Round live metric to {@link LIVE_METRIC_DECIMALS} decimal places. */
+export function roundLiveMetric(value: number): number {
   if (!Number.isFinite(value)) {
     throw new Error('ערך מטריקה לא תקין')
   }
-  return value.toFixed(LIVE_METRIC_DISPLAY_DECIMALS)
+  const factor = 10 ** LIVE_METRIC_DECIMALS
+  return Math.round(value * factor) / factor
+}
+
+/** Same rounding as {@link roundLiveMetric}; omits trailing zeros for UI (90 → "90", 90.1 → "90.1"). */
+export function formatLiveMetric(value: number): string {
+  const rounded = roundLiveMetric(value)
+  return String(parseFloat(rounded.toFixed(LIVE_METRIC_DECIMALS)))
 }
 
 export function calculateTargetLiveMetrics(input: TargetLiveMetricsInput): TargetLiveMetrics | null {
@@ -40,8 +48,8 @@ export function calculateTargetLiveMetrics(input: TargetLiveMetricsInput): Targe
   const azimuth = (theta / (2 * Math.PI)) * 360
 
   return {
-    azimuth,
-    range,
-    altitudeDiff,
+    azimuth: roundLiveMetric(azimuth),
+    range: roundLiveMetric(range),
+    altitudeDiff: roundLiveMetric(altitudeDiff),
   }
 }
