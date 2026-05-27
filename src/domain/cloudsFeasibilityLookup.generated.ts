@@ -3,7 +3,7 @@
 
 import type { CloudsFeasibilityLookupData } from './cloudsFeasibility.types.ts'
 
-export const CLOUDS_FEASIBILITY_LOOKUP_GENERATED_AT = "2026-05-26T18:11:37.212Z"
+export const CLOUDS_FEASIBILITY_LOOKUP_GENERATED_AT = "2026-05-27T17:58:02.611Z"
 
 export const cloudsFeasibilityLookupData: CloudsFeasibilityLookupData = 
 {

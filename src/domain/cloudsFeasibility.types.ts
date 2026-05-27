@@ -1,5 +1,7 @@
 export type CloudsFeasibilityTrajectory = 'low' | 'lofted'
 
+export type CloudsFeasibilityTableTrajectory = CloudsFeasibilityTrajectory | 'loftedPlus'
+
 export interface CloudsFeasibilityNumericBand {
   id: string
   min: number
@@ -8,7 +10,7 @@ export interface CloudsFeasibilityNumericBand {
 }
 
 export type CloudsFeasibilityLookupCells = Partial<
-  Record<CloudsFeasibilityTrajectory, number>
+  Record<CloudsFeasibilityTableTrajectory, number>
 >
 
 export interface CloudsFeasibilityLookupData {

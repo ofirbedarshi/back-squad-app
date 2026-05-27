@@ -1,9 +1,11 @@
 import { cloudsFeasibilityLookupData } from './cloudsFeasibilityLookup.generated.ts'
+import { cloudsFeasibilityGenBLookupData } from './cloudsFeasibilityGenBLookup.generated.ts'
 import type {
   CloudsFeasibilityEvaluationInput,
   CloudsFeasibilityEvaluationResult,
+  CloudsFeasibilityLookupData,
   CloudsFeasibilityNumericBand,
-  CloudsFeasibilityTrajectory,
+  CloudsFeasibilityTableTrajectory,
 } from './cloudsFeasibility.types.ts'
 import {
   CloudsFeasibilityOutOfTableError,
@@ -18,12 +20,9 @@ export const CLOUDS_LOFTED_PLUS_FLIGHT_PATH_NOTE = 'lofted+ לא נתמך בדו
 
 export const CLOUDS_OUT_OF_TABLE_NOTE = 'ערכים מחוץ לטבלת הערכים'
 
-const { heightBands, rangeBands, lookup } = cloudsFeasibilityLookupData
-
 function findBand(
   bands: CloudsFeasibilityNumericBand[],
   valueMeters: number,
-  _axisLabel: string,
 ): CloudsFeasibilityNumericBand {
   const band = bands.find((b) => valueMeters >= b.min && valueMeters < b.max)
   if (!band) {
@@ -38,19 +37,24 @@ function assertFiniteMeters(value: number, label: string): void {
   }
 }
 
-export function assertCloudsFlightPath(
+function resolveCloudsTableTrajectory(
   flightPath: string,
-): asserts flightPath is CloudsFeasibilityTrajectory {
+  rejectLoftedPlus: boolean,
+): CloudsFeasibilityTableTrajectory | null {
   if (flightPath === 'low' || flightPath === 'lofted') {
-    return
+    return flightPath
   }
-  throw new Error('מסלול מעוף לא תקין לחישוב עננים')
+  if (flightPath === '+lofted') {
+    return rejectLoftedPlus ? null : 'loftedPlus'
+  }
+  return null
 }
 
-export function lookupCloudsTableValue(
+function lookupCloudsTableValue(
+  data: CloudsFeasibilityLookupData,
   heightDifferenceMeters: number,
   rangeMeters: number,
-  trajectory: CloudsFeasibilityTrajectory,
+  trajectory: CloudsFeasibilityTableTrajectory,
 ): number {
   if (!Number.isFinite(heightDifferenceMeters)) {
     throw new Error('הפרש גובה לא תקין')
@@ -59,11 +63,11 @@ export function lookupCloudsTableValue(
     throw new Error('טווח לא תקין')
   }
 
-  const heightBand = findBand(heightBands, heightDifferenceMeters, 'הפרש גובה')
-  const rangeBand = findBand(rangeBands, rangeMeters, 'טווח')
+  const heightBand = findBand(data.heightBands, heightDifferenceMeters)
+  const rangeBand = findBand(data.rangeBands, rangeMeters)
 
   const key = `${heightBand.id}|${rangeBand.id}`
-  const cell = lookup[key]
+  const cell = data.lookup[key]
   const value = cell?.[trajectory]
   if (value === undefined) {
     throw new CloudsFeasibilityOutOfTableError()
@@ -72,9 +76,10 @@ export function lookupCloudsTableValue(
   return value
 }
 
-// דור א׳ — lookup table from clouds-generation-a.xlsx
-export function evaluateCloudsFeasibility(
+function evaluateCloudsFromLookup(
   input: CloudsFeasibilityEvaluationInput,
+  data: CloudsFeasibilityLookupData,
+  options: { rejectLoftedPlus: boolean },
 ): CloudsFeasibilityEvaluationResult {
   if (input.flightPath === 'flat') {
     return {
@@ -83,22 +88,27 @@ export function evaluateCloudsFeasibility(
     }
   }
 
-  if (input.flightPath === '+lofted') {
+  if (options.rejectLoftedPlus && input.flightPath === '+lofted') {
     return {
       enabled: false,
       notes: CLOUDS_LOFTED_PLUS_FLIGHT_PATH_NOTE,
     }
   }
 
-  assertCloudsFlightPath(input.flightPath)
+  const trajectory = resolveCloudsTableTrajectory(input.flightPath, options.rejectLoftedPlus)
+  if (trajectory === null) {
+    throw new Error('מסלול מעוף לא תקין לחישוב עננים')
+  }
+
   assertFiniteMeters(input.targetHeightMeters, 'גובה מטרה')
   assertFiniteMeters(input.cloudHeightMeters, 'גובה עננים')
 
   try {
     const lookupValue = lookupCloudsTableValue(
+      data,
       input.positionToTargetHeightDifferenceMeters,
       input.positionToTargetRangeMeters,
-      input.flightPath,
+      trajectory,
     )
 
     const computed =
@@ -121,8 +131,20 @@ export function evaluateCloudsFeasibility(
   }
 }
 
-export function evaluateCloudsFeasibilityGenB(
-  _input: CloudsFeasibilityEvaluationInput,
+// דור א׳ — lookup table from clouds-generation-a.xlsx
+export function evaluateCloudsFeasibility(
+  input: CloudsFeasibilityEvaluationInput,
 ): CloudsFeasibilityEvaluationResult {
-  return { enabled: true, notes: '' }
+  return evaluateCloudsFromLookup(input, cloudsFeasibilityLookupData, {
+    rejectLoftedPlus: true,
+  })
+}
+
+// דור ב׳ — lookup table from clouds-generation-b.xlsx
+export function evaluateCloudsFeasibilityGenB(
+  input: CloudsFeasibilityEvaluationInput,
+): CloudsFeasibilityEvaluationResult {
+  return evaluateCloudsFromLookup(input, cloudsFeasibilityGenBLookupData, {
+    rejectLoftedPlus: false,
+  })
 }
