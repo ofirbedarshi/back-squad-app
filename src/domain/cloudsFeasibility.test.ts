@@ -35,7 +35,10 @@ describe('evaluateCloudsFeasibility', () => {
     assert.ok(result.logs.length > 0)
     assert.ok(result.logs.some((l) => l.includes('הפרש גבהים')))
     assert.ok(result.logs.some((l) => l.includes('טווח בין עמדה למטרה')))
+    const rangeLog = result.logs.find((l) => l.includes('טווח בין עמדה למטרה'))
+    assert.match(rangeLog!, /7200 מ׳ \(7\.2 ק״מ\)/)
     assert.ok(result.logs.some((l) => l.includes('מסלול מעוף')))
+    assert.ok(result.logs.some((l) => l.includes('גובה עננים: 700 מ׳')))
     assert.ok(result.logs.some((l) => l.includes('טולרנס')))
     assert.ok(result.logs.some((l) => l.includes('מאפשר')))
   })
@@ -87,12 +90,15 @@ describe('evaluateCloudsFeasibility', () => {
   })
 
   it('flat flight path is always enabled with note', () => {
-    const result = evaluateCloudsFeasibility(evalInput({ flightPath: 'flat' }))
+    const result = evaluateCloudsFeasibility(
+      evalInput({ flightPath: 'flat', cloudHeightMeters: 700 }),
+    )
     assert.equal(result.enabled, true)
     assert.equal(result.notes, CLOUDS_FLAT_FLIGHT_PATH_NOTE)
     assert.equal(result.lookupValue, undefined)
     assert.equal(result.computed, undefined)
     assert.ok(result.logs.some((l) => l.includes(CLOUDS_FLAT_FLIGHT_PATH_NOTE)))
+    assert.ok(result.logs.some((l) => l.includes('גובה עננים: 700 מ׳')))
   })
 
   it('lofted+ flight path is disabled with generation-a note', () => {

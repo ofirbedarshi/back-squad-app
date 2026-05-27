@@ -31,6 +31,7 @@ export function buildCloudsInputLogs(input: CloudsFeasibilityEvaluationInput): s
     `הפרש גבהים: ${formatMeters(input.positionToTargetHeightDifferenceMeters)}`,
     `טווח בין עמדה למטרה: ${formatPositionToTargetRangeMeters(input.positionToTargetRangeMeters)}`,
     `מסלול מעוף: ${flightPathLabel(input.flightPath)}`,
+    `גובה עננים: ${formatMeters(input.cloudHeightMeters)}`,
   ]
 }
 
@@ -54,7 +55,6 @@ export function buildCloudsTableSuccessLogs(
     ...buildCloudsInputLogs(input),
     `תא טבלה (טווח ${lookup.rangeBand.label}, הפרש גובה ${lookup.heightBand.label}, עמודה ${column}): ${formatMeters(lookup.value)}`,
     `גובה עננים מקסימלי = ערך טבלה + גובה מטרה + טולרנס ${toleranceMeters} = ${lookup.value} + ${input.targetHeightMeters} + ${toleranceMeters} = ${formatMeters(computed)}`,
-    `גובה עננים: ${formatMeters(input.cloudHeightMeters)}`,
   ]
 
   if (enabled) {

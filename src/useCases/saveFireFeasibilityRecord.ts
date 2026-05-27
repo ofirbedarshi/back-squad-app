@@ -1,8 +1,8 @@
 import { createFireFeasibilityRecord } from '../domain/fireFeasibility'
-import type { FireFeasibilityRecordInput } from '../domain/fireFeasibility.types'
+import type { FireFeasibilityRecord, FireFeasibilityRecordInput } from '../domain/fireFeasibility.types'
 import { addFireFeasibilityRecord } from '../storage/fireFeasibilityStorage'
 
-export function saveFireFeasibilityRecordUseCase(input: FireFeasibilityRecordInput): void {
+export function saveFireFeasibilityRecordUseCase(input: FireFeasibilityRecordInput): FireFeasibilityRecord {
   if (!input.targetId.trim()) {
     throw new Error('לא נבחרה מטרה לשמירה')
   }
@@ -15,4 +15,5 @@ export function saveFireFeasibilityRecordUseCase(input: FireFeasibilityRecordInp
 
   const record = createFireFeasibilityRecord(input)
   addFireFeasibilityRecord(record)
+  return record
 }

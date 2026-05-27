@@ -1,12 +1,17 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import FireFeasibilityCloudsMockModal from '../components/FireFeasibilityCloudsMockModal'
 import ListCard from '../components/base/ListCard'
-import type { FireFeasibilityRecord } from '../domain/fireFeasibility.types'
+import type {
+  FireFeasibilityFlightPath,
+  FireFeasibilityRecord,
+} from '../domain/fireFeasibility.types'
 import type { Position } from '../domain/position.types'
 import type { Target } from '../domain/target.types'
 import { useConfirm } from '../hooks/useConfirm'
 import { useDomainError } from '../hooks/useDomainError'
 import { useNotification } from '../hooks/useNotification'
+import { createCloudsFeasibilityMockUseCase } from '../useCases/createCloudsFeasibilityMock'
 import { loadFireFeasibilityRecordsUseCase } from '../useCases/loadFireFeasibilityRecords'
 import { loadPositionsUseCase } from '../useCases/loadPositions'
 import { loadTargetsUseCase } from '../useCases/loadTargets'
@@ -17,6 +22,7 @@ function FireFeasibilitySavedListScreen() {
   const [records, setRecords] = useState<FireFeasibilityRecord[]>([])
   const [targets, setTargets] = useState<Target[]>([])
   const [positions, setPositions] = useState<Position[]>([])
+  const [showCloudsMockModal, setShowCloudsMockModal] = useState(false)
   const navigate = useNavigate()
   const confirm = useConfirm()
   const { triggerError } = useDomainError()
@@ -31,6 +37,21 @@ function FireFeasibilitySavedListScreen() {
   useEffect(() => {
     resetResources()
   }, [])
+
+  async function handleCreateCloudsMock(input: {
+    desiredGenAEnabled: boolean
+    desiredGenBEnabled: boolean
+    flightPath: FireFeasibilityFlightPath
+  }) {
+    try {
+      createCloudsFeasibilityMockUseCase(input)
+      resetResources()
+      notifySuccess('מטרת הבדיקה והתוצאות נשמרו')
+    } catch (error) {
+      triggerError(error instanceof Error ? error.message : 'יצירת מטרת בדיקה נכשלה')
+      throw error
+    }
+  }
 
   async function handleRemove(record: FireFeasibilityRecord) {
     const confirmed = await confirm({
@@ -57,6 +78,14 @@ function FireFeasibilitySavedListScreen() {
       </header>
 
       <div className="flex flex-col gap-3 p-4">
+        <button
+          type="button"
+          onClick={() => setShowCloudsMockModal(true)}
+          className="w-full rounded-xl border border-blue-200 bg-blue-50 px-4 py-3 text-sm font-bold text-blue-700 active:bg-blue-100 touch-manipulation"
+        >
+          צור מטרת בדיקה לעננים
+        </button>
+
         {records.length === 0 && (
           <p className="py-8 text-center text-neutral-400">אין תוצאות שמורות</p>
         )}
@@ -93,6 +122,13 @@ function FireFeasibilitySavedListScreen() {
           )
         })}
       </div>
+
+      {showCloudsMockModal && (
+        <FireFeasibilityCloudsMockModal
+          onClose={() => setShowCloudsMockModal(false)}
+          onSubmit={handleCreateCloudsMock}
+        />
+      )}
     </div>
   )
 }
