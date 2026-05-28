@@ -6,6 +6,7 @@ import type {
   FireFeasibilityResults,
 } from '../domain/fireFeasibility.types'
 import type { EntityLinksUpdate } from '../domain/entityLinks.types'
+import { createEmptyFireFeasibilityFormData } from '../domain/fireFeasibility'
 import { calculateFireFeasibility } from '../useCases/calculateFireFeasibility'
 import { saveFireFeasibilityRecordUseCase } from '../useCases/saveFireFeasibilityRecord'
 import { useDomainError } from './useDomainError'
@@ -25,12 +26,7 @@ export function useFireFeasibilityFlow() {
   const [targetId, setTargetId] = useState<string | undefined>()
   const [positionId, setPositionId] = useState<string | undefined>()
   const [results, setResults] = useState<FireFeasibilityResults | null>(null)
-  const [formData, setFormData] = useState<FireFeasibilityFormData>({
-    positionToTargetRange: null,
-    positionToTargetHeightDifference: null,
-    targetAltitudeMeters: null,
-    flightPath: 'flat',
-  })
+  const [formData, setFormData] = useState<FireFeasibilityFormData>(createEmptyFireFeasibilityFormData())
 
   const { position, target } = useEntityLinkResources({
     targetId,

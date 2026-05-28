@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import type { Position } from '../domain/position.types'
 import type { Target } from '../domain/target.types'
+import type { ObstaclesFeasibilityEvaluationInput } from '../domain/obstaclesFeasibility.types'
 import {
   POSITION_FIELD_TOOLTIP,
   TARGET_FIELD_TOOLTIP,
@@ -13,19 +14,47 @@ interface FireFeasibilityDistancesHeightsFieldsProps {
   position: Position
   target: Target
   rangeDisplay: string
+  onObstacleChange: (value: ObstaclesFeasibilityEvaluationInput | null) => void
+}
+
+function parseOptionalNumber(value: string): number | null {
+  if (value === '') {
+    return null
+  }
+  const parsed = Number(value)
+  return Number.isNaN(parsed) ? null : parsed
 }
 
 function FireFeasibilityDistancesHeightsFields({
   position,
   target,
   rangeDisplay,
+  onObstacleChange,
 }: FireFeasibilityDistancesHeightsFieldsProps) {
-  const [obstacleHeight, setObstacleHeight] = useState('')
-  const [positionObstacleRange, setPositionObstacleRange] = useState('')
+  const [obstacleHeightInput, setObstacleHeightInput] = useState('')
+  const [positionToObstacleRangeInput, setPositionToObstacleRangeInput] = useState('')
   const [hide1Distance, setHide1Distance] = useState('')
   const [hide1HeightDiff, setHide1HeightDiff] = useState('')
   const [hide2Distance, setHide2Distance] = useState('')
   const [hide2HeightDiff, setHide2HeightDiff] = useState('')
+
+  const obstacle = useMemo(() => {
+    const obstacleHeightMeters = parseOptionalNumber(obstacleHeightInput)
+    const positionToObstacleRangeMeters = parseOptionalNumber(positionToObstacleRangeInput)
+    if (obstacleHeightMeters === null || positionToObstacleRangeMeters === null) {
+      return null
+    }
+
+    return {
+      obstacleHeightMeters,
+      positionToObstacleRangeMeters,
+      positionToObstacleHeightDifferenceMeters: obstacleHeightMeters - position.altitude,
+    }
+  }, [obstacleHeightInput, positionToObstacleRangeInput, position.altitude])
+
+  useEffect(() => {
+    onObstacleChange(obstacle)
+  }, [obstacle, onObstacleChange])
 
   return (
     <>
@@ -50,16 +79,16 @@ function FireFeasibilityDistancesHeightsFields({
       <FormField label="גובה מכשול (מעל פני הים)">
         <Input
           type="number"
-          value={obstacleHeight}
-          onChange={(e) => setObstacleHeight(e.target.value)}
+          value={obstacleHeightInput}
+          onChange={(e) => setObstacleHeightInput(e.target.value)}
         />
       </FormField>
 
       <FormField label="טווח מכשול עמדה">
         <Input
           type="number"
-          value={positionObstacleRange}
-          onChange={(e) => setPositionObstacleRange(e.target.value)}
+          value={positionToObstacleRangeInput}
+          onChange={(e) => setPositionToObstacleRangeInput(e.target.value)}
         />
       </FormField>
 

@@ -6,9 +6,20 @@ import type {
   FireFeasibilityCategoryResultsByGeneration,
   FireFeasibilityFlightPathPercentByPath,
   FireFeasibilityFlightPathResultsByGeneration,
+  FireFeasibilityFormData,
   FireFeasibilityRecord,
   FireFeasibilityRecordInput,
 } from './fireFeasibility.types'
+
+export function createEmptyFireFeasibilityFormData(): FireFeasibilityFormData {
+  return {
+    positionToTargetRange: null,
+    positionToTargetHeightDifference: null,
+    targetAltitudeMeters: null,
+    flightPath: 'flat',
+    obstacle: null,
+  }
+}
 
 export function createFireFeasibilityRecord(input: FireFeasibilityRecordInput): FireFeasibilityRecord {
   return {

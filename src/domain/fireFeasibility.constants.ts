@@ -13,6 +13,9 @@ export const FIRE_FEASIBILITY_CATEGORY_TITLES = {
 
 export const FIRE_FEASIBILITY_NOT_IMPLEMENTED_NOTE = 'טרם מומש'
 
+export const OBSTACLES_FEASIBILITY_MISSING_INPUT_NOTE =
+  'לא הוזנו נתוני מכשול — הקטגוריה לא נבדקה ומסומנת כמאפשרת'
+
 export const FLIGHT_PATH_OPTIONS = [
   { label: 'flat', value: 'flat' },
   { label: 'low', value: 'low' },

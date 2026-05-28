@@ -1,4 +1,5 @@
 import type { FLIGHT_PATH_OPTIONS } from './fireFeasibility.constants'
+import type { ObstaclesFeasibilityEvaluationInput } from './obstaclesFeasibility.types'
 
 export type FireFeasibilityMode = 'coords' | 'distances-heights'
 
@@ -9,6 +10,7 @@ export interface FireFeasibilityFormData {
   positionToTargetHeightDifference: number | null
   targetAltitudeMeters: number | null
   flightPath: FireFeasibilityFlightPath
+  obstacle: ObstaclesFeasibilityEvaluationInput | null
 }
 
 export interface FireFeasibilityCategoryResult {
