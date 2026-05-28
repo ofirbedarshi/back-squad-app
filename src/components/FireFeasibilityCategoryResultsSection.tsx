@@ -17,10 +17,10 @@ function FireFeasibilityCategoryResultsSection({
   results,
 }: FireFeasibilityCategoryResultsSectionProps) {
   return (
-    <section className="flex flex-col gap-3">
-      <h3 className="text-center text-base font-bold text-neutral-800">{title}</h3>
+    <section className="flex flex-col gap-3 rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm">
+      <h3 className="text-center text-lg font-bold text-neutral-800">{title}</h3>
 
-      <div className="flex flex-col gap-3">
+      <div className="grid grid-cols-2 gap-3">
         {GENERATION_ORDER.map((generation) => (
           <FireFeasibilityCategoryResultBlock
             key={generation}

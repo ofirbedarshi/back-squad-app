@@ -9,7 +9,7 @@ interface FireFeasibilityResultsViewProps {
 
 function FireFeasibilityResultsView({ results }: FireFeasibilityResultsViewProps) {
   return (
-    <div className="flex flex-col gap-5">
+    <div className="mx-auto flex w-full max-w-2xl flex-col gap-4">
       <FireFeasibilityCategoryResultsSection
         title={FIRE_FEASIBILITY_CATEGORY_TITLES.clouds}
         results={results.clouds}

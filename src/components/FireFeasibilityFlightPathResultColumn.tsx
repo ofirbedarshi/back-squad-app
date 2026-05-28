@@ -13,8 +13,8 @@ function FireFeasibilityFlightPathResultColumn({
   percentByFlightPath,
 }: FireFeasibilityFlightPathResultColumnProps) {
   return (
-    <div className="flex flex-1 flex-col gap-2">
-      <h4 className="text-center text-sm font-bold text-neutral-800 underline underline-offset-4">
+    <div className="flex flex-1 flex-col gap-2 rounded-xl border border-neutral-200 bg-neutral-50 p-3">
+      <h4 className="text-center text-sm font-bold text-neutral-800">
         {generationLabel}
       </h4>
 
@@ -22,7 +22,7 @@ function FireFeasibilityFlightPathResultColumn({
         {rows.map((row) => (
           <li
             key={row.value}
-            className="flex items-center justify-between gap-2 text-sm font-medium text-neutral-800"
+            className="flex items-center justify-between gap-2 rounded-lg bg-white px-2 py-1 text-sm font-medium text-neutral-800"
           >
             <span>{row.label}</span>
             <span>{percentByFlightPath[row.value]}%</span>

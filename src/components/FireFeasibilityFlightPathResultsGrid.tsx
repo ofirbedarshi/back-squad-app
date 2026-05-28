@@ -18,7 +18,9 @@ function FireFeasibilityFlightPathResultsGrid({
   results,
 }: FireFeasibilityFlightPathResultsGridProps) {
   return (
-    <div className="flex gap-6 rounded-xl bg-neutral-200/70 px-4 py-4">
+    <section className="rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm">
+      <h3 className="mb-3 text-center text-lg font-bold text-neutral-800">חישוב סיכוי</h3>
+      <div className="flex gap-6">
       {GENERATION_ORDER.map((generation) => (
         <FireFeasibilityFlightPathResultColumn
           key={generation}
@@ -27,7 +29,8 @@ function FireFeasibilityFlightPathResultsGrid({
           percentByFlightPath={results[generation]}
         />
       ))}
-    </div>
+      </div>
+    </section>
   )
 }
 
