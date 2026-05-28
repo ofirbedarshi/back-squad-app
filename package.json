@@ -11,6 +11,7 @@
     "send": "npm run build:apk && npm run build:html && bash scripts/send-artifacts-to-telegram.sh output/back-squad-app.apk output/back-squad-standalone.html",
     "seed": "node scripts/seed-localStorage.mjs",
     "generate:clouds-lookup": "node scripts/generate-clouds-lookup.mjs",
+    "generate:obstacles-lookup": "node scripts/generate-obstacles-lookup.mjs",
     "lint": "eslint .",
     "preview": "vite preview"
   },

@@ -16,6 +16,10 @@ export const FIRE_FEASIBILITY_NOT_IMPLEMENTED_NOTE = 'טרם מומש'
 export const OBSTACLES_FEASIBILITY_MISSING_INPUT_NOTE =
   'לא הוזנו נתוני מכשול — הקטגוריה לא נבדקה ומסומנת כמאפשרת'
 
+export const OBSTACLES_FLAT_FLIGHT_PATH_NOTE = 'מסלול flat אינו נתמך בטבלת מכשולים'
+
+export const OBSTACLES_OUT_OF_TABLE_NOTE = 'ערכי מכשול מחוץ לטבלת הערכים'
+
 export const FLIGHT_PATH_OPTIONS = [
   { label: 'flat', value: 'flat' },
   { label: 'low', value: 'low' },

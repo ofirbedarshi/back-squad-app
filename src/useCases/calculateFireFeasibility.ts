@@ -39,7 +39,12 @@ export function calculateFireFeasibility(formData: FireFeasibilityFormData): Fir
   const genB = evaluateCloudsFeasibilityGenB(cloudsInput)
 
   const obstaclesGenA = formData.obstacle
-    ? evaluateObstaclesFeasibilityGenA(formData.obstacle)
+    ? evaluateObstaclesFeasibilityGenA({
+        positionToTargetRangeMeters: formData.positionToTargetRange,
+        positionToTargetHeightDifferenceMeters: formData.positionToTargetHeightDifference,
+        flightPath: formData.flightPath,
+        obstacle: formData.obstacle,
+      })
     : evaluateObstaclesFeasibilityWhenMissing()
   const obstaclesGenB = createNotImplementedCategoryResultsByGeneration().b
 
