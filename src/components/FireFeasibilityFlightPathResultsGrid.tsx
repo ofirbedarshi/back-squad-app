@@ -20,7 +20,7 @@ function FireFeasibilityFlightPathResultsGrid({
 }: FireFeasibilityFlightPathResultsGridProps) {
   return (
     <section className="rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm">
-      <h3 className="mb-3 text-center text-lg font-bold text-neutral-800">חישוב סיכוי</h3>
+      <h3 className="mb-3 text-center text-lg font-bold text-neutral-800">סיכויי פגיעה</h3>
       <div className="flex gap-6">
       {GENERATION_ORDER.map((generation) => (
         <FireFeasibilityFlightPathResultColumn
