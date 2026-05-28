@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
 import {
-  evaluateObstaclesFeasibilityGenA,
+  evaluateObstaclesFeasibilityGenB,
   evaluateObstaclesFeasibilityWhenMissing,
 } from './obstaclesFeasibility.ts'
 import {
@@ -20,9 +20,9 @@ describe('evaluateObstaclesFeasibilityWhenMissing', () => {
   })
 })
 
-describe('evaluateObstaclesFeasibilityGenA', () => {
+describe('evaluateObstaclesFeasibilityGenB', () => {
   it('returns blocked note for flat trajectory', () => {
-    const result = evaluateObstaclesFeasibilityGenA({
+    const result = evaluateObstaclesFeasibilityGenB({
       positionToTargetRangeMeters: 2000,
       positionToTargetHeightDifferenceMeters: 0,
       flightPath: 'flat',
@@ -39,7 +39,7 @@ describe('evaluateObstaclesFeasibilityGenA', () => {
   })
 
   it('returns enabled when obstacle is lower than missile at same point', () => {
-    const result = evaluateObstaclesFeasibilityGenA({
+    const result = evaluateObstaclesFeasibilityGenB({
       positionToTargetRangeMeters: 2000,
       positionToTargetHeightDifferenceMeters: 0,
       flightPath: 'low',
@@ -56,7 +56,7 @@ describe('evaluateObstaclesFeasibilityGenA', () => {
   })
 
   it('returns blocked when obstacle is higher than missile at same point', () => {
-    const result = evaluateObstaclesFeasibilityGenA({
+    const result = evaluateObstaclesFeasibilityGenB({
       positionToTargetRangeMeters: 2000,
       positionToTargetHeightDifferenceMeters: 0,
       flightPath: 'low',
@@ -73,7 +73,7 @@ describe('evaluateObstaclesFeasibilityGenA', () => {
   })
 
   it('returns allow with note when lookup key missing', () => {
-    const result = evaluateObstaclesFeasibilityGenA({
+    const result = evaluateObstaclesFeasibilityGenB({
       positionToTargetRangeMeters: 1234,
       positionToTargetHeightDifferenceMeters: 0,
       flightPath: 'low',
@@ -91,7 +91,7 @@ describe('evaluateObstaclesFeasibilityGenA', () => {
 
   it('throws on invalid numeric input', () => {
     assert.throws(() =>
-      evaluateObstaclesFeasibilityGenA({
+      evaluateObstaclesFeasibilityGenB({
         positionToTargetRangeMeters: Number.NaN,
         positionToTargetHeightDifferenceMeters: 0,
         flightPath: 'low',

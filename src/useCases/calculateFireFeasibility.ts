@@ -7,7 +7,7 @@ import {
   calculateHitProbabilityByFlightPath,
 } from '../domain/hitProbability'
 import {
-  evaluateObstaclesFeasibilityGenA,
+  evaluateObstaclesFeasibilityGenB,
   evaluateObstaclesFeasibilityWhenMissing,
 } from '../domain/obstaclesFeasibility'
 import type { CloudsFeasibilityEvaluationInput } from '../domain/cloudsFeasibility.types'
@@ -41,15 +41,15 @@ export function calculateFireFeasibility(formData: FireFeasibilityFormData): Fir
   const genA = evaluateCloudsFeasibility(cloudsInput)
   const genB = evaluateCloudsFeasibilityGenB(cloudsInput)
 
-  const obstaclesGenA = formData.obstacle
-    ? evaluateObstaclesFeasibilityGenA({
+  const obstaclesGenB = formData.obstacle
+    ? evaluateObstaclesFeasibilityGenB({
         positionToTargetRangeMeters: formData.positionToTargetRange,
         positionToTargetHeightDifferenceMeters: formData.positionToTargetHeightDifference,
         flightPath: formData.flightPath,
         obstacle: formData.obstacle,
       })
     : evaluateObstaclesFeasibilityWhenMissing()
-  const obstaclesGenB = createNotImplementedCategoryResultsByGeneration().b
+  const obstaclesGenA = createNotImplementedCategoryResultsByGeneration().a
   const hitProbability = calculateHitProbabilityByFlightPath({
     positionToTargetRangeMeters: formData.positionToTargetRange,
     positionToTargetHeightDifferenceMeters: formData.positionToTargetHeightDifference,

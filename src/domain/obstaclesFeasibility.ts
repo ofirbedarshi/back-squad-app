@@ -20,7 +20,7 @@ import {
   ObstaclesFeasibilityOutOfTableError,
 } from './errors'
 
-export interface EvaluateObstaclesFeasibilityGenAInput {
+export interface EvaluateObstaclesFeasibilityGenBInput {
   positionToTargetRangeMeters: number
   positionToTargetHeightDifferenceMeters: number
   flightPath: string
@@ -84,8 +84,8 @@ export function evaluateObstaclesFeasibilityWhenMissing(): FireFeasibilityCatego
   }
 }
 
-export function evaluateObstaclesFeasibilityGenA(
-  input: EvaluateObstaclesFeasibilityGenAInput,
+export function evaluateObstaclesFeasibilityGenB(
+  input: EvaluateObstaclesFeasibilityGenBInput,
 ): FireFeasibilityCategoryResult {
   if (input.flightPath === 'flat') {
     return {
