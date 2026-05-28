@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import FireFeasibilityCloudsMockModal from '../components/FireFeasibilityCloudsMockModal'
 import FireFeasibilityObstaclesMockModal from '../components/FireFeasibilityObstaclesMockModal'
+import FireFeasibilityRangeHeightTargetMockModal from '../components/FireFeasibilityRangeHeightTargetMockModal'
 import HeaderOptionsMenu from '../components/base/HeaderOptionsMenu'
 import ListCard from '../components/base/ListCard'
 import type {
@@ -15,6 +16,7 @@ import { useDomainError } from '../hooks/useDomainError'
 import { useNotification } from '../hooks/useNotification'
 import { createCloudsFeasibilityMockUseCase } from '../useCases/createCloudsFeasibilityMock'
 import { createObstaclesFeasibilityMockUseCase } from '../useCases/createObstaclesFeasibilityMock'
+import { createRangeHeightTargetMockUseCase } from '../useCases/createRangeHeightTargetMock'
 import { loadFireFeasibilityRecordsUseCase } from '../useCases/loadFireFeasibilityRecords'
 import { loadPositionsUseCase } from '../useCases/loadPositions'
 import { loadTargetsUseCase } from '../useCases/loadTargets'
@@ -28,6 +30,7 @@ function FireFeasibilityListScreen() {
   const [positions, setPositions] = useState<Position[]>([])
   const [showCloudsMockModal, setShowCloudsMockModal] = useState(false)
   const [showObstaclesMockModal, setShowObstaclesMockModal] = useState(false)
+  const [showRangeHeightTargetMockModal, setShowRangeHeightTargetMockModal] = useState(false)
   const navigate = useNavigate()
   const confirm = useConfirm()
   const { triggerError } = useDomainError()
@@ -66,6 +69,20 @@ function FireFeasibilityListScreen() {
       createObstaclesFeasibilityMockUseCase(input)
       resetResources()
       notifySuccess('מטרת הבדיקה והתוצאות נשמרו')
+    } catch (error) {
+      triggerError(error instanceof Error ? error.message : 'יצירת מטרת בדיקה נכשלה')
+      throw error
+    }
+  }
+
+  async function handleCreateRangeHeightTargetMock(input: {
+    rangeMeters: number
+    heightDifferenceMeters: number
+  }) {
+    try {
+      createRangeHeightTargetMockUseCase(input)
+      resetResources()
+      notifySuccess('מטרת הבדיקה נשמרה')
     } catch (error) {
       triggerError(error instanceof Error ? error.message : 'יצירת מטרת בדיקה נכשלה')
       throw error
@@ -138,6 +155,13 @@ function FireFeasibilityListScreen() {
         >
           צור מטרת בדיקה למכשולים
         </button>
+        <button
+          type="button"
+          onClick={() => setShowRangeHeightTargetMockModal(true)}
+          className="w-full rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-bold text-emerald-700 active:bg-emerald-100 touch-manipulation"
+        >
+          צור מטרה מטווח והפרש גובה
+        </button>
 
         {records.length === 0 && (
           <p className="py-8 text-center text-neutral-400">אין היתכנויות לירי שמורות</p>
@@ -194,6 +218,12 @@ function FireFeasibilityListScreen() {
         <FireFeasibilityObstaclesMockModal
           onClose={() => setShowObstaclesMockModal(false)}
           onSubmit={handleCreateObstaclesMock}
+        />
+      )}
+      {showRangeHeightTargetMockModal && (
+        <FireFeasibilityRangeHeightTargetMockModal
+          onClose={() => setShowRangeHeightTargetMockModal(false)}
+          onSubmit={handleCreateRangeHeightTargetMock}
         />
       )}
     </div>
