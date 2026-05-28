@@ -72,7 +72,7 @@ export function calculateFireFeasibility(formData: FireFeasibilityFormData): Fir
   return {
     clouds: {
       a: { enabled: genA.enabled, notes: genA.notes, logs: genA.logs },
-      b: { enabled: genB.enabled, notes: genB.notes, logs: [...genB.logs, ...hitProbabilityLogsGenB] },
+      b: { enabled: genB.enabled, notes: genB.notes, logs: genB.logs },
     },
     obstacles: {
       a: obstaclesGenA,
@@ -80,8 +80,14 @@ export function calculateFireFeasibility(formData: FireFeasibilityFormData): Fir
     },
     concealment: createNotImplementedCategoryResultsByGeneration(),
     flightPaths: {
-      a: hitProbabilityGenA,
-      b: hitProbabilityGenB.percentByFlightPath,
+      a: {
+        percentByFlightPath: hitProbabilityGenA,
+        logs: [],
+      },
+      b: {
+        percentByFlightPath: hitProbabilityGenB.percentByFlightPath,
+        logs: hitProbabilityLogsGenB,
+      },
     },
   }
 }

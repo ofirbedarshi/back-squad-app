@@ -6,6 +6,7 @@ import type {
   FireFeasibilityFlightPathResultsByGeneration,
   FireFeasibilityGeneration,
 } from '../domain/fireFeasibility.types'
+import FireFeasibilityFlightPathLogsPanel from './FireFeasibilityFlightPathLogsPanel'
 import FireFeasibilityFlightPathResultColumn from './FireFeasibilityFlightPathResultColumn'
 
 const GENERATION_ORDER: FireFeasibilityGeneration[] = ['a', 'b']
@@ -26,10 +27,12 @@ function FireFeasibilityFlightPathResultsGrid({
           key={generation}
           generationLabel={FIRE_FEASIBILITY_GENERATION_LABELS[generation]}
           rows={FIRE_FEASIBILITY_FLIGHT_PATH_RESULT_ROWS}
-          percentByFlightPath={results[generation]}
+          percentByFlightPath={results[generation].percentByFlightPath}
         />
       ))}
       </div>
+
+      <FireFeasibilityFlightPathLogsPanel results={results} />
     </section>
   )
 }

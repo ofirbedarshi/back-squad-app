@@ -28,9 +28,14 @@ export type FireFeasibilityCategoryResultsByGeneration = Record<
 
 export type FireFeasibilityFlightPathPercentByPath = Record<FireFeasibilityFlightPath, number>
 
+export interface FireFeasibilityFlightPathGenerationResult {
+  percentByFlightPath: FireFeasibilityFlightPathPercentByPath
+  logs: string[]
+}
+
 export type FireFeasibilityFlightPathResultsByGeneration = Record<
   FireFeasibilityGeneration,
-  FireFeasibilityFlightPathPercentByPath
+  FireFeasibilityFlightPathGenerationResult
 >
 
 export interface FireFeasibilityResults {
