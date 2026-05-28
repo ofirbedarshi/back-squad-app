@@ -11,7 +11,11 @@ import {
   evaluateObstaclesFeasibilityWhenMissing,
 } from '../domain/obstaclesFeasibility'
 import type { CloudsFeasibilityEvaluationInput } from '../domain/cloudsFeasibility.types'
-import type { FireFeasibilityFormData, FireFeasibilityResults } from '../domain/fireFeasibility.types'
+import type {
+  FireFeasibilityFlightPathPercentByPath,
+  FireFeasibilityFormData,
+  FireFeasibilityResults,
+} from '../domain/fireFeasibility.types'
 import { loadCloudHeight } from './loadCloudHeight'
 
 export function calculateFireFeasibility(formData: FireFeasibilityFormData): FireFeasibilityResults {
@@ -50,19 +54,25 @@ export function calculateFireFeasibility(formData: FireFeasibilityFormData): Fir
       })
     : evaluateObstaclesFeasibilityWhenMissing()
   const obstaclesGenA = createNotImplementedCategoryResultsByGeneration().a
-  const hitProbability = calculateHitProbabilityByFlightPath({
+  const hitProbabilityGenB = calculateHitProbabilityByFlightPath({
     positionToTargetRangeMeters: formData.positionToTargetRange,
     positionToTargetHeightDifferenceMeters: formData.positionToTargetHeightDifference,
   })
-  const hitProbabilityLogs = buildHitProbabilityLogs(
-    hitProbability.debug,
-    hitProbability.percentByFlightPath,
+  const hitProbabilityGenA: FireFeasibilityFlightPathPercentByPath = {
+    flat: 0,
+    low: 0,
+    lofted: 0,
+    '+lofted': 0,
+  }
+  const hitProbabilityLogsGenB = buildHitProbabilityLogs(
+    hitProbabilityGenB.debug,
+    hitProbabilityGenB.percentByFlightPath,
   )
 
   return {
     clouds: {
-      a: { enabled: genA.enabled, notes: genA.notes, logs: [...genA.logs, ...hitProbabilityLogs] },
-      b: { enabled: genB.enabled, notes: genB.notes, logs: [...genB.logs, ...hitProbabilityLogs] },
+      a: { enabled: genA.enabled, notes: genA.notes, logs: genA.logs },
+      b: { enabled: genB.enabled, notes: genB.notes, logs: [...genB.logs, ...hitProbabilityLogsGenB] },
     },
     obstacles: {
       a: obstaclesGenA,
@@ -70,8 +80,8 @@ export function calculateFireFeasibility(formData: FireFeasibilityFormData): Fir
     },
     concealment: createNotImplementedCategoryResultsByGeneration(),
     flightPaths: {
-      a: hitProbability.percentByFlightPath,
-      b: hitProbability.percentByFlightPath,
+      a: hitProbabilityGenA,
+      b: hitProbabilityGenB.percentByFlightPath,
     },
   }
 }
