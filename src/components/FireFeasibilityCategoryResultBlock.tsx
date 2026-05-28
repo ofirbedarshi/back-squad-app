@@ -4,12 +4,14 @@ interface FireFeasibilityCategoryResultBlockProps {
   title?: string
   generationLabel?: string
   result: FireFeasibilityCategoryResult
+  showLogs?: boolean
 }
 
 function FireFeasibilityCategoryResultBlock({
   title,
   generationLabel,
   result,
+  showLogs = true,
 }: FireFeasibilityCategoryResultBlockProps) {
   const logLines = result.logs ?? []
   const statusLabel = result.enabled ? 'מאפשר' : 'לא מאפשר'
@@ -40,7 +42,7 @@ function FireFeasibilityCategoryResultBlock({
           <p className="text-sm font-medium leading-relaxed text-neutral-700">{result.notes}</p>
         ) : null}
 
-        {logLines.length > 0 ? (
+        {showLogs && logLines.length > 0 ? (
           <details className="rounded-xl border border-neutral-200 bg-neutral-50 px-3 py-2 text-start" dir="rtl">
             <summary className="cursor-pointer text-sm font-semibold text-neutral-700">
               מידע חישוב

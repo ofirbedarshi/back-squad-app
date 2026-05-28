@@ -3,6 +3,7 @@ import type {
   FireFeasibilityCategoryResultsByGeneration,
   FireFeasibilityGeneration,
 } from '../domain/fireFeasibility.types'
+import FireFeasibilityCategoryLogsPanel from './FireFeasibilityCategoryLogsPanel'
 import FireFeasibilityCategoryResultBlock from './FireFeasibilityCategoryResultBlock'
 
 const GENERATION_ORDER: FireFeasibilityGeneration[] = ['a', 'b']
@@ -26,9 +27,12 @@ function FireFeasibilityCategoryResultsSection({
             key={generation}
             generationLabel={FIRE_FEASIBILITY_GENERATION_LABELS[generation]}
             result={results[generation]}
+            showLogs={false}
           />
         ))}
       </div>
+
+      <FireFeasibilityCategoryLogsPanel results={results} />
     </section>
   )
 }
