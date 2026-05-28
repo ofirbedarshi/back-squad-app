@@ -1,8 +1,11 @@
 import { evaluateCloudsFeasibility, evaluateCloudsFeasibilityGenB } from '../domain/cloudsFeasibility'
 import {
-  createMockFlightPathResultsByGeneration,
   createNotImplementedCategoryResultsByGeneration,
 } from '../domain/fireFeasibility'
+import {
+  buildHitProbabilityLogs,
+  calculateHitProbabilityByFlightPath,
+} from '../domain/hitProbability'
 import {
   evaluateObstaclesFeasibilityGenA,
   evaluateObstaclesFeasibilityWhenMissing,
@@ -47,17 +50,28 @@ export function calculateFireFeasibility(formData: FireFeasibilityFormData): Fir
       })
     : evaluateObstaclesFeasibilityWhenMissing()
   const obstaclesGenB = createNotImplementedCategoryResultsByGeneration().b
+  const hitProbability = calculateHitProbabilityByFlightPath({
+    positionToTargetRangeMeters: formData.positionToTargetRange,
+    positionToTargetHeightDifferenceMeters: formData.positionToTargetHeightDifference,
+  })
+  const hitProbabilityLogs = buildHitProbabilityLogs(
+    hitProbability.debug,
+    hitProbability.percentByFlightPath,
+  )
 
   return {
     clouds: {
-      a: { enabled: genA.enabled, notes: genA.notes, logs: genA.logs },
-      b: { enabled: genB.enabled, notes: genB.notes, logs: genB.logs },
+      a: { enabled: genA.enabled, notes: genA.notes, logs: [...genA.logs, ...hitProbabilityLogs] },
+      b: { enabled: genB.enabled, notes: genB.notes, logs: [...genB.logs, ...hitProbabilityLogs] },
     },
     obstacles: {
       a: obstaclesGenA,
       b: obstaclesGenB,
     },
     concealment: createNotImplementedCategoryResultsByGeneration(),
-    flightPaths: createMockFlightPathResultsByGeneration(0),
+    flightPaths: {
+      a: hitProbability.percentByFlightPath,
+      b: hitProbability.percentByFlightPath,
+    },
   }
 }
