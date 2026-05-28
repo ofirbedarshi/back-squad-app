@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import FireFeasibilityCloudsMockModal from '../components/FireFeasibilityCloudsMockModal'
+import FireFeasibilityObstaclesMockModal from '../components/FireFeasibilityObstaclesMockModal'
 import HeaderOptionsMenu from '../components/base/HeaderOptionsMenu'
 import ListCard from '../components/base/ListCard'
 import type {
@@ -13,6 +14,7 @@ import { useConfirm } from '../hooks/useConfirm'
 import { useDomainError } from '../hooks/useDomainError'
 import { useNotification } from '../hooks/useNotification'
 import { createCloudsFeasibilityMockUseCase } from '../useCases/createCloudsFeasibilityMock'
+import { createObstaclesFeasibilityMockUseCase } from '../useCases/createObstaclesFeasibilityMock'
 import { loadFireFeasibilityRecordsUseCase } from '../useCases/loadFireFeasibilityRecords'
 import { loadPositionsUseCase } from '../useCases/loadPositions'
 import { loadTargetsUseCase } from '../useCases/loadTargets'
@@ -25,6 +27,7 @@ function FireFeasibilityListScreen() {
   const [targets, setTargets] = useState<Target[]>([])
   const [positions, setPositions] = useState<Position[]>([])
   const [showCloudsMockModal, setShowCloudsMockModal] = useState(false)
+  const [showObstaclesMockModal, setShowObstaclesMockModal] = useState(false)
   const navigate = useNavigate()
   const confirm = useConfirm()
   const { triggerError } = useDomainError()
@@ -47,6 +50,20 @@ function FireFeasibilityListScreen() {
   }) {
     try {
       createCloudsFeasibilityMockUseCase(input)
+      resetResources()
+      notifySuccess('מטרת הבדיקה והתוצאות נשמרו')
+    } catch (error) {
+      triggerError(error instanceof Error ? error.message : 'יצירת מטרת בדיקה נכשלה')
+      throw error
+    }
+  }
+
+  async function handleCreateObstaclesMock(input: {
+    desiredGenAEnabled: boolean
+    flightPath: FireFeasibilityFlightPath
+  }) {
+    try {
+      createObstaclesFeasibilityMockUseCase(input)
       resetResources()
       notifySuccess('מטרת הבדיקה והתוצאות נשמרו')
     } catch (error) {
@@ -114,6 +131,13 @@ function FireFeasibilityListScreen() {
         >
           צור מטרת בדיקה לעננים
         </button>
+        <button
+          type="button"
+          onClick={() => setShowObstaclesMockModal(true)}
+          className="w-full rounded-xl border border-violet-200 bg-violet-50 px-4 py-3 text-sm font-bold text-violet-700 active:bg-violet-100 touch-manipulation"
+        >
+          צור מטרת בדיקה למכשולים
+        </button>
 
         {records.length === 0 && (
           <p className="py-8 text-center text-neutral-400">אין היתכנויות לירי שמורות</p>
@@ -164,6 +188,12 @@ function FireFeasibilityListScreen() {
         <FireFeasibilityCloudsMockModal
           onClose={() => setShowCloudsMockModal(false)}
           onSubmit={handleCreateCloudsMock}
+        />
+      )}
+      {showObstaclesMockModal && (
+        <FireFeasibilityObstaclesMockModal
+          onClose={() => setShowObstaclesMockModal(false)}
+          onSubmit={handleCreateObstaclesMock}
         />
       )}
     </div>
