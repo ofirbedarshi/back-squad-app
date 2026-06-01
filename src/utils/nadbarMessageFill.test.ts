@@ -369,7 +369,7 @@ describe('isNadbarTargetVarLoadOnly', () => {
       false,
     )
     assert.equal(
-      isNadbarTargetVarLoadOnly(pointerTeamUpdatedBlockFooterActions, 5, 'moked'),
+      isNadbarTargetVarLoadOnly(pointerTeamUpdatedBlockFooterActions, 5, 'flightTime'),
       false,
     )
     assert.equal(
