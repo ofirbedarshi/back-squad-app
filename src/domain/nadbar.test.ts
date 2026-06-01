@@ -313,7 +313,7 @@ describe('getNadbarTemplate', () => {
     assert.equal(template.blocks[1]?.messages.length, 6)
     assert.equal(template.blocks[2]?.messages.length, 5)
     assert.equal(template.blocks[3]?.messages.length, 9)
-    assert.equal(template.blocks[4]?.messages.length, 3)
+    assert.equal(template.blocks[4]?.messages.length, 5)
     assert.equal(template.blocks[5]?.messages.length, 9)
     assert.deepEqual(template.userVarFields, {
       ktanot: { input: 'numeric' },
@@ -332,8 +332,11 @@ describe('getNadbarTemplate', () => {
       obstacleHeight3: { input: 'numeric' },
       obstacleDistance3: { input: 'numeric' },
       hasSpecialRequirements: { input: 'choice', options: ['שלילי', 'חיובי'] },
-      hetSet: { input: 'numeric' },
-      hashaya: { input: 'numeric' },
+      hetSet: {
+        input: 'choice',
+        options: ['ימין', 'שמאל', 'למעלה', 'למטה'],
+      },
+      hashaya: { input: 'choice', options: ['ללא', 'קצרה', 'ארוכה'] },
       flightTime: { input: 'numeric' },
       pergolaOrientation: { input: 'choice', options: ['פרגול', 'הפוכה'] },
       tunisNeed: {

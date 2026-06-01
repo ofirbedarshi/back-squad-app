@@ -16,7 +16,7 @@ function NadbarUserVarChoiceInput({
   const toggleOptions = options.map((option) => ({ label: option, value: option }))
 
   return (
-    <span className="inline-block align-middle min-w-[8rem] max-w-full mx-0.5" aria-label={ariaLabel}>
+    <span className="block w-full max-w-full my-1" aria-label={ariaLabel}>
       <SegmentedToggle
         options={toggleOptions}
         value={value}

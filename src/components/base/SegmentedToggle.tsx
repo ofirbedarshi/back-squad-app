@@ -34,7 +34,7 @@ function SegmentedToggle({
     <div
       className={[
         'flex w-full border border-neutral-200 bg-neutral-100',
-        isCompact ? 'rounded-xl p-0.5 gap-0.5' : 'rounded-2xl p-1 gap-1',
+        isCompact ? 'rounded-xl p-1 gap-1' : 'rounded-2xl p-1 gap-1',
       ].join(' ')}
     >
       {options.map((option) => {
@@ -45,7 +45,7 @@ function SegmentedToggle({
             type="button"
             onClick={() => handleOptionClick(option.value)}
             className={[
-              'flex-1 font-semibold transition-all touch-manipulation select-none',
+              'flex-1 min-w-[2.75rem] shrink-0 whitespace-nowrap px-2.5 font-semibold transition-all touch-manipulation select-none',
               isCompact ? 'py-1.5 rounded-lg text-sm' : 'py-3 rounded-xl text-base',
               isActive
                 ? 'bg-white text-blue-600 shadow-sm'

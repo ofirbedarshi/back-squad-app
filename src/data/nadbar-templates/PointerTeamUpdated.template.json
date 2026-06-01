@@ -26,8 +26,14 @@
       "input": "choice",
       "options": ["שלילי", "חיובי"]
     },
-    "hetSet": { "input": "numeric" },
-    "hashaya": { "input": "numeric" },
+    "hetSet": {
+      "input": "choice",
+      "options": ["ימין", "שמאל", "למעלה", "למטה"]
+    },
+    "hashaya": {
+      "input": "choice",
+      "options": ["ללא", "קצרה", "ארוכה"]
+    },
     "flightTime": { "input": "numeric" },
     "pergolaOrientation": {
       "input": "choice",
@@ -114,7 +120,7 @@
         },
         {
           "source": "Me",
-          "content": "קיבלתי, למטרה {{metara}} שפרתי ל {{amuraCorrected}} במעלות",
+          "content": "קיבלתי, למטרה {{metara}} יש לשפר ל{{amuraCorrected}} במעלות",
           "visibleWhen": { "var": "amuraValid", "equals": "לא תקינה" }
         }
       ]
@@ -177,11 +183,23 @@
         },
         {
           "source": "They",
-          "content": "קבל למטרה {{metara}} {{hasSpecialRequirements}} הסט {{hetSet}} השהיה {{hashaya}}"
+          "content": "קבל למטרה {{metara}} {{hasSpecialRequirements}}",
+          "visibleWhen": { "var": "hasSpecialRequirements", "equals": "שלילי" }
         },
         {
           "source": "Me",
-          "content": "קיבלתי למטרה {{metara}} {{hasSpecialRequirements}} הסט {{hetSet}} השהיה {{hashaya}}"
+          "content": "קיבלתי למטרה {{metara}} {{hasSpecialRequirements}}",
+          "visibleWhen": { "var": "hasSpecialRequirements", "equals": "שלילי" }
+        },
+        {
+          "source": "They",
+          "content": "קבל למטרה {{metara}} {{hasSpecialRequirements}} הסט {{hetSet}} השהיה {{hashaya}}",
+          "visibleWhen": { "var": "hasSpecialRequirements", "equals": "חיובי" }
+        },
+        {
+          "source": "Me",
+          "content": "קיבלתי למטרה {{metara}} {{hasSpecialRequirements}} הסט {{hetSet}} השהיה {{hashaya}}",
+          "visibleWhen": { "var": "hasSpecialRequirements", "equals": "חיובי" }
         }
       ]
     },
