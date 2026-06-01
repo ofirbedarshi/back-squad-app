@@ -6,7 +6,7 @@
     "gamal": { "input": "numeric" },
     "amura": { "input": "numeric" },
     "amuraManual": { "input": "numeric" },
-    "gur": { "input": "numeric" },
+    "kutz": { "input": "numeric" },
     "amuraCorrected": { "input": "numeric" },
     "amuraValid": {
       "input": "choice",

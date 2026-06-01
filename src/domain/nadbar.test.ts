@@ -321,7 +321,7 @@ describe('getNadbarTemplate', () => {
       tsepa: { input: 'numeric' },
       gamal: { input: 'numeric' },
       amura: { input: 'numeric' },
-      gur: { input: 'numeric' },
+      kutz: { input: 'numeric' },
       amuraCorrected: { input: 'numeric' },
       amuraValid: { input: 'choice', options: ['תקינה', 'לא תקינה'] },
       hasNearbyObstacles: { input: 'choice', options: ['שלילי', 'חיובי'] },
