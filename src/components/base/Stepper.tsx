@@ -1,22 +1,55 @@
-interface StepperProps {
-  value: number
-  min: number
-  max: number
-  step?: number
-  unit?: string
-  onChange: (value: number) => void
-}
+type StepperProps =
+  | {
+      value: number
+      values: readonly number[]
+      unit?: string
+      onChange: (value: number) => void
+    }
+  | {
+      value: number
+      min: number
+      max: number
+      step?: number
+      unit?: string
+      onChange: (value: number) => void
+    }
 
-function Stepper({ value, min, max, step = 1, unit, onChange }: StepperProps) {
-  const canDecrement = value > min
-  const canIncrement = value < max
+function Stepper(props: StepperProps) {
+  const { value, unit, onChange } = props
+
+  const canDecrement =
+    'values' in props
+      ? props.values.indexOf(value) > 0
+      : value > props.min
+  const canIncrement =
+    'values' in props
+      ? props.values.indexOf(value) < props.values.length - 1
+      : value < props.max
+
+  const decrement = () => {
+    if ('values' in props) {
+      const index = props.values.indexOf(value)
+      if (index > 0) onChange(props.values[index - 1])
+      return
+    }
+    if (value > props.min) onChange(value - (props.step ?? 1))
+  }
+
+  const increment = () => {
+    if ('values' in props) {
+      const index = props.values.indexOf(value)
+      if (index >= 0 && index < props.values.length - 1) onChange(props.values[index + 1])
+      return
+    }
+    if (value < props.max) onChange(value + (props.step ?? 1))
+  }
 
   return (
     <div className="flex items-center justify-between bg-neutral-50 border border-neutral-200 rounded-2xl px-2 py-2 shadow-sm">
       <button
         type="button"
         disabled={!canDecrement}
-        onClick={() => canDecrement && onChange(value - step)}
+        onClick={() => canDecrement && decrement()}
         className="w-12 h-12 flex items-center justify-center rounded-xl text-2xl font-bold text-blue-600 disabled:text-neutral-300 active:bg-blue-50 touch-manipulation select-none transition-colors"
         aria-label="הקטן ערך"
       >
@@ -31,7 +64,7 @@ function Stepper({ value, min, max, step = 1, unit, onChange }: StepperProps) {
       <button
         type="button"
         disabled={!canIncrement}
-        onClick={() => canIncrement && onChange(value + step)}
+        onClick={() => canIncrement && increment()}
         className="w-12 h-12 flex items-center justify-center rounded-xl text-2xl font-bold text-blue-600 disabled:text-neutral-300 active:bg-blue-50 touch-manipulation select-none transition-colors"
         aria-label="הגדל ערך"
       >

@@ -204,17 +204,6 @@ function HitPenetrationCalculatorScreen() {
         </section>
 
         <HitPenetrationResultCard
-          title="נתוני טבלה"
-          rows={[
-            { label: 'זווית מסלול', value: result?.trajectoryAngleDeg ?? null, unit: '°' },
-            { label: 'השהיה', value: result?.delayMs ?? null, unit: 'אלפיות שנייה' },
-            { label: 'מהירות בטווח', value: result?.speedMs ?? null, unit: 'מ/ש' },
-            { label: 'מהירות אחרי חדירה', value: result?.speedAfterPenetrationMs ?? null, unit: 'מ/ש' },
-            { label: 'התבדרות אמצעי', value: result?.munitionDivergence ?? null, unit: '' },
-          ]}
-        />
-
-        <HitPenetrationResultCard
           title="תוצאות חדירה"
           rows={[
             {
@@ -258,6 +247,17 @@ function HitPenetrationCalculatorScreen() {
               unit: 'מ׳',
               highlight: true,
             },
+          ]}
+        />
+
+        <HitPenetrationResultCard
+          title="נתוני טבלה"
+          rows={[
+            { label: 'זווית מסלול', value: result?.trajectoryAngleDeg ?? null, unit: '°' },
+            { label: 'השהיה', value: result?.delayMs ?? null, unit: 'אלפיות שנייה' },
+            { label: 'מהירות בטווח', value: result?.speedMs ?? null, unit: 'מ/ש' },
+            { label: 'מהירות אחרי חדירה', value: result?.speedAfterPenetrationMs ?? null, unit: 'מ/ש' },
+            { label: 'התבדרות אמצעי', value: result?.munitionDivergence ?? null, unit: '' },
           ]}
         />
 

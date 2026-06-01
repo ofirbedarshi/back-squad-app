@@ -1,4 +1,4 @@
-export type MovingTargetRange = 4 | 5 | 6 | 7 | 8 | 9 | 10
+export type MovingTargetRange = 4 | 5 | 6 | 7 | 8 | 9 | 9.75
 
 export interface MovingTargetLookupRow {
   minDetectionKm: number

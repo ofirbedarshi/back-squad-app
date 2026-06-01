@@ -2,14 +2,12 @@ import { useMemo, useState } from 'react'
 import Input from '../components/Input'
 import Stepper from '../components/base/Stepper'
 import MovingTargetResultCard from '../components/MovingTargetResultCard'
+import { VALID_RANGES } from '../domain/movingTarget'
 import {
   calculateMovingTargetFromInputs,
   getLookupDisplayForRange,
 } from '../useCases/calculateMovingTargetFromInputs'
 import type { MovingTargetRange } from '../domain/movingTarget.types'
-
-const MIN_RANGE = 4
-const MAX_RANGE = 10
 const DEFAULT_FLIGHT_TIME = '30'
 
 function MovingTargetCalculatorScreen() {
@@ -41,8 +39,7 @@ function MovingTargetCalculatorScreen() {
             </label>
             <Stepper
               value={rangeKm}
-              min={MIN_RANGE}
-              max={MAX_RANGE}
+              values={VALID_RANGES}
               onChange={(v) => setRangeKm(v as MovingTargetRange)}
             />
           </div>

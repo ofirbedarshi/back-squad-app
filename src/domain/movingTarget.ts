@@ -5,7 +5,7 @@ import type {
   MovingTargetResult,
 } from './movingTarget.types'
 
-export const VALID_RANGES: MovingTargetRange[] = [4, 5, 6, 7, 8, 9, 10]
+export const VALID_RANGES: MovingTargetRange[] = [4, 5, 6, 7, 8, 9, 9.75]
 
 const LOOKUP_TABLE: Record<MovingTargetRange, MovingTargetLookupRow> = {
   4:  { minDetectionKm: 2.5, flightSpeedMs: 270 },
@@ -14,7 +14,7 @@ const LOOKUP_TABLE: Record<MovingTargetRange, MovingTargetLookupRow> = {
   7:  { minDetectionKm: 3.0, flightSpeedMs: 160 },
   8:  { minDetectionKm: 4.0, flightSpeedMs: 130 },
   9:  { minDetectionKm: 4.0, flightSpeedMs: 130 },
-  10: { minDetectionKm: 4.0, flightSpeedMs: 100 },
+  9.75: { minDetectionKm: 4.0, flightSpeedMs: 100 },
 }
 
 export function lookupRange(rangeKm: MovingTargetRange): MovingTargetLookupRow {
