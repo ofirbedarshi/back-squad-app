@@ -4,11 +4,8 @@ import type { Target } from '../domain/target.types'
 import type { ObstaclesFeasibilityEvaluationInput } from '../domain/obstaclesFeasibility.types'
 import {
   POSITION_FIELD_TOOLTIP,
-  RANGE_COMPUTED_TOOLTIP,
   TARGET_FIELD_TOOLTIP,
 } from '../domain/fireFeasibility.constants'
-import { calculatePositionToObstacleMetrics } from '../domain/positionToObstacleMetrics'
-import { formatMetric } from '../utils/metricRounding'
 import CoordinateInput from './base/CoordinateInput'
 import FireFeasibilityRangeField from './FireFeasibilityRangeField'
 import FormField from './FormField'
@@ -35,8 +32,8 @@ function FireFeasibilityCoordsFields({
   rangeDisplay,
   onObstacleChange,
 }: FireFeasibilityCoordsFieldsProps) {
-  const [obstacleCoordinates, setObstacleCoordinates] = useState<PositionCoordinates | undefined>()
   const [obstacleHeightInput, setObstacleHeightInput] = useState('')
+  const [positionToObstacleRangeInput, setPositionToObstacleRangeInput] = useState('')
   const [hide1Coordinates, setHide1Coordinates] = useState<PositionCoordinates | undefined>()
   const [hide1Height, setHide1Height] = useState('')
   const [hide2Coordinates, setHide2Coordinates] = useState<PositionCoordinates | undefined>()
@@ -44,35 +41,21 @@ function FireFeasibilityCoordsFields({
 
   const obstacle = useMemo(() => {
     const obstacleHeightMeters = parseOptionalNumber(obstacleHeightInput)
-    if (obstacleHeightMeters === null) {
-      return null
-    }
-
-    const metrics = calculatePositionToObstacleMetrics({
-      positionCoordinates: position.coordinates,
-      positionAltitude: position.altitude,
-      obstacleCoordinates,
-      obstacleAltitude: obstacleHeightMeters,
-    })
-    if (!metrics) {
+    const positionToObstacleRangeMeters = parseOptionalNumber(positionToObstacleRangeInput)
+    if (obstacleHeightMeters === null || positionToObstacleRangeMeters === null) {
       return null
     }
 
     return {
       obstacleHeightMeters,
-      positionToObstacleRangeMeters: metrics.range,
-      positionToObstacleHeightDifferenceMeters: metrics.altitudeDiff,
+      positionToObstacleRangeMeters,
+      positionToObstacleHeightDifferenceMeters: obstacleHeightMeters - position.altitude,
     }
-  }, [position.coordinates, position.altitude, obstacleCoordinates, obstacleHeightInput])
+  }, [obstacleHeightInput, positionToObstacleRangeInput, position.altitude])
 
   useEffect(() => {
     onObstacleChange(obstacle)
   }, [obstacle, onObstacleChange])
-
-  const obstacleRangeDisplay =
-    obstacle?.positionToObstacleRangeMeters != null
-      ? formatMetric(obstacle.positionToObstacleRangeMeters)
-      : ''
 
   return (
     <>
@@ -106,11 +89,7 @@ function FireFeasibilityCoordsFields({
 
       <FireFeasibilityRangeField rangeDisplay={rangeDisplay} />
 
-      <FormField label='נ"צ מכשול'>
-        <CoordinateInput value={obstacleCoordinates} onChange={setObstacleCoordinates} />
-      </FormField>
-
-      <FormField label="גובה מכשול">
+      <FormField label="גובה מכשול (מעל פני הים)">
         <Input
           type="number"
           value={obstacleHeightInput}
@@ -118,11 +97,13 @@ function FireFeasibilityCoordsFields({
         />
       </FormField>
 
-      {obstacleRangeDisplay !== '' && (
-        <FormField label="טווח מכשול עמדה" infoTooltipText={RANGE_COMPUTED_TOOLTIP}>
-          <Input type="number" value={obstacleRangeDisplay} disabled />
-        </FormField>
-      )}
+      <FormField label="טווח מכשול עמדה">
+        <Input
+          type="number"
+          value={positionToObstacleRangeInput}
+          onChange={(e) => setPositionToObstacleRangeInput(e.target.value)}
+        />
+      </FormField>
 
       <FormField label='נ"צ הסתר 1'>
         <CoordinateInput value={hide1Coordinates} onChange={setHide1Coordinates} />
