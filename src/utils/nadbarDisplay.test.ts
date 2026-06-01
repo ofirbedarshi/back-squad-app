@@ -1,8 +1,6 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
-import type { Indicator } from '../domain/indicator.types'
 import type { Nadbar } from '../domain/nadbar.types'
-import type { Position } from '../domain/position.types'
 import type { Target } from '../domain/target.types'
 import { formatUpdatedAt } from '../domain/formatUpdatedAt'
 import { getNadbarCardDetails, getNadbarCardTitle } from './nadbarDisplay'
@@ -20,29 +18,8 @@ const targets: Target[] = [
     id: 'target-1',
     updatedAt: '2026-05-01T10:00:00.000Z',
     targetName: 'מטרה אלפא',
-    coordinates: { easting: 100, northing: 200 },
-  },
-]
-
-const positions: Position[] = [
-  {
-    id: 'position-1',
-    updatedAt: '2026-05-01T10:00:00.000Z',
-    stationName: 'עמדה גמא',
-    coordinates: { east: '100', north: '200', palach: '300' },
+    coordinates: { east: '123456', north: '3123456', palach: '36' },
     altitude: 50,
-  },
-]
-
-const indicators: Indicator[] = [
-  {
-    id: 'pointer-1',
-    indicatorName: 'מציין בטא',
-    coordinates: { easting: 300, northing: 400 },
-    altitude: 100,
-    means: 'שיח',
-    markCode: 1,
-    updatedAt: '2026-05-01T10:00:00.000Z',
   },
 ]
 
@@ -53,42 +30,39 @@ describe('getNadbarCardTitle', () => {
 })
 
 describe('getNadbarCardDetails', () => {
-  it('resolves linked target, indicator, and position names', () => {
+  it('resolves target from the last filled block', () => {
     const details = getNadbarCardDetails(
       {
         ...baseNadbar,
-        links: { targetId: 'target-1', pointerId: 'pointer-1', positionId: 'position-1' },
+        messageBlocks: [
+          { messages: [{ source: 'They', content: '{{metara}}' }] },
+          { messages: [{ source: 'They', content: '{{metara}}' }] },
+        ],
+        blockMessageVars: [
+          { metara: 'מטרה אלפא', meraom: '123456', tsepa: '3123456' },
+          { metara: 'מטרה אחרת' },
+        ],
       },
       targets,
-      indicators,
-      positions,
     )
-    assert.equal(details.targetName, 'מטרה אלפא')
-    assert.equal(details.indicatorName, 'מציין בטא')
-    assert.equal(details.positionName, 'עמדה גמא')
+    assert.equal(details.targetName, 'מטרה אחרת')
     assert.notEqual(details.updatedAtLabel, '—')
   })
 
-  it('shows placeholders when links are missing', () => {
-    const details = getNadbarCardDetails(baseNadbar, targets, indicators, positions)
+  it('shows placeholder when no block has a target', () => {
+    const details = getNadbarCardDetails(baseNadbar, targets)
     assert.equal(details.targetName, 'ללא מטרה')
-    assert.equal(details.indicatorName, 'ללא מציין')
-    assert.equal(details.positionName, 'ללא עמדה')
   })
 
-  it('shows missing entity labels when ids are stale', () => {
+  it('ignores toolbar links when blocks have no target', () => {
     const details = getNadbarCardDetails(
       {
         ...baseNadbar,
-        links: { targetId: 'missing-target', pointerId: 'missing-pointer' },
+        links: { targetId: 'target-1', pointerId: 'pointer-1' },
       },
       targets,
-      indicators,
-      positions,
     )
-    assert.equal(details.targetName, 'מטרה לא נמצאה')
-    assert.equal(details.indicatorName, 'מציין לא נמצא')
-    assert.equal(details.positionName, 'ללא עמדה')
+    assert.equal(details.targetName, 'ללא מטרה')
   })
 })
 

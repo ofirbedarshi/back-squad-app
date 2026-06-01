@@ -292,7 +292,7 @@ function AttackLogForm({ onSubmit, submitLabel = 'שמור', initialValues }: At
         <Input type="number" hasError={!!errors.indicatorRange} {...register('indicatorRange', { valueAsNumber: true })} />
       </FormField>
 
-      <FormField label="זווית קודקוד" error={errors.apexAngle?.message}>
+      <FormField label="זווית קודקוד (בין אזימוט מציין מטרה לבין אזימוט עמדה מטרה)" error={errors.apexAngle?.message}>
         <Input type="number" hasError={!!errors.apexAngle} {...register('apexAngle', { valueAsNumber: true })} />
       </FormField>
 

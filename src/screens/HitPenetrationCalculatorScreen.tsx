@@ -100,7 +100,7 @@ function HitPenetrationCalculatorScreen() {
 
       <div className="flex flex-col gap-4 p-4">
         <section className="bg-white rounded-2xl border border-neutral-200 shadow-sm p-4 flex flex-col gap-4">
-          <h2 className="text-sm font-semibold text-neutral-500 uppercase tracking-wide">נתוני חדירה</h2>
+          <h2 className="text-sm font-semibold text-neutral-500 uppercase tracking-wide">נתוני שיגור</h2>
 
           <div className="grid grid-cols-2 gap-3">
             <HitPenetrationSelect
@@ -146,7 +146,7 @@ function HitPenetrationCalculatorScreen() {
         </section>
 
         <section className="bg-white rounded-2xl border border-neutral-200 shadow-sm p-4 flex flex-col gap-4">
-          <h2 className="text-sm font-semibold text-neutral-500 uppercase tracking-wide">נתוני כתם</h2>
+          <h2 className="text-sm font-semibold text-neutral-500 uppercase tracking-wide">נתוני ציון</h2>
 
           <div className="grid grid-cols-2 gap-3">
             <div className="flex flex-col gap-1.5">
