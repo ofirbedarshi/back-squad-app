@@ -48,3 +48,13 @@ export const CLOUD_HEIGHT_FIELD_TOOLTIP =
 
 export const RANGE_COMPUTED_TOOLTIP =
   'ערך מחושב אוטומטית כטווח בין העמדה למטרה לפי נ"צ וגובה כששניהם נטענו. לא ניתן לעריכה ידנית.'
+
+export const OBSTACLE_HEIGHT_REFERENCE_TOGGLE_OPTIONS = [
+  { label: 'מעל פני הים', value: 'amsl' },
+  { label: 'מעל העמדה', value: 'abovePosition' },
+] as const
+
+export const OBSTACLE_HEIGHT_FIELD_LABEL_BY_REFERENCE = {
+  amsl: 'גובה מכשול (מעל פני הים)',
+  abovePosition: 'גובה מכשול (מעל העמדה)',
+} as const

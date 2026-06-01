@@ -1,11 +1,15 @@
 import { useEffect, useMemo, useState } from 'react'
 import type { Position } from '../domain/position.types'
 import type { Target } from '../domain/target.types'
+import { resolveObstacleHeightMetrics } from '../domain/obstacleHeightInput'
+import type { ObstacleHeightReference } from '../domain/obstacleHeightInput.types'
 import type { ObstaclesFeasibilityEvaluationInput } from '../domain/obstaclesFeasibility.types'
 import {
   POSITION_FIELD_TOOLTIP,
   TARGET_FIELD_TOOLTIP,
 } from '../domain/fireFeasibility.constants'
+import FireFeasibilityObstacleHeightField from './FireFeasibilityObstacleHeightField'
+import type { FireFeasibilityObstacleHeightFieldChange } from './FireFeasibilityObstacleHeightField'
 import FireFeasibilityRangeField from './FireFeasibilityRangeField'
 import FormField from './FormField'
 import Input from './Input'
@@ -31,7 +35,10 @@ function FireFeasibilityDistancesHeightsFields({
   rangeDisplay,
   onObstacleChange,
 }: FireFeasibilityDistancesHeightsFieldsProps) {
-  const [obstacleHeightInput, setObstacleHeightInput] = useState('')
+  const [obstacleHeight, setObstacleHeight] = useState<{
+    rawHeightMeters: number | null
+    reference: ObstacleHeightReference
+  }>({ rawHeightMeters: null, reference: 'amsl' })
   const [positionToObstacleRangeInput, setPositionToObstacleRangeInput] = useState('')
   const [hide1Distance, setHide1Distance] = useState('')
   const [hide1HeightDiff, setHide1HeightDiff] = useState('')
@@ -39,18 +46,22 @@ function FireFeasibilityDistancesHeightsFields({
   const [hide2HeightDiff, setHide2HeightDiff] = useState('')
 
   const obstacle = useMemo(() => {
-    const obstacleHeightMeters = parseOptionalNumber(obstacleHeightInput)
     const positionToObstacleRangeMeters = parseOptionalNumber(positionToObstacleRangeInput)
-    if (obstacleHeightMeters === null || positionToObstacleRangeMeters === null) {
+    if (obstacleHeight.rawHeightMeters === null || positionToObstacleRangeMeters === null) {
       return null
     }
 
+    const heightMetrics = resolveObstacleHeightMetrics({
+      rawHeightMeters: obstacleHeight.rawHeightMeters,
+      reference: obstacleHeight.reference,
+      positionAltitudeMeters: position.altitude,
+    })
+
     return {
-      obstacleHeightMeters,
+      ...heightMetrics,
       positionToObstacleRangeMeters,
-      positionToObstacleHeightDifferenceMeters: obstacleHeightMeters - position.altitude,
     }
-  }, [obstacleHeightInput, positionToObstacleRangeInput, position.altitude])
+  }, [obstacleHeight, positionToObstacleRangeInput, position.altitude])
 
   useEffect(() => {
     onObstacleChange(obstacle)
@@ -76,13 +87,9 @@ function FireFeasibilityDistancesHeightsFields({
         <Input type="number" value={String(position.altitude)} disabled />
       </FormField>
 
-      <FormField label="גובה מכשול (מעל פני הים)">
-        <Input
-          type="number"
-          value={obstacleHeightInput}
-          onChange={(e) => setObstacleHeightInput(e.target.value)}
-        />
-      </FormField>
+      <FireFeasibilityObstacleHeightField
+        onChange={(value: FireFeasibilityObstacleHeightFieldChange) => setObstacleHeight(value)}
+      />
 
       <FormField label="טווח מכשול עמדה">
         <Input
