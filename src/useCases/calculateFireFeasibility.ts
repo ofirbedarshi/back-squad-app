@@ -2,17 +2,13 @@ import { evaluateCloudsFeasibility, evaluateCloudsFeasibilityGenB } from '../dom
 import {
   createNotImplementedCategoryResultsByGeneration,
 } from '../domain/fireFeasibility'
-import {
-  buildHitProbabilityLogs,
-  calculateHitProbabilityByFlightPath,
-} from '../domain/hitProbability'
+import { buildHitProbabilityFlightPathResultsByGeneration } from './buildHitProbabilityFlightPathResultsByGeneration'
 import {
   evaluateObstaclesFeasibilityGenB,
   evaluateObstaclesFeasibilityWhenMissing,
 } from '../domain/obstaclesFeasibility'
 import type { CloudsFeasibilityEvaluationInput } from '../domain/cloudsFeasibility.types'
 import type {
-  FireFeasibilityFlightPathPercentByPath,
   FireFeasibilityFormData,
   FireFeasibilityResults,
 } from '../domain/fireFeasibility.types'
@@ -54,20 +50,10 @@ export function calculateFireFeasibility(formData: FireFeasibilityFormData): Fir
       })
     : evaluateObstaclesFeasibilityWhenMissing()
   const obstaclesGenA = createNotImplementedCategoryResultsByGeneration().a
-  const hitProbabilityGenB = calculateHitProbabilityByFlightPath({
+  const flightPaths = buildHitProbabilityFlightPathResultsByGeneration({
     positionToTargetRangeMeters: formData.positionToTargetRange,
     positionToTargetHeightDifferenceMeters: formData.positionToTargetHeightDifference,
   })
-  const hitProbabilityGenA: FireFeasibilityFlightPathPercentByPath = {
-    flat: 0,
-    low: 0,
-    lofted: 0,
-    '+lofted': 0,
-  }
-  const hitProbabilityLogsGenB = buildHitProbabilityLogs(
-    hitProbabilityGenB.debug,
-    hitProbabilityGenB.percentByFlightPath,
-  )
 
   return {
     clouds: {
@@ -79,15 +65,6 @@ export function calculateFireFeasibility(formData: FireFeasibilityFormData): Fir
       b: obstaclesGenB,
     },
     concealment: createNotImplementedCategoryResultsByGeneration(),
-    flightPaths: {
-      a: {
-        percentByFlightPath: hitProbabilityGenA,
-        logs: [],
-      },
-      b: {
-        percentByFlightPath: hitProbabilityGenB.percentByFlightPath,
-        logs: hitProbabilityLogsGenB,
-      },
-    },
+    flightPaths,
   }
 }

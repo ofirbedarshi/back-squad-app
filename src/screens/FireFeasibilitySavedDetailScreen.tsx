@@ -13,6 +13,8 @@ function FireFeasibilitySavedDetailScreen() {
   const [record, setRecord] = useState<FireFeasibilityRecord | null>(null)
 
   useEffect(() => {
+    setRecord(null)
+
     if (!id) {
       reportUIError('מזהה רשומה חסר')
       navigate('/fire-feasibility')
@@ -30,16 +32,20 @@ function FireFeasibilitySavedDetailScreen() {
   }, [id, navigate, reportUIError])
 
   if (!record) {
-    return null
+    return (
+      <div dir="rtl" className="flex min-h-full flex-col items-center justify-center bg-neutral-50 px-4">
+        <p className="text-sm font-medium text-neutral-500">טוען תוצאות…</p>
+      </div>
+    )
   }
 
   return (
-    <div dir="rtl" className="flex h-full min-h-0 flex-col bg-neutral-50">
+    <div dir="rtl" className="flex min-h-full flex-col bg-neutral-50">
       <header className="shrink-0 border-b border-neutral-200 bg-white px-4 py-4 text-center text-lg font-bold text-neutral-800">
         {getFireFeasibilityCardTitle(record)}
       </header>
 
-      <div className="min-h-0 flex-1 overflow-y-auto p-4">
+      <div className="p-4">
         <FireFeasibilityResultsView results={record.results} />
       </div>
     </div>

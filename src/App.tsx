@@ -44,6 +44,7 @@ import FireFeasibilitySavedDetailScreen from './screens/FireFeasibilitySavedDeta
 
 function AppRoutes() {
   const location = useLocation()
+
   return (
     <div className="flex flex-col min-h-svh bg-neutral-50">
       <main className="flex min-h-0 flex-1 flex-col" style={{ paddingBottom: 'calc(4rem + env(safe-area-inset-bottom))' }}>

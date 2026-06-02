@@ -103,7 +103,7 @@ function BottomNav() {
   return (
     <nav
       dir="rtl"
-      className="fixed bottom-0 inset-x-0 z-50 flex items-stretch bg-white border-t border-neutral-200"
+      className="fixed bottom-0 inset-x-0 z-[60] flex items-stretch bg-white border-t border-neutral-200"
       style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
     >
       {navItems.map((item) => (

@@ -3,6 +3,8 @@ import {
 } from './fireFeasibility.constants'
 import type {
   FireFeasibilityCategoryResultsByGeneration,
+  FireFeasibilityFlightPathGenerationResult,
+  FireFeasibilityFlightPathPercentByPath,
   FireFeasibilityFormData,
   FireFeasibilityRecord,
   FireFeasibilityRecordInput,
@@ -30,5 +32,21 @@ export function createNotImplementedCategoryResultsByGeneration(): FireFeasibili
   return {
     a: { enabled: false, notes: FIRE_FEASIBILITY_NOT_IMPLEMENTED_NOTE, logs: [] },
     b: { enabled: false, notes: FIRE_FEASIBILITY_NOT_IMPLEMENTED_NOTE, logs: [] },
+  }
+}
+
+export function createNotImplementedHitProbabilityPercentByPath(): FireFeasibilityFlightPathPercentByPath {
+  return {
+    flat: 0,
+    low: 0,
+    lofted: 0,
+    '+lofted': 0,
+  }
+}
+
+export function createNotImplementedHitProbabilityGenerationResult(): FireFeasibilityFlightPathGenerationResult {
+  return {
+    percentByFlightPath: createNotImplementedHitProbabilityPercentByPath(),
+    logs: [],
   }
 }

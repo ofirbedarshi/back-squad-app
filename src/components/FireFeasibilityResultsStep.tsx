@@ -9,7 +9,7 @@ interface FireFeasibilityResultsStepProps {
 
 function FireFeasibilityResultsStep({ results, onSave }: FireFeasibilityResultsStepProps) {
   return (
-    <div dir="rtl" className="flex h-full min-h-0 flex-col bg-neutral-50">
+    <div dir="rtl" className="flex min-h-full flex-col bg-neutral-50">
       <header className="sticky top-0 z-10 shrink-0 border-b border-neutral-200 bg-white px-4 py-3">
         <div className="flex items-center gap-2">
           <span className="min-w-0 flex-1 truncate px-1 text-center text-lg font-bold text-neutral-800">
@@ -25,7 +25,7 @@ function FireFeasibilityResultsStep({ results, onSave }: FireFeasibilityResultsS
         </div>
       </header>
 
-      <div className="min-h-0 flex-1 overflow-y-auto p-4">
+      <div className="p-4">
         <FireFeasibilityResultsView results={results} />
       </div>
     </div>

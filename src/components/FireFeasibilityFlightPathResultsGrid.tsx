@@ -3,6 +3,7 @@ import {
   FIRE_FEASIBILITY_GENERATION_LABELS,
 } from '../domain/fireFeasibility.constants'
 import type {
+  FireFeasibilityFlightPathPercentByPath,
   FireFeasibilityFlightPathResultsByGeneration,
   FireFeasibilityGeneration,
 } from '../domain/fireFeasibility.types'
@@ -10,6 +11,13 @@ import FireFeasibilityFlightPathLogsPanel from './FireFeasibilityFlightPathLogsP
 import FireFeasibilityFlightPathResultColumn from './FireFeasibilityFlightPathResultColumn'
 
 const GENERATION_ORDER: FireFeasibilityGeneration[] = ['a', 'b']
+
+const EMPTY_FLIGHT_PATH_PERCENTS: FireFeasibilityFlightPathPercentByPath = {
+  flat: 0,
+  low: 0,
+  lofted: 0,
+  '+lofted': 0,
+}
 
 interface FireFeasibilityFlightPathResultsGridProps {
   results: FireFeasibilityFlightPathResultsByGeneration
@@ -27,7 +35,9 @@ function FireFeasibilityFlightPathResultsGrid({
           key={generation}
           generationLabel={FIRE_FEASIBILITY_GENERATION_LABELS[generation]}
           rows={FIRE_FEASIBILITY_FLIGHT_PATH_RESULT_ROWS}
-          percentByFlightPath={results[generation].percentByFlightPath}
+          percentByFlightPath={
+            results[generation]?.percentByFlightPath ?? EMPTY_FLIGHT_PATH_PERCENTS
+          }
         />
       ))}
       </div>

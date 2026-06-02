@@ -1,5 +1,6 @@
 import { FIRE_FEASIBILITY_GENERATION_LABELS } from '../domain/fireFeasibility.constants'
 import type {
+  FireFeasibilityCategoryResult,
   FireFeasibilityCategoryResultsByGeneration,
   FireFeasibilityGeneration,
 } from '../domain/fireFeasibility.types'
@@ -7,6 +8,12 @@ import FireFeasibilityCategoryLogsPanel from './FireFeasibilityCategoryLogsPanel
 import FireFeasibilityCategoryResultBlock from './FireFeasibilityCategoryResultBlock'
 
 const GENERATION_ORDER: FireFeasibilityGeneration[] = ['a', 'b']
+
+const EMPTY_CATEGORY_RESULT: FireFeasibilityCategoryResult = {
+  enabled: false,
+  notes: '',
+  logs: [],
+}
 
 interface FireFeasibilityCategoryResultsSectionProps {
   title: string
@@ -26,7 +33,7 @@ function FireFeasibilityCategoryResultsSection({
           <FireFeasibilityCategoryResultBlock
             key={generation}
             generationLabel={FIRE_FEASIBILITY_GENERATION_LABELS[generation]}
-            result={results[generation]}
+            result={results[generation] ?? EMPTY_CATEGORY_RESULT}
             showLogs={false}
           />
         ))}

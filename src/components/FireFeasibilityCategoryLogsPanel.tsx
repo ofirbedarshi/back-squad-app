@@ -14,9 +14,12 @@ interface FireFeasibilityCategoryLogsPanelProps {
 function FireFeasibilityCategoryLogsPanel({ results }: FireFeasibilityCategoryLogsPanelProps) {
   const [activeGeneration, setActiveGeneration] = useState<FireFeasibilityGeneration>('a')
 
-  const activeLogs = useMemo(() => results[activeGeneration].logs ?? [], [activeGeneration, results])
+  const activeLogs = useMemo(
+    () => results[activeGeneration]?.logs ?? [],
+    [activeGeneration, results],
+  )
 
-  if (results.a.logs.length === 0 && results.b.logs.length === 0) {
+  if ((results.a?.logs?.length ?? 0) === 0 && (results.b?.logs?.length ?? 0) === 0) {
     return null
   }
 

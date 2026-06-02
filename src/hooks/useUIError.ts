@@ -1,11 +1,15 @@
+import { useCallback } from 'react'
 import { useErrorContext } from '../context/ErrorContext'
 
 export function useUIError() {
   const { showError } = useErrorContext()
 
-  function reportUIError(message: string) {
-    showError(message, 'warning')
-  }
+  const reportUIError = useCallback(
+    (message: string) => {
+      showError(message, 'warning')
+    },
+    [showError],
+  )
 
   return { reportUIError }
 }
