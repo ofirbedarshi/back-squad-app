@@ -6,7 +6,7 @@ import {
   milsToDegrees,
 } from '../domain/unitConversion'
 
-function parseFiniteNumberFromInput(raw: string): number | null {
+export function parseFiniteNumberFromInput(raw: string): number | null {
   const normalized = raw.trim().replaceAll(',', '.')
   if (normalized === '') {
     return null
