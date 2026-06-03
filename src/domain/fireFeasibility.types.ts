@@ -54,6 +54,6 @@ export interface FireFeasibilityRecordInput {
 
 export interface FireFeasibilityRecord extends FireFeasibilityRecordInput {
   id: string
-  savedAt: string
+  updatedAt: string
 }
 

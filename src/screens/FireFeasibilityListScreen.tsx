@@ -118,7 +118,7 @@ function FireFeasibilityListScreen() {
         )}
 
         {records.map((record) => {
-          const { modeLabel, targetName, positionName, savedAtLabel } = getFireFeasibilityCardDetails(
+          const { modeLabel, targetName, positionName, updatedAtLabel } = getFireFeasibilityCardDetails(
             record,
             targets,
             positions,
@@ -134,8 +134,7 @@ function FireFeasibilityListScreen() {
                   <span>עמדה: {positionName}</span>
                 </div>
               }
-              lastUpdatedAt={savedAtLabel}
-              lastUpdatedLabel="נשמר"
+              lastUpdatedAt={updatedAtLabel}
               onClick={() => navigate(`/fire-feasibility/saved/${record.id}`)}
               menuTitle={modeLabel}
               menuItems={[

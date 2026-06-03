@@ -1,3 +1,4 @@
+import { createWithUpdatedAt } from './createWithUpdatedAt'
 import {
   FIRE_FEASIBILITY_NOT_IMPLEMENTED_NOTE,
 } from './fireFeasibility.constants'
@@ -21,11 +22,7 @@ export function createEmptyFireFeasibilityFormData(): FireFeasibilityFormData {
 }
 
 export function createFireFeasibilityRecord(input: FireFeasibilityRecordInput): FireFeasibilityRecord {
-  return {
-    ...input,
-    id: crypto.randomUUID(),
-    savedAt: new Date().toISOString(),
-  }
+  return createWithUpdatedAt(input)
 }
 
 export function createNotImplementedCategoryResultsByGeneration(): FireFeasibilityCategoryResultsByGeneration {

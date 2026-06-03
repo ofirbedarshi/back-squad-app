@@ -28,6 +28,6 @@ export function getFireFeasibilityCardDetails(
     modeLabel: getFireFeasibilityCardTitle(record),
     targetName: resolveTargetName(record.targetId, targets),
     positionName: resolvePositionName(record.positionId, positions),
-    savedAtLabel: formatUpdatedAt(record.savedAt),
+    updatedAtLabel: formatUpdatedAt(record.updatedAt),
   }
 }
