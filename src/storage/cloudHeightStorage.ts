@@ -20,3 +20,7 @@ export function loadCloudHeightSettings(): CloudHeightSettings {
 export function saveCloudHeightSettings(settings: CloudHeightSettings): void {
   localStorage.setItem(CLOUD_HEIGHT_KEY, JSON.stringify(settings))
 }
+
+export function clearCloudHeightSettings(): void {
+  localStorage.removeItem(CLOUD_HEIGHT_KEY)
+}
