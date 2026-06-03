@@ -13,9 +13,9 @@ import type {
 } from '../domain/hitPenetration.types'
 
 const TRAJECTORY_OPTIONS = [
-  { label: 'לופטד פלוס', value: 'loftedPlus' },
-  { label: 'לופטד', value: 'lofted' },
-  { label: 'לו', value: 'low' },
+  { label: 'lofted+', value: 'loftedPlus' },
+  { label: 'lofted', value: 'lofted' },
+  { label: 'low', value: 'low' },
 ]
 
 const DELAY_OPTIONS = [
