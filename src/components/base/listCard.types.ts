@@ -3,6 +3,7 @@ import type { OptionsMenuItem } from './OptionsMenu'
 
 export interface ListCardProps {
   title: ReactNode
+  titleClassName?: string
   subheader?: ReactNode
   lastUpdatedAt?: string
   lastUpdatedLabel?: string

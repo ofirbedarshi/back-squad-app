@@ -5,21 +5,25 @@ interface TargetCardLiveMetricsRowProps {
   metrics: TargetLiveMetrics
 }
 
+const METRIC_FIELDS = [
+  { label: 'אזימוט', value: (m: TargetLiveMetrics) => formatMetric(m.azimuth) },
+  { label: 'טווח', value: (m: TargetLiveMetrics) => formatMetric(m.range) },
+  { label: 'הפרש גובה', value: (m: TargetLiveMetrics) => formatMetric(m.altitudeDiff) },
+] as const
+
 function TargetCardLiveMetricsRow({ metrics }: TargetCardLiveMetricsRowProps) {
   return (
-    <div className="flex gap-3">
-      <span className="text-neutral-600">
-        <span className="text-neutral-400 text-xs">אזימוט </span>
-        {formatMetric(metrics.azimuth)}
-      </span>
-      <span className="text-neutral-600">
-        <span className="text-neutral-400 text-xs">טווח </span>
-        {formatMetric(metrics.range)}
-      </span>
-      <span className="text-neutral-600">
-        <span className="text-neutral-400 text-xs">הפרש גובה </span>
-        {formatMetric(metrics.altitudeDiff)}
-      </span>
+    <div className="w-[4.75rem] shrink-0 rounded-md bg-neutral-50 px-1.5 py-1">
+      <div className="flex flex-col gap-1">
+        {METRIC_FIELDS.map((field) => (
+          <div key={field.label} className="flex min-w-0 flex-col gap-px">
+            <span className="text-[9px] leading-none text-neutral-400">{field.label}</span>
+            <span className="text-[10px] font-semibold tabular-nums leading-tight text-neutral-800">
+              {field.value(metrics)}
+            </span>
+          </div>
+        ))}
+      </div>
     </div>
   )
 }

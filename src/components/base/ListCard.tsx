@@ -8,6 +8,7 @@ const DEFAULT_LAST_UPDATED_LABEL = 'עודכן לאחרונה'
 
 function ListCard({
   title,
+  titleClassName,
   subheader,
   lastUpdatedAt,
   lastUpdatedLabel = DEFAULT_LAST_UPDATED_LABEL,
@@ -42,8 +43,19 @@ function ListCard({
       >
         <div className="flex items-start justify-between gap-3">
           <div className="flex-1 flex flex-col gap-1 min-w-0">
-            <div className="font-bold text-neutral-800 text-base min-w-0">{title}</div>
-            {subheader ? <div className="text-sm text-neutral-500">{subheader}</div> : null}
+            <div
+              className={[
+                'font-bold text-neutral-800 text-base min-w-0',
+                titleClassName,
+              ]
+                .filter(Boolean)
+                .join(' ')}
+            >
+              {title}
+            </div>
+            {subheader ? (
+              <div className="min-w-0 w-full text-sm text-neutral-500">{subheader}</div>
+            ) : null}
           </div>
           {lastUpdatedAt ? (
             <div className="flex flex-col items-end shrink-0 self-start pt-0.5 gap-0.5">

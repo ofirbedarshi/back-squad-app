@@ -25,18 +25,22 @@ function TargetCard({ target, onClick, menuItems }: TargetCardProps) {
   return (
     <ListCard
       title={target.targetName}
+      titleClassName="line-clamp-2 leading-snug"
+      className="gap-1.5 p-3"
       menuTitle={target.targetName}
       menuItems={menuItems}
       subheader={
-        <div className="flex flex-col gap-1">
-          {metrics ? <TargetCardLiveMetricsRow metrics={metrics} /> : null}
-          {hitProbabilityPreview || cloudsFeasibilityPreview ? (
-            <TargetCardFireFeasibilityPreview
-              hitProbability={hitProbabilityPreview}
-              clouds={cloudsFeasibilityPreview}
-            />
-          ) : null}
-        </div>
+        metrics || hitProbabilityPreview || cloudsFeasibilityPreview ? (
+          <div className="grid w-full min-w-0 grid-cols-[auto_1fr] items-start gap-1.5">
+            {metrics ? <TargetCardLiveMetricsRow metrics={metrics} /> : null}
+            {hitProbabilityPreview || cloudsFeasibilityPreview ? (
+              <TargetCardFireFeasibilityPreview
+                hitProbability={hitProbabilityPreview}
+                clouds={cloudsFeasibilityPreview}
+              />
+            ) : null}
+          </div>
+        ) : null
       }
       lastUpdatedAt={formatUpdatedAt(target.updatedAt)}
       onClick={onClick}
