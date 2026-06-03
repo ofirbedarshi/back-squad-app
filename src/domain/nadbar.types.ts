@@ -1,10 +1,9 @@
 import type { EntityLinkIds } from './entityLinks.types'
 
-export type NadbarType = 'PointerTeam' | 'PointerTeamUpdated' | 'Katmam' | 'TzurPointer'
+export type NadbarType = 'PointerTeam' | 'Katmam' | 'TzurPointer'
 
 export const NADBAR_TYPES: readonly NadbarType[] = [
   'PointerTeam',
-  'PointerTeamUpdated',
   'Katmam',
   'TzurPointer',
 ]

@@ -6,8 +6,8 @@ import { createTargetFromNadbarVarsAndPropagateUseCase } from './createTargetFro
 
 describe('createTargetFromNadbarVarsAndPropagateUseCase', () => {
   it('propagates validated block 2 vars to later blocks after save', () => {
-    const template = getNadbarTemplate('PointerTeamUpdated')
-    const nadbar = createNadbarFromTemplate('PointerTeamUpdated', template)
+    const template = getNadbarTemplate('PointerTeam')
+    const nadbar = createNadbarFromTemplate('PointerTeam', template)
     const withVars = {
       ...nadbar,
       blockMessageVars: [
@@ -34,8 +34,8 @@ describe('createTargetFromNadbarVarsAndPropagateUseCase', () => {
   })
 
   it('throws before propagation when vars are invalid', () => {
-    const template = getNadbarTemplate('PointerTeamUpdated')
-    const nadbar = createNadbarFromTemplate('PointerTeamUpdated', template)
+    const template = getNadbarTemplate('PointerTeam')
+    const nadbar = createNadbarFromTemplate('PointerTeam', template)
     const withInvalid = {
       ...nadbar,
       blockMessageVars: [{}, { metara: 'מטרה א', meraom: '12345' }, {}, {}, {}, {}],

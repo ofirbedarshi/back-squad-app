@@ -23,7 +23,7 @@ export function isNadbarType(value: string): value is NadbarType {
 }
 
 export function nadbarRequiresEntityLinks(type: NadbarType): boolean {
-  return type !== 'PointerTeamUpdated'
+  return type !== 'PointerTeam'
 }
 
 function isNadbarMessageSource(value: unknown): value is NadbarMessageSource {

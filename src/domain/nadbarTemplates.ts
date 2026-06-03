@@ -1,5 +1,4 @@
 import pointerTeamTemplate from '../data/nadbar-templates/PointerTeam.template.json'
-import pointerTeamUpdatedTemplate from '../data/nadbar-templates/PointerTeamUpdated.template.json'
 import katmamTemplate from '../data/nadbar-templates/Katmam.template.json'
 import tzurPointerTemplate from '../data/nadbar-templates/TzurPointer.template.json'
 import { parseNadbarTemplate } from './nadbar'
@@ -7,7 +6,6 @@ import type { NadbarTemplate, NadbarType } from './nadbar.types'
 
 const TEMPLATES_BY_TYPE: Record<NadbarType, NadbarTemplate> = {
   PointerTeam: parseNadbarTemplate(pointerTeamTemplate),
-  PointerTeamUpdated: parseNadbarTemplate(pointerTeamUpdatedTemplate),
   Katmam: parseNadbarTemplate(katmamTemplate),
   TzurPointer: parseNadbarTemplate(tzurPointerTemplate),
 }

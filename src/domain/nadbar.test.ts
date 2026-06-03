@@ -25,18 +25,17 @@ function blocksFromMessages(messages: NadbarMessage[]) {
 }
 
 describe('nadbarRequiresEntityLinks', () => {
-  it('is false only for PointerTeamUpdated', () => {
-    assert.equal(nadbarRequiresEntityLinks('PointerTeamUpdated'), false)
-    assert.equal(nadbarRequiresEntityLinks('PointerTeam'), true)
+  it('is false only for PointerTeam', () => {
+    assert.equal(nadbarRequiresEntityLinks('PointerTeam'), false)
     assert.equal(nadbarRequiresEntityLinks('Katmam'), true)
     assert.equal(nadbarRequiresEntityLinks('TzurPointer'), true)
   })
 })
 
 describe('assertNadbarSaveableUseCase', () => {
-  it('allows PointerTeamUpdated without links', () => {
+  it('allows PointerTeam without links', () => {
     const nadbar = createNadbarFromTemplate(
-      'PointerTeamUpdated',
+      'PointerTeam',
       blocksFromMessages([{ source: 'Me', content: 'בדיקה' }]),
     )
     assert.equal(nadbar.links, undefined)
@@ -257,8 +256,8 @@ describe('createNadbarFromTemplate', () => {
   })
 
   it('initializes empty blockMessageVars per template block', () => {
-    const template = getNadbarTemplate('PointerTeamUpdated')
-    const nadbar = createNadbarFromTemplate('PointerTeamUpdated', template)
+    const template = getNadbarTemplate('PointerTeam')
+    const nadbar = createNadbarFromTemplate('PointerTeam', template)
     assert.equal(nadbar.blockMessageVars?.length, 6)
     assert.deepEqual(nadbar.blockMessageVars, [{}, {}, {}, {}, {}, {}])
     assert.ok(isValidNadbar(nadbar))
@@ -286,8 +285,8 @@ describe('normalizeNadbar notes', () => {
 
 describe('updateNadbarBlockMessageVar', () => {
   it('updates vars only for the given block index', () => {
-    const template = getNadbarTemplate('PointerTeamUpdated')
-    const nadbar = createNadbarFromTemplate('PointerTeamUpdated', template)
+    const template = getNadbarTemplate('PointerTeam')
+    const nadbar = createNadbarFromTemplate('PointerTeam', template)
     const updated = updateNadbarBlockMessageVar(nadbar, 0, 'metara', 'block-0')
     const alsoUpdated = updateNadbarBlockMessageVar(updated, 1, 'metara', 'block-1')
 
@@ -299,15 +298,15 @@ describe('updateNadbarBlockMessageVar', () => {
 
 describe('getNadbarTemplate', () => {
   it('returns template for each type', () => {
-    for (const type of ['PointerTeam', 'PointerTeamUpdated', 'Katmam', 'TzurPointer'] as const) {
+    for (const type of ['PointerTeam', 'Katmam', 'TzurPointer'] as const) {
       const template = getNadbarTemplate(type)
       assert.ok(template.blocks.length > 0)
       assert.ok(template.blocks[0]?.messages.length > 0)
     }
   })
 
-  it('PointerTeamUpdated has six blocks', () => {
-    const template = getNadbarTemplate('PointerTeamUpdated')
+  it('PointerTeam has six blocks', () => {
+    const template = getNadbarTemplate('PointerTeam')
     assert.equal(template.blocks.length, 6)
     assert.equal(template.blocks[0]?.messages.length, 4)
     assert.equal(template.blocks[1]?.messages.length, 6)

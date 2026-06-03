@@ -202,7 +202,7 @@ describe('resolveNadbarUserVarFallbackDisplayValue', () => {
   })
 })
 
-const pointerTeamUpdatedEchoMessages: NadbarMessage[] = [
+const pointerTeamEchoMessages: NadbarMessage[] = [
   { source: 'They', content: '{{openingCallsign1}} מ {{openingCallsign2}} האם אתה מבלה בענבים' },
   { source: 'Me', content: 'חיובי, מבלה בענבים / שלילי עוד __ קטנות' },
   { source: 'They', content: 'קבל קוץ {{kutz}} כמו כן גור {{gur}} מעל פני הים' },
@@ -286,7 +286,7 @@ describe('resolveNadbarUserVarDisplayValue', () => {
 
 describe('buildUserVarFirstMessageIndex', () => {
   it('records first message index per user var', () => {
-    const index = buildUserVarFirstMessageIndex(pointerTeamUpdatedEchoMessages)
+    const index = buildUserVarFirstMessageIndex(pointerTeamEchoMessages)
     assert.equal(index.get('openingCallsign1'), 0)
     assert.equal(index.get('openingCallsign2'), 0)
     assert.equal(index.get('kutz'), 2)
@@ -296,10 +296,10 @@ describe('buildUserVarFirstMessageIndex', () => {
 
 describe('isNadbarUserVarEditableAt', () => {
   it('allows kutz and gur only on first occurrence message', () => {
-    assert.equal(isNadbarUserVarEditableAt(pointerTeamUpdatedEchoMessages, 2, 'kutz'), true)
-    assert.equal(isNadbarUserVarEditableAt(pointerTeamUpdatedEchoMessages, 2, 'gur'), true)
-    assert.equal(isNadbarUserVarEditableAt(pointerTeamUpdatedEchoMessages, 3, 'kutz'), false)
-    assert.equal(isNadbarUserVarEditableAt(pointerTeamUpdatedEchoMessages, 3, 'gur'), false)
+    assert.equal(isNadbarUserVarEditableAt(pointerTeamEchoMessages, 2, 'kutz'), true)
+    assert.equal(isNadbarUserVarEditableAt(pointerTeamEchoMessages, 2, 'gur'), true)
+    assert.equal(isNadbarUserVarEditableAt(pointerTeamEchoMessages, 3, 'kutz'), false)
+    assert.equal(isNadbarUserVarEditableAt(pointerTeamEchoMessages, 3, 'gur'), false)
   })
 
   it('resets first occurrence per block when using block-local messages', () => {
@@ -339,41 +339,41 @@ describe('isNadbarUserVarEditableAt', () => {
   })
 })
 
-const pointerTeamUpdatedBlockFooterActions = getNadbarTemplate('PointerTeamUpdated').blocks.map(
+const pointerTeamBlockFooterActions = getNadbarTemplate('PointerTeam').blocks.map(
   (block) => block.footerActions,
 )
 
 describe('isNadbarBlockHasLoadTarget', () => {
   it('is true only for blocks with loadTarget footer action', () => {
-    assert.equal(isNadbarBlockHasLoadTarget(pointerTeamUpdatedBlockFooterActions, 1), false)
-    assert.equal(isNadbarBlockHasLoadTarget(pointerTeamUpdatedBlockFooterActions, 2), true)
-    assert.equal(isNadbarBlockHasLoadTarget(pointerTeamUpdatedBlockFooterActions, 5), true)
+    assert.equal(isNadbarBlockHasLoadTarget(pointerTeamBlockFooterActions, 1), false)
+    assert.equal(isNadbarBlockHasLoadTarget(pointerTeamBlockFooterActions, 2), true)
+    assert.equal(isNadbarBlockHasLoadTarget(pointerTeamBlockFooterActions, 5), true)
   })
 })
 
 describe('isNadbarTargetVarLoadOnly', () => {
   it('is true for target-derived vars on loadTarget blocks', () => {
     assert.equal(
-      isNadbarTargetVarLoadOnly(pointerTeamUpdatedBlockFooterActions, 2, 'metara'),
+      isNadbarTargetVarLoadOnly(pointerTeamBlockFooterActions, 2, 'metara'),
       true,
     )
     assert.equal(
-      isNadbarTargetVarLoadOnly(pointerTeamUpdatedBlockFooterActions, 2, 'amura'),
+      isNadbarTargetVarLoadOnly(pointerTeamBlockFooterActions, 2, 'amura'),
       true,
     )
   })
 
   it('is false without loadTarget block or for non-target vars', () => {
     assert.equal(
-      isNadbarTargetVarLoadOnly(pointerTeamUpdatedBlockFooterActions, 1, 'metara'),
+      isNadbarTargetVarLoadOnly(pointerTeamBlockFooterActions, 1, 'metara'),
       false,
     )
     assert.equal(
-      isNadbarTargetVarLoadOnly(pointerTeamUpdatedBlockFooterActions, 5, 'flightTime'),
+      isNadbarTargetVarLoadOnly(pointerTeamBlockFooterActions, 5, 'flightTime'),
       false,
     )
     assert.equal(
-      isNadbarTargetVarLoadOnly(pointerTeamUpdatedBlockFooterActions, 2, 'amuraValid'),
+      isNadbarTargetVarLoadOnly(pointerTeamBlockFooterActions, 2, 'amuraValid'),
       false,
     )
   })

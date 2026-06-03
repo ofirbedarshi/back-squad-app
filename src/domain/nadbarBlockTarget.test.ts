@@ -29,7 +29,7 @@ const baseNadbar: Nadbar = {
   id: 'nadbar-1',
   createdAt: '2026-05-01T10:00:00.000Z',
   updatedAt: '2026-05-02T12:30:00.000Z',
-  type: 'PointerTeamUpdated',
+  type: 'PointerTeam',
   messageBlocks: [{}, {}, {}].map(() => ({ messages: [{ source: 'They', content: '{{metara}}' }] })),
 }
 

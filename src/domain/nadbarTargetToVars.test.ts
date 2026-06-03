@@ -40,7 +40,7 @@ describe('resolveNadbarVarFromTarget', () => {
 
 describe('buildBlockMessageVarsFromTarget', () => {
   it('fills only vars used in the block messages', () => {
-    const template = getNadbarTemplate('PointerTeamUpdated')
+    const template = getNadbarTemplate('PointerTeam')
     const block3 = template.blocks[2]!
     const vars = buildBlockMessageVarsFromTarget(block3, sampleTarget, 90)
 
@@ -53,7 +53,7 @@ describe('buildBlockMessageVarsFromTarget', () => {
   })
 
   it('fills coordinate vars for block 2', () => {
-    const template = getNadbarTemplate('PointerTeamUpdated')
+    const template = getNadbarTemplate('PointerTeam')
     const block2 = template.blocks[1]!
     const vars = buildBlockMessageVarsFromTarget(block2, sampleTarget)
 
@@ -67,8 +67,8 @@ describe('buildBlockMessageVarsFromTarget', () => {
 
 describe('applyTargetToNadbarBlock', () => {
   it('updates only the requested block', () => {
-    const template = getNadbarTemplate('PointerTeamUpdated')
-    const nadbar = createNadbarFromTemplate('PointerTeamUpdated', template)
+    const template = getNadbarTemplate('PointerTeam')
+    const nadbar = createNadbarFromTemplate('PointerTeam', template)
     const withBlock2 = applyTargetToNadbarBlock(nadbar, 1, sampleTarget)
     const updated = applyTargetToNadbarBlock(withBlock2, 2, sampleTarget, 180)
 
@@ -88,8 +88,8 @@ const targetB: Target = {
 
 describe('applyTargetToNadbarBlocksFrom', () => {
   it('fills target-derived vars from blockIndex through last block', () => {
-    const template = getNadbarTemplate('PointerTeamUpdated')
-    const nadbar = createNadbarFromTemplate('PointerTeamUpdated', template)
+    const template = getNadbarTemplate('PointerTeam')
+    const nadbar = createNadbarFromTemplate('PointerTeam', template)
     const updated = applyTargetToNadbarBlocksFrom(nadbar, 2, sampleTarget, 180)
 
     assert.equal(updated.blockMessageVars?.[0]?.metara, undefined)
@@ -103,8 +103,8 @@ describe('applyTargetToNadbarBlocksFrom', () => {
   })
 
   it('reload from a later block updates only that block and after', () => {
-    const template = getNadbarTemplate('PointerTeamUpdated')
-    let nadbar = createNadbarFromTemplate('PointerTeamUpdated', template)
+    const template = getNadbarTemplate('PointerTeam')
+    let nadbar = createNadbarFromTemplate('PointerTeam', template)
     nadbar = applyTargetToNadbarBlocksFrom(nadbar, 2, sampleTarget, 180)
     nadbar = applyTargetToNadbarBlocksFrom(nadbar, 4, targetB, 200)
 
@@ -117,8 +117,8 @@ describe('applyTargetToNadbarBlocksFrom', () => {
 
 describe('clearTargetDerivedBlockVarsFrom', () => {
   it('clears target-derived vars from blockIndex through last block', () => {
-    const template = getNadbarTemplate('PointerTeamUpdated')
-    let nadbar = createNadbarFromTemplate('PointerTeamUpdated', template)
+    const template = getNadbarTemplate('PointerTeam')
+    let nadbar = createNadbarFromTemplate('PointerTeam', template)
     nadbar = applyTargetToNadbarBlocksFrom(nadbar, 2, sampleTarget, 180)
     nadbar = applyTargetToNadbarBlock(nadbar, 1, sampleTarget)
 
@@ -134,8 +134,8 @@ describe('clearTargetDerivedBlockVarsFrom', () => {
 
 describe('propagateTargetDerivedVarsFromBlock', () => {
   it('copies target-derived vars from manual entry block to later blocks that use them', () => {
-    const template = getNadbarTemplate('PointerTeamUpdated')
-    const nadbar = createNadbarFromTemplate('PointerTeamUpdated', template)
+    const template = getNadbarTemplate('PointerTeam')
+    const nadbar = createNadbarFromTemplate('PointerTeam', template)
     const withSource = {
       ...nadbar,
       blockMessageVars: [
@@ -162,8 +162,8 @@ describe('propagateTargetDerivedVarsFromBlock', () => {
   })
 
   it('propagates cleared values forward when source block clears a var', () => {
-    const template = getNadbarTemplate('PointerTeamUpdated')
-    let nadbar = createNadbarFromTemplate('PointerTeamUpdated', template)
+    const template = getNadbarTemplate('PointerTeam')
+    let nadbar = createNadbarFromTemplate('PointerTeam', template)
     nadbar = propagateTargetDerivedVarsFromBlock(
       {
         ...nadbar,
@@ -191,9 +191,9 @@ describe('propagateTargetDerivedVarsFromBlock', () => {
 
 describe('clearTargetDerivedBlockVars', () => {
   it('removes target-derived vars but keeps manual workflow vars', () => {
-    const template = getNadbarTemplate('PointerTeamUpdated')
+    const template = getNadbarTemplate('PointerTeam')
     const block3 = template.blocks[2]!
-    let nadbar = createNadbarFromTemplate('PointerTeamUpdated', template)
+    let nadbar = createNadbarFromTemplate('PointerTeam', template)
     nadbar = applyTargetToNadbarBlock(nadbar, 2, sampleTarget, 180)
     nadbar = {
       ...nadbar,
@@ -221,7 +221,7 @@ describe('clearTargetDerivedBlockVars', () => {
 
 describe('collectBlockUserVarNames', () => {
   it('collects unique var names from block messages', () => {
-    const template = getNadbarTemplate('PointerTeamUpdated')
+    const template = getNadbarTemplate('PointerTeam')
     const names = collectBlockUserVarNames(template.blocks[2]!)
 
     assert.ok(names.includes('metara'))
