@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import TargetAidCard from '../components/TargetAidCard'
+import ListSearchBar from '../components/base/ListSearchBar'
 import ListScreenHeader from '../components/base/ListScreenHeader'
 import type { TargetAid } from '../domain/targetAid.types'
 import { useConfirm } from '../hooks/useConfirm'
@@ -9,9 +10,13 @@ import { useNotification } from '../hooks/useNotification'
 import { loadTargetAidsUseCase } from '../useCases/loadTargetAids'
 import { removeAllTargetAidsUseCase } from '../useCases/removeAllTargetAids'
 import { removeTargetAidUseCase } from '../useCases/removeTargetAid'
+import { filterByQuery } from '../utils/search'
+import { getTargetAidSearchFields } from '../utils/targetAidSearch'
 
 function TargetAidListScreen() {
   const [items, setItems] = useState<TargetAid[]>(() => loadTargetAidsUseCase())
+  const [searchQuery, setSearchQuery] = useState('')
+  const filteredItems = filterByQuery(items, searchQuery, getTargetAidSearchFields)
   const navigate = useNavigate()
   const confirm = useConfirm()
   const { triggerError } = useDomainError()
@@ -73,11 +78,21 @@ function TargetAidListScreen() {
       />
 
       <div className="flex flex-col gap-3 p-4">
+        <ListSearchBar
+          searchQuery={searchQuery}
+          onSearchQueryChange={setSearchQuery}
+          placeholder="חפש לפי שם מטרה..."
+        />
+
         {items.length === 0 && (
           <p className="text-center text-neutral-400 py-8">אין טפסים שמורים</p>
         )}
 
-        {items.map((item) => (
+        {items.length > 0 && filteredItems.length === 0 && (
+          <p className="text-center text-neutral-400 py-8">לא נמצאו תוצאות</p>
+        )}
+
+        {filteredItems.map((item) => (
           <TargetAidCard
             key={item.id}
             item={item}

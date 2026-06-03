@@ -4,6 +4,7 @@ import NoteAddTriggerButton from '../components/NoteAddTriggerButton'
 import NoteEditModal from '../components/NoteEditModal'
 import UserNoteRow from '../components/UserNoteRow'
 import HeaderOptionsMenu from '../components/base/HeaderOptionsMenu'
+import ListSearchBar from '../components/base/ListSearchBar'
 import { formatUserNoteSavedAt, noteLastActivityIso } from '../domain/notes'
 import type { NoteVoicePayload, UserNote } from '../domain/notes.types'
 import { useConfirm } from '../hooks/useConfirm'
@@ -17,12 +18,15 @@ import { removeNoteUseCase } from '../useCases/removeNote'
 import { removeVoiceFromNoteUseCase } from '../useCases/removeVoiceFromNote'
 import { updateNoteUseCase } from '../useCases/updateNote'
 import { exportNotesCsvUseCase } from '../useCases/exportNotesCsv'
+import { filterByQuery } from '../utils/search'
+import { getNoteSearchFields } from '../utils/notesSearch'
 
 function NotesScreen() {
   const confirm = useConfirm()
   const { triggerError } = useDomainError()
   const { notifySuccess } = useNotification()
   const [notes, setNotes] = useState<UserNote[]>(() => loadNotesUseCase())
+  const [searchQuery, setSearchQuery] = useState('')
   const [addModalOpen, setAddModalOpen] = useState(false)
   const [editingNote, setEditingNote] = useState<UserNote | null>(null)
 
@@ -118,6 +122,7 @@ function NotesScreen() {
     (a, b) =>
       new Date(noteLastActivityIso(b)).getTime() - new Date(noteLastActivityIso(a)).getTime(),
   )
+  const filteredNotes = filterByQuery(sorted, searchQuery, getNoteSearchFields)
 
   return (
     <div dir="rtl" className="flex flex-col bg-neutral-50 min-h-full">
@@ -145,11 +150,21 @@ function NotesScreen() {
       <div className="flex flex-col gap-3 p-4">
         <NoteAddTriggerButton layout="listRow" onClick={() => setAddModalOpen(true)} />
 
+        <ListSearchBar
+          searchQuery={searchQuery}
+          onSearchQueryChange={setSearchQuery}
+          placeholder="חפש לפי תוכן ההערה..."
+        />
+
         {sorted.length === 0 && !addModalOpen && (
           <p className="text-center text-neutral-400 py-6 text-sm">אין הערות שמורות</p>
         )}
 
-        {sorted.map((note) => (
+        {sorted.length > 0 && filteredNotes.length === 0 && (
+          <p className="text-center text-neutral-400 py-6 text-sm">לא נמצאו תוצאות</p>
+        )}
+
+        {filteredNotes.map((note) => (
           <UserNoteRow
             key={note.id}
             note={note}

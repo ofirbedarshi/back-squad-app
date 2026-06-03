@@ -1,5 +1,6 @@
 import ListCard from './base/ListCard'
 import type { OptionsMenuItem } from './base/OptionsMenu'
+import { getNoteCardTitleText } from '../domain/notes'
 import type { UserNote } from '../domain/notes.types'
 import { formatVoiceDurationSec } from '../domain/voiceNote'
 import NoteVoicePlayback from './NoteVoicePlayback'
@@ -13,7 +14,7 @@ interface UserNoteRowProps {
 }
 
 function UserNoteRow({ note, lastUpdatedAt, onClick, menuItems, onPlaybackError }: UserNoteRowProps) {
-  const textDisplay = note.text.trim() ? note.text : '— ללא טקסט —'
+  const textDisplay = getNoteCardTitleText(note)
   const menuTitle = note.text.trim() || 'הערה ללא טקסט'
 
   return (

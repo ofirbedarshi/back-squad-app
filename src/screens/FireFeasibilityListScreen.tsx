@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import FireFeasibilityRangeHeightTargetMockModal from '../components/FireFeasibilityRangeHeightTargetMockModal'
 import ListScreenHeader from '../components/base/ListScreenHeader'
+import ListSearchBar from '../components/base/ListSearchBar'
 import ListCard from '../components/base/ListCard'
 import type {
   FireFeasibilityRecord,
@@ -18,12 +19,16 @@ import { loadTargetsUseCase } from '../useCases/loadTargets'
 import { removeAllFireFeasibilityRecordsUseCase } from '../useCases/removeAllFireFeasibilityRecords'
 import { removeFireFeasibilityRecordUseCase } from '../useCases/removeFireFeasibilityRecord'
 import { getFireFeasibilityCardDetails, getFireFeasibilityCardTitle } from '../utils/fireFeasibilityDisplay'
+import { getFireFeasibilitySearchFields } from '../utils/fireFeasibilitySearch'
+import { filterByQuery } from '../utils/search'
 
 function FireFeasibilityListScreen() {
   const [records, setRecords] = useState<FireFeasibilityRecord[]>([])
   const [targets, setTargets] = useState<Target[]>([])
   const [positions, setPositions] = useState<Position[]>([])
+  const [searchQuery, setSearchQuery] = useState('')
   const [showRangeHeightTargetMockModal, setShowRangeHeightTargetMockModal] = useState(false)
+  const filteredRecords = filterByQuery(records, searchQuery, getFireFeasibilitySearchFields)
   const navigate = useNavigate()
   const confirm = useConfirm()
   const { triggerError } = useDomainError()
@@ -105,6 +110,12 @@ function FireFeasibilityListScreen() {
       />
 
       <div className="flex flex-col gap-3 p-4">
+        <ListSearchBar
+          searchQuery={searchQuery}
+          onSearchQueryChange={setSearchQuery}
+          placeholder="חפש לפי סוג היתכנות..."
+        />
+
         <button
           type="button"
           onClick={() => setShowRangeHeightTargetMockModal(true)}
@@ -117,7 +128,11 @@ function FireFeasibilityListScreen() {
           <p className="py-8 text-center text-neutral-400">אין היתכנויות לירי שמורות</p>
         )}
 
-        {records.map((record) => {
+        {records.length > 0 && filteredRecords.length === 0 && (
+          <p className="py-8 text-center text-neutral-400">לא נמצאו תוצאות</p>
+        )}
+
+        {filteredRecords.map((record) => {
           const { modeLabel, targetName, positionName, updatedAtLabel } = getFireFeasibilityCardDetails(
             record,
             targets,

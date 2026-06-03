@@ -95,6 +95,11 @@ export function noteLastActivityIso(note: UserNote): string {
   return note.updatedAtIso ?? note.createdAtIso
 }
 
+/** Visible list-card title for a note (matches UserNoteRow). */
+export function getNoteCardTitleText(note: UserNote): string {
+  return note.text.trim() ? note.text : '— ללא טקסט —'
+}
+
 export function formatUserNoteSavedAt(isoUtc: string): string {
   return formatUpdatedAt(isoUtc)
 }

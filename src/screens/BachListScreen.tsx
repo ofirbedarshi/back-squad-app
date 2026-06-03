@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import BachCard from '../components/BachCard'
+import ListSearchBar from '../components/base/ListSearchBar'
 import ListScreenHeader from '../components/base/ListScreenHeader'
 import type { Bach } from '../domain/bach.types'
 import { useConfirm } from '../hooks/useConfirm'
@@ -9,9 +10,13 @@ import { useNotification } from '../hooks/useNotification'
 import { loadBachsUseCase } from '../useCases/loadBachs'
 import { removeAllBachsUseCase } from '../useCases/removeAllBachs'
 import { removeBachUseCase } from '../useCases/removeBach'
+import { getBachSearchFields } from '../utils/bachSearch'
+import { filterByQuery } from '../utils/search'
 
 function BachListScreen() {
   const [bachs, setBachs] = useState<Bach[]>(() => loadBachsUseCase())
+  const [searchQuery, setSearchQuery] = useState('')
+  const filteredBachs = filterByQuery(bachs, searchQuery, getBachSearchFields)
   const navigate = useNavigate()
   const confirm = useConfirm()
   const { triggerError } = useDomainError()
@@ -73,11 +78,21 @@ function BachListScreen() {
       />
 
       <div className="flex flex-col gap-3 p-4">
+        <ListSearchBar
+          searchQuery={searchQuery}
+          onSearchQueryChange={setSearchQuery}
+          placeholder="חפש לפי שם מטרה..."
+        />
+
         {bachs.length === 0 && (
           <p className="text-center text-neutral-400 py-8">אין בדחים שמורים</p>
         )}
 
-        {bachs.map((bach) => (
+        {bachs.length > 0 && filteredBachs.length === 0 && (
+          <p className="text-center text-neutral-400 py-8">לא נמצאו תוצאות</p>
+        )}
+
+        {filteredBachs.map((bach) => (
           <BachCard
             key={bach.id}
             bach={bach}

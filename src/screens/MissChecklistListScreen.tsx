@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import MissChecklistCard from '../components/MissChecklistCard'
+import ListSearchBar from '../components/base/ListSearchBar'
 import ListScreenHeader from '../components/base/ListScreenHeader'
 import type { MissChecklist } from '../domain/missChecklist.types'
 import { useConfirm } from '../hooks/useConfirm'
@@ -9,9 +10,13 @@ import { useNotification } from '../hooks/useNotification'
 import { loadMissChecklistsUseCase } from '../useCases/loadMissChecklists'
 import { removeAllMissChecklistsUseCase } from '../useCases/removeAllMissChecklists'
 import { removeMissChecklistUseCase } from '../useCases/removeMissChecklist'
+import { getMissChecklistSearchFields } from '../utils/missChecklistSearch'
+import { filterByQuery } from '../utils/search'
 
 function MissChecklistListScreen() {
   const [items, setItems] = useState<MissChecklist[]>(() => loadMissChecklistsUseCase())
+  const [searchQuery, setSearchQuery] = useState('')
+  const filteredItems = filterByQuery(items, searchQuery, getMissChecklistSearchFields)
   const navigate = useNavigate()
   const confirm = useConfirm()
   const { triggerError } = useDomainError()
@@ -73,11 +78,21 @@ function MissChecklistListScreen() {
       />
 
       <div className="flex flex-col gap-3 p-4">
+        <ListSearchBar
+          searchQuery={searchQuery}
+          onSearchQueryChange={setSearchQuery}
+          placeholder="חפש לפי סוג מטרה..."
+        />
+
         {items.length === 0 && (
           <p className="text-center text-neutral-400 py-8">אין צ'קליסטים שמורים</p>
         )}
 
-        {items.map((item) => (
+        {items.length > 0 && filteredItems.length === 0 && (
+          <p className="text-center text-neutral-400 py-8">לא נמצאו תוצאות</p>
+        )}
+
+        {filteredItems.map((item) => (
           <MissChecklistCard
             key={item.id}
             item={item}

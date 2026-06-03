@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import ListCard from '../components/base/ListCard'
+import ListSearchBar from '../components/base/ListSearchBar'
 import ListScreenHeader from '../components/base/ListScreenHeader'
 import OptionsMenu from '../components/base/OptionsMenu'
 import { NADBAR_TYPES, type Nadbar } from '../domain/nadbar.types'
@@ -11,12 +12,16 @@ import { loadNadbarsUseCase } from '../useCases/loadNadbars'
 import { loadTargetsUseCase } from '../useCases/loadTargets'
 import { removeAllNadbarsUseCase } from '../useCases/removeAllNadbars'
 import { removeNadbarUseCase } from '../useCases/removeNadbar'
+import { filterByQuery } from '../utils/search'
 import { getNadbarCardDetails, getNadbarCardTitle, getNadbarTypeLabel } from '../utils/nadbarDisplay'
+import { getNadbarSearchFields } from '../utils/nadbarSearch'
 
 function NadbarimScreen() {
   const [nadbars, setNadbars] = useState<Nadbar[]>([])
   const [targets, setTargets] = useState<Target[]>([])
+  const [searchQuery, setSearchQuery] = useState('')
   const [typePickerOpen, setTypePickerOpen] = useState(false)
+  const filteredNadbars = filterByQuery(nadbars, searchQuery, getNadbarSearchFields)
   const navigate = useNavigate()
   const confirm = useConfirm()
   const { notifySuccess } = useNotification()
@@ -74,11 +79,21 @@ function NadbarimScreen() {
       />
 
       <div className="flex flex-col gap-3 p-4">
+        <ListSearchBar
+          searchQuery={searchQuery}
+          onSearchQueryChange={setSearchQuery}
+          placeholder="חפש לפי סוג נדבר..."
+        />
+
         {nadbars.length === 0 && (
           <p className="text-center text-neutral-400 py-8">אין נדברים שמורים</p>
         )}
 
-        {nadbars.map((nadbar) => {
+        {nadbars.length > 0 && filteredNadbars.length === 0 && (
+          <p className="text-center text-neutral-400 py-8">לא נמצאו תוצאות</p>
+        )}
+
+        {filteredNadbars.map((nadbar) => {
           const { targetName, updatedAtLabel } = getNadbarCardDetails(nadbar, targets)
 
           return (
