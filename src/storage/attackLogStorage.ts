@@ -31,3 +31,11 @@ export function updateAttackLog(updated: AttackLog): void {
 export function loadAttackLogs(): AttackLog[] {
   return readAttackLogs()
 }
+
+export function removeAttackLog(id: string): void {
+  writeAttackLogs(readAttackLogs().filter((log) => log.id !== id))
+}
+
+export function removeAllAttackLogs(): void {
+  writeAttackLogs([])
+}

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import IndicatorCard from '../components/IndicatorCard'
 import IndicatorForm from '../components/IndicatorForm'
-import IndicatorSearchBar from '../components/IndicatorSearchBar'
+import ListSearchBar from '../components/base/ListSearchBar'
 import HeaderOptionsMenu from '../components/base/HeaderOptionsMenu'
 import Modal from '../components/base/Modal'
 import { useConfirm } from '../hooks/useConfirm'
@@ -99,7 +99,11 @@ function IndicatorsListScreen() {
       </header>
 
       <div className="flex flex-col gap-3 p-4">
-        <IndicatorSearchBar searchQuery={searchQuery} onSearchQueryChange={setSearchQuery} />
+        <ListSearchBar
+          searchQuery={searchQuery}
+          onSearchQueryChange={setSearchQuery}
+          placeholder="חפש לפי שם, אמצעי, קוד ציון..."
+        />
 
         {indicators.length === 0 && !showForm && (
           <p className="text-center text-neutral-400 py-8">אין מציינים שמורים</p>

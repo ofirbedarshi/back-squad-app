@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import PositionCard from '../components/PositionCard'
 import CurrentPositionForm from '../components/CurrentPositionForm'
 import PositionForm from '../components/PositionForm'
-import PositionSearchBar from '../components/PositionSearchBar'
+import ListSearchBar from '../components/base/ListSearchBar'
 import HeaderOptionsMenu from '../components/base/HeaderOptionsMenu'
 import Modal from '../components/base/Modal'
 import { useConfirm } from '../hooks/useConfirm'
@@ -171,7 +171,11 @@ function PositionsListScreen() {
           </div>
 
           {storedPositions.length > 0 && (
-            <PositionSearchBar searchQuery={searchQuery} onSearchQueryChange={setSearchQuery} />
+            <ListSearchBar
+              searchQuery={searchQuery}
+              onSearchQueryChange={setSearchQuery}
+              placeholder="חפש לפי שם או קואורדינטות..."
+            />
           )}
 
           {archiveIsEmpty && searchQuery === '' && (

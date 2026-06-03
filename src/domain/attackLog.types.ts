@@ -44,5 +44,5 @@ export interface AttackLogInput {
 
 export interface AttackLog extends AttackLogInput {
   id: string
-  savedAt: string
+  updatedAt: string
 }

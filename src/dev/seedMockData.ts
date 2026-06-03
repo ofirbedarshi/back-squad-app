@@ -107,7 +107,7 @@ const indicators = [
 const attackLogs = [
   {
     id: IDS.log1,
-    savedAt,
+    updatedAt: savedAt,
     targetName: 'יעד דמה א׳',
     date: '2026-05-09',
     wasAttacked: 'yes',
@@ -121,7 +121,7 @@ const attackLogs = [
   },
   {
     id: IDS.log2,
-    savedAt,
+    updatedAt: savedAt,
     targetName: 'יעד דמה ב׳',
     date: '2026-05-08',
     wasAttacked: 'no',
