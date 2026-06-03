@@ -11,9 +11,10 @@ interface NadbarNewChatStepProps {
   onLinksChange: (links: NadbarLinksUpdate) => void
   onSave: () => void
   onBlockFooterAction?: (blockIndex: number, action: NadbarBlockFooterAction) => void
-  blockLoadedTargetIds?: Record<number, string | undefined>
-  onBlockLoadTarget?: (blockIndex: number, target: Target) => void
-  onBlockClearLoadedTarget?: (blockIndex: number) => void
+  showGlobalTargetLoad?: boolean
+  loadedTargetId?: string
+  onLoadTarget?: (target: Target) => void
+  onClearLoadedTarget?: () => void
   onBlockAddObstacle?: (blockIndex: number) => void
 }
 
@@ -25,9 +26,10 @@ function NadbarNewChatStep({
   onLinksChange,
   onSave,
   onBlockFooterAction,
-  blockLoadedTargetIds,
-  onBlockLoadTarget,
-  onBlockClearLoadedTarget,
+  showGlobalTargetLoad,
+  loadedTargetId,
+  onLoadTarget,
+  onClearLoadedTarget,
   onBlockAddObstacle,
 }: NadbarNewChatStepProps) {
   return (
@@ -39,6 +41,10 @@ function NadbarNewChatStep({
         positionId={draftNadbar.links?.positionId}
         onLinksChange={onLinksChange}
         onSave={onSave}
+        showGlobalTargetLoad={showGlobalTargetLoad}
+        loadedTargetId={loadedTargetId}
+        onLoadTarget={onLoadTarget}
+        onClearLoadedTarget={onClearLoadedTarget}
       />
 
       <div className="flex-1 overflow-y-auto">
@@ -51,9 +57,6 @@ function NadbarNewChatStep({
           onNotesChange={onNotesChange}
           onUserVarChange={onUserVarChange}
           onBlockFooterAction={onBlockFooterAction}
-          blockLoadedTargetIds={blockLoadedTargetIds}
-          onBlockLoadTarget={onBlockLoadTarget}
-          onBlockClearLoadedTarget={onBlockClearLoadedTarget}
           onBlockAddObstacle={onBlockAddObstacle}
         />
       </div>

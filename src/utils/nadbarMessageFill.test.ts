@@ -10,8 +10,10 @@ import {
   collectUserVarNamesFromContent,
   fillNadbarMessageContent,
   filterVisibleNadbarMessages,
+  getFirstNadbarLoadTargetBlockIndex,
   isNadbarBlockHasLoadTarget,
   isNadbarMessageVisible,
+  nadbarTemplateHasLoadTarget,
   isNadbarTargetVarLoadOnly,
   isNadbarUserVarEditableAt,
   NADBAR_TARGET_LOAD_EMPTY_LABEL,
@@ -348,6 +350,30 @@ describe('isNadbarBlockHasLoadTarget', () => {
     assert.equal(isNadbarBlockHasLoadTarget(pointerTeamBlockFooterActions, 1), false)
     assert.equal(isNadbarBlockHasLoadTarget(pointerTeamBlockFooterActions, 2), true)
     assert.equal(isNadbarBlockHasLoadTarget(pointerTeamBlockFooterActions, 5), true)
+  })
+})
+
+describe('getFirstNadbarLoadTargetBlockIndex', () => {
+  it('returns first block index with loadTarget for Pointer Team', () => {
+    assert.equal(getFirstNadbarLoadTargetBlockIndex(pointerTeamBlockFooterActions), 2)
+  })
+
+  it('returns undefined when no loadTarget blocks', () => {
+    assert.equal(getFirstNadbarLoadTargetBlockIndex(undefined), undefined)
+    assert.equal(
+      getFirstNadbarLoadTargetBlockIndex([undefined, ['createTargetFromVars']]),
+      undefined,
+    )
+  })
+})
+
+describe('nadbarTemplateHasLoadTarget', () => {
+  it('is true when template has loadTarget footer', () => {
+    assert.equal(nadbarTemplateHasLoadTarget(pointerTeamBlockFooterActions), true)
+  })
+
+  it('is false without loadTarget footer', () => {
+    assert.equal(nadbarTemplateHasLoadTarget(undefined), false)
   })
 })
 

@@ -12,7 +12,8 @@ function NadbarEditScreen() {
     updateDraftLinks,
     saveNadbar,
     handleBlockFooterAction,
-    blockLoadedTargetIds,
+    showGlobalTargetLoad,
+    loadedTargetId,
     handleLoadTarget,
     handleClearLoadedTarget,
     handleAddObstacle,
@@ -28,6 +29,10 @@ function NadbarEditScreen() {
         draftNadbar={draftNadbar}
         onLinksChange={updateDraftLinks}
         onSave={saveNadbar}
+        showGlobalTargetLoad={showGlobalTargetLoad}
+        loadedTargetId={loadedTargetId}
+        onLoadTarget={handleLoadTarget}
+        onClearLoadedTarget={handleClearLoadedTarget}
       />
 
       <div className="flex-1 overflow-y-auto">
@@ -40,9 +45,6 @@ function NadbarEditScreen() {
           onNotesChange={setNotes}
           onUserVarChange={setUserVar}
           onBlockFooterAction={handleBlockFooterAction}
-          blockLoadedTargetIds={blockLoadedTargetIds}
-          onBlockLoadTarget={handleLoadTarget}
-          onBlockClearLoadedTarget={handleClearLoadedTarget}
           onBlockAddObstacle={handleAddObstacle}
         />
       </div>

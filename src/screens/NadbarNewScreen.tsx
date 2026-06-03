@@ -19,7 +19,8 @@ function NadbarNewScreen() {
     saveDraftLinks,
     saveNadbar,
     handleBlockFooterAction,
-    blockLoadedTargetIds,
+    showGlobalTargetLoad,
+    loadedTargetId,
     handleLoadTarget,
     handleClearLoadedTarget,
     handleAddObstacle,
@@ -62,9 +63,10 @@ function NadbarNewScreen() {
       onLinksChange={saveDraftLinks}
       onSave={saveNadbar}
       onBlockFooterAction={handleBlockFooterAction}
-      blockLoadedTargetIds={blockLoadedTargetIds}
-      onBlockLoadTarget={handleLoadTarget}
-      onBlockClearLoadedTarget={handleClearLoadedTarget}
+      showGlobalTargetLoad={showGlobalTargetLoad}
+      loadedTargetId={loadedTargetId}
+      onLoadTarget={handleLoadTarget}
+      onClearLoadedTarget={handleClearLoadedTarget}
       onBlockAddObstacle={handleAddObstacle}
     />
   )

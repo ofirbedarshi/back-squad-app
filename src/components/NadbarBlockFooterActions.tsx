@@ -1,6 +1,5 @@
 import NadbarAddObstacleButton from './NadbarAddObstacleButton'
 import NadbarCreateTargetFromVarsButton from './NadbarCreateTargetFromVarsButton'
-import NadbarLoadTargetButton from './NadbarLoadTargetButton'
 import { useNadbarChatContext } from './NadbarChatContext'
 
 interface NadbarBlockFooterActionsProps {
@@ -8,15 +7,8 @@ interface NadbarBlockFooterActionsProps {
 }
 
 function NadbarBlockFooterActions({ blockIndex }: NadbarBlockFooterActionsProps) {
-  const {
-    blockFooterActions,
-    onBlockFooterAction,
-    blockLoadedTargetIds,
-    onBlockLoadTarget,
-    onBlockClearLoadedTarget,
-    onBlockAddObstacle,
-  } = useNadbarChatContext()
-  const actions = blockFooterActions?.[blockIndex]
+  const { blockFooterActions, onBlockFooterAction, onBlockAddObstacle } = useNadbarChatContext()
+  const actions = blockFooterActions?.[blockIndex]?.filter((action) => action !== 'loadTarget')
 
   if (!actions?.length) {
     return null
@@ -32,16 +24,6 @@ function NadbarBlockFooterActions({ blockIndex }: NadbarBlockFooterActionsProps)
               <NadbarCreateTargetFromVarsButton
                 key={action}
                 onClick={() => onBlockFooterAction(blockIndex, action)}
-              />
-            )
-          case 'loadTarget':
-            if (!onBlockLoadTarget || !onBlockClearLoadedTarget) return null
-            return (
-              <NadbarLoadTargetButton
-                key={action}
-                targetId={blockLoadedTargetIds?.[blockIndex]}
-                onSelect={(target) => onBlockLoadTarget(blockIndex, target)}
-                onClear={() => onBlockClearLoadedTarget(blockIndex)}
               />
             )
           case 'addObstacle':

@@ -9,9 +9,10 @@ import { updateNadbarUseCase } from '../useCases/updateNadbar'
 import { useDomainError } from './useDomainError'
 import { useNadbarBlockAddObstacleHandler } from './useNadbarBlockAddObstacleHandler'
 import { useNadbarBlockFooterActionHandler } from './useNadbarBlockFooterActionHandler'
-import { useNadbarBlockLoadTargetHandler } from './useNadbarBlockLoadTargetHandler'
+import { useNadbarGlobalLoadTargetHandler } from './useNadbarGlobalLoadTargetHandler'
 import { useNadbarBlockUserVarChange } from './useNadbarBlockUserVarChange'
 import { useNadbarNotesChange } from './useNadbarNotesChange'
+import { nadbarTemplateHasLoadTarget } from '../utils/nadbarMessageFill'
 import { useNotification } from './useNotification'
 
 export function useNadbarEditFlow(id: string | undefined) {
@@ -28,8 +29,12 @@ export function useNadbarEditFlow(id: string | undefined) {
       draftNadbar ? getNadbarChatTemplateUseCase(draftNadbar.type).blockFooterActions : undefined,
     [draftNadbar?.type],
   )
-  const { blockLoadedTargetIds, handleLoadTarget, handleClearLoadedTarget } =
-    useNadbarBlockLoadTargetHandler(draftNadbar, setDraftNadbar, blockFooterActions)
+  const showGlobalTargetLoad = useMemo(
+    () => nadbarTemplateHasLoadTarget(blockFooterActions),
+    [blockFooterActions],
+  )
+  const { loadedTargetId, handleLoadTarget, handleClearLoadedTarget } =
+    useNadbarGlobalLoadTargetHandler(draftNadbar, setDraftNadbar, blockFooterActions)
   const { handleAddObstacle } = useNadbarBlockAddObstacleHandler(draftNadbar, setDraftNadbar)
   const setUserVar = useNadbarBlockUserVarChange(setDraftNadbar, blockFooterActions)
   const setNotes = useNadbarNotesChange(setDraftNadbar)
@@ -68,7 +73,8 @@ export function useNadbarEditFlow(id: string | undefined) {
     updateDraftLinks,
     saveNadbar,
     handleBlockFooterAction,
-    blockLoadedTargetIds,
+    showGlobalTargetLoad,
+    loadedTargetId,
     handleLoadTarget,
     handleClearLoadedTarget,
     handleAddObstacle,

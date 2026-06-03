@@ -4,7 +4,6 @@ import type {
   NadbarUserVarFields,
   NadbarVarInitialFromBlock,
 } from '../domain/nadbar.types'
-import type { Target } from '../domain/target.types'
 import type { NadbarMessageResources } from '../utils/nadbarMessageFill.types'
 
 export interface NadbarChatContextValue {
@@ -13,9 +12,6 @@ export interface NadbarChatContextValue {
   resources: NadbarMessageResources
   blockFooterActions?: readonly (readonly NadbarBlockFooterAction[] | undefined)[]
   onBlockFooterAction?: (blockIndex: number, action: NadbarBlockFooterAction) => void
-  blockLoadedTargetIds?: Record<number, string | undefined>
-  onBlockLoadTarget?: (blockIndex: number, target: Target) => void
-  onBlockClearLoadedTarget?: (blockIndex: number) => void
   onBlockAddObstacle?: (blockIndex: number) => void
 }
 

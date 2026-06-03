@@ -136,6 +136,24 @@ export function isNadbarBlockHasLoadTarget(
   return blockFooterActions?.[blockIndex]?.includes('loadTarget') ?? false
 }
 
+export function getFirstNadbarLoadTargetBlockIndex(
+  blockFooterActions: NadbarBlockFooterActionsByBlock | undefined,
+): number | undefined {
+  if (!blockFooterActions?.length) return undefined
+  for (let i = 0; i < blockFooterActions.length; i++) {
+    if (isNadbarBlockHasLoadTarget(blockFooterActions, i)) {
+      return i
+    }
+  }
+  return undefined
+}
+
+export function nadbarTemplateHasLoadTarget(
+  blockFooterActions: NadbarBlockFooterActionsByBlock | undefined,
+): boolean {
+  return getFirstNadbarLoadTargetBlockIndex(blockFooterActions) != null
+}
+
 export function isNadbarTargetVarLoadOnly(
   blockFooterActions: NadbarBlockFooterActionsByBlock | undefined,
   blockIndex: number,
