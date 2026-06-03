@@ -10,7 +10,7 @@ function CalculatorScreen() {
       <div className="p-4">
         {/* LTR grid so column order matches the reference layout (Hebrew labels remain RTL inside buttons). */}
         <div dir="ltr" className="grid grid-cols-2 gap-3">
-          <MenuButton label="מחשבון פגיעה וחדירה" to="/calculator/hit-penetration" />
+          <MenuButton label="מחשבון חדירה ומריחת כתם" to="/calculator/hit-penetration" />
           <MenuButton label="מחשבון המרת יחידות" to="/calculator/unit-conversion" />
           <MenuButton label="מחשבון מטרה בתנועה" to="/calculator/moving-target" />
           <MenuButton label="מחשבון זווית סטיה היסט" to="/calculator/deflection-angle" />

@@ -1,4 +1,4 @@
-export type HitPenetrationTrajectory = 'lofted' | 'low'
+export type HitPenetrationTrajectory = 'loftedPlus' | 'lofted' | 'low'
 
 export type HitPenetrationDelay = 'long' | 'short' | 'impact'
 

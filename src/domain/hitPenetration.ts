@@ -9,7 +9,8 @@ import type {
 } from './hitPenetration.types'
 
 const TRAJECTORY_ANGLES_DEG: Record<HitPenetrationTrajectory, number> = {
-  lofted: 30,
+  loftedPlus: 30,
+  lofted: 25,
   low: 20,
 }
 
@@ -20,13 +21,13 @@ const DELAY_MS: Record<HitPenetrationDelay, number> = {
 }
 
 const RANGE_SPEED_MS: Record<HitPenetrationRangeKm, number> = {
-  4: 230,
-  5: 230,
-  6: 230,
-  7: 230,
-  8: 130,
-  9: 130,
-  9.75: 130,
+  4: 270,
+  5: 269,
+  6: 229,
+  7: 196,
+  8: 175,
+  9: 162,
+  9.75: 157,
 }
 
 const MUNITION_DIVERGENCE: Record<HitPenetrationMunition, number> = {
