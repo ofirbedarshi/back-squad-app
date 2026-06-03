@@ -1,4 +1,8 @@
-import { calculateMovingTarget, lookupRange } from '../domain/movingTarget'
+import {
+  calculateMovingTarget,
+  computeFlightTimeSecFromRange,
+  lookupRange,
+} from '../domain/movingTarget'
 import type { MovingTargetDisplayResult, MovingTargetRange } from '../domain/movingTarget.types'
 
 function parsePositiveNumber(raw: string): number | null {
@@ -21,6 +25,19 @@ export function getLookupDisplayForRange(rangeKm: MovingTargetRange) {
   }
 }
 
+export function getComputedFlightTimeDisplayForRange(rangeKm: MovingTargetRange): string {
+  return fmt(computeFlightTimeSecFromRange(rangeKm), 1)
+}
+
+export function resolveFlightTimeSec(
+  rangeKm: MovingTargetRange,
+  flightTimeRaw: string,
+): number {
+  const manual = parsePositiveNumber(flightTimeRaw)
+  if (manual !== null) return manual
+  return computeFlightTimeSecFromRange(rangeKm)
+}
+
 export function calculateMovingTargetFromInputs(
   rangeKm: MovingTargetRange,
   targetSpeedRaw: string,
@@ -29,8 +46,7 @@ export function calculateMovingTargetFromInputs(
   const targetSpeedKmh = parsePositiveNumber(targetSpeedRaw)
   if (targetSpeedKmh === null) return null
 
-  const flightTimeSec = parsePositiveNumber(flightTimeRaw)
-  if (flightTimeSec === null) return null
+  const flightTimeSec = resolveFlightTimeSec(rangeKm, flightTimeRaw)
 
   const result = calculateMovingTarget({ rangeKm, targetSpeedKmh, flightTimeSec })
 

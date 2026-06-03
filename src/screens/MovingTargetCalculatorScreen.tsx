@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import Input from '../components/Input'
 import Stepper from '../components/base/Stepper'
+import MovingTargetFlightTimeFields from '../components/MovingTargetFlightTimeFields'
 import MovingTargetResultCard from '../components/MovingTargetResultCard'
 import { VALID_RANGES } from '../domain/movingTarget'
 import {
@@ -8,12 +9,11 @@ import {
   getLookupDisplayForRange,
 } from '../useCases/calculateMovingTargetFromInputs'
 import type { MovingTargetRange } from '../domain/movingTarget.types'
-const DEFAULT_FLIGHT_TIME = '30'
 
 function MovingTargetCalculatorScreen() {
   const [rangeKm, setRangeKm] = useState<MovingTargetRange>(4)
   const [targetSpeedRaw, setTargetSpeedRaw] = useState('')
-  const [flightTimeRaw, setFlightTimeRaw] = useState(DEFAULT_FLIGHT_TIME)
+  const [flightTimeRaw, setFlightTimeRaw] = useState('')
 
   const lookup = useMemo(() => getLookupDisplayForRange(rangeKm), [rangeKm])
 
@@ -31,7 +31,7 @@ function MovingTargetCalculatorScreen() {
       <div className="flex flex-col gap-4 p-4">
         {/* Inputs */}
         <section className="bg-white rounded-2xl border border-neutral-200 shadow-sm p-4 flex flex-col gap-4">
-          <h2 className="text-sm font-semibold text-neutral-500 uppercase tracking-wide">נתוני קלט</h2>
+          <h2 className="text-sm font-semibold text-neutral-500 uppercase tracking-wide">נתוני שיגור</h2>
 
           <div className="flex flex-col gap-1.5">
             <label className="text-sm font-medium text-neutral-700">
@@ -44,37 +44,26 @@ function MovingTargetCalculatorScreen() {
             />
           </div>
 
-          <div className="flex gap-3">
-            <div className="flex flex-col gap-1.5 flex-1">
-              <label className="text-sm font-medium text-neutral-700">
-                מהירות מטרה (קמ״ש)
-              </label>
-              <Input
-                type="text"
-                inputMode="decimal"
-                enterKeyHint="done"
-                autoComplete="off"
-                placeholder="לדוגמה: 80"
-                value={targetSpeedRaw}
-                onChange={(e) => setTargetSpeedRaw(e.target.value)}
-              />
-            </div>
-
-            <div className="flex flex-col gap-1.5 flex-1">
-              <label className="text-sm font-medium text-neutral-700">
-                זמן מעוף (שניות)
-              </label>
-              <Input
-                type="text"
-                inputMode="decimal"
-                enterKeyHint="done"
-                autoComplete="off"
-                placeholder="לדוגמה: 30"
-                value={flightTimeRaw}
-                onChange={(e) => setFlightTimeRaw(e.target.value)}
-              />
-            </div>
+          <div className="flex flex-col gap-1.5">
+            <label className="text-sm font-medium text-neutral-700">
+              מהירות מטרה (קמ״ש)
+            </label>
+            <Input
+              type="text"
+              inputMode="decimal"
+              enterKeyHint="done"
+              autoComplete="off"
+              placeholder="לדוגמה: 80"
+              value={targetSpeedRaw}
+              onChange={(e) => setTargetSpeedRaw(e.target.value)}
+            />
           </div>
+
+          <MovingTargetFlightTimeFields
+            rangeKm={rangeKm}
+            flightTimeRaw={flightTimeRaw}
+            onFlightTimeChange={setFlightTimeRaw}
+          />
         </section>
 
         {/* Lookup results — always shown based on range alone */}
@@ -120,8 +109,8 @@ function MovingTargetCalculatorScreen() {
           ]}
         />
 
-        {result === null && (targetSpeedRaw !== '' || flightTimeRaw !== DEFAULT_FLIGHT_TIME) && (
-          <p className="text-center text-sm text-neutral-400">הכנס נתוני קלט תקינים לקבלת תוצאות</p>
+        {result === null && targetSpeedRaw !== '' && (
+          <p className="text-center text-sm text-neutral-400">הכנס נתוני שיגור תקינים לקבלת תוצאות</p>
         )}
       </div>
     </div>
