@@ -73,6 +73,23 @@ function AttackLogIcon({ active }: { active: boolean }) {
   )
 }
 
+function SettingsIcon({ active }: { active: boolean }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      strokeWidth={active ? 2.2 : 1.8}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={iconClass(active)}
+    >
+      <circle cx="12" cy="12" r="3" />
+      <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
+    </svg>
+  )
+}
+
 function TargetBankIcon({ active }: { active: boolean }) {
   return (
     <svg
@@ -95,6 +112,7 @@ const navItems: NavItem[] = [
   { to: '/calculator', label: 'מחשבון', icon: (active) => <CalculatorIcon active={active} /> },
   { to: '/attack-log', label: 'יומן תקיפות', icon: (active) => <AttackLogIcon active={active} /> },
   { to: '/target-bank', label: 'בנק מטרות', icon: (active) => <TargetBankIcon active={active} /> },
+  { to: '/settings', label: 'הגדרות', icon: (active) => <SettingsIcon active={active} /> },
 ]
 
 function BottomNav() {

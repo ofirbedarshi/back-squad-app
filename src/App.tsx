@@ -41,6 +41,7 @@ import NotesScreen from './screens/NotesScreen'
 import FireFeasibilityFlowScreen from './screens/FireFeasibilityFlowScreen'
 import FireFeasibilityListScreen from './screens/FireFeasibilityListScreen'
 import FireFeasibilitySavedDetailScreen from './screens/FireFeasibilitySavedDetailScreen'
+import SettingsScreen from './screens/SettingsScreen'
 
 function AppRoutes() {
   const location = useLocation()
@@ -71,6 +72,7 @@ function AppRoutes() {
             <Route path="/calculator/directional-distance" element={<DirectionalShootingDistanceScreen />} />
             <Route path="/attack-log" element={<AttackLogListScreen />} />
             <Route path="/target-bank" element={<TargetListScreen />} />
+            <Route path="/settings" element={<SettingsScreen />} />
             <Route path="/maagarim" element={<MaagarimScreen />} />
             <Route path="/maagarim/positions" element={<PositionsListScreen />} />
             <Route path="/maagarim/indicators" element={<IndicatorsListScreen />} />
