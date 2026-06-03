@@ -53,7 +53,11 @@ function MovingTargetResultCard({ rows, title, layout = 'list' }: MovingTargetRe
                   row.value === null ? 'text-neutral-300' : '',
                 ].join(' ')}
               >
-                {row.value !== null ? `${row.value} ${row.unit}` : '—'}
+                {row.value !== null
+                  ? row.unit
+                    ? `${row.value} ${row.unit}`
+                    : row.value
+                  : '—'}
               </span>
             </div>
           ))}
