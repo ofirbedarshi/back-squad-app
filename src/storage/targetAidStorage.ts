@@ -38,3 +38,7 @@ export function updateTargetAid(updated: TargetAid): void {
 export function removeTargetAid(id: string): void {
   writeTargetAids(readTargetAids().filter((item) => item.id !== id))
 }
+
+export function removeAllTargetAids(): void {
+  writeTargetAids([])
+}

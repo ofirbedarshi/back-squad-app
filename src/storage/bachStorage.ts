@@ -40,3 +40,7 @@ export function removeBach(id: string): void {
   const bachs = readBachs()
   writeBachs(bachs.filter((bach) => bach.id !== id))
 }
+
+export function removeAllBachs(): void {
+  writeBachs([])
+}

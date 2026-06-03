@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import MissChecklistCard from '../components/MissChecklistCard'
+import HeaderOptionsMenu from '../components/base/HeaderOptionsMenu'
 import type { MissChecklist } from '../domain/missChecklist.types'
 import { useConfirm } from '../hooks/useConfirm'
 import { useDomainError } from '../hooks/useDomainError'
 import { useNotification } from '../hooks/useNotification'
 import { loadMissChecklistsUseCase } from '../useCases/loadMissChecklists'
+import { removeAllMissChecklistsUseCase } from '../useCases/removeAllMissChecklists'
 import { removeMissChecklistUseCase } from '../useCases/removeMissChecklist'
 
 function MissChecklistListScreen() {
@@ -37,10 +39,37 @@ function MissChecklistListScreen() {
     }
   }
 
+  async function handleRemoveAll() {
+    const confirmed = await confirm({
+      title: "מחיקת כל הצ'קליסטים",
+      message: "פעולה זו תמחק את כל הצ'קליסטים השמורים ללא אפשרות שחזור.",
+      confirmLabel: 'מחק הכל',
+      cancelLabel: 'ביטול',
+      variant: 'danger',
+    })
+    if (!confirmed) return
+    try {
+      removeAllMissChecklistsUseCase()
+      setItems(loadMissChecklistsUseCase())
+      notifySuccess("כל הצ'קליסטים נמחקו")
+    } catch {
+      triggerError("מחיקת כל הצ'קליסטים נכשלה")
+    }
+  }
+
   return (
     <div dir="rtl" className="flex flex-col bg-neutral-50 min-h-full">
-      <header className="py-4 px-4 text-center font-bold text-lg border-b border-neutral-200 text-neutral-800 bg-white">
+      <header className="relative py-4 px-4 text-center font-bold text-lg border-b border-neutral-200 text-neutral-800 bg-white">
         צאק"ליסט החטאה
+        <HeaderOptionsMenu
+          items={[
+            {
+              label: "מחק את כל הצ'קליסטים",
+              variant: 'danger',
+              onSelect: () => void handleRemoveAll(),
+            },
+          ]}
+        />
       </header>
 
       <div className="flex flex-col gap-3 p-4">

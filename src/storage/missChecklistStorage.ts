@@ -38,3 +38,7 @@ export function updateMissChecklist(updated: MissChecklist): void {
 export function removeMissChecklist(id: string): void {
   writeMissChecklists(readMissChecklists().filter((item) => item.id !== id))
 }
+
+export function removeAllMissChecklists(): void {
+  writeMissChecklists([])
+}

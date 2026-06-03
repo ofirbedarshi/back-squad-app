@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import BachCard from '../components/BachCard'
+import HeaderOptionsMenu from '../components/base/HeaderOptionsMenu'
 import type { Bach } from '../domain/bach.types'
 import { useConfirm } from '../hooks/useConfirm'
 import { useDomainError } from '../hooks/useDomainError'
 import { useNotification } from '../hooks/useNotification'
 import { loadBachsUseCase } from '../useCases/loadBachs'
+import { removeAllBachsUseCase } from '../useCases/removeAllBachs'
 import { removeBachUseCase } from '../useCases/removeBach'
 
 function BachListScreen() {
@@ -37,10 +39,37 @@ function BachListScreen() {
     }
   }
 
+  async function handleRemoveAll() {
+    const confirmed = await confirm({
+      title: 'מחיקת כל הבדחים',
+      message: 'פעולה זו תמחק את כל הבדחים השמורים ללא אפשרות שחזור.',
+      confirmLabel: 'מחק הכל',
+      cancelLabel: 'ביטול',
+      variant: 'danger',
+    })
+    if (!confirmed) return
+    try {
+      removeAllBachsUseCase()
+      setBachs(loadBachsUseCase())
+      notifySuccess('כל הבדחים נמחקו')
+    } catch {
+      triggerError('מחיקת כל הבדחים נכשלה')
+    }
+  }
+
   return (
     <div dir="rtl" className="flex flex-col bg-neutral-50 min-h-full">
-      <header className="py-4 px-4 text-center font-bold text-lg border-b border-neutral-200 text-neutral-800 bg-white">
+      <header className="relative py-4 px-4 text-center font-bold text-lg border-b border-neutral-200 text-neutral-800 bg-white">
         בדח תחקור ותקיפה
+        <HeaderOptionsMenu
+          items={[
+            {
+              label: 'מחק את כל הבדחים',
+              variant: 'danger',
+              onSelect: () => void handleRemoveAll(),
+            },
+          ]}
+        />
       </header>
 
       <div className="flex flex-col gap-3 p-4">
