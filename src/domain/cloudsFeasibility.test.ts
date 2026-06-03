@@ -5,6 +5,7 @@ import {
   CLOUDS_FLAT_FLIGHT_PATH_NOTE,
   CLOUDS_LOFTED_PLUS_FLIGHT_PATH_NOTE,
   CLOUDS_OUT_OF_TABLE_NOTE,
+  computeMaxFlyHeightFromCloudCeiling,
   evaluateCloudsFeasibility,
   evaluateCloudsFeasibilityGenB,
 } from './cloudsFeasibility.ts'
@@ -22,6 +23,12 @@ function evalInput(
     ...overrides,
   }
 }
+
+describe('computeMaxFlyHeightFromCloudCeiling', () => {
+  it('returns cloud height minus safety tolerance', () => {
+    assert.equal(computeMaxFlyHeightFromCloudCeiling(700), 700 - CLOUDS_FEASIBILITY_TOLERANCE_METERS)
+  })
+})
 
 describe('evaluateCloudsFeasibility', () => {
   it('enabled true when computed is strictly below cloud height', () => {

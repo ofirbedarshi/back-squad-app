@@ -19,6 +19,11 @@ import {
 
 export const CLOUDS_FEASIBILITY_TOLERANCE_METERS = 100
 
+export function computeMaxFlyHeightFromCloudCeiling(cloudHeightMeters: number): number {
+  assertFiniteMeters(cloudHeightMeters, 'גובה עננים')
+  return cloudHeightMeters - CLOUDS_FEASIBILITY_TOLERANCE_METERS
+}
+
 export const CLOUDS_FLAT_FLIGHT_PATH_NOTE = 'מסלול flat תמיד מאפשר בחישוב עננים'
 
 export const CLOUDS_LOFTED_PLUS_FLIGHT_PATH_NOTE = 'lofted+ לא נתמך בדור א׳'
