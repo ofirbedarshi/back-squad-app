@@ -13,8 +13,10 @@ function ComputedTextField({ field, metrics, setValue }: ComputedTextFieldProps)
   }, [metrics, field.computedMetric])
 
   useEffect(() => {
-    setValue(field.key, displayValue)
-  }, [displayValue, field.key, setValue])
+    if (metrics !== null) {
+      setValue(field.key, displayValue)
+    }
+  }, [displayValue, field.key, setValue, metrics])
 
   return (
     <FormField label={field.label} infoTooltipText={field.infoTooltipText}>

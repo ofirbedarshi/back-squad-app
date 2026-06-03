@@ -11,7 +11,7 @@ interface IndicatorToTargetComputedTextFieldProps {
 }
 
 function IndicatorToTargetComputedTextField({ field, watch, setValue }: IndicatorToTargetComputedTextFieldProps) {
-  const metrics = useIndicatorToTargetMetrics(watch)
+  const metrics = useIndicatorToTargetMetrics(watch, field.indicatorToTargetWatchKeys)
 
   return <ComputedTextField field={field} metrics={metrics} setValue={setValue} />
 }

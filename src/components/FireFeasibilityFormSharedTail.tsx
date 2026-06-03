@@ -1,8 +1,6 @@
-import { FLIGHT_PATH_OPTIONS } from '../domain/fireFeasibility.constants'
 import type { FireFeasibilityFlightPath } from '../domain/fireFeasibility.types'
 import FireFeasibilityCloudHeightField from './FireFeasibilityCloudHeightField'
-import SegmentedToggle from './base/SegmentedToggle'
-import FormField from './FormField'
+import FlightPathSegmentedField from './FlightPathSegmentedField'
 
 interface FireFeasibilityFormSharedTailProps {
   flightPath: FireFeasibilityFlightPath
@@ -17,13 +15,10 @@ function FireFeasibilityFormSharedTail({
     <>
       <FireFeasibilityCloudHeightField />
 
-      <FormField label="מסלול מעוף">
-        <SegmentedToggle
-          options={[...FLIGHT_PATH_OPTIONS]}
-          value={flightPath}
-          onChange={(value) => onFlightPathChange(value as FireFeasibilityFlightPath)}
-        />
-      </FormField>
+      <FlightPathSegmentedField
+        value={flightPath}
+        onChange={(value) => onFlightPathChange(value as FireFeasibilityFlightPath)}
+      />
     </>
   )
 }

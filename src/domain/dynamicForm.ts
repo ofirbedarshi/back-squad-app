@@ -18,6 +18,12 @@ function collectDefaultFromFormFieldDef(field: FormFieldDef, values: FormValues)
     field.type === 'indicatorLoader' ||
     field.type === 'positionLoader'
   ) return
+  if (field.type === 'flightPath') {
+    if (field.defaultValue !== undefined) {
+      values[field.key] = field.defaultValue
+    }
+    return
+  }
   if (field.type === 'row') {
     for (const child of field.fields) {
       collectDefault(child, values)
@@ -41,7 +47,7 @@ function collectDefaultFromFormFieldDef(field: FormFieldDef, values: FormValues)
 }
 
 function collectDefault(field: RowableField, values: FormValues): void {
-  if (field.type === 'note') return
+  if (field.type === 'note' || field.type === 'pitchRoll') return
   if (field.type === 'toggleWithConditions') {
     if (field.defaultValue !== undefined) {
       values[field.key] = field.defaultValue

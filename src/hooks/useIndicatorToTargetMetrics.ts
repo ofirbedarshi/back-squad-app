@@ -1,9 +1,34 @@
 import { useMemo } from 'react'
 import type { UseFormWatch } from 'react-hook-form'
 import { calculateIndicatorToTargetMetricsUseCase } from '../useCases/calculateIndicatorToTargetMetrics'
-import type { CoordinateValue, FormValues } from '../domain/dynamicForm.types'
+import type {
+  CoordinateValue,
+  FormValues,
+  IndicatorToTargetWatchKeyOverrides,
+} from '../domain/dynamicForm.types'
 import type { PositionCoordinates } from '../domain/position.types'
 import type { IndicatorToTargetMetrics } from '../domain/indicatorToTargetMetrics.types'
+
+const DEFAULT_INDICATOR_TO_TARGET_WATCH_KEYS = {
+  targetId: 'targetId',
+  indicatorId: 'indicatorId',
+  indicatorCoords: 'indicatorPositionCoords',
+  indicatorAltitude: 'indicatorAltitude',
+  targetCoords: 'targetCoords',
+  targetAltitude: 'targetAltitude',
+} as const
+
+function resolveWatchKeys(overrides?: IndicatorToTargetWatchKeyOverrides) {
+  return {
+    targetId: overrides?.targetId ?? DEFAULT_INDICATOR_TO_TARGET_WATCH_KEYS.targetId,
+    indicatorId: overrides?.indicatorId ?? DEFAULT_INDICATOR_TO_TARGET_WATCH_KEYS.indicatorId,
+    indicatorCoords: overrides?.indicatorCoords ?? DEFAULT_INDICATOR_TO_TARGET_WATCH_KEYS.indicatorCoords,
+    indicatorAltitude:
+      overrides?.indicatorAltitude ?? DEFAULT_INDICATOR_TO_TARGET_WATCH_KEYS.indicatorAltitude,
+    targetCoords: overrides?.targetCoords ?? DEFAULT_INDICATOR_TO_TARGET_WATCH_KEYS.targetCoords,
+    targetAltitude: overrides?.targetAltitude ?? DEFAULT_INDICATOR_TO_TARGET_WATCH_KEYS.targetAltitude,
+  }
+}
 
 function toPositionCoordinates(value: unknown): PositionCoordinates | undefined {
   if (typeof value !== 'object' || value === null) {
@@ -18,13 +43,17 @@ function toPositionCoordinates(value: unknown): PositionCoordinates | undefined 
   }
 }
 
-export function useIndicatorToTargetMetrics(watch: UseFormWatch<FormValues>): IndicatorToTargetMetrics | null {
-  const targetId = watch('targetId') as string | undefined
-  const indicatorId = watch('indicatorId') as string | undefined
-  const indicatorCoordinates = toPositionCoordinates(watch('indicatorPositionCoords'))
-  const targetCoordinates = toPositionCoordinates(watch('targetCoords'))
-  const indicatorAltitude = watch('indicatorAltitude') as string | number | undefined
-  const targetAltitude = watch('targetAltitude') as string | number | undefined
+export function useIndicatorToTargetMetrics(
+  watch: UseFormWatch<FormValues>,
+  keyOverrides?: IndicatorToTargetWatchKeyOverrides,
+): IndicatorToTargetMetrics | null {
+  const keys = resolveWatchKeys(keyOverrides)
+  const targetId = watch(keys.targetId) as string | undefined
+  const indicatorId = watch(keys.indicatorId) as string | undefined
+  const indicatorCoordinates = toPositionCoordinates(watch(keys.indicatorCoords))
+  const targetCoordinates = toPositionCoordinates(watch(keys.targetCoords))
+  const indicatorAltitude = watch(keys.indicatorAltitude) as string | number | undefined
+  const targetAltitude = watch(keys.targetAltitude) as string | number | undefined
 
   return useMemo(
     () =>
@@ -47,6 +76,6 @@ export function useIndicatorToTargetMetrics(watch: UseFormWatch<FormValues>): In
       targetCoordinates?.north,
       targetCoordinates?.palach,
       targetAltitude,
-    ]
+    ],
   )
 }

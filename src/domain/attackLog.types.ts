@@ -1,6 +1,9 @@
 import type { PositionCoordinates } from './position.types'
 
 export interface AttackLogInput {
+  targetId?: string
+  stationPositionId?: string
+  indicatorId?: string
   targetName: string
   date: string
   wasAttacked?: 'yes' | 'no'

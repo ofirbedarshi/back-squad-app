@@ -12,6 +12,16 @@ export type PositionToTargetWatchKeyOverrides = Partial<{
   targetAltitude: string
 }>
 
+/** Form keys watched for computed indicator→target metrics. Omitted entries use Bach defaults. */
+export type IndicatorToTargetWatchKeyOverrides = Partial<{
+  targetId: string
+  indicatorId: string
+  indicatorCoords: string
+  indicatorAltitude: string
+  targetCoords: string
+  targetAltitude: string
+}>
+
 export interface HeaderField {
   type: 'header'
   text: string
@@ -33,8 +43,26 @@ export interface TextField {
   computedMetric?: 'azimuth' | 'range' | 'altitudeDiff'
   /** When `computedFrom` is positionToTarget: which form keys hold position/target (defaults: בדח rear position + מטרה). */
   positionToTargetWatchKeys?: PositionToTargetWatchKeyOverrides
+  /** When `computedFrom` is indicatorToTarget: which form keys hold indicator/target (defaults: בדח). */
+  indicatorToTargetWatchKeys?: IndicatorToTargetWatchKeyOverrides
   /** Manual azimuth in degrees (0–359.9); non-empty optional values must be numeric. */
   valueKind?: 'azimuthDegree'
+}
+
+export interface PitchRollField {
+  type: 'pitchRoll'
+  key: string
+  label: string
+  required?: boolean
+}
+
+/** Segmented flight path selector — same options/labels as fire feasibility. */
+export interface FlightPathField {
+  type: 'flightPath'
+  key: string
+  label?: string
+  required?: boolean
+  defaultValue?: string
 }
 
 export interface TextareaField {
@@ -180,6 +208,7 @@ export type RowableField =
   | CheckboxField
   | CoordsField
   | NoteField
+  | PitchRollField
 
 export interface RowField {
   type: 'row'
@@ -236,6 +265,8 @@ export type FormFieldDef =
   | TargetLoaderField
   | IndicatorLoaderField
   | PositionLoaderField
+  | PitchRollField
+  | FlightPathField
 
 export interface FormSchema {
   fields: FormFieldDef[]

@@ -21,6 +21,9 @@ import {
   collectVisibleWhenWatchKeys,
   isFormFieldVisibleWhen,
 } from '../../domain/dynamicFormVisibleWhen'
+import FlightPathSegmentedField from '../FlightPathSegmentedField'
+import PitchRollInput from '../PitchRollInput'
+import { pitchRollOpts } from '../pitchRollInput.utils'
 import { isFieldVisible, makeFieldValidator } from '../../domain/dynamicFormValidation'
 
 interface DynamicFormFieldProps {
@@ -382,6 +385,45 @@ function DynamicFormField({
             {...sharedChildProps}
           />
         )}
+      />
+    )
+  }
+
+  if (field.type === 'flightPath') {
+    const error = errors[field.key]
+    const errorMessage = error && 'message' in error ? (error.message as string) : undefined
+    return (
+      <Controller
+        name={field.key}
+        control={control}
+        defaultValue={field.defaultValue}
+        rules={{ validate: makeFieldValidator(field, getValues, parentByKey) }}
+        render={({ field: formField }) => (
+          <FlightPathSegmentedField
+            label={field.label}
+            value={typeof formField.value === 'string' ? formField.value : undefined}
+            onChange={formField.onChange}
+            allowDeselect={field.required !== true}
+            error={errorMessage}
+          />
+        )}
+      />
+    )
+  }
+
+  if (field.type === 'pitchRoll') {
+    const error = errors[field.key]
+    const errorMessage = error && 'message' in error ? (error.message as string) : undefined
+    const valueForWarning = watch(field.key) as number | undefined
+    return (
+      <PitchRollInput
+        label={field.label}
+        error={errorMessage}
+        valueForWarning={valueForWarning}
+        {...register(field.key, {
+          ...pitchRollOpts,
+          validate: makeFieldValidator(field, getValues, parentByKey),
+        })}
       />
     )
   }

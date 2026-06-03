@@ -1,14 +1,17 @@
 import { useState, useEffect } from 'react'
 import AttackLogCard from '../components/AttackLogCard'
-import AttackLogForm from '../components/AttackLogForm'
+import DynamicForm from '../components/DynamicForm/DynamicForm'
 import Modal from '../components/base/Modal'
+import { attackLogFormSchema } from '../domain/attackLogForm.schema'
+import { attackLogInputToFormValues, formValuesToAttackLogInput } from '../domain/attackLogForm'
+import type { FormValues } from '../domain/dynamicForm.types'
 import { useDomainError } from '../hooks/useDomainError'
 import { useNotification } from '../hooks/useNotification'
 import { useUIError } from '../hooks/useUIError'
 import { addAttackLogUseCase } from '../useCases/addAttackLog'
 import { loadAttackLogsUseCase } from '../useCases/loadAttackLogs'
 import { updateAttackLogUseCase } from '../useCases/updateAttackLog'
-import type { AttackLog, AttackLogInput } from '../domain/attackLog.types'
+import type { AttackLog } from '../domain/attackLog.types'
 
 function AttackLogListScreen() {
   const [logs, setLogs] = useState<AttackLog[]>([])
@@ -22,20 +25,20 @@ function AttackLogListScreen() {
     setLogs(loadAttackLogsUseCase())
   }, [])
 
-  function handleAdd(data: AttackLogInput) {
-    addAttackLogUseCase(data)
+  function handleAdd(values: FormValues) {
+    addAttackLogUseCase(formValuesToAttackLogInput(values))
     setLogs(loadAttackLogsUseCase())
     setShowForm(false)
     notifySuccess('התקיפה נוספה בהצלחה')
   }
 
-  function handleEdit(data: AttackLogInput) {
+  function handleEdit(values: FormValues) {
     if (!editingItem) {
       reportUIError('לא ניתן לערוך: אין פריט נבחר')
       return
     }
     try {
-      updateAttackLogUseCase(editingItem.id, data)
+      updateAttackLogUseCase(editingItem.id, formValuesToAttackLogInput(values))
       setLogs(loadAttackLogsUseCase())
       setEditingItem(null)
       notifySuccess('השינויים נשמרו')
@@ -61,13 +64,18 @@ function AttackLogListScreen() {
 
         {showForm && (
           <Modal title="הוסף תקיפה" onClose={() => setShowForm(false)}>
-            <AttackLogForm onSubmit={handleAdd} submitLabel="שמור" />
+            <DynamicForm schema={attackLogFormSchema} onSubmit={handleAdd} submitLabel="שמור" />
           </Modal>
         )}
 
         {editingItem && (
           <Modal title="עריכת תקיפה" onClose={() => setEditingItem(null)}>
-            <AttackLogForm onSubmit={handleEdit} submitLabel="שמור שינויים" initialValues={editingItem} />
+            <DynamicForm
+              schema={attackLogFormSchema}
+              onSubmit={handleEdit}
+              submitLabel="שמור שינויים"
+              defaultValues={attackLogInputToFormValues(editingItem)}
+            />
           </Modal>
         )}
 

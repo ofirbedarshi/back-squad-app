@@ -1,5 +1,6 @@
 import { isFormFieldVisibleWhen } from './dynamicFormVisibleWhen.ts'
 import { validateAzimuthDegreeValue } from './azimuthDegree.ts'
+import { FLIGHT_PATH_OPTIONS } from './fireFeasibility.constants.ts'
 import type { CoordinateValue } from './dynamicForm.types'
 import type {
   FormFieldDef,
@@ -27,9 +28,34 @@ type ValidatableFieldType =
   | 'multiSelectToggle'
   | 'coords'
   | 'checkbox'
+  | 'pitchRoll'
   | 'targetLoader'
   | 'indicatorLoader'
   | 'positionLoader'
+  | 'flightPath'
+
+const FLIGHT_PATH_VALUES = FLIGHT_PATH_OPTIONS.map((option) => option.value)
+
+function validateFlightPathValue(value: unknown, required: boolean): true | string {
+  if (value === undefined || (typeof value === 'string' && value.trim() === '')) {
+    return required ? REQUIRED_FIELD_MESSAGE : true
+  }
+  if (typeof value !== 'string' || !FLIGHT_PATH_VALUES.includes(value as (typeof FLIGHT_PATH_VALUES)[number])) {
+    return 'מסלול מעוף לא תקין'
+  }
+  return true
+}
+
+function validatePitchRollValue(value: unknown, required: boolean): true | string {
+  if (value === undefined || value === '' || (typeof value === 'number' && Number.isNaN(value))) {
+    return required ? 'יש להזין מספר' : true
+  }
+  const n = typeof value === 'number' ? value : Number(value)
+  if (Number.isNaN(n)) return 'יש להזין מספר'
+  if (n < 0) return 'ערך מינימלי הוא 0'
+  if (n > 10) return 'ערך מקסימלי הוא 10'
+  return true
+}
 
 function isMultiSelectFilled(value: unknown, options?: readonly string[]): boolean {
   if (!Array.isArray(value) || value.length === 0) return false
@@ -67,6 +93,7 @@ export function isFilledFormValue(
     case 'time':
       return typeof value === 'string' && value.trim() !== ''
     case 'number':
+    case 'pitchRoll':
       return typeof value === 'number' && !Number.isNaN(value)
     case 'toggle':
     case 'toggleWithConditions':
@@ -85,6 +112,12 @@ export function isFilledFormValue(
     case 'indicatorLoader':
     case 'positionLoader':
       return typeof value === 'string' && value.trim() !== ''
+    case 'flightPath':
+      return (
+        typeof value === 'string' &&
+        value.trim() !== '' &&
+        FLIGHT_PATH_VALUES.includes(value as (typeof FLIGHT_PATH_VALUES)[number])
+      )
     default:
       return false
   }
@@ -135,7 +168,8 @@ function isRowableFieldFilledForAutoCheck(
     case 'time':
       return isFilledFormValue(value, field.type)
     case 'number':
-      return isFilledFormValue(value, 'number')
+    case 'pitchRoll':
+      return isFilledFormValue(value, field.type)
     case 'toggle':
       return isFilledFormValue(value, 'toggle', field.options)
     case 'toggleWithConditions':
@@ -264,6 +298,14 @@ export function validateFieldValue(
 
   if (isAzimuthDegreeTextField(field)) {
     return validateAzimuthDegreeValue(value, { required: field.required === true })
+  }
+
+  if (field.type === 'pitchRoll') {
+    return validatePitchRollValue(value, field.required === true)
+  }
+
+  if (field.type === 'flightPath') {
+    return validateFlightPathValue(value, field.required === true)
   }
 
   if (field.required !== true) return true
