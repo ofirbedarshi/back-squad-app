@@ -28,7 +28,9 @@ function FireFeasibilityListScreen() {
   const [positions, setPositions] = useState<Position[]>([])
   const [searchQuery, setSearchQuery] = useState('')
   const [showRangeHeightTargetMockModal, setShowRangeHeightTargetMockModal] = useState(false)
-  const filteredRecords = filterByQuery(records, searchQuery, getFireFeasibilitySearchFields)
+  const filteredRecords = filterByQuery(records, searchQuery, (record) =>
+    getFireFeasibilitySearchFields(record, targets, positions),
+  )
   const navigate = useNavigate()
   const confirm = useConfirm()
   const { triggerError } = useDomainError()
@@ -113,7 +115,7 @@ function FireFeasibilityListScreen() {
         <ListSearchBar
           searchQuery={searchQuery}
           onSearchQueryChange={setSearchQuery}
-          placeholder="חפש לפי סוג היתכנות..."
+          placeholder="חפש לפי סוג היתכנות או שם מטרה..."
         />
 
         <button

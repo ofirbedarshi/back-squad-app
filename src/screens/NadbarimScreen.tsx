@@ -21,7 +21,9 @@ function NadbarimScreen() {
   const [targets, setTargets] = useState<Target[]>([])
   const [searchQuery, setSearchQuery] = useState('')
   const [typePickerOpen, setTypePickerOpen] = useState(false)
-  const filteredNadbars = filterByQuery(nadbars, searchQuery, getNadbarSearchFields)
+  const filteredNadbars = filterByQuery(nadbars, searchQuery, (nadbar) =>
+    getNadbarSearchFields(nadbar, targets),
+  )
   const navigate = useNavigate()
   const confirm = useConfirm()
   const { notifySuccess } = useNotification()
@@ -82,7 +84,7 @@ function NadbarimScreen() {
         <ListSearchBar
           searchQuery={searchQuery}
           onSearchQueryChange={setSearchQuery}
-          placeholder="חפש לפי סוג נדבר..."
+          placeholder="חפש לפי סוג נדבר או שם מטרה..."
         />
 
         {nadbars.length === 0 && (
