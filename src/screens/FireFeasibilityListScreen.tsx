@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import FireFeasibilityRangeHeightTargetMockModal from '../components/FireFeasibilityRangeHeightTargetMockModal'
-import HeaderOptionsMenu from '../components/base/HeaderOptionsMenu'
+import ListScreenHeader from '../components/base/ListScreenHeader'
 import ListCard from '../components/base/ListCard'
 import type {
   FireFeasibilityRecord,
@@ -91,18 +91,18 @@ function FireFeasibilityListScreen() {
 
   return (
     <div dir="rtl" className="flex min-h-full flex-col bg-neutral-50">
-      <header className="relative border-b border-neutral-200 bg-white px-4 py-4 text-center text-lg font-bold text-neutral-800">
-        היתכנות לירי
-        <HeaderOptionsMenu
-          items={[
-            {
-              label: 'מחק את כל התוצאות',
-              variant: 'danger',
-              onSelect: handleRemoveAll,
-            },
-          ]}
-        />
-      </header>
+      <ListScreenHeader
+        title="היתכנות לירי"
+        addLabel="+ הוסף היתכנות לירי"
+        onAdd={() => navigate('/fire-feasibility/new')}
+        menuItems={[
+          {
+            label: 'מחק את כל התוצאות',
+            variant: 'danger',
+            onSelect: handleRemoveAll,
+          },
+        ]}
+      />
 
       <div className="flex flex-col gap-3 p-4">
         <button

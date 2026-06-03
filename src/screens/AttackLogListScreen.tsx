@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import AttackLogCard from '../components/AttackLogCard'
 import DynamicForm from '../components/DynamicForm/DynamicForm'
-import HeaderOptionsMenu from '../components/base/HeaderOptionsMenu'
+import ListScreenHeader from '../components/base/ListScreenHeader'
 import ListSearchBar from '../components/base/ListSearchBar'
 import Modal from '../components/base/Modal'
 import { attackLogFormSchema } from '../domain/attackLogForm.schema'
@@ -100,30 +100,19 @@ function AttackLogListScreen() {
 
   return (
     <div dir="rtl" className="flex flex-col bg-neutral-50 min-h-full">
-      <header className="relative grid grid-cols-[auto_1fr_auto] items-center gap-2 py-3 px-3 border-b border-neutral-200 text-neutral-800 bg-white">
-        <div className="justify-self-start shrink-0">
-          {!showForm && (
-            <button
-              type="button"
-              onClick={() => setShowForm(true)}
-              className="py-2 px-3 rounded-xl border-2 border-dashed border-neutral-300 text-neutral-600 font-semibold text-sm active:bg-neutral-100 transition-colors touch-manipulation select-none max-w-[11rem] leading-tight"
-            >
-              + הוסף תקיפה
-            </button>
-          )}
-        </div>
-        <h1 className="font-bold text-lg text-center min-w-0">יומן תקיפות</h1>
-        <div className="w-24 shrink-0 justify-self-end" aria-hidden />
-        <HeaderOptionsMenu
-          items={[
-            {
-              label: 'מחק את כל התקיפות',
-              variant: 'danger',
-              onSelect: () => void handleRemoveAll(),
-            },
-          ]}
-        />
-      </header>
+      <ListScreenHeader
+        title="יומן תקיפות"
+        addLabel="+ הוסף תקיפה"
+        onAdd={() => setShowForm(true)}
+        hideAdd={showForm}
+        menuItems={[
+          {
+            label: 'מחק את כל התקיפות',
+            variant: 'danger',
+            onSelect: () => void handleRemoveAll(),
+          },
+        ]}
+      />
 
       <div className="flex flex-col gap-3 p-4">
         <ListSearchBar
@@ -170,6 +159,16 @@ function AttackLogListScreen() {
               defaultValues={attackLogInputToFormValues(editingItem)}
             />
           </Modal>
+        )}
+
+        {!showForm && (
+          <button
+            type="button"
+            onClick={() => setShowForm(true)}
+            className="w-full py-4 rounded-2xl border-2 border-dashed border-neutral-300 text-neutral-500 font-semibold text-base active:bg-neutral-100 transition-colors touch-manipulation select-none"
+          >
+            + הוסף תקיפה
+          </button>
         )}
       </div>
     </div>

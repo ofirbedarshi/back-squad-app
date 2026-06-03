@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import ListCard from '../components/base/ListCard'
-import HeaderOptionsMenu from '../components/base/HeaderOptionsMenu'
+import ListScreenHeader from '../components/base/ListScreenHeader'
 import OptionsMenu from '../components/base/OptionsMenu'
 import { NADBAR_TYPES, type Nadbar } from '../domain/nadbar.types'
 import type { Target } from '../domain/target.types'
@@ -60,18 +60,18 @@ function NadbarimScreen() {
 
   return (
     <div dir="rtl" className="flex flex-col bg-neutral-50 min-h-full">
-      <header className="relative py-4 px-4 text-center font-bold text-lg border-b border-neutral-200 text-neutral-800 bg-white">
-        נדברים
-        <HeaderOptionsMenu
-          items={[
-            {
-              label: 'מחק את כל הנדברים',
-              variant: 'danger',
-              onSelect: handleRemoveAll,
-            },
-          ]}
-        />
-      </header>
+      <ListScreenHeader
+        title="נדברים"
+        addLabel="+ הוסף נדבר"
+        onAdd={() => setTypePickerOpen(true)}
+        menuItems={[
+          {
+            label: 'מחק את כל הנדברים',
+            variant: 'danger',
+            onSelect: handleRemoveAll,
+          },
+        ]}
+      />
 
       <div className="flex flex-col gap-3 p-4">
         {nadbars.length === 0 && (

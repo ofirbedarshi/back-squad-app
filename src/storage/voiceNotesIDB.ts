@@ -59,3 +59,13 @@ export async function idbDeleteNoteVoice(id: string): Promise<void> {
     db.close()
   }
 }
+
+export async function idbClearAllNoteVoices(): Promise<void> {
+  const db = await openDb()
+  try {
+    const tx = db.transaction(STORE, 'readwrite')
+    await promisifyRequest(tx.objectStore(STORE).clear())
+  } finally {
+    db.close()
+  }
+}

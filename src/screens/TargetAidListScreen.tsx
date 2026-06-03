@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import TargetAidCard from '../components/TargetAidCard'
-import HeaderOptionsMenu from '../components/base/HeaderOptionsMenu'
+import ListScreenHeader from '../components/base/ListScreenHeader'
 import type { TargetAid } from '../domain/targetAid.types'
 import { useConfirm } from '../hooks/useConfirm'
 import { useDomainError } from '../hooks/useDomainError'
@@ -59,18 +59,18 @@ function TargetAidListScreen() {
 
   return (
     <div dir="rtl" className="flex flex-col bg-neutral-50 min-h-full">
-      <header className="relative py-4 px-4 text-center font-bold text-lg border-b border-neutral-200 text-neutral-800 bg-white">
-        עזר מטרות למפקד משימה
-        <HeaderOptionsMenu
-          items={[
-            {
-              label: 'מחק את כל הטפסים',
-              variant: 'danger',
-              onSelect: () => void handleRemoveAll(),
-            },
-          ]}
-        />
-      </header>
+      <ListScreenHeader
+        title="עזר מטרות למפקד משימה"
+        addLabel="+ הוסף טופס"
+        onAdd={() => navigate('/others/target-aid/new')}
+        menuItems={[
+          {
+            label: 'מחק את כל הטפסים',
+            variant: 'danger',
+            onSelect: () => void handleRemoveAll(),
+          },
+        ]}
+      />
 
       <div className="flex flex-col gap-3 p-4">
         {items.length === 0 && (

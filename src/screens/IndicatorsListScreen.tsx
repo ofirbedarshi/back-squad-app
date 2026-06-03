@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import IndicatorCard from '../components/IndicatorCard'
 import IndicatorForm from '../components/IndicatorForm'
 import ListSearchBar from '../components/base/ListSearchBar'
-import HeaderOptionsMenu from '../components/base/HeaderOptionsMenu'
+import ListScreenHeader from '../components/base/ListScreenHeader'
 import Modal from '../components/base/Modal'
 import { useConfirm } from '../hooks/useConfirm'
 import { useDomainError } from '../hooks/useDomainError'
@@ -85,18 +85,19 @@ function IndicatorsListScreen() {
 
   return (
     <div dir="rtl" className="flex flex-col bg-neutral-50 min-h-full">
-      <header className="relative py-4 px-4 text-center font-bold text-lg border-b border-neutral-200 text-neutral-800 bg-white">
-        מציינים
-        <HeaderOptionsMenu
-          items={[
-            {
-              label: 'מחק את כל המציינים',
-              variant: 'danger',
-              onSelect: handleRemoveAll,
-            },
-          ]}
-        />
-      </header>
+      <ListScreenHeader
+        title="מציינים"
+        addLabel="+ הוסף מציין"
+        onAdd={() => setShowForm(true)}
+        hideAdd={showForm}
+        menuItems={[
+          {
+            label: 'מחק את כל המציינים',
+            variant: 'danger',
+            onSelect: handleRemoveAll,
+          },
+        ]}
+      />
 
       <div className="flex flex-col gap-3 p-4">
         <ListSearchBar

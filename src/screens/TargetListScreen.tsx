@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import Modal from '../components/base/Modal'
-import HeaderOptionsMenu from '../components/base/HeaderOptionsMenu'
+import ListScreenHeader from '../components/base/ListScreenHeader'
 import TargetSearchBar from '../components/TargetSearchBar'
 import ReferencePositionSummarySelector from '../components/ReferencePositionSummarySelector'
 import TargetCard from '../components/TargetCard'
@@ -87,18 +87,19 @@ function TargetListScreen() {
 
   return (
     <div dir="rtl" className="flex flex-col bg-neutral-50 min-h-full">
-      <header className="relative py-4 px-4 text-center font-bold text-lg border-b border-neutral-200 text-neutral-800 bg-white">
-        מטרות
-        <HeaderOptionsMenu
-          items={[
-            {
-              label: 'מחק את כל המטרות',
-              variant: 'danger',
-              onSelect: handleRemoveAll,
-            },
-          ]}
-        />
-      </header>
+      <ListScreenHeader
+        title="מטרות"
+        addLabel="+ הוסף מטרה"
+        onAdd={() => setShowForm(true)}
+        hideAdd={showForm}
+        menuItems={[
+          {
+            label: 'מחק את כל המטרות',
+            variant: 'danger',
+            onSelect: handleRemoveAll,
+          },
+        ]}
+      />
 
       <div className="flex flex-col gap-3 p-4">
         <ReferencePositionSummarySelector />

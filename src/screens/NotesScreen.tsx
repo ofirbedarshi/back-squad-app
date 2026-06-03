@@ -12,6 +12,7 @@ import { useNotification } from '../hooks/useNotification'
 import { addNoteUseCase } from '../useCases/addNote'
 import { attachVoiceToNoteUseCase } from '../useCases/attachVoiceToNote'
 import { loadNotesUseCase } from '../useCases/loadNotes'
+import { removeAllNotesUseCase } from '../useCases/removeAllNotes'
 import { removeNoteUseCase } from '../useCases/removeNote'
 import { removeVoiceFromNoteUseCase } from '../useCases/removeVoiceFromNote'
 import { updateNoteUseCase } from '../useCases/updateNote'
@@ -85,6 +86,24 @@ function NotesScreen() {
     }
   }
 
+  async function handleRemoveAll() {
+    const confirmed = await confirm({
+      title: 'מחיקת כל ההערות',
+      message: 'פעולה זו תמחק את כל ההערות וההקלטות השמורות ללא אפשרות שחזור.',
+      confirmLabel: 'מחק הכל',
+      cancelLabel: 'ביטול',
+      variant: 'danger',
+    })
+    if (!confirmed) return
+    try {
+      setNotes(await removeAllNotesUseCase())
+      setEditingNote(null)
+      notifySuccess('כל ההערות נמחקו')
+    } catch {
+      triggerError('מחיקת כל ההערות נכשלה')
+    }
+  }
+
   function handleExportNotes() {
     try {
       const fileName = exportNotesCsvUseCase()
@@ -113,6 +132,11 @@ function NotesScreen() {
             {
               label: 'ייצוא הערות לקובץ',
               onSelect: handleExportNotes,
+            },
+            {
+              label: 'מחק את כל ההערות',
+              variant: 'danger',
+              onSelect: () => void handleRemoveAll(),
             },
           ]}
         />

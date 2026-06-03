@@ -1,3 +1,4 @@
+import ListHeaderAddButton from './base/ListHeaderAddButton'
 import type { NoteAddTriggerLayout } from './noteAddTrigger.types'
 
 interface NoteAddTriggerButtonProps {
@@ -5,16 +6,16 @@ interface NoteAddTriggerButtonProps {
   onClick: () => void
 }
 
-const LAYOUT_CLASS: Record<NoteAddTriggerLayout, string> = {
-  header:
-    'py-2 px-3 rounded-xl border-2 border-dashed border-neutral-300 text-neutral-600 font-semibold text-sm active:bg-neutral-100 transition-colors touch-manipulation select-none max-w-[11rem] leading-tight',
-  listRow:
-    'w-full py-4 rounded-2xl border-2 border-dashed border-neutral-300 text-neutral-600 font-semibold text-base active:bg-neutral-100 transition-colors touch-manipulation select-none',
-}
+const LIST_ROW_CLASS =
+  'w-full py-4 rounded-2xl border-2 border-dashed border-neutral-300 text-neutral-600 font-semibold text-base active:bg-neutral-100 transition-colors touch-manipulation select-none'
 
 function NoteAddTriggerButton({ layout, onClick }: NoteAddTriggerButtonProps) {
+  if (layout === 'header') {
+    return <ListHeaderAddButton label="+ הוסף הערה" onClick={onClick} />
+  }
+
   return (
-    <button type="button" onClick={onClick} className={LAYOUT_CLASS[layout]}>
+    <button type="button" onClick={onClick} className={LIST_ROW_CLASS}>
       + הוסף הערה
     </button>
   )

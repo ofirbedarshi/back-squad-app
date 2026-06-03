@@ -3,7 +3,7 @@ import PositionCard from '../components/PositionCard'
 import CurrentPositionForm from '../components/CurrentPositionForm'
 import PositionForm from '../components/PositionForm'
 import ListSearchBar from '../components/base/ListSearchBar'
-import HeaderOptionsMenu from '../components/base/HeaderOptionsMenu'
+import ListScreenHeader from '../components/base/ListScreenHeader'
 import Modal from '../components/base/Modal'
 import { useConfirm } from '../hooks/useConfirm'
 import { useCurrentPosition } from '../hooks/useCurrentPosition'
@@ -130,18 +130,20 @@ function PositionsListScreen() {
 
   return (
     <div dir="rtl" className="flex flex-col bg-neutral-100 min-h-full">
-      <header className="relative py-3 px-4 text-center font-bold text-base border-b border-neutral-200 text-neutral-800 bg-white">
-        עמדות
-        <HeaderOptionsMenu
-          items={[
-            {
-              label: 'מחק את כל העמדות',
-              variant: 'danger',
-              onSelect: handleRemoveAll,
-            },
-          ]}
-        />
-      </header>
+      <ListScreenHeader
+        title="עמדות"
+        addLabel="+ הוסף עמדה"
+        onAdd={() => setShowForm(true)}
+        hideAdd={showForm}
+        titleClassName="font-bold text-base"
+        menuItems={[
+          {
+            label: 'מחק את כל העמדות',
+            variant: 'danger',
+            onSelect: handleRemoveAll,
+          },
+        ]}
+      />
 
       <div className="flex flex-col gap-3 p-3">
         <section className="rounded-xl border border-neutral-200 bg-neutral-50 px-3 py-2 flex flex-col gap-2 shadow-sm">

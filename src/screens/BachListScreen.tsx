@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import BachCard from '../components/BachCard'
-import HeaderOptionsMenu from '../components/base/HeaderOptionsMenu'
+import ListScreenHeader from '../components/base/ListScreenHeader'
 import type { Bach } from '../domain/bach.types'
 import { useConfirm } from '../hooks/useConfirm'
 import { useDomainError } from '../hooks/useDomainError'
@@ -59,18 +59,18 @@ function BachListScreen() {
 
   return (
     <div dir="rtl" className="flex flex-col bg-neutral-50 min-h-full">
-      <header className="relative py-4 px-4 text-center font-bold text-lg border-b border-neutral-200 text-neutral-800 bg-white">
-        בדח תחקור ותקיפה
-        <HeaderOptionsMenu
-          items={[
-            {
-              label: 'מחק את כל הבדחים',
-              variant: 'danger',
-              onSelect: () => void handleRemoveAll(),
-            },
-          ]}
-        />
-      </header>
+      <ListScreenHeader
+        title="בדח תחקור ותקיפה"
+        addLabel="+ הוסף בדח"
+        onAdd={() => navigate('/others/bach/new')}
+        menuItems={[
+          {
+            label: 'מחק את כל הבדחים',
+            variant: 'danger',
+            onSelect: () => void handleRemoveAll(),
+          },
+        ]}
+      />
 
       <div className="flex flex-col gap-3 p-4">
         {bachs.length === 0 && (

@@ -16,3 +16,7 @@ export function loadNotesFromStorage(): UserNote[] {
 export function saveNotesToStorage(notes: UserNote[]): void {
   localStorage.setItem(NOTES_KEY, JSON.stringify(notes))
 }
+
+export function removeAllNotesFromStorage(): void {
+  saveNotesToStorage([])
+}

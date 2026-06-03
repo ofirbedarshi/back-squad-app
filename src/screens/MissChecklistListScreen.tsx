@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import MissChecklistCard from '../components/MissChecklistCard'
-import HeaderOptionsMenu from '../components/base/HeaderOptionsMenu'
+import ListScreenHeader from '../components/base/ListScreenHeader'
 import type { MissChecklist } from '../domain/missChecklist.types'
 import { useConfirm } from '../hooks/useConfirm'
 import { useDomainError } from '../hooks/useDomainError'
@@ -59,18 +59,18 @@ function MissChecklistListScreen() {
 
   return (
     <div dir="rtl" className="flex flex-col bg-neutral-50 min-h-full">
-      <header className="relative py-4 px-4 text-center font-bold text-lg border-b border-neutral-200 text-neutral-800 bg-white">
-        צאק"ליסט החטאה
-        <HeaderOptionsMenu
-          items={[
-            {
-              label: "מחק את כל הצ'קליסטים",
-              variant: 'danger',
-              onSelect: () => void handleRemoveAll(),
-            },
-          ]}
-        />
-      </header>
+      <ListScreenHeader
+        title='צאק"ליסט החטאה'
+        addLabel="+ הוסף צ'קליסט"
+        onAdd={() => navigate('/others/miss-checklist/new')}
+        menuItems={[
+          {
+            label: "מחק את כל הצ'קליסטים",
+            variant: 'danger',
+            onSelect: () => void handleRemoveAll(),
+          },
+        ]}
+      />
 
       <div className="flex flex-col gap-3 p-4">
         {items.length === 0 && (
