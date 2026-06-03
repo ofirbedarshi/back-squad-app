@@ -9,9 +9,9 @@ import type {
 } from '../domain/directionalShootingDistance.types'
 
 const TRAJECTORY_OPTIONS = [
-  { label: 'שטוח', value: 'flat' },
-  { label: 'לופטד', value: 'lofted' },
-  { label: 'לופטד פלוס', value: 'loftedPlus' },
+  { label: 'flat', value: 'flat' },
+  { label: 'lofted', value: 'lofted' },
+  { label: 'lofted+', value: 'loftedPlus' },
 ]
 
 const MIN_TARGET_RANGE_M = 3000
@@ -63,24 +63,19 @@ function DirectionalShootingDistanceScreen() {
           title="תוצאות מהטבלה"
           rows={[
             {
-              label: 'טווח מטרה',
-              value: result.targetRangeM,
-              unit: 'מ׳',
-            },
-            {
-              label: 'X ב-Y מקסימלי',
+              label: 'מרחק מהמשגר בסטייה מקסימלית',
               value: result.xAtMaxYM,
               unit: 'מ׳',
               highlight: true,
             },
             {
-              label: 'ממוצע Y מקסימלי',
+              label: 'סטייה מקסימלית מציר הקו',
               value: result.meanMaxYM,
               unit: 'מ׳',
               highlight: true,
             },
             {
-              label: 'סטיית תקן ב-Y מקסימלי',
+              label: 'דיוק הסטייה +/-',
               value: result.stdAtMaxYM,
               unit: 'מ׳',
             },
