@@ -1,31 +1,98 @@
 import { useMemo, useState } from 'react'
-import Input from '../components/Input'
+import DeflectionAngleAzimuthFields from '../components/DeflectionAngleAzimuthFields'
+import DeflectionAngleCoordinatesFields from '../components/DeflectionAngleCoordinatesFields'
 import MovingTargetResultCard from '../components/MovingTargetResultCard'
+import SegmentedControl from '../components/base/SegmentedControl'
+import type { DeflectionAngleInputMode } from '../domain/deflectionAngle.types'
 import {
+  calculateDeflectionAngleFromCoordinateInputs,
   calculateDeflectionAngleFromInputs,
+  hasDuplicateWallCorners,
+  hasInvalidDeflectionAngleCoordinateInputs,
   hasInvalidDeflectionAngleInputs,
 } from '../useCases/calculateDeflectionAngleFromInputs'
 
+const INPUT_MODE_OPTIONS = [
+  { value: 'azimuth' as const, label: 'אזימוטים' },
+  { value: 'coordinates' as const, label: 'קואורדינטות' },
+]
+
 function DeflectionAngleCalculatorScreen() {
+  const [inputMode, setInputMode] = useState<DeflectionAngleInputMode>('azimuth')
+
   const [targetObservationAzimuthRaw, setTargetObservationAzimuthRaw] = useState('')
   const [targetLauncherAzimuthRaw, setTargetLauncherAzimuthRaw] = useState('')
   const [wallAzimuthRaw, setWallAzimuthRaw] = useState('')
 
-  const result = useMemo(
-    () =>
-      calculateDeflectionAngleFromInputs(
+  const [indicatorEastRaw, setIndicatorEastRaw] = useState('')
+  const [indicatorNorthRaw, setIndicatorNorthRaw] = useState('')
+  const [launcherEastRaw, setLauncherEastRaw] = useState('')
+  const [launcherNorthRaw, setLauncherNorthRaw] = useState('')
+  const [wallCorner1EastRaw, setWallCorner1EastRaw] = useState('')
+  const [wallCorner1NorthRaw, setWallCorner1NorthRaw] = useState('')
+  const [wallCorner2EastRaw, setWallCorner2EastRaw] = useState('')
+  const [wallCorner2NorthRaw, setWallCorner2NorthRaw] = useState('')
+
+  const result = useMemo(() => {
+    if (inputMode === 'azimuth') {
+      return calculateDeflectionAngleFromInputs(
         targetObservationAzimuthRaw,
         targetLauncherAzimuthRaw,
         wallAzimuthRaw,
-      ),
-    [targetObservationAzimuthRaw, targetLauncherAzimuthRaw, wallAzimuthRaw],
-  )
+      )
+    }
+    return calculateDeflectionAngleFromCoordinateInputs(
+      indicatorEastRaw,
+      indicatorNorthRaw,
+      launcherEastRaw,
+      launcherNorthRaw,
+      wallCorner1EastRaw,
+      wallCorner1NorthRaw,
+      wallCorner2EastRaw,
+      wallCorner2NorthRaw,
+    )
+  }, [
+    inputMode,
+    targetObservationAzimuthRaw,
+    targetLauncherAzimuthRaw,
+    wallAzimuthRaw,
+    indicatorEastRaw,
+    indicatorNorthRaw,
+    launcherEastRaw,
+    launcherNorthRaw,
+    wallCorner1EastRaw,
+    wallCorner1NorthRaw,
+    wallCorner2EastRaw,
+    wallCorner2NorthRaw,
+  ])
 
-  const showInputError = hasInvalidDeflectionAngleInputs(
+  const showAzimuthInputError = hasInvalidDeflectionAngleInputs(
     targetObservationAzimuthRaw,
     targetLauncherAzimuthRaw,
     wallAzimuthRaw,
   )
+
+  const showCoordinateInvalidError = hasInvalidDeflectionAngleCoordinateInputs(
+    indicatorEastRaw,
+    indicatorNorthRaw,
+    launcherEastRaw,
+    launcherNorthRaw,
+    wallCorner1EastRaw,
+    wallCorner1NorthRaw,
+    wallCorner2EastRaw,
+    wallCorner2NorthRaw,
+  )
+
+  const showDuplicateWallCorners = hasDuplicateWallCorners(
+    wallCorner1EastRaw,
+    wallCorner1NorthRaw,
+    wallCorner2EastRaw,
+    wallCorner2NorthRaw,
+  )
+
+  const coordinateErrorMessage = showDuplicateWallCorners
+    ? 'פינות הקיר חייבות להיות שונות'
+    : 'הזן קואורדינטות תקינות (מזרח וצפון) לכל הנקודות'
 
   return (
     <div dir="rtl" className="flex flex-col h-full overflow-y-auto bg-neutral-50">
@@ -35,53 +102,44 @@ function DeflectionAngleCalculatorScreen() {
 
       <div className="flex flex-col gap-4 p-4">
         <section className="bg-white rounded-2xl border border-neutral-200 shadow-sm p-4 flex flex-col gap-4">
-          <h2 className="text-sm font-semibold text-neutral-500 uppercase tracking-wide">
-            אזימוטים (מעלות)
-          </h2>
+          <SegmentedControl<DeflectionAngleInputMode>
+            value={inputMode}
+            options={INPUT_MODE_OPTIONS}
+            onChange={setInputMode}
+            ariaLabel="אופן הזנת נתונים"
+          />
 
-          <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-medium text-neutral-700">אזימוט תצפית מטרה</label>
-            <Input
-              type="text"
-              inputMode="decimal"
-              enterKeyHint="done"
-              autoComplete="off"
-              placeholder="0–359.9"
-              value={targetObservationAzimuthRaw}
-              onChange={(e) => setTargetObservationAzimuthRaw(e.target.value)}
+          {inputMode === 'azimuth' ? (
+            <DeflectionAngleAzimuthFields
+              targetObservationAzimuthRaw={targetObservationAzimuthRaw}
+              targetLauncherAzimuthRaw={targetLauncherAzimuthRaw}
+              wallAzimuthRaw={wallAzimuthRaw}
+              onTargetObservationAzimuthChange={setTargetObservationAzimuthRaw}
+              onTargetLauncherAzimuthChange={setTargetLauncherAzimuthRaw}
+              onWallAzimuthChange={setWallAzimuthRaw}
+              showInputError={showAzimuthInputError}
             />
-          </div>
-
-          <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-medium text-neutral-700">אזימוט משגר מטרה</label>
-            <Input
-              type="text"
-              inputMode="decimal"
-              enterKeyHint="done"
-              autoComplete="off"
-              placeholder="0–359.9"
-              value={targetLauncherAzimuthRaw}
-              onChange={(e) => setTargetLauncherAzimuthRaw(e.target.value)}
+          ) : (
+            <DeflectionAngleCoordinatesFields
+              indicatorEastRaw={indicatorEastRaw}
+              indicatorNorthRaw={indicatorNorthRaw}
+              launcherEastRaw={launcherEastRaw}
+              launcherNorthRaw={launcherNorthRaw}
+              wallCorner1EastRaw={wallCorner1EastRaw}
+              wallCorner1NorthRaw={wallCorner1NorthRaw}
+              wallCorner2EastRaw={wallCorner2EastRaw}
+              wallCorner2NorthRaw={wallCorner2NorthRaw}
+              onIndicatorEastChange={setIndicatorEastRaw}
+              onIndicatorNorthChange={setIndicatorNorthRaw}
+              onLauncherEastChange={setLauncherEastRaw}
+              onLauncherNorthChange={setLauncherNorthRaw}
+              onWallCorner1EastChange={setWallCorner1EastRaw}
+              onWallCorner1NorthChange={setWallCorner1NorthRaw}
+              onWallCorner2EastChange={setWallCorner2EastRaw}
+              onWallCorner2NorthChange={setWallCorner2NorthRaw}
+              showInputError={showCoordinateInvalidError || showDuplicateWallCorners}
+              inputErrorMessage={coordinateErrorMessage}
             />
-          </div>
-
-          <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-medium text-neutral-700">אזימוט קיר</label>
-            <Input
-              type="text"
-              inputMode="decimal"
-              enterKeyHint="done"
-              autoComplete="off"
-              placeholder="0–359.9"
-              value={wallAzimuthRaw}
-              onChange={(e) => setWallAzimuthRaw(e.target.value)}
-            />
-          </div>
-
-          {showInputError && (
-            <p className="text-sm font-semibold text-red-600 text-center pt-1">
-              הזן שלושה אזימוטים תקינים (0–359.9) לקבלת תוצאות
-            </p>
           )}
         </section>
 

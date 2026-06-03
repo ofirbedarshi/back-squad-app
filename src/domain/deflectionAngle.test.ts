@@ -3,7 +3,9 @@ import { describe, it } from 'node:test'
 import {
   acuteAngleBetweenAzimuthAndWall,
   apexAngleBetweenAzimuths,
+  azimuthDegFromEastNorth,
   calculateDeflectionAngle,
+  deriveDeflectionAzimuthsFromCoordinates,
   excelMod,
   feetMultiplierFromAngleDeg,
 } from './deflectionAngle.ts'
@@ -80,6 +82,53 @@ describe('feetMultiplierFromAngleDeg', () => {
   })
 })
 
+/** Sample from data/deflection-angle/azimuth_calculator2.xlsx */
+const XLSX2_COORDS = {
+  indicatorEast: 0,
+  indicatorNorth: 0,
+  launcherEast: 500,
+  launcherNorth: 100,
+  wallCorner1East: 100,
+  wallCorner1North: 100,
+  wallCorner2East: 200,
+  wallCorner2North: 200,
+}
+
+describe('deriveDeflectionAzimuthsFromCoordinates', () => {
+  it('matches azimuth_calculator2.xlsx row 8', () => {
+    const derived = deriveDeflectionAzimuthsFromCoordinates(XLSX2_COORDS)
+    assert.equal(derived.targetObservationAzimuthDeg, 45)
+    assert.equal(derived.targetLauncherAzimuthDeg, 278)
+    assert.equal(derived.wallAzimuthDeg, 45)
+  })
+
+  it('rejects identical wall corners', () => {
+    assert.throws(
+      () =>
+        deriveDeflectionAzimuthsFromCoordinates({
+          ...XLSX2_COORDS,
+          wallCorner2East: XLSX2_COORDS.wallCorner1East,
+          wallCorner2North: XLSX2_COORDS.wallCorner1North,
+        }),
+      /פינות הקיר/,
+    )
+  })
+})
+
+describe('azimuthDegFromEastNorth', () => {
+  it('matches wall bearing corner 1 to 2 in xlsx2', () => {
+    assert.equal(
+      azimuthDegFromEastNorth(
+        XLSX2_COORDS.wallCorner1East,
+        XLSX2_COORDS.wallCorner1North,
+        XLSX2_COORDS.wallCorner2East,
+        XLSX2_COORDS.wallCorner2North,
+      ),
+      45,
+    )
+  })
+})
+
 describe('calculateDeflectionAngle', () => {
   it('matches azimuth_calculator.xlsx row 2–8', () => {
     const result = calculateDeflectionAngle({
@@ -96,5 +145,16 @@ describe('calculateDeflectionAngle', () => {
       result.sideDriftDeflectionIncreaseFeet,
       XLSX_SAMPLE.sideDriftDeflectionIncreaseFeet,
     )
+  })
+
+  it('matches azimuth_calculator2.xlsx via coordinates', () => {
+    const derived = deriveDeflectionAzimuthsFromCoordinates(XLSX2_COORDS)
+    const result = calculateDeflectionAngle(derived)
+
+    assert.equal(result.designationAngleToWallDeg, 0)
+    assert.equal(result.apexAngleDeg, 233)
+    assert.equal(result.missileArrivalAngleToWallDeg, 53)
+    assert.equal(result.requiredDistanceOnWallFeet, null)
+    assert.equal(result.sideDriftDeflectionIncreaseFeet, 1.3)
   })
 })

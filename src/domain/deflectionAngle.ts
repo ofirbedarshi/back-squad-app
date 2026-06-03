@@ -1,5 +1,10 @@
 import { isAzimuthDegreeInRange } from './azimuthDegree.ts'
-import type { DeflectionAngleInputs, DeflectionAngleResult } from './deflectionAngle.types'
+import type {
+  DeflectionAngleCoordinatesInputs,
+  DeflectionAngleDerivedAzimuths,
+  DeflectionAngleInputs,
+  DeflectionAngleResult,
+} from './deflectionAngle.types.ts'
 
 /** Excel MOD — remainder with divisor sign (positive divisor → 0..d-1). */
 export function excelMod(n: number, d: number): number {
@@ -15,6 +20,69 @@ function validateAzimuth(value: number, label: string): void {
   }
   if (!isAzimuthDegreeInRange(value)) {
     throw new Error(`${label} חייב להיות בין 0 ל-359.9`)
+  }
+}
+
+/** Excel ATAN2(ΔE, ΔN) → degrees, MOD 360, rounded — matches azimuth_calculator2 row 8. */
+export function azimuthDegFromEastNorth(
+  fromEast: number,
+  fromNorth: number,
+  toEast: number,
+  toNorth: number,
+): number {
+  const dE = toEast - fromEast
+  const dN = toNorth - fromNorth
+  const degrees = (Math.atan2(dE, dN) * 180) / Math.PI
+  return Math.round(excelMod(degrees, 360))
+}
+
+export function deriveDeflectionAzimuthsFromCoordinates(
+  inputs: DeflectionAngleCoordinatesInputs,
+): DeflectionAngleDerivedAzimuths {
+  validateCoordinate(inputs.indicatorEast, 'מזרח מציין')
+  validateCoordinate(inputs.indicatorNorth, 'צפון מציין')
+  validateCoordinate(inputs.launcherEast, 'מזרח משגר')
+  validateCoordinate(inputs.launcherNorth, 'צפון משגר')
+  validateCoordinate(inputs.wallCorner1East, 'מזרח פינת קיר 1')
+  validateCoordinate(inputs.wallCorner1North, 'צפון פינת קיר 1')
+  validateCoordinate(inputs.wallCorner2East, 'מזרח פינת קיר 2')
+  validateCoordinate(inputs.wallCorner2North, 'צפון פינת קיר 2')
+
+  if (
+    inputs.wallCorner1East === inputs.wallCorner2East &&
+    inputs.wallCorner1North === inputs.wallCorner2North
+  ) {
+    throw new Error('פינות הקיר חייבות להיות שונות')
+  }
+
+  const wallMidEast = (inputs.wallCorner1East + inputs.wallCorner2East) / 2
+  const wallMidNorth = (inputs.wallCorner1North + inputs.wallCorner2North) / 2
+
+  return {
+    targetObservationAzimuthDeg: azimuthDegFromEastNorth(
+      inputs.indicatorEast,
+      inputs.indicatorNorth,
+      wallMidEast,
+      wallMidNorth,
+    ),
+    targetLauncherAzimuthDeg: azimuthDegFromEastNorth(
+      inputs.launcherEast,
+      inputs.launcherNorth,
+      wallMidEast,
+      wallMidNorth,
+    ),
+    wallAzimuthDeg: azimuthDegFromEastNorth(
+      inputs.wallCorner1East,
+      inputs.wallCorner1North,
+      inputs.wallCorner2East,
+      inputs.wallCorner2North,
+    ),
+  }
+}
+
+function validateCoordinate(value: number, label: string): void {
+  if (!Number.isFinite(value)) {
+    throw new Error(`${label} חייב להיות מספר תקין`)
   }
 }
 
