@@ -1,5 +1,6 @@
 import { isFormFieldVisibleWhen } from './dynamicFormVisibleWhen.ts'
 import { validateAzimuthDegreeValue } from './azimuthDegree.ts'
+import { validatePitchRollValue as validatePitchRollDomainValue } from './pitchRoll.ts'
 import { FLIGHT_PATH_OPTIONS } from './fireFeasibility.constants.ts'
 import type { CoordinateValue } from './dynamicForm.types'
 import type {
@@ -15,6 +16,10 @@ export const REQUIRED_FIELD_MESSAGE = 'שדה חובה'
 
 function isAzimuthDegreeTextField(field: FormFieldDef | RowableField): boolean {
   return field.type === 'text' && field.valueKind === 'azimuthDegree'
+}
+
+function isPitchRollField(field: FormFieldDef | RowableField): boolean {
+  return field.type === 'pitchRoll'
 }
 
 type ValidatableFieldType =
@@ -47,14 +52,7 @@ function validateFlightPathValue(value: unknown, required: boolean): true | stri
 }
 
 function validatePitchRollValue(value: unknown, required: boolean): true | string {
-  if (value === undefined || value === '' || (typeof value === 'number' && Number.isNaN(value))) {
-    return required ? 'יש להזין מספר' : true
-  }
-  const n = typeof value === 'number' ? value : Number(value)
-  if (Number.isNaN(n)) return 'יש להזין מספר'
-  if (n < 0) return 'ערך מינימלי הוא 0'
-  if (n > 10) return 'ערך מקסימלי הוא 10'
-  return true
+  return validatePitchRollDomainValue(value, { required })
 }
 
 function isMultiSelectFilled(value: unknown, options?: readonly string[]): boolean {
@@ -283,7 +281,7 @@ export function shouldValidateField(
   if (!('key' in field)) return false
   if (field.type === 'text' && isComputedTextField(field)) return false
   if ('lockedByRef' in field && field.lockedByRef) return false
-  if (isAzimuthDegreeTextField(field)) {
+  if (isAzimuthDegreeTextField(field) || isPitchRollField(field)) {
     return isFieldVisible(field, values, parentByKey)
   }
   if (field.required !== true) return false

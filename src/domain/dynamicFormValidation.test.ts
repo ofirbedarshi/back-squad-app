@@ -192,3 +192,40 @@ describe('azimuth degree validation', () => {
     assert.equal(errors.optionalAz, 'יש להזין מספר')
   })
 })
+
+const pitchRollSchema: FormSchema = {
+  fields: [
+    {
+      type: 'row',
+      fields: [
+        { type: 'pitchRoll', key: 'pitch', label: 'Pitch', required: false },
+        { type: 'pitchRoll', key: 'roll', label: 'Roll', required: false },
+      ],
+    },
+  ],
+}
+
+describe('pitchRoll validation', () => {
+  it('rejects optional pitch above 10 on save', () => {
+    const errors = validateFormValues(pitchRollSchema, {
+      pitch: 11,
+      roll: 5,
+    })
+    assert.equal(errors.pitch, 'ערך מקסימלי הוא 10')
+    assert.equal(errors.roll, undefined)
+  })
+
+  it('rejects optional pitch at or below -10 on save', () => {
+    const errors = validateFormValues(pitchRollSchema, {
+      pitch: -10,
+      roll: -5,
+    })
+    assert.equal(errors.pitch, 'ערך לא יכול להיות -10 ומטה')
+    assert.equal(errors.roll, undefined)
+  })
+
+  it('allows empty optional pitch and roll', () => {
+    const errors = validateFormValues(pitchRollSchema, {})
+    assert.deepEqual(errors, {})
+  })
+})

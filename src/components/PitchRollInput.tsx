@@ -1,4 +1,9 @@
 import { forwardRef } from 'react'
+import {
+  getPitchRollVisualState,
+  PITCH_ROLL_INVALID_AT_OR_BELOW,
+  PITCH_ROLL_MAX,
+} from '../domain/pitchRoll'
 import FormField from './FormField'
 import { inputFieldClassName } from './inputFieldClassName'
 
@@ -10,21 +15,19 @@ interface PitchRollInputProps extends Omit<React.InputHTMLAttributes<HTMLInputEl
 
 const PitchRollInput = forwardRef<HTMLInputElement, PitchRollInputProps>(
   ({ label, error, valueForWarning, className, ...inputProps }, ref) => {
-    const isWarning =
-      typeof valueForWarning === 'number' &&
-      !isNaN(valueForWarning) &&
-      valueForWarning >= 5 &&
-      valueForWarning <= 10
+    const visualState = getPitchRollVisualState(valueForWarning)
+    const isInvalid = visualState === 'invalid'
+    const isWarning = visualState === 'warning'
 
     return (
       <FormField label={label} error={error}>
         <input
           ref={ref}
           type="number"
-          min={0}
-          max={10}
+          min={PITCH_ROLL_INVALID_AT_OR_BELOW}
+          max={PITCH_ROLL_MAX}
           step={0.1}
-          className={inputFieldClassName(!!error, !error && isWarning, false, className)}
+          className={inputFieldClassName(!!error || isInvalid, isWarning, false, className)}
           {...inputProps}
         />
       </FormField>

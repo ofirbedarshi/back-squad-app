@@ -1,22 +1,26 @@
 import { z } from 'zod'
+import {
+  PITCH_ROLL_INVALID_AT_OR_BELOW,
+  PITCH_ROLL_MAX,
+  PITCH_ROLL_MAX_MESSAGE,
+  PITCH_ROLL_MIN_MESSAGE,
+  PITCH_ROLL_MUST_BE_NUMBER_MESSAGE,
+  parsePitchRollString,
+} from '../domain/pitchRoll'
 
 const pitchRollNumber = z
-  .number({ error: 'יש להזין מספר' })
-  .min(0, 'ערך מינימלי הוא 0')
-  .max(10, 'ערך מקסימלי הוא 10')
+  .number({ error: PITCH_ROLL_MUST_BE_NUMBER_MESSAGE })
+  .gt(PITCH_ROLL_INVALID_AT_OR_BELOW, PITCH_ROLL_MIN_MESSAGE)
+  .max(PITCH_ROLL_MAX, PITCH_ROLL_MAX_MESSAGE)
 
 const pitchRollInput = z.union([z.undefined(), pitchRollNumber])
 
 export const pitchRollSchema = pitchRollInput
-  .refine((v): v is number => v !== undefined, { message: 'יש להזין מספר' })
+  .refine((v): v is number => v !== undefined, { message: PITCH_ROLL_MUST_BE_NUMBER_MESSAGE })
   .transform((v) => v)
 
-export const optionalPitchRollSchema = pitchRollInput.optional()
-
 export function parsePitchRollInput(v: string): number | undefined {
-  if (v === '' || v === null || v === undefined) return undefined
-  const n = parseFloat(v)
-  return isNaN(n) ? undefined : n
+  return parsePitchRollString(v)
 }
 
 export const pitchRollOpts = { setValueAs: parsePitchRollInput }
