@@ -2,8 +2,8 @@ import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
 import {
   assertAttackLogPitchRoll,
+  assertOptionalPitchRollFields,
   assertPitchRollInRange,
-  assertPositionPitchRoll,
   getPitchRollVisualState,
   PITCH_ROLL_MAX_MESSAGE,
   PITCH_ROLL_MIN_MESSAGE,
@@ -52,7 +52,7 @@ describe('assertPitchRollInRange', () => {
   it('throws for invalid values', () => {
     assert.throws(() => assertPitchRollInRange(11, 'Pitch'), /Pitch: ערך מקסימלי הוא 10/)
     assert.throws(() => assertPitchRollInRange(-10, 'Pitch'), /Pitch: ערך לא יכול להיות -10 ומטה/)
-    assert.throws(() => assertPositionPitchRoll({ pitch: 0, roll: 12 }), /Roll: ערך מקסימלי הוא 10/)
+    assert.throws(() => assertOptionalPitchRollFields({ pitch: 0, roll: 12 }), /Roll: ערך מקסימלי הוא 10/)
   })
 
   it('allows optional attack log values', () => {

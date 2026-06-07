@@ -67,11 +67,6 @@ export function assertOptionalPitchRollInRange(value: number | undefined, label:
   assertPitchRollInRange(value, label)
 }
 
-export function assertPositionPitchRoll(input: { pitch: number; roll: number }): void {
-  assertPitchRollInRange(input.pitch, 'Pitch')
-  assertPitchRollInRange(input.roll, 'Roll')
-}
-
 export function assertOptionalPitchRollFields(input: { pitch?: number; roll?: number }): void {
   assertOptionalPitchRollInRange(input.pitch, 'Pitch')
   assertOptionalPitchRollInRange(input.roll, 'Roll')

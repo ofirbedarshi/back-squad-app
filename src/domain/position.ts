@@ -1,14 +1,14 @@
 import { applyWithUpdatedAt } from './applyWithUpdatedAt'
 import { createWithUpdatedAt } from './createWithUpdatedAt'
-import { assertPositionPitchRoll } from './pitchRoll'
+import { assertOptionalPitchRollFields } from './pitchRoll'
 import type { Position, PositionInput } from './position.types'
 
 export function createPosition(input: PositionInput): Position {
-  assertPositionPitchRoll(input)
+  assertOptionalPitchRollFields(input)
   return createWithUpdatedAt(input)
 }
 
 export function applyPositionUpdate(existing: Position, input: PositionInput): Position {
-  assertPositionPitchRoll(input)
+  assertOptionalPitchRollFields(input)
   return applyWithUpdatedAt(existing, input)
 }

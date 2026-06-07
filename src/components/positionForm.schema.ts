@@ -36,13 +36,19 @@ export const LAUNCHER_TYPES = {
   INFANTRY: 'infantry',
 } as const
 
-const sharedPositionFields = {
+const baseFields = {
   stationName: z.string().min(1, 'שדה חובה'),
   coordinates: coordinateValueSchema,
   altitude: numberField,
-  aka: numberField
-    .min(AZIMUTH_DEGREE_MIN, AZIMUTH_MIN_MESSAGE)
-    .max(AZIMUTH_DEGREE_MAX, AZIMUTH_MAX_MESSAGE),
+}
+
+const akaField = numberField
+  .min(AZIMUTH_DEGREE_MIN, AZIMUTH_MIN_MESSAGE)
+  .max(AZIMUTH_DEGREE_MAX, AZIMUTH_MAX_MESSAGE)
+
+const sharedPositionFields = {
+  ...baseFields,
+  aka: akaField,
   pitch: pitchRollSchema,
   roll: pitchRollSchema,
   primarySector: sectorSchema.optional(),
@@ -50,9 +56,19 @@ const sharedPositionFields = {
   obstacles: z.array(obstacleSchema).optional(),
 }
 
-/** Archive: vehicleId stays optional (default vehicle, no צ׳ field in UI). */
+/**
+ * Archive add/edit: only the base fields are rendered. Current-only fields
+ * (aka/pitch/roll/sectors/obstacles) are optional — they get filled later when
+ * the position is promoted to current. vehicleId stays optional (no צ׳ field in UI).
+ */
 const positionFormObjectSchema = z.object({
-  ...sharedPositionFields,
+  ...baseFields,
+  aka: akaField.optional(),
+  pitch: pitchRollSchema.optional(),
+  roll: pitchRollSchema.optional(),
+  primarySector: sectorSchema.optional(),
+  secondarySector: sectorSchema.optional(),
+  obstacles: z.array(obstacleSchema).optional(),
   launcherType: z.enum(['vehicle', 'infantry']),
   vehicleId: z.string().optional(),
 })
