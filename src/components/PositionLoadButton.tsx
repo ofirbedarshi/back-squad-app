@@ -76,6 +76,7 @@ function PositionLoadButton({
           <LoadPickerChip
             displayName={loadedPosition.stationName}
             onClear={onClear}
+            onReplace={openPicker}
             dense={variant === 'toolbar'}
             clearAriaLabel="נקה עמדה"
             badge={

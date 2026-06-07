@@ -6,7 +6,6 @@ export interface FireFeasibilityModeConfig {
 
 export const FIRE_FEASIBILITY_RESULTS_TITLE = 'היתכנות לירי — תוצאות'
 export const FIRE_FEASIBILITY_FLOW_TITLE = 'היתכנות לירי'
-export const FIRE_FEASIBILITY_LINKS_SUBTITLE = 'בחר מטרה ועמדה'
 
 export const FIRE_FEASIBILITY_MODE_CONFIG: Record<
   FireFeasibilityMode,

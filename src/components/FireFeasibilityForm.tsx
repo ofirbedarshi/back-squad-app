@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import type { Position } from '../domain/position.types'
 import type { Target } from '../domain/target.types'
+import type { EntityLinksUpdate } from '../domain/entityLinks.types'
 import type {
   FireFeasibilityFlightPath,
   FireFeasibilityFormData,
@@ -15,15 +16,21 @@ import FireFeasibilityFormSharedTail from './FireFeasibilityFormSharedTail'
 
 interface FireFeasibilityFormProps {
   mode: FireFeasibilityMode
-  position: Position
-  target: Target
+  positionId?: string
+  targetId?: string
+  position?: Position
+  target?: Target
+  onLinksChange: (links: EntityLinksUpdate) => void
   onUpdateData: (data: FireFeasibilityFormData) => void
 }
 
 function FireFeasibilityForm({
   mode,
+  positionId,
+  targetId,
   position,
   target,
+  onLinksChange,
   onUpdateData,
 }: FireFeasibilityFormProps) {
   const metrics = useFireFeasibilityPositionTargetMetrics(position, target)
@@ -35,26 +42,32 @@ function FireFeasibilityForm({
     onUpdateData({
       positionToTargetRange: metrics?.range ?? null,
       positionToTargetHeightDifference: metrics?.altitudeDiff ?? null,
-      targetAltitudeMeters: target.altitude ?? null,
+      targetAltitudeMeters: target?.altitude ?? null,
       flightPath,
       obstacle,
     })
-  }, [metrics?.range, metrics?.altitudeDiff, target.altitude, flightPath, obstacle, onUpdateData])
+  }, [metrics?.range, metrics?.altitudeDiff, target?.altitude, flightPath, obstacle, onUpdateData])
 
   return (
     <div className="flex flex-col gap-4">
       {mode === 'coords' ? (
         <FireFeasibilityCoordsFields
+          positionId={positionId}
+          targetId={targetId}
           position={position}
           target={target}
           rangeDisplay={rangeDisplay}
+          onLinksChange={onLinksChange}
           onObstacleChange={setObstacle}
         />
       ) : (
         <FireFeasibilityDistancesHeightsFields
+          positionId={positionId}
+          targetId={targetId}
           position={position}
           target={target}
           rangeDisplay={rangeDisplay}
+          onLinksChange={onLinksChange}
           onObstacleChange={setObstacle}
         />
       )}

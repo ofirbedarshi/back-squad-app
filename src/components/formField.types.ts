@@ -5,4 +5,5 @@ export interface FormFieldProps {
   error?: string
   children: ReactNode
   infoTooltipText?: string
+  headerAction?: ReactNode
 }

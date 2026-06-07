@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import type { Position, PositionCoordinates } from '../domain/position.types'
 import type { Target } from '../domain/target.types'
+import type { EntityLinksUpdate } from '../domain/entityLinks.types'
 import { resolveObstacleHeightMetrics } from '../domain/obstacleHeightInput'
 import type { ObstacleHeightReference } from '../domain/obstacleHeightInput.types'
 import type { ObstaclesFeasibilityEvaluationInput } from '../domain/obstaclesFeasibility.types'
@@ -14,11 +15,16 @@ import type { FireFeasibilityObstacleHeightFieldChange } from './FireFeasibility
 import FireFeasibilityRangeField from './FireFeasibilityRangeField'
 import FormField from './FormField'
 import Input from './Input'
+import PositionLoadButton from './PositionLoadButton'
+import TargetLoadButton from './TargetLoadButton'
 
 interface FireFeasibilityCoordsFieldsProps {
-  position: Position
-  target: Target
+  positionId?: string
+  targetId?: string
+  position?: Position
+  target?: Target
   rangeDisplay: string
+  onLinksChange: (links: EntityLinksUpdate) => void
   onObstacleChange: (value: ObstaclesFeasibilityEvaluationInput | null) => void
 }
 
@@ -31,9 +37,12 @@ function parseOptionalNumber(value: string): number | null {
 }
 
 function FireFeasibilityCoordsFields({
+  positionId,
+  targetId,
   position,
   target,
   rangeDisplay,
+  onLinksChange,
   onObstacleChange,
 }: FireFeasibilityCoordsFieldsProps) {
   const [obstacleHeight, setObstacleHeight] = useState<{
@@ -48,7 +57,11 @@ function FireFeasibilityCoordsFields({
 
   const obstacle = useMemo(() => {
     const positionToObstacleRangeMeters = parseOptionalNumber(positionToObstacleRangeInput)
-    if (obstacleHeight.rawHeightMeters === null || positionToObstacleRangeMeters === null) {
+    if (
+      obstacleHeight.rawHeightMeters === null ||
+      positionToObstacleRangeMeters === null ||
+      position?.altitude == null
+    ) {
       return null
     }
 
@@ -62,7 +75,7 @@ function FireFeasibilityCoordsFields({
       ...heightMetrics,
       positionToObstacleRangeMeters,
     }
-  }, [obstacleHeight, positionToObstacleRangeInput, position.altitude])
+  }, [obstacleHeight, positionToObstacleRangeInput, position?.altitude])
 
   useEffect(() => {
     onObstacleChange(obstacle)
@@ -70,30 +83,55 @@ function FireFeasibilityCoordsFields({
 
   return (
     <>
-      <FormField label="שם עמדה" infoTooltipText={POSITION_FIELD_TOOLTIP}>
-        <Input type="text" value={position.stationName} disabled />
+      <FormField
+        label="שם עמדה"
+        infoTooltipText={POSITION_FIELD_TOOLTIP}
+        headerAction={
+          <PositionLoadButton
+            positionId={positionId}
+            autoLoadCurrent={false}
+            onSelect={(selected) => onLinksChange({ positionId: selected.id })}
+            onClear={() => onLinksChange({ positionId: null })}
+          />
+        }
+      >
+        <Input type="text" value={position?.stationName ?? ''} disabled />
       </FormField>
 
       <FormField label='נ"צ עמדה' infoTooltipText={POSITION_FIELD_TOOLTIP}>
-        <CoordinateInput value={position.coordinates} onChange={() => {}} disabled />
+        <CoordinateInput value={position?.coordinates} onChange={() => {}} disabled />
       </FormField>
 
       <FormField label="גובה עמדה" infoTooltipText={POSITION_FIELD_TOOLTIP}>
-        <Input type="number" value={String(position.altitude)} disabled />
+        <Input
+          type="number"
+          value={position?.altitude != null ? String(position.altitude) : ''}
+          disabled
+        />
       </FormField>
 
-      <FormField label="שם מטרה" infoTooltipText={TARGET_FIELD_TOOLTIP}>
-        <Input type="text" value={target.targetName} disabled />
+      <FormField
+        label="שם מטרה"
+        infoTooltipText={TARGET_FIELD_TOOLTIP}
+        headerAction={
+          <TargetLoadButton
+            targetId={targetId}
+            onSelect={(selected) => onLinksChange({ targetId: selected.id })}
+            onClear={() => onLinksChange({ targetId: null })}
+          />
+        }
+      >
+        <Input type="text" value={target?.targetName ?? ''} disabled />
       </FormField>
 
       <FormField label='נ"צ מטרה' infoTooltipText={TARGET_FIELD_TOOLTIP}>
-        <CoordinateInput value={target.coordinates} onChange={() => {}} disabled />
+        <CoordinateInput value={target?.coordinates} onChange={() => {}} disabled />
       </FormField>
 
       <FormField label="גובה מטרה" infoTooltipText={TARGET_FIELD_TOOLTIP}>
         <Input
           type="number"
-          value={target.altitude != null ? String(target.altitude) : ''}
+          value={target?.altitude != null ? String(target.altitude) : ''}
           disabled
         />
       </FormField>

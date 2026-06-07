@@ -1,4 +1,4 @@
-export type FireFeasibilityStep = 'links' | 'form' | 'results'
+export type FireFeasibilityStep = 'form' | 'results'
 
 export function getNextStepAfterForm(): FireFeasibilityStep {
   return 'results'

@@ -5,19 +5,20 @@ import type { PositionToTargetMetrics } from '../domain/positionToTargetMetrics.
 import { calculatePositionToTargetMetricsUseCase } from '../useCases/calculatePositionToTargetMetrics'
 
 export function useFireFeasibilityPositionTargetMetrics(
-  position: Position,
-  target: Target,
+  position: Position | undefined,
+  target: Target | undefined,
 ): PositionToTargetMetrics | null {
-  return useMemo(
-    () =>
-      calculatePositionToTargetMetricsUseCase({
-        targetId: target.id,
-        positionId: position.id,
-        positionCoordinates: position.coordinates,
-        positionAltitude: position.altitude,
-        targetCoordinates: target.coordinates,
-        targetAltitude: target.altitude,
-      }),
-    [position, target],
-  )
+  return useMemo(() => {
+    if (!position || !target) {
+      return null
+    }
+    return calculatePositionToTargetMetricsUseCase({
+      targetId: target.id,
+      positionId: position.id,
+      positionCoordinates: position.coordinates,
+      positionAltitude: position.altitude,
+      targetCoordinates: target.coordinates,
+      targetAltitude: target.altitude,
+    })
+  }, [position, target])
 }

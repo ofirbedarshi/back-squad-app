@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import type {
   FireFeasibilityFormData,
@@ -8,6 +8,7 @@ import type {
 import type { EntityLinksUpdate } from '../domain/entityLinks.types'
 import { createEmptyFireFeasibilityFormData } from '../domain/fireFeasibility'
 import { calculateFireFeasibility } from '../useCases/calculateFireFeasibility'
+import { loadCurrentPositionUseCase } from '../useCases/loadCurrentPosition'
 import { saveFireFeasibilityRecordUseCase } from '../useCases/saveFireFeasibilityRecord'
 import { useDomainError } from './useDomainError'
 import { useEntityLinkResources } from './useEntityLinkResources'
@@ -22,7 +23,7 @@ export function useFireFeasibilityFlow() {
   const { reportUIError } = useUIError()
   const { notifySuccess } = useNotification()
   const [mode, setMode] = useState<FireFeasibilityMode>('coords')
-  const [step, setStep] = useState<FireFeasibilityStep>('links')
+  const [step, setStep] = useState<FireFeasibilityStep>('form')
   const [targetId, setTargetId] = useState<string | undefined>()
   const [positionId, setPositionId] = useState<string | undefined>()
   const [results, setResults] = useState<FireFeasibilityResults | null>(null)
@@ -33,15 +34,17 @@ export function useFireFeasibilityFlow() {
     positionId,
   })
 
+  const hasAutoLoadedCurrentPositionRef = useRef(false)
+
   useEffect(() => {
-    if (step !== 'form') return
-    if (!positionId || !position) {
-      reportUIError('לא נמצאה עמדה — חזור לשלב הבחירה')
+    if (hasAutoLoadedCurrentPositionRef.current) return
+    hasAutoLoadedCurrentPositionRef.current = true
+
+    const current = loadCurrentPositionUseCase()
+    if (current) {
+      setPositionId(current.id)
     }
-    if (!targetId || !target) {
-      reportUIError('לא נמצאה מטרה — חזור לשלב הבחירה')
-    }
-  }, [step, positionId, position, targetId, target, reportUIError])
+  }, [])
 
   function updateLinks(links: EntityLinksUpdate) {
     if ('targetId' in links) {
@@ -52,13 +55,11 @@ export function useFireFeasibilityFlow() {
     }
   }
 
-  const handleAdvanceFromLinks = useCallback(() => {
-    if (!position || !target || !targetId || !positionId) return
-    setStep('form')
-  }, [position, target, targetId, positionId])
-
   const handleCalculate = useCallback(() => {
-    if (!position || !target) return
+    if (!position || !target) {
+      triggerError('יש לטעון מטרה ועמדה לפני חישוב')
+      return
+    }
     try {
       const result = calculateFireFeasibility(formData)
       setResults(result)
@@ -102,7 +103,6 @@ export function useFireFeasibilityFlow() {
     position,
     target,
     formData,
-    handleAdvanceFromLinks,
     handleCalculate,
     handleUpdateData,
     handleSaveResults,
