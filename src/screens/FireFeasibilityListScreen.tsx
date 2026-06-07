@@ -22,6 +22,9 @@ import { getFireFeasibilityCardDetails, getFireFeasibilityCardTitle } from '../u
 import { getFireFeasibilitySearchFields } from '../utils/fireFeasibilitySearch'
 import { filterByQuery } from '../utils/search'
 
+// Testing only — mock target creator hidden from UI until needed in production.
+const SHOW_RANGE_HEIGHT_MOCK_TARGET_BUTTON = false
+
 function FireFeasibilityListScreen() {
   const [records, setRecords] = useState<FireFeasibilityRecord[]>([])
   const [targets, setTargets] = useState<Target[]>([])
@@ -118,13 +121,15 @@ function FireFeasibilityListScreen() {
           placeholder="חפש לפי סוג היתכנות או שם מטרה..."
         />
 
-        <button
-          type="button"
-          onClick={() => setShowRangeHeightTargetMockModal(true)}
-          className="w-full rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-bold text-emerald-700 active:bg-emerald-100 touch-manipulation"
-        >
-          צור מטרה מטווח והפרש גובה
-        </button>
+        {SHOW_RANGE_HEIGHT_MOCK_TARGET_BUTTON && (
+          <button
+            type="button"
+            onClick={() => setShowRangeHeightTargetMockModal(true)}
+            className="w-full rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-bold text-emerald-700 active:bg-emerald-100 touch-manipulation"
+          >
+            צור מטרה מטווח והפרש גובה
+          </button>
+        )}
 
         {records.length === 0 && (
           <p className="py-8 text-center text-neutral-400">אין היתכנויות לירי שמורות</p>
