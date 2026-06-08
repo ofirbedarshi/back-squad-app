@@ -46,7 +46,7 @@ export const missChecklistFormSchema: FormSchema = {
     {
       type: 'checkbox',
       key: 'indicatorTargetDataComparedWithChecklist',
-      label: 'השווה מול מציין את נתוני המטרה עם הצ\'קליסט',
+      label: 'השווה מול מציין את נתוני המטרה עם הטאצטר',
     },
     {
       type: 'checkbox',
