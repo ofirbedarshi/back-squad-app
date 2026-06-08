@@ -140,7 +140,7 @@ function FireFeasibilityListScreen() {
         )}
 
         {filteredRecords.map((record) => {
-          const { modeLabel, targetName, positionName, updatedAtLabel } = getFireFeasibilityCardDetails(
+          const { modeLabel, primaryLabel, positionName, updatedAtLabel } = getFireFeasibilityCardDetails(
             record,
             targets,
             positions,
@@ -152,7 +152,7 @@ function FireFeasibilityListScreen() {
               title={modeLabel}
               subheader={
                 <div className="flex flex-col gap-0.5">
-                  <span>מטרה: {targetName}</span>
+                  <span>{primaryLabel}</span>
                   <span>עמדה: {positionName}</span>
                 </div>
               }

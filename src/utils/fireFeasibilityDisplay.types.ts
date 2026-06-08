@@ -1,6 +1,6 @@
 export interface FireFeasibilityCardDetails {
   modeLabel: string
-  targetName: string
+  primaryLabel: string
   positionName: string
   updatedAtLabel: string
 }

@@ -45,14 +45,26 @@ export interface FireFeasibilityResults {
   flightPaths: FireFeasibilityFlightPathResultsByGeneration
 }
 
-export interface FireFeasibilityRecordInput {
-  mode: FireFeasibilityMode
+export interface FireFeasibilityCoordsRecordInput {
+  mode: 'coords'
   targetId: string
   positionId: string
   results: FireFeasibilityResults
 }
 
-export interface FireFeasibilityRecord extends FireFeasibilityRecordInput {
+export interface FireFeasibilityDistancesHeightsRecordInput {
+  mode: 'distances-heights'
+  positionId: string
+  rangeMeters: number
+  heightDifferenceMeters: number
+  results: FireFeasibilityResults
+}
+
+export type FireFeasibilityRecordInput =
+  | FireFeasibilityCoordsRecordInput
+  | FireFeasibilityDistancesHeightsRecordInput
+
+export type FireFeasibilityRecord = (FireFeasibilityCoordsRecordInput | FireFeasibilityDistancesHeightsRecordInput) & {
   id: string
   updatedAt: string
 }

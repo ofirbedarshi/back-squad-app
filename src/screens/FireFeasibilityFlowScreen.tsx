@@ -16,10 +16,16 @@ function FireFeasibilityFlowScreen() {
     updateLinks,
     position,
     target,
+    formData,
     handleCalculate,
     handleUpdateData,
     handleSaveResults,
   } = useFireFeasibilityFlow()
+
+  const calculateDisabled =
+    mode === 'distances-heights'
+      ? !position || formData.positionToTargetRange === null || formData.positionToTargetHeightDifference === null
+      : !position || !target
 
   if (step === 'results' && results) {
     return <FireFeasibilityResultsStep results={results} onSave={handleSaveResults} />
@@ -48,7 +54,7 @@ function FireFeasibilityFlowScreen() {
 
       <FireFeasibilityCalculateFooter
         onCalculate={handleCalculate}
-        disabled={!position || !target}
+        disabled={calculateDisabled}
       />
     </div>
   )

@@ -29,10 +29,16 @@ const Input = forwardRef<HTMLInputElement | HTMLTextAreaElement, InputProps>(
       )
     }
 
+    const numberWheelGuard =
+      type === 'number'
+        ? (event: React.WheelEvent<HTMLInputElement>) => event.currentTarget.blur()
+        : undefined
+
     return (
       <input
         ref={ref as React.ForwardedRef<HTMLInputElement>}
         type={type}
+        onWheel={numberWheelGuard}
         {...rest}
         className={inputFieldClassName(hasError ?? false, hasWarning ?? false, false, className)}
       />

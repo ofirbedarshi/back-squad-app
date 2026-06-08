@@ -56,9 +56,20 @@ export function useFireFeasibilityFlow() {
   }
 
   const handleCalculate = useCallback(() => {
-    if (!position || !target) {
-      triggerError('יש לטעון מטרה ועמדה לפני חישוב')
-      return
+    if (mode === 'distances-heights') {
+      if (!position) {
+        triggerError('יש לטעון עמדה לפני חישוב')
+        return
+      }
+      if (formData.positionToTargetRange === null || formData.positionToTargetHeightDifference === null) {
+        triggerError('יש להזין טווח והפרש גובה לפני חישוב')
+        return
+      }
+    } else {
+      if (!position || !target) {
+        triggerError('יש לטעון מטרה ועמדה לפני חישוב')
+        return
+      }
     }
     try {
       const result = calculateFireFeasibility(formData)
@@ -67,30 +78,50 @@ export function useFireFeasibilityFlow() {
     } catch (error) {
       triggerError(error instanceof Error ? error.message : 'חישוב נכשל')
     }
-  }, [position, target, formData, triggerError])
+  }, [mode, position, target, formData, triggerError])
 
   const handleUpdateData = useCallback((data: FireFeasibilityFormData) => {
     setFormData(data)
   }, [])
 
   const handleSaveResults = useCallback(() => {
-    if (!results || !targetId || !positionId) {
+    if (!results || !positionId) {
       reportUIError('לא ניתן לשמור — חסרים נתונים')
       return
     }
     try {
-      saveFireFeasibilityRecordUseCase({
-        mode,
-        targetId,
-        positionId,
-        results,
-      })
+      if (mode === 'distances-heights') {
+        const range = formData.positionToTargetRange
+        const heightDiff = formData.positionToTargetHeightDifference
+        if (range === null || heightDiff === null) {
+          reportUIError('לא ניתן לשמור — חסר טווח או הפרש גובה')
+          return
+        }
+        saveFireFeasibilityRecordUseCase({
+          mode,
+          positionId,
+          rangeMeters: range,
+          heightDifferenceMeters: heightDiff,
+          results,
+        })
+      } else {
+        if (!targetId) {
+          reportUIError('לא ניתן לשמור — לא נבחרה מטרה')
+          return
+        }
+        saveFireFeasibilityRecordUseCase({
+          mode,
+          targetId,
+          positionId,
+          results,
+        })
+      }
       notifySuccess('התוצאות נשמרו')
       navigate('/fire-feasibility')
     } catch (error) {
       triggerError(error instanceof Error ? error.message : 'שמירת התוצאות נכשלה')
     }
-  }, [results, targetId, positionId, mode, notifySuccess, navigate, reportUIError, triggerError])
+  }, [results, targetId, positionId, mode, formData, notifySuccess, navigate, reportUIError, triggerError])
 
   return {
     mode,

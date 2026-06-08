@@ -15,6 +15,13 @@ function resolvePositionName(positionId: string, positions: Position[]): string 
   return position?.stationName ?? 'עמדה לא נמצאה'
 }
 
+function resolvePrimaryLabel(record: FireFeasibilityRecord, targets: Target[]): string {
+  if (record.mode === 'coords') {
+    return resolveTargetName(record.targetId, targets)
+  }
+  return `טווח ${record.rangeMeters} · הפרש גובה ${record.heightDifferenceMeters}`
+}
+
 export function getFireFeasibilityCardTitle(record: FireFeasibilityRecord): string {
   return FIRE_FEASIBILITY_MODE_CONFIG[record.mode].modeLabel
 }
@@ -26,7 +33,7 @@ export function getFireFeasibilityCardDetails(
 ): FireFeasibilityCardDetails {
   return {
     modeLabel: getFireFeasibilityCardTitle(record),
-    targetName: resolveTargetName(record.targetId, targets),
+    primaryLabel: resolvePrimaryLabel(record, targets),
     positionName: resolvePositionName(record.positionId, positions),
     updatedAtLabel: formatUpdatedAt(record.updatedAt),
   }

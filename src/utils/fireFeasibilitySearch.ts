@@ -8,6 +8,6 @@ export function getFireFeasibilitySearchFields(
   targets: Target[],
   positions: Position[],
 ): string[] {
-  const { targetName } = getFireFeasibilityCardDetails(record, targets, positions)
-  return [getFireFeasibilityCardTitle(record), targetName]
+  const { primaryLabel } = getFireFeasibilityCardDetails(record, targets, positions)
+  return [getFireFeasibilityCardTitle(record), primaryLabel]
 }

@@ -1,29 +1,27 @@
 import { useEffect, useMemo, useState } from 'react'
 import type { Position } from '../domain/position.types'
-import type { Target } from '../domain/target.types'
 import type { EntityLinksUpdate } from '../domain/entityLinks.types'
 import { resolveObstacleHeightMetrics } from '../domain/obstacleHeightInput'
 import type { ObstacleHeightReference } from '../domain/obstacleHeightInput.types'
 import type { ObstaclesFeasibilityEvaluationInput } from '../domain/obstaclesFeasibility.types'
-import {
-  POSITION_FIELD_TOOLTIP,
-  TARGET_FIELD_TOOLTIP,
-} from '../domain/fireFeasibility.constants'
+import { POSITION_FIELD_TOOLTIP } from '../domain/fireFeasibility.constants'
 import FireFeasibilityObstacleHeightField from './FireFeasibilityObstacleHeightField'
 import type { FireFeasibilityObstacleHeightFieldChange } from './FireFeasibilityObstacleHeightField'
-import FireFeasibilityRangeField from './FireFeasibilityRangeField'
 import FormField from './FormField'
 import Input from './Input'
-import TargetLoadButton from './TargetLoadButton'
+import PositionLoadButton from './PositionLoadButton'
+
+export interface FireFeasibilityDistancesHeightsMetrics {
+  rangeMeters: number | null
+  heightDifferenceMeters: number | null
+}
 
 interface FireFeasibilityDistancesHeightsFieldsProps {
   positionId?: string
-  targetId?: string
   position?: Position
-  target?: Target
-  rangeDisplay: string
   onLinksChange: (links: EntityLinksUpdate) => void
   onObstacleChange: (value: ObstaclesFeasibilityEvaluationInput | null) => void
+  onMetricsChange: (metrics: FireFeasibilityDistancesHeightsMetrics) => void
 }
 
 function parseOptionalNumber(value: string): number | null {
@@ -35,13 +33,14 @@ function parseOptionalNumber(value: string): number | null {
 }
 
 function FireFeasibilityDistancesHeightsFields({
+  positionId,
   position,
-  target,
-  targetId,
-  rangeDisplay,
   onLinksChange,
   onObstacleChange,
+  onMetricsChange,
 }: FireFeasibilityDistancesHeightsFieldsProps) {
+  const [rangeInput, setRangeInput] = useState('')
+  const [heightDiffInput, setHeightDiffInput] = useState('')
   const [obstacleHeight, setObstacleHeight] = useState<{
     rawHeightMeters: number | null
     reference: ObstacleHeightReference
@@ -78,30 +77,28 @@ function FireFeasibilityDistancesHeightsFields({
     onObstacleChange(obstacle)
   }, [obstacle, onObstacleChange])
 
+  useEffect(() => {
+    onMetricsChange({
+      rangeMeters: parseOptionalNumber(rangeInput),
+      heightDifferenceMeters: parseOptionalNumber(heightDiffInput),
+    })
+  }, [rangeInput, heightDiffInput, onMetricsChange])
+
   return (
     <>
       <FormField
-        label="שם מטרה"
-        infoTooltipText={TARGET_FIELD_TOOLTIP}
+        label="שם עמדה"
+        infoTooltipText={POSITION_FIELD_TOOLTIP}
         headerAction={
-          <TargetLoadButton
-            targetId={targetId}
-            onSelect={(selected) => onLinksChange({ targetId: selected.id })}
-            onClear={() => onLinksChange({ targetId: null })}
+          <PositionLoadButton
+            positionId={positionId}
+            autoLoadCurrent={false}
+            onSelect={(selected) => onLinksChange({ positionId: selected.id })}
+            onClear={() => onLinksChange({ positionId: null })}
           />
         }
       >
-        <Input type="text" value={target?.targetName ?? ''} disabled />
-      </FormField>
-
-      <FireFeasibilityRangeField rangeDisplay={rangeDisplay} />
-
-      <FormField label="גובה מטרה" infoTooltipText={TARGET_FIELD_TOOLTIP}>
-        <Input
-          type="number"
-          value={target?.altitude != null ? String(target.altitude) : ''}
-          disabled
-        />
+        <Input type="text" value={position?.stationName ?? ''} disabled />
       </FormField>
 
       <FormField label="גובה עמדה" infoTooltipText={POSITION_FIELD_TOOLTIP}>
@@ -109,6 +106,22 @@ function FireFeasibilityDistancesHeightsFields({
           type="number"
           value={position?.altitude != null ? String(position.altitude) : ''}
           disabled
+        />
+      </FormField>
+
+      <FormField label="טווח עמדה-מטרה">
+        <Input
+          type="number"
+          value={rangeInput}
+          onChange={(e) => setRangeInput(e.target.value)}
+        />
+      </FormField>
+
+      <FormField label="הפרש גובה עמדה-מטרה">
+        <Input
+          type="number"
+          value={heightDiffInput}
+          onChange={(e) => setHeightDiffInput(e.target.value)}
         />
       </FormField>
 
