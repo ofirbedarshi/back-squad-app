@@ -28,8 +28,8 @@ export const FLIGHT_PATH_OPTIONS = [
 ] as const
 
 export const FIRE_FEASIBILITY_FLIGHT_PATH_RESULT_ROWS = [
+  { label: '+L', value: '+lofted' },
   { label: 'L', value: 'lofted' },
-  { label: 'L+', value: '+lofted' },
   { label: 'Low', value: 'low' },
   { label: 'F', value: 'flat' },
 ] as const
