@@ -224,7 +224,7 @@ export const bachFormSchema: FormSchema = {
     { type: 'text', key: 'unusualEvents', label: 'אירועים חריגים (האם היה ריח חריג בשיגור?)' },
     { type: 'text', key: 'results', label: 'תוצאות' },
     { type: 'text', key: 'renewed', label: 'ירי נוסף – אישור מוכנות מחודש' },
-    { type: 'time', key: 'readyTime', label: 'זמן בהיכון לירי' },
+    { type: 'text', key: 'readyTime', label: 'זמן בהיכון לירי' },
     { type: 'text', key: 'malfunctions', label: 'תקלות במהלך או לפני העבודה' },
 
     { type: 'header', text: 'הערות', bold: true },
