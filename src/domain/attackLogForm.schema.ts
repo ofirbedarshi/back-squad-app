@@ -118,7 +118,13 @@ export const attackLogFormSchema: FormSchema = {
         { type: 'pitchRoll', key: 'roll', label: 'Roll', required: false },
       ],
     },
-    { type: 'text', key: 'vehicleEncryptionMethod', label: 'באמצעות מה הוצפן הרכב?', required: false },
+    {
+      type: 'multiSelectToggle',
+      key: 'vehicleEncryptionMethod',
+      label: 'באמצעות מה הוצפן הרכב?',
+      options: ['מצפן', 'nfs', 'tmaps'],
+      required: false,
+    },
     { type: 'text', key: 'hivePosition', label: 'מיקום טיך בכוורת', required: false },
     {
       type: 'toggle',
@@ -227,7 +233,7 @@ export const attackLogFormSchema: FormSchema = {
     {
       type: 'text',
       key: 'wallAzimuth',
-      label: 'אזימות הקיר',
+      label: 'אזימות הקיר (במעלות)',
       valueKind: 'azimuthDegree',
       required: false,
     },

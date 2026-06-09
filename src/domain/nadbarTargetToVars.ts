@@ -1,7 +1,70 @@
 import type { Nadbar, NadbarMessageBlock, NadbarMessageUserVars } from './nadbar.types'
 import type { Target } from './target.types'
 import { formatMetric } from '../utils/metricRounding'
-import { collectUserVarNamesFromContent } from '../utils/nadbarMessageFill'
+import {
+  collectUserVarNamesFromContent,
+  isNadbarBlockHasLoadTarget,
+  type NadbarBlockFooterActionsByBlock,
+} from '../utils/nadbarMessageFill'
+
+export const GLOBAL_TARGET_CHANGE_RESET_VAR_NAMES = [
+  'amura',
+  'amuraManual',
+  'amuraValid',
+  'amuraCorrected',
+  'hasNearbyObstacles',
+  'obstacleHeight1',
+  'obstacleDistance1',
+  'obstacleActive2',
+  'obstacleHeight2',
+  'obstacleDistance2',
+  'obstacleActive3',
+  'obstacleHeight3',
+  'obstacleDistance3',
+] as const
+
+const GLOBAL_TARGET_CHANGE_RESET_VAR_SET = new Set<string>(GLOBAL_TARGET_CHANGE_RESET_VAR_NAMES)
+
+export function blockHasGlobalTargetChangeResetVar(block: NadbarMessageBlock): boolean {
+  return collectBlockUserVarNames(block).some((varName) =>
+    GLOBAL_TARGET_CHANGE_RESET_VAR_SET.has(varName),
+  )
+}
+
+export function getNadbarGlobalTargetChangeResetBlockIndices(
+  nadbar: Nadbar,
+  blockFooterActions: NadbarBlockFooterActionsByBlock | undefined,
+): number[] {
+  const indices: number[] = []
+  for (let i = 0; i < nadbar.messageBlocks.length; i++) {
+    if (!isNadbarBlockHasLoadTarget(blockFooterActions, i)) continue
+    if (blockHasGlobalTargetChangeResetVar(nadbar.messageBlocks[i]!)) {
+      indices.push(i)
+    }
+  }
+  return indices
+}
+
+export function clearNadbarBlockUserVarsAtIndices(nadbar: Nadbar, blockIndices: readonly number[]): Nadbar {
+  if (blockIndices.length === 0) return nadbar
+
+  const blockCount = nadbar.messageBlocks.length
+  const current: NadbarMessageUserVars[] =
+    nadbar.blockMessageVars ?? Array.from({ length: blockCount }, (): NadbarMessageUserVars => ({}))
+  const next = [...current]
+  while (next.length < blockCount) {
+    next.push({})
+  }
+
+  for (const blockIndex of blockIndices) {
+    if (blockIndex < 0 || blockIndex >= blockCount) {
+      throw new Error('בלוק נדבר לא נמצא')
+    }
+    next[blockIndex] = {}
+  }
+
+  return { ...nadbar, blockMessageVars: next }
+}
 
 const TARGET_DERIVED_VAR_NAMES = ['metara', 'meraom', 'tsepa', 'gamal', 'amura'] as const
 

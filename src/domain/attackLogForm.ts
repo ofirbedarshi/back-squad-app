@@ -72,6 +72,14 @@ function optionalStringFromUnknown(raw: unknown): string | undefined {
   return undefined
 }
 
+function optionalStringArrayFromUnknown(raw: unknown): string[] | undefined {
+  if (!Array.isArray(raw)) {
+    return undefined
+  }
+  const values = raw.filter((v): v is string => typeof v === 'string' && v.trim() !== '')
+  return values.length > 0 ? values : undefined
+}
+
 function optionalLoaderId(raw: unknown): string | undefined {
   if (typeof raw === 'string' && raw.trim() !== '') {
     return raw
@@ -114,7 +122,7 @@ export function formValuesToAttackLogInput(values: FormValues): AttackLogInput {
     aka: optionalStringFromUnknown(values.aka),
     pitch: optionalNumberFromUnknown(values.pitch),
     roll: optionalNumberFromUnknown(values.roll),
-    vehicleEncryptionMethod: optionalStringFromUnknown(values.vehicleEncryptionMethod),
+    vehicleEncryptionMethod: optionalStringArrayFromUnknown(values.vehicleEncryptionMethod),
     hivePosition: optionalStringFromUnknown(values.hivePosition),
     generation,
     stationCoordinates: toPositionCoordinates(stationCoordinates),
@@ -187,7 +195,7 @@ export function attackLogInputToFormValues(input: AttackLogInput): FormValues {
     aka: input.aka ?? '',
     pitch: input.pitch ?? defaults.pitch,
     roll: input.roll ?? defaults.roll,
-    vehicleEncryptionMethod: input.vehicleEncryptionMethod ?? '',
+    vehicleEncryptionMethod: input.vehicleEncryptionMethod ?? [],
     hivePosition: input.hivePosition ?? '',
     generation: GENERATION_TO_FORM[generation],
     stationCoordinates,

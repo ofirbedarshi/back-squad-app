@@ -15,7 +15,7 @@ export interface AttackLogInput {
   aka?: string
   pitch?: number
   roll?: number
-  vehicleEncryptionMethod?: string
+  vehicleEncryptionMethod?: string[]
   hivePosition?: string
   generation?: 'a' | 'b'
   stationCoordinates?: PositionCoordinates
