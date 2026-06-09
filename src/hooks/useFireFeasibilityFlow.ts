@@ -5,7 +5,6 @@ import type {
   FireFeasibilityMode,
   FireFeasibilityResults,
 } from '../domain/fireFeasibility.types'
-import type { EntityLinksUpdate } from '../domain/entityLinks.types'
 import { createEmptyFireFeasibilityFormData } from '../domain/fireFeasibility'
 import { calculateFireFeasibility } from '../useCases/calculateFireFeasibility'
 import { loadCurrentPositionUseCase } from '../useCases/loadCurrentPosition'
@@ -46,30 +45,14 @@ export function useFireFeasibilityFlow() {
     }
   }, [])
 
-  function updateLinks(links: EntityLinksUpdate) {
-    if ('targetId' in links) {
-      setTargetId(links.targetId ?? undefined)
-    }
-    if ('positionId' in links) {
-      setPositionId(links.positionId ?? undefined)
-    }
-  }
-
   const handleCalculate = useCallback(() => {
-    if (mode === 'distances-heights') {
-      if (!position) {
-        triggerError('יש לטעון עמדה לפני חישוב')
-        return
-      }
-      if (formData.positionToTargetRange === null || formData.positionToTargetHeightDifference === null) {
-        triggerError('יש להזין טווח והפרש גובה לפני חישוב')
-        return
-      }
-    } else {
-      if (!position || !target) {
-        triggerError('יש לטעון מטרה ועמדה לפני חישוב')
-        return
-      }
+    if (!position) {
+      triggerError('יש לטעון עמדה לפני חישוב')
+      return
+    }
+    if (formData.positionToTargetRange === null || formData.positionToTargetHeightDifference === null) {
+      triggerError('יש להזין טווח והפרש גובה לפני חישוב')
+      return
     }
     try {
       const result = calculateFireFeasibility(formData)
@@ -78,7 +61,7 @@ export function useFireFeasibilityFlow() {
     } catch (error) {
       triggerError(error instanceof Error ? error.message : 'חישוב נכשל')
     }
-  }, [mode, position, target, formData, triggerError])
+  }, [position, formData, triggerError])
 
   const handleUpdateData = useCallback((data: FireFeasibilityFormData) => {
     setFormData(data)
@@ -129,8 +112,9 @@ export function useFireFeasibilityFlow() {
     step,
     targetId,
     positionId,
+    setTargetId,
+    setPositionId,
     results,
-    updateLinks,
     position,
     target,
     formData,

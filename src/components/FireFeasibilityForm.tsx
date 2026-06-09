@@ -1,83 +1,72 @@
 import { useCallback, useEffect, useState } from 'react'
 import type { Position } from '../domain/position.types'
 import type { Target } from '../domain/target.types'
-import type { EntityLinksUpdate } from '../domain/entityLinks.types'
 import type {
   FireFeasibilityFlightPath,
   FireFeasibilityFormData,
   FireFeasibilityMode,
 } from '../domain/fireFeasibility.types'
 import type { ObstaclesFeasibilityEvaluationInput } from '../domain/obstaclesFeasibility.types'
-import { formatMetric } from '../utils/metricRounding'
-import { useFireFeasibilityPositionTargetMetrics } from '../hooks/useFireFeasibilityPositionTargetMetrics'
-import FireFeasibilityCoordsFields from './FireFeasibilityCoordsFields'
-import FireFeasibilityDistancesHeightsFields from './FireFeasibilityDistancesHeightsFields'
-import type { FireFeasibilityDistancesHeightsMetrics } from './FireFeasibilityDistancesHeightsFields'
+import FireFeasibilityConcealmentFields from './FireFeasibilityConcealmentFields'
+import FireFeasibilityFormModeToggle from './FireFeasibilityFormModeToggle'
 import FireFeasibilityFormSharedTail from './FireFeasibilityFormSharedTail'
+import FireFeasibilityObstacleFields from './FireFeasibilityObstacleFields'
+import FireFeasibilityPositionFields from './FireFeasibilityPositionFields'
+import FireFeasibilityTargetCoordsSection from './FireFeasibilityTargetCoordsSection'
+import type { FireFeasibilityTargetMetrics } from './FireFeasibilityTargetCoordsSection'
+import FireFeasibilityTargetRangeSection from './FireFeasibilityTargetRangeSection'
 
 interface FireFeasibilityFormProps {
   mode: FireFeasibilityMode
+  onModeChange: (mode: FireFeasibilityMode) => void
   positionId?: string
   targetId?: string
   position?: Position
   target?: Target
-  onLinksChange: (links: EntityLinksUpdate) => void
+  onPositionChange: (positionId: string | null) => void
+  onTargetChange: (targetId: string | null) => void
   onUpdateData: (data: FireFeasibilityFormData) => void
 }
 
 function FireFeasibilityForm({
   mode,
+  onModeChange,
   positionId,
   targetId,
   position,
   target,
-  onLinksChange,
+  onPositionChange,
+  onTargetChange,
   onUpdateData,
 }: FireFeasibilityFormProps) {
-  const metrics = useFireFeasibilityPositionTargetMetrics(position, target)
-  const rangeDisplay = metrics?.range != null ? formatMetric(metrics.range) : ''
   const [flightPath, setFlightPath] = useState<FireFeasibilityFlightPath>('flat')
   const [obstacle, setObstacle] = useState<ObstaclesFeasibilityEvaluationInput | null>(null)
-  const [dhMetrics, setDhMetrics] = useState<FireFeasibilityDistancesHeightsMetrics>({
+  const [metrics, setMetrics] = useState<FireFeasibilityTargetMetrics>({
     rangeMeters: null,
     heightDifferenceMeters: null,
   })
 
-  const handleDhMetricsChange = useCallback((next: FireFeasibilityDistancesHeightsMetrics) => {
-    setDhMetrics(next)
+  const handleMetricsChange = useCallback((next: FireFeasibilityTargetMetrics) => {
+    setMetrics(next)
   }, [])
 
   useEffect(() => {
-    if (mode === 'distances-heights') {
-      const targetAltitudeMeters =
-        position?.altitude != null && dhMetrics.heightDifferenceMeters != null
-          ? position.altitude + dhMetrics.heightDifferenceMeters
-          : null
+    const targetAltitudeMeters =
+      position?.altitude != null && metrics.heightDifferenceMeters != null
+        ? position.altitude + metrics.heightDifferenceMeters
+        : null
 
-      onUpdateData({
-        positionToTargetRange: dhMetrics.rangeMeters,
-        positionToTargetHeightDifference: dhMetrics.heightDifferenceMeters,
-        targetAltitudeMeters,
-        flightPath,
-        obstacle,
-      })
-    } else {
-      onUpdateData({
-        positionToTargetRange: metrics?.range ?? null,
-        positionToTargetHeightDifference: metrics?.altitudeDiff ?? null,
-        targetAltitudeMeters: target?.altitude ?? null,
-        flightPath,
-        obstacle,
-      })
-    }
+    onUpdateData({
+      positionToTargetRange: metrics.rangeMeters,
+      positionToTargetHeightDifference: metrics.heightDifferenceMeters,
+      targetAltitudeMeters,
+      flightPath,
+      obstacle,
+    })
   }, [
-    mode,
-    dhMetrics.rangeMeters,
-    dhMetrics.heightDifferenceMeters,
+    metrics.rangeMeters,
+    metrics.heightDifferenceMeters,
     position?.altitude,
-    metrics?.range,
-    metrics?.altitudeDiff,
-    target?.altitude,
     flightPath,
     obstacle,
     onUpdateData,
@@ -85,25 +74,29 @@ function FireFeasibilityForm({
 
   return (
     <div className="flex flex-col gap-4">
+      <FireFeasibilityPositionFields
+        positionId={positionId}
+        position={position}
+        onPositionChange={onPositionChange}
+      />
+
+      <FireFeasibilityFormModeToggle mode={mode} onModeChange={onModeChange} />
+
       {mode === 'coords' ? (
-        <FireFeasibilityCoordsFields
-          positionId={positionId}
-          targetId={targetId}
+        <FireFeasibilityTargetCoordsSection
           position={position}
+          targetId={targetId}
           target={target}
-          rangeDisplay={rangeDisplay}
-          onLinksChange={onLinksChange}
-          onObstacleChange={setObstacle}
+          onTargetChange={onTargetChange}
+          onMetricsChange={handleMetricsChange}
         />
       ) : (
-        <FireFeasibilityDistancesHeightsFields
-          positionId={positionId}
-          position={position}
-          onLinksChange={onLinksChange}
-          onObstacleChange={setObstacle}
-          onMetricsChange={handleDhMetricsChange}
-        />
+        <FireFeasibilityTargetRangeSection onMetricsChange={handleMetricsChange} />
       )}
+
+      <FireFeasibilityObstacleFields position={position} onObstacleChange={setObstacle} />
+
+      <FireFeasibilityConcealmentFields />
 
       <FireFeasibilityFormSharedTail
         flightPath={flightPath}
