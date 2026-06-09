@@ -131,7 +131,8 @@ export function formValuesToAttackLogInput(values: FormValues): AttackLogInput {
     date: typeof values.date === 'string' ? values.date : '',
     wasAttacked,
     hit: values.hit === true,
-    result: optionalStringFromUnknown(values.result),
+    result: optionalToggleChoice<NonNullable<AttackLogInput['result']>>(values.result),
+    notes: optionalStringFromUnknown(values.notes),
     time: optionalStringFromUnknown(values.time),
     launcherType: optionalStringFromUnknown(values.launcherType),
     launcherId: optionalNumberFromUnknown(values.launcherId),
@@ -154,7 +155,7 @@ export function formValuesToAttackLogInput(values: FormValues): AttackLogInput {
     indicatorRange: optionalNumberFromUnknown(values.indicatorRange),
     apexAngle: optionalNumberFromUnknown(values.apexAngle),
     spotSizeWithoutSpread: optionalNumberFromUnknown(values.spotSizeWithoutSpread),
-    targetFront: optionalStringFromUnknown(values.targetFront),
+    targetFront: optionalToggleChoice<NonNullable<AttackLogInput['targetFront']>>(values.targetFront),
     wallAzimuth: optionalNumberFromUnknown(values.wallAzimuth),
     spotSizeWithSpread: optionalNumberFromUnknown(values.spotSizeWithSpread),
     cloudBaseAltitude: optionalNumberFromUnknown(values.cloudBaseAltitude),
@@ -165,7 +166,7 @@ export function formValuesToAttackLogInput(values: FormValues): AttackLogInput {
     directionality: optionalToggleChoice<NonNullable<AttackLogInput['directionality']>>(
       values.directionality,
     ),
-    fuseType: optionalStringFromUnknown(values.fuseType),
+    fuseType: optionalToggleChoice<NonNullable<AttackLogInput['fuseType']>>(values.fuseType),
   }
 }
 
@@ -208,6 +209,7 @@ export function attackLogInputToFormValues(input: AttackLogInput): FormValues {
     wasAttacked: WAS_ATTACKED_TO_FORM[wasAttacked],
     hit: input.hit ?? false,
     result: input.result ?? '',
+    notes: input.notes ?? '',
     time: input.time ?? '',
     launcherType: input.launcherType ?? '',
     launcherId: input.launcherId ?? defaults.launcherId,

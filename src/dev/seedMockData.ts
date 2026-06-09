@@ -112,7 +112,7 @@ const attackLogs = [
     date: '2026-05-09',
     wasAttacked: 'yes',
     hit: true,
-    result: 'פגיעה טובה',
+    result: 'פרגול',
     time: '14:30',
     launcherType: 'רכבי',
     generation: 'a',

@@ -8,7 +8,8 @@ export interface AttackLogInput {
   date: string
   wasAttacked?: 'yes' | 'no'
   hit?: boolean
-  result?: string
+  result?: 'פרגול' | 'הפוכה' | 'טוניס'
+  notes?: string
   time?: string
   launcherType?: string
   launcherId?: number
@@ -31,7 +32,7 @@ export interface AttackLogInput {
   indicatorRange?: number
   apexAngle?: number
   spotSizeWithoutSpread?: number
-  targetFront?: string
+  targetFront?: 'חזית' | 'גג'
   wallAzimuth?: number
   spotSizeWithSpread?: number
   cloudBaseAltitude?: number
@@ -41,7 +42,7 @@ export interface AttackLogInput {
   flightPath?: string
   offset?: 'למעלה' | 'למטה' | 'ימינה' | 'שמאלה'
   directionality?: 'ימינה' | 'שמאלה'
-  fuseType?: string
+  fuseType?: 'הקשה' | 'השהייה קצרה' | 'השהייה ארוכה'
 }
 
 export interface AttackLog extends AttackLogInput {
