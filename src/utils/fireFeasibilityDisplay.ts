@@ -17,7 +17,7 @@ function resolvePositionName(positionId: string, positions: Position[]): string 
 
 function resolvePrimaryLabel(record: FireFeasibilityRecord, targets: Target[]): string {
   if (record.mode === 'coords') {
-    return resolveTargetName(record.targetId, targets)
+    return `מטרה: ${resolveTargetName(record.targetId, targets)}`
   }
   return `טווח ${record.rangeMeters} · הפרש גובה ${record.heightDifferenceMeters}`
 }
