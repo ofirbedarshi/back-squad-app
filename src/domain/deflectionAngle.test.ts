@@ -8,6 +8,8 @@ import {
   deriveDeflectionAzimuthsFromCoordinates,
   excelMod,
   feetMultiplierFromAngleDeg,
+  isApexAngleWarning,
+  isMissileArrivalAngleWarning,
 } from './deflectionAngle.ts'
 
 /** Sample row from data/deflection-angle/azimuth_calculator.xlsx */
@@ -63,6 +65,20 @@ describe('apexAngleBetweenAzimuths', () => {
 
   it('wraps when observation minus launcher exceeds 180', () => {
     assert.equal(apexAngleBetweenAzimuths(350, 10), 20)
+  })
+})
+
+describe('angle warning thresholds', () => {
+  it('flags apex angle above 60', () => {
+    assert.equal(isApexAngleWarning(60), false)
+    assert.equal(isApexAngleWarning(60.1), true)
+    assert.equal(isApexAngleWarning(40), false)
+  })
+
+  it('flags missile arrival angle below 30', () => {
+    assert.equal(isMissileArrivalAngleWarning(30), false)
+    assert.equal(isMissileArrivalAngleWarning(29.9), true)
+    assert.equal(isMissileArrivalAngleWarning(39), false)
   })
 })
 

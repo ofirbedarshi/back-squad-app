@@ -19,6 +19,17 @@ function CoordinatePair({
     <div className="flex flex-col gap-3 rounded-xl border border-neutral-100 bg-neutral-50/80 p-3">
       <h3 className="text-sm font-semibold text-neutral-700">{title}</h3>
       <div className="grid grid-cols-2 gap-3">
+      <div className="flex flex-col gap-1.5">
+          <label className="text-xs font-medium text-neutral-500">צפון (N)</label>
+          <Input
+            type="text"
+            inputMode="decimal"
+            enterKeyHint="done"
+            autoComplete="off"
+            value={northRaw}
+            onChange={(e) => onNorthChange(e.target.value)}
+          />
+        </div>
         <div className="flex flex-col gap-1.5">
           <label className="text-xs font-medium text-neutral-500">מזרח (E)</label>
           <Input
@@ -30,17 +41,7 @@ function CoordinatePair({
             onChange={(e) => onEastChange(e.target.value)}
           />
         </div>
-        <div className="flex flex-col gap-1.5">
-          <label className="text-xs font-medium text-neutral-500">צפון (N)</label>
-          <Input
-            type="text"
-            inputMode="decimal"
-            enterKeyHint="done"
-            autoComplete="off"
-            value={northRaw}
-            onChange={(e) => onNorthChange(e.target.value)}
-          />
-        </div>
+        
       </div>
     </div>
   )

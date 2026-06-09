@@ -95,7 +95,7 @@ function MovingTargetCalculatorScreen() {
           title="תוצאות חישוב"
           rows={[
             {
-              label: 'מרחק מפגיעה לפקודת אש',
+              label: 'מרחק מנקודת פגיעה רצויה לנקודת פקודת האש',
               value: result?.fireCommandDistanceM ?? null,
               unit: 'מ׳',
               highlight: true,

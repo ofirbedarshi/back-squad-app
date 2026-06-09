@@ -35,6 +35,8 @@ export interface DeflectionAngleDisplayResult {
   designationAngleToWallDeg: string
   apexAngleDeg: string
   missileArrivalAngleToWallDeg: string
+  apexAngleWarning: boolean
+  missileArrivalAngleWarning: boolean
   requiredDistanceOnWallFeet: string | null
   sideDriftDeflectionIncreaseFeet: string | null
 }

@@ -1,6 +1,8 @@
 import {
   calculateDeflectionAngle,
   deriveDeflectionAzimuthsFromCoordinates,
+  isApexAngleWarning,
+  isMissileArrivalAngleWarning,
 } from '../domain/deflectionAngle.ts'
 import { isAzimuthDegreeInRange, parseAzimuthDegreeString } from '../domain/azimuthDegree.ts'
 import type { DeflectionAngleDisplayResult } from '../domain/deflectionAngle.types.ts'
@@ -22,6 +24,8 @@ function toDisplayResult(
     designationAngleToWallDeg: formatAngleDeg(result.designationAngleToWallDeg),
     apexAngleDeg: formatAngleDeg(result.apexAngleDeg),
     missileArrivalAngleToWallDeg: formatAngleDeg(result.missileArrivalAngleToWallDeg),
+    apexAngleWarning: isApexAngleWarning(result.apexAngleDeg),
+    missileArrivalAngleWarning: isMissileArrivalAngleWarning(result.missileArrivalAngleToWallDeg),
     requiredDistanceOnWallFeet: formatFeetMultiplier(result.requiredDistanceOnWallFeet),
     sideDriftDeflectionIncreaseFeet: formatFeetMultiplier(
       result.sideDriftDeflectionIncreaseFeet,

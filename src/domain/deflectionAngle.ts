@@ -6,6 +6,17 @@ import type {
   DeflectionAngleResult,
 } from './deflectionAngle.types.ts'
 
+export const APEX_ANGLE_WARNING_ABOVE_DEG = 60
+export const MISSILE_ARRIVAL_ANGLE_WARNING_BELOW_DEG = 30
+
+export function isApexAngleWarning(apexAngleDeg: number): boolean {
+  return apexAngleDeg > APEX_ANGLE_WARNING_ABOVE_DEG
+}
+
+export function isMissileArrivalAngleWarning(missileArrivalAngleToWallDeg: number): boolean {
+  return missileArrivalAngleToWallDeg < MISSILE_ARRIVAL_ANGLE_WARNING_BELOW_DEG
+}
+
 /** Excel MOD — remainder with divisor sign (positive divisor → 0..d-1). */
 export function excelMod(n: number, d: number): number {
   if (d === 0) {

@@ -157,11 +157,13 @@ function DeflectionAngleCalculatorScreen() {
               value: result?.apexAngleDeg ?? null,
               unit: '°',
               highlight: true,
+              warning: result?.apexAngleWarning ?? false,
             },
             {
               label: 'זווית הגעת טיל לקיר',
               value: result?.missileArrivalAngleToWallDeg ?? null,
               unit: '°',
+              warning: result?.missileArrivalAngleWarning ?? false,
             },
           ]}
         />
@@ -170,7 +172,7 @@ function DeflectionAngleCalculatorScreen() {
           title="מכפילי מרחק"
           rows={[
             {
-              label: 'מרחק נדרש על קיר - פי',
+              label: 'הגדלת הכתם (מריחה) פי',
               value: result?.requiredDistanceOnWallFeet ?? null,
               unit: '',
               highlight: true,
