@@ -59,7 +59,12 @@ export function calculateFireFeasibility(formData: FireFeasibilityFormData): Fir
     positionToTargetHeightDifferenceMeters: formData.positionToTargetHeightDifference,
   })
   const concealmentResult = formData.concealment
-    ? evaluateConcealmentFeasibility(formData.concealment)
+    ? evaluateConcealmentFeasibility({
+        positionToTargetRangeMeters: formData.positionToTargetRange,
+        positionToTargetHeightDifferenceMeters: formData.positionToTargetHeightDifference,
+        flightPath: formData.flightPath,
+        concealment: formData.concealment,
+      })
     : evaluateConcealmentFeasibilityWhenMissing()
 
   return {

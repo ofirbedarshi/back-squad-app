@@ -1,5 +1,6 @@
 import type { FLIGHT_PATH_OPTIONS } from './fireFeasibility.constants'
 import type { ConcealmentFeasibilityEvaluationInput } from './concealmentFeasibility.types'
+import type { ConcealmentDiagramModel } from './concealmentDiagram.types'
 import type { ObstaclesFeasibilityEvaluationInput } from './obstaclesFeasibility.types'
 
 export type FireFeasibilityMode = 'coords' | 'distances-heights'
@@ -19,6 +20,7 @@ export interface FireFeasibilityCategoryResult {
   enabled: boolean
   notes: string
   logs: string[]
+  diagram?: ConcealmentDiagramModel
 }
 
 export type FireFeasibilityGeneration = 'a' | 'b'

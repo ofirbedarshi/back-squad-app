@@ -4,6 +4,7 @@ import type {
   FireFeasibilityCategoryResultsByGeneration,
   FireFeasibilityGeneration,
 } from '../domain/fireFeasibility.types'
+import ConcealmentDiagram from './ConcealmentDiagram'
 
 const GENERATION_ORDER: FireFeasibilityGeneration[] = ['a', 'b']
 
@@ -18,6 +19,8 @@ function FireFeasibilityCategoryLogsPanel({ results }: FireFeasibilityCategoryLo
     () => results[activeGeneration]?.logs ?? [],
     [activeGeneration, results],
   )
+
+  const activeDiagram = results[activeGeneration]?.diagram
 
   if ((results.a?.logs?.length ?? 0) === 0 && (results.b?.logs?.length ?? 0) === 0) {
     return null
@@ -48,6 +51,8 @@ function FireFeasibilityCategoryLogsPanel({ results }: FireFeasibilityCategoryLo
             )
           })}
         </div>
+
+        {activeDiagram ? <ConcealmentDiagram model={activeDiagram} /> : null}
 
         {activeLogs.length > 0 ? (
           <ul className="space-y-1.5 rounded-lg border border-neutral-200 bg-white p-3 text-sm font-medium leading-relaxed text-neutral-700">

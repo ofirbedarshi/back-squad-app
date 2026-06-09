@@ -7,14 +7,14 @@ import type { FireFeasibilityCategoryResult } from './fireFeasibility.types'
 import type {
   ObstaclesFeasibilityEvaluationInput,
   ObstaclesFeasibilityLookupContext,
-  ObstaclesFeasibilityLookupData,
-  ObstaclesFeasibilityLookupTrajectory,
 } from './obstaclesFeasibility.types'
+import type { FeasibilityLookupData, FeasibilityLookupTrajectory } from './feasibilityLookup.types'
 import {
   buildObstaclesLookupSuccessLogs,
   buildObstaclesNoteLogs,
 } from './obstaclesFeasibilityLogs'
-import { obstaclesFeasibilityLookupData } from './obstaclesFeasibilityLookup.generated'
+import { feasibilityLookupData } from './feasibilityLookup.generated'
+import { resolveLookupTrajectory, buildFeasibilityLookupKey } from './feasibilityLookup'
 import {
   isObstaclesFeasibilityOutOfTableError,
   ObstaclesFeasibilityOutOfTableError,
@@ -33,29 +33,14 @@ function assertFiniteMeters(value: number, label: string): void {
   }
 }
 
-function resolveObstacleTrajectory(flightPath: string): ObstaclesFeasibilityLookupTrajectory | null {
-  if (flightPath === 'low') return 'low'
-  if (flightPath === 'lofted') return 'lofted'
-  if (flightPath === '+lofted') return 'loftedPlus'
-  return null
-}
-
-function buildLookupKey(
-  positionToTargetRangeMeters: number,
-  positionToTargetHeightDifferenceMeters: number,
-  positionToObstacleRangeMeters: number,
-): string {
-  return `${positionToTargetRangeMeters}|${positionToTargetHeightDifferenceMeters}|${positionToObstacleRangeMeters}`
-}
-
 function lookupObstacleCell(
-  data: ObstaclesFeasibilityLookupData,
+  data: FeasibilityLookupData,
   positionToTargetRangeMeters: number,
   positionToTargetHeightDifferenceMeters: number,
   positionToObstacleRangeMeters: number,
-  trajectory: ObstaclesFeasibilityLookupTrajectory,
+  trajectory: FeasibilityLookupTrajectory,
 ): ObstaclesFeasibilityLookupContext {
-  const key = buildLookupKey(
+  const key = buildFeasibilityLookupKey(
     positionToTargetRangeMeters,
     positionToTargetHeightDifferenceMeters,
     positionToObstacleRangeMeters,
@@ -100,14 +85,14 @@ export function evaluateObstaclesFeasibilityGenB(
   assertFiniteMeters(input.obstacle.positionToObstacleRangeMeters, 'טווח מכשול-עמדה')
   assertFiniteMeters(input.obstacle.positionToObstacleHeightDifferenceMeters, 'גובה מכשול מעל העמדה')
 
-  const trajectory = resolveObstacleTrajectory(input.flightPath)
+  const trajectory = resolveLookupTrajectory(input.flightPath)
   if (!trajectory) {
     throw new Error('מסלול מעוף לא תקין לחישוב מכשולים')
   }
 
   try {
     const lookup = lookupObstacleCell(
-      obstaclesFeasibilityLookupData,
+      feasibilityLookupData,
       input.positionToTargetRangeMeters,
       input.positionToTargetHeightDifferenceMeters,
       input.obstacle.positionToObstacleRangeMeters,

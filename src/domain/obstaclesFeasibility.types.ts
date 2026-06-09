@@ -1,22 +1,9 @@
+import type { FeasibilityLookupTrajectory } from './feasibilityLookup.types'
+
 export interface ObstaclesFeasibilityEvaluationInput {
   positionToObstacleRangeMeters: number
   positionToObstacleHeightDifferenceMeters: number
   obstacleHeightMeters: number
-}
-
-export type ObstaclesFeasibilityLookupTrajectory = 'low' | 'lofted' | 'loftedPlus'
-
-export interface ObstaclesFeasibilityLookupCell {
-  low?: number
-  lofted?: number
-  loftedPlus?: number
-}
-
-export interface ObstaclesFeasibilityLookupData {
-  rangesMeters: number[]
-  positionToTargetHeightDifferencesMeters: number[]
-  positionToObstacleRangesMeters: number[]
-  lookup: Record<string, ObstaclesFeasibilityLookupCell>
 }
 
 export interface ObstaclesFeasibilityLookupContext {
@@ -24,6 +11,6 @@ export interface ObstaclesFeasibilityLookupContext {
   rangeMeters: number
   positionToTargetHeightDifferenceMeters: number
   positionToObstacleRangeMeters: number
-  trajectory: ObstaclesFeasibilityLookupTrajectory
+  trajectory: FeasibilityLookupTrajectory
   missileHeightAbovePositionMeters: number
 }
