@@ -149,6 +149,10 @@ export interface NumberField {
   required?: boolean
   defaultValue?: number
   infoTooltipText?: string
+  min?: number
+  max?: number
+  /** When true, non-integer values fail validation. */
+  integer?: boolean
 }
 
 export interface CoordsField {

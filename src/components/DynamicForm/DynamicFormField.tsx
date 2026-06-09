@@ -213,6 +213,9 @@ function DynamicFormField({
         <Input
           type="number"
           placeholder={field.placeholder}
+          min={field.min}
+          max={field.max}
+          step={field.integer ? 1 : undefined}
           hasError={!!error}
           {...register(field.key, {
             valueAsNumber: true,

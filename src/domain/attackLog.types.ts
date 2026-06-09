@@ -16,7 +16,7 @@ export interface AttackLogInput {
   pitch?: number
   roll?: number
   vehicleEncryptionMethod?: string[]
-  hivePosition?: string
+  hivePosition?: number
   generation?: 'a' | 'b'
   stationCoordinates?: PositionCoordinates
   altitude?: number
@@ -35,10 +35,12 @@ export interface AttackLogInput {
   wallAzimuth?: number
   spotSizeWithSpread?: number
   cloudBaseAltitude?: number
+  /** Unit for `cloudBaseAltitude` — display metadata only; value is not converted. */
+  cloudBaseAltitudeUnit?: 'מטר' | 'רגל'
   windSpeed?: number
   flightPath?: string
-  offset?: number
-  directionality?: string
+  offset?: 'למעלה' | 'למטה' | 'ימינה' | 'שמאלה'
+  directionality?: 'ימינה' | 'שמאלה'
   fuseType?: string
 }
 

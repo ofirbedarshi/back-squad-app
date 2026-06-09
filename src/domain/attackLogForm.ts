@@ -72,6 +72,22 @@ function optionalStringFromUnknown(raw: unknown): string | undefined {
   return undefined
 }
 
+function optionalToggleChoice<T extends string>(raw: unknown): T | undefined {
+  if (typeof raw !== 'string' || raw.trim() === '' || raw === 'ללא') {
+    return undefined
+  }
+  return raw as T
+}
+
+function optionalCloudBaseAltitudeUnit(
+  raw: unknown,
+): AttackLogInput['cloudBaseAltitudeUnit'] | undefined {
+  if (raw === 'מטר' || raw === 'רגל') {
+    return raw
+  }
+  return undefined
+}
+
 function optionalStringArrayFromUnknown(raw: unknown): string[] | undefined {
   if (!Array.isArray(raw)) {
     return undefined
@@ -123,7 +139,7 @@ export function formValuesToAttackLogInput(values: FormValues): AttackLogInput {
     pitch: optionalNumberFromUnknown(values.pitch),
     roll: optionalNumberFromUnknown(values.roll),
     vehicleEncryptionMethod: optionalStringArrayFromUnknown(values.vehicleEncryptionMethod),
-    hivePosition: optionalStringFromUnknown(values.hivePosition),
+    hivePosition: optionalNumberFromUnknown(values.hivePosition),
     generation,
     stationCoordinates: toPositionCoordinates(stationCoordinates),
     altitude: optionalNumberFromUnknown(values.altitude),
@@ -142,10 +158,13 @@ export function formValuesToAttackLogInput(values: FormValues): AttackLogInput {
     wallAzimuth: optionalNumberFromUnknown(values.wallAzimuth),
     spotSizeWithSpread: optionalNumberFromUnknown(values.spotSizeWithSpread),
     cloudBaseAltitude: optionalNumberFromUnknown(values.cloudBaseAltitude),
+    cloudBaseAltitudeUnit: optionalCloudBaseAltitudeUnit(values.cloudBaseAltitudeUnit),
     windSpeed: optionalNumberFromUnknown(values.windSpeed),
     flightPath: optionalStringFromUnknown(values.flightPath),
-    offset: optionalNumberFromUnknown(values.offset),
-    directionality: optionalStringFromUnknown(values.directionality),
+    offset: optionalToggleChoice<NonNullable<AttackLogInput['offset']>>(values.offset),
+    directionality: optionalToggleChoice<NonNullable<AttackLogInput['directionality']>>(
+      values.directionality,
+    ),
     fuseType: optionalStringFromUnknown(values.fuseType),
   }
 }
@@ -196,7 +215,7 @@ export function attackLogInputToFormValues(input: AttackLogInput): FormValues {
     pitch: input.pitch ?? defaults.pitch,
     roll: input.roll ?? defaults.roll,
     vehicleEncryptionMethod: input.vehicleEncryptionMethod ?? [],
-    hivePosition: input.hivePosition ?? '',
+    hivePosition: input.hivePosition ?? defaults.hivePosition,
     generation: GENERATION_TO_FORM[generation],
     stationCoordinates,
     altitude: numberToFormString(input.altitude),
@@ -217,6 +236,7 @@ export function attackLogInputToFormValues(input: AttackLogInput): FormValues {
     wallAzimuth: numberToFormString(input.wallAzimuth),
     spotSizeWithSpread: input.spotSizeWithSpread ?? defaults.spotSizeWithSpread,
     cloudBaseAltitude: input.cloudBaseAltitude ?? defaults.cloudBaseAltitude,
+    cloudBaseAltitudeUnit: input.cloudBaseAltitudeUnit ?? defaults.cloudBaseAltitudeUnit,
     windSpeed: input.windSpeed ?? defaults.windSpeed,
     flightPath: input.flightPath ?? '',
     offset: input.offset ?? defaults.offset,

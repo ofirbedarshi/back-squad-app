@@ -7,6 +7,7 @@ import type {
   FormFieldDef,
   FormSchema,
   FormValues,
+  NumberField,
   RowableField,
   TextField,
   ToggleWithConditionsField,
@@ -20,6 +21,32 @@ function isAzimuthDegreeTextField(field: FormFieldDef | RowableField): boolean {
 
 function isPitchRollField(field: FormFieldDef | RowableField): boolean {
   return field.type === 'pitchRoll'
+}
+
+function isConstrainedNumberField(field: FormFieldDef | RowableField): boolean {
+  return (
+    field.type === 'number' &&
+    (field.min !== undefined || field.max !== undefined || field.integer === true)
+  )
+}
+
+const NUMBER_MUST_BE_NUMBER_MESSAGE = 'יש להזין מספר'
+const NUMBER_INTEGER_MESSAGE = 'יש להזין מספר שלם'
+
+function validateConstrainedNumberValue(
+  value: unknown,
+  field: Pick<NumberField, 'required' | 'min' | 'max' | 'integer'>,
+): true | string {
+  if (value === undefined || value === '' || (typeof value === 'number' && Number.isNaN(value))) {
+    return field.required === true ? REQUIRED_FIELD_MESSAGE : true
+  }
+
+  const n = typeof value === 'number' ? value : Number(value)
+  if (Number.isNaN(n)) return NUMBER_MUST_BE_NUMBER_MESSAGE
+  if (field.integer === true && !Number.isInteger(n)) return NUMBER_INTEGER_MESSAGE
+  if (field.min !== undefined && n < field.min) return `ערך מינימלי הוא ${field.min}`
+  if (field.max !== undefined && n > field.max) return `ערך מקסימלי הוא ${field.max}`
+  return true
 }
 
 type ValidatableFieldType =
@@ -281,7 +308,7 @@ export function shouldValidateField(
   if (!('key' in field)) return false
   if (field.type === 'text' && isComputedTextField(field)) return false
   if ('lockedByRef' in field && field.lockedByRef) return false
-  if (isAzimuthDegreeTextField(field) || isPitchRollField(field)) {
+  if (isAzimuthDegreeTextField(field) || isPitchRollField(field) || isConstrainedNumberField(field)) {
     return isFieldVisible(field, values, parentByKey)
   }
   if (field.required !== true) return false
@@ -302,6 +329,14 @@ export function validateFieldValue(
     return validatePitchRollValue(value, field.required === true)
   }
 
+  if (field.type === 'number') {
+    if (isConstrainedNumberField(field)) {
+      return validateConstrainedNumberValue(value, field)
+    }
+    if (field.required !== true) return true
+    return isFilledFormValue(value, 'number') || REQUIRED_FIELD_MESSAGE
+  }
+
   if (field.type === 'flightPath') {
     return validateFlightPathValue(value, field.required === true)
   }
@@ -310,9 +345,6 @@ export function validateFieldValue(
 
   if (field.type === 'text' || field.type === 'textarea' || field.type === 'date' || field.type === 'time') {
     return isFilledFormValue(value, field.type) || REQUIRED_FIELD_MESSAGE
-  }
-  if (field.type === 'number') {
-    return isFilledFormValue(value, 'number') || REQUIRED_FIELD_MESSAGE
   }
   if (field.type === 'toggle') {
     return isFilledFormValue(value, 'toggle', field.options) || REQUIRED_FIELD_MESSAGE
