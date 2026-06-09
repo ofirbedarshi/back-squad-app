@@ -1,4 +1,5 @@
 import type { FLIGHT_PATH_OPTIONS } from './fireFeasibility.constants'
+import type { ConcealmentFeasibilityEvaluationInput } from './concealmentFeasibility.types'
 import type { ObstaclesFeasibilityEvaluationInput } from './obstaclesFeasibility.types'
 
 export type FireFeasibilityMode = 'coords' | 'distances-heights'
@@ -11,6 +12,7 @@ export interface FireFeasibilityFormData {
   targetAltitudeMeters: number | null
   flightPath: FireFeasibilityFlightPath
   obstacle: ObstaclesFeasibilityEvaluationInput | null
+  concealment: ConcealmentFeasibilityEvaluationInput | null
 }
 
 export interface FireFeasibilityCategoryResult {

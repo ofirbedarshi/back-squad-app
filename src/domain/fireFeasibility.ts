@@ -18,6 +18,7 @@ export function createEmptyFireFeasibilityFormData(): FireFeasibilityFormData {
     targetAltitudeMeters: null,
     flightPath: 'flat',
     obstacle: null,
+    concealment: null,
   }
 }
 

@@ -41,6 +41,7 @@ function FireFeasibilityForm({
 }: FireFeasibilityFormProps) {
   const [flightPath, setFlightPath] = useState<FireFeasibilityFlightPath>('flat')
   const [obstacle, setObstacle] = useState<ObstaclesFeasibilityEvaluationInput | null>(null)
+  const [concealment, setConcealment] = useState<FireFeasibilityFormData['concealment']>(null)
   const [metrics, setMetrics] = useState<FireFeasibilityTargetMetrics>({
     rangeMeters: null,
     heightDifferenceMeters: null,
@@ -62,6 +63,7 @@ function FireFeasibilityForm({
       targetAltitudeMeters,
       flightPath,
       obstacle,
+      concealment,
     })
   }, [
     metrics.rangeMeters,
@@ -69,6 +71,7 @@ function FireFeasibilityForm({
     position?.altitude,
     flightPath,
     obstacle,
+    concealment,
     onUpdateData,
   ])
 
@@ -96,7 +99,7 @@ function FireFeasibilityForm({
 
       <FireFeasibilityObstacleFields position={position} onObstacleChange={setObstacle} />
 
-      <FireFeasibilityConcealmentFields />
+      <FireFeasibilityConcealmentFields onConcealmentChange={setConcealment} />
 
       <FireFeasibilityFormSharedTail
         flightPath={flightPath}

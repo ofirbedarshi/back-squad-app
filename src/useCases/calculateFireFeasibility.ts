@@ -1,5 +1,9 @@
 import { evaluateCloudsFeasibility, evaluateCloudsFeasibilityGenB } from '../domain/cloudsFeasibility'
 import {
+  evaluateConcealmentFeasibility,
+  evaluateConcealmentFeasibilityWhenMissing,
+} from '../domain/concealmentFeasibility'
+import {
   createNotImplementedCategoryResultsByGeneration,
 } from '../domain/fireFeasibility'
 import { buildHitProbabilityFlightPathResultsByGeneration } from './buildHitProbabilityFlightPathResultsByGeneration'
@@ -54,6 +58,9 @@ export function calculateFireFeasibility(formData: FireFeasibilityFormData): Fir
     positionToTargetRangeMeters: formData.positionToTargetRange,
     positionToTargetHeightDifferenceMeters: formData.positionToTargetHeightDifference,
   })
+  const concealmentResult = formData.concealment
+    ? evaluateConcealmentFeasibility(formData.concealment)
+    : evaluateConcealmentFeasibilityWhenMissing()
 
   return {
     clouds: {
@@ -64,7 +71,10 @@ export function calculateFireFeasibility(formData: FireFeasibilityFormData): Fir
       a: obstaclesGenA,
       b: obstaclesGenB,
     },
-    concealment: createNotImplementedCategoryResultsByGeneration(),
+    concealment: {
+      a: concealmentResult,
+      b: concealmentResult,
+    },
     flightPaths,
   }
 }
