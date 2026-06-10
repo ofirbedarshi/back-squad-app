@@ -62,11 +62,11 @@ export function buildConcealmentLookupLogs(
 
   if (enabled) {
     logs.push(
-      `זווית הטיל קטנה מזווית ההסתר — מאפשר (${formatDeg(result.missileAngleDeg)} < ${formatDeg(result.concealmentAngleDeg)})`,
+      `זווית הטיל גדולה מזווית ההסתר — מאפשר (${formatDeg(result.missileAngleDeg)} > ${formatDeg(result.concealmentAngleDeg)})`,
     )
   } else {
     logs.push(
-      `זווית הטיל אינה קטנה מזווית ההסתר — לא מאפשר (${formatDeg(result.missileAngleDeg)} ≥ ${formatDeg(result.concealmentAngleDeg)})`,
+      `זווית הטיל אינה גדולה מזווית ההסתר — לא מאפשר (${formatDeg(result.missileAngleDeg)} ≤ ${formatDeg(result.concealmentAngleDeg)})`,
     )
   }
 
