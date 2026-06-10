@@ -315,7 +315,11 @@ describe('isNadbarUserVarEditableAt', () => {
     const loadTargetMessages = [
       {
         source: 'Me' as const,
-        content: 'למטרה {{metara}}, האם יש הסתרים? {{hasNearbyObstacles}}',
+        content: 'למטרה {{metara}}, האם יש הסתרים?',
+      },
+      {
+        source: 'They' as const,
+        content: 'קבל למטרה {{metara}} {{hasNearbyObstacles}}',
       },
     ]
     const blockFooterActions = [
@@ -333,6 +337,13 @@ describe('isNadbarUserVarEditableAt', () => {
     )
     assert.equal(
       isNadbarUserVarEditableAt(loadTargetMessages, 0, 'hasNearbyObstacles', {
+        blockFooterActions,
+        blockIndex: 3,
+      }),
+      false,
+    )
+    assert.equal(
+      isNadbarUserVarEditableAt(loadTargetMessages, 1, 'hasNearbyObstacles', {
         blockFooterActions,
         blockIndex: 3,
       }),

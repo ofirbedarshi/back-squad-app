@@ -130,12 +130,11 @@
       "messages": [
         {
           "source": "Me",
-          "content": "למטרה {{metara}}, האם יש הסתרים קרובים באיזור המטרה? {{hasNearbyObstacles}}"
+          "content": "למטרה {{metara}}, האם יש הסתרים קרובים באיזור המטרה?"
         },
         {
           "source": "They",
-          "content": "קבל למטרה {{metara}} שלילי",
-          "visibleWhen": { "var": "hasNearbyObstacles", "equals": "שלילי" }
+          "content": "קבל למטרה {{metara}} {{hasNearbyObstacles}}"
         },
         {
           "source": "Me",
@@ -144,7 +143,7 @@
         },
         {
           "source": "They",
-          "content": "קבל למטרה {{metara}} חיובי בגובה {{obstacleHeight1}} במרחק {{obstacleDistance1}}",
+          "content": "בגובה {{obstacleHeight1}} במרחק {{obstacleDistance1}}",
           "visibleWhen": { "var": "hasNearbyObstacles", "equals": "חיובי" }
         },
         {
@@ -179,12 +178,11 @@
       "messages": [
         {
           "source": "Me",
-          "content": "למטרה {{metara}}, האם יש דרישות מיוחדות? {{hasSpecialRequirements}}"
+          "content": "למטרה {{metara}}, האם יש דרישות מיוחדות?"
         },
         {
           "source": "They",
-          "content": "קבל למטרה {{metara}} {{hasSpecialRequirements}}",
-          "visibleWhen": { "var": "hasSpecialRequirements", "equals": "שלילי" }
+          "content": "קבל למטרה {{metara}} {{hasSpecialRequirements}}"
         },
         {
           "source": "Me",
@@ -193,7 +191,7 @@
         },
         {
           "source": "They",
-          "content": "קבל למטרה {{metara}} {{hasSpecialRequirements}} הסט {{hetSet}} השהיה {{hashaya}}",
+          "content": "הסט {{hetSet}} השהיה {{hashaya}}",
           "visibleWhen": { "var": "hasSpecialRequirements", "equals": "חיובי" }
         },
         {
