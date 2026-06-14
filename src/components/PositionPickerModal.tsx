@@ -1,8 +1,11 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import Modal from './base/Modal'
+import ListSearchBar from './base/ListSearchBar'
 import PositionCard from './PositionCard'
 import { sortPositionsCurrentFirst } from '../domain/sortPositionsCurrentFirst'
 import type { Position } from '../domain/position.types'
+import { filterByQuery } from '../utils/search'
+import { getPositionSearchFields } from '../utils/positionSearch'
 
 interface PositionPickerModalProps {
   open: boolean
@@ -28,9 +31,18 @@ function PositionPickerModal({
   emptyListMessage = 'אין עמדות שמורות לבחירה',
   onPick,
 }: PositionPickerModalProps) {
+  const [searchQuery, setSearchQuery] = useState('')
+
+  useEffect(() => {
+    if (!open) {
+      setSearchQuery('')
+    }
+  }, [open])
+
+  const filteredPositions = filterByQuery(positions, searchQuery, getPositionSearchFields)
   const sorted = useMemo(
-    () => sortPositionsCurrentFirst(positions, currentStationId ?? undefined),
-    [positions, currentStationId]
+    () => sortPositionsCurrentFirst(filteredPositions, currentStationId ?? undefined),
+    [filteredPositions, currentStationId],
   )
 
   if (!open) return null
@@ -43,8 +55,18 @@ function PositionPickerModal({
   return (
     <Modal title={title} onClose={onClose}>
       <div className="flex flex-col gap-3 px-2">
-        {sorted.length === 0 ? (
+        {positions.length > 0 ? (
+          <ListSearchBar
+            searchQuery={searchQuery}
+            onSearchQueryChange={setSearchQuery}
+            placeholder="חפש לפי שם או קואורדינטות..."
+          />
+        ) : null}
+
+        {positions.length === 0 ? (
           <p className="text-center text-neutral-500 text-sm py-4">{emptyListMessage}</p>
+        ) : sorted.length === 0 ? (
+          <p className="text-center text-neutral-400 py-8">לא נמצאו תוצאות</p>
         ) : (
           sorted.map((position) => {
             const isCurrentStation = currentStationId === position.id
