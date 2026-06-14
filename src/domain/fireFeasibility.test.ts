@@ -6,8 +6,9 @@ import {
   createNotImplementedCategoryResultsByGeneration,
   createNotImplementedHitProbabilityGenerationResult,
   getFireFeasibilityFlowInitFromRecord,
+  hasAnyFireFeasibilityCategoryEnabled,
 } from './fireFeasibility'
-import type { FireFeasibilityRecord } from './fireFeasibility.types'
+import type { FireFeasibilityCategoryResult, FireFeasibilityRecord } from './fireFeasibility.types'
 
 function createMinimalResults() {
   return {
@@ -104,5 +105,57 @@ describe('getFireFeasibilityFlowInitFromRecord', () => {
 
     assert.equal(init.formData.flightPath, 'flat')
     assert.equal(init.formData.obstacle, null)
+  })
+})
+
+function createCategoryResults(
+  a: Partial<FireFeasibilityCategoryResult>,
+  b: Partial<FireFeasibilityCategoryResult>,
+) {
+  const disabled: FireFeasibilityCategoryResult = { enabled: false, notes: '', logs: [] }
+  return {
+    a: { ...disabled, ...a },
+    b: { ...disabled, ...b },
+  }
+}
+
+describe('hasAnyFireFeasibilityCategoryEnabled', () => {
+  it('returns false when all six category results are disabled', () => {
+    const allDisabled = createNotImplementedCategoryResultsByGeneration()
+    assert.equal(
+      hasAnyFireFeasibilityCategoryEnabled({
+        clouds: allDisabled,
+        obstacles: allDisabled,
+        concealment: allDisabled,
+      }),
+      false,
+    )
+  })
+
+  it('returns true when only one category result is enabled', () => {
+    assert.equal(
+      hasAnyFireFeasibilityCategoryEnabled({
+        clouds: createCategoryResults({ enabled: true }, {}),
+        obstacles: createNotImplementedCategoryResultsByGeneration(),
+        concealment: createNotImplementedCategoryResultsByGeneration(),
+      }),
+      true,
+    )
+  })
+
+  it('returns true when missing-input defaults mark obstacles or concealment as enabled', () => {
+    const enabledWithNote: FireFeasibilityCategoryResult = {
+      enabled: true,
+      notes: 'לא הוזנו נתונים',
+      logs: [],
+    }
+    assert.equal(
+      hasAnyFireFeasibilityCategoryEnabled({
+        clouds: createNotImplementedCategoryResultsByGeneration(),
+        obstacles: { a: createNotImplementedCategoryResultsByGeneration().a, b: enabledWithNote },
+        concealment: { a: enabledWithNote, b: enabledWithNote },
+      }),
+      true,
+    )
   })
 })

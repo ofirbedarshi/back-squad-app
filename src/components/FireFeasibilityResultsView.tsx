@@ -1,4 +1,5 @@
 import { FIRE_FEASIBILITY_CATEGORY_TITLES } from '../domain/fireFeasibility.constants'
+import { hasAnyFireFeasibilityCategoryEnabled } from '../domain/fireFeasibility'
 import type { FireFeasibilityResults } from '../domain/fireFeasibility.types'
 import FireFeasibilityCategoryResultsSection from './FireFeasibilityCategoryResultsSection'
 import FireFeasibilityFlightPathResultsGrid from './FireFeasibilityFlightPathResultsGrid'
@@ -8,6 +9,8 @@ interface FireFeasibilityResultsViewProps {
 }
 
 function FireFeasibilityResultsView({ results }: FireFeasibilityResultsViewProps) {
+  const showHitProbability = hasAnyFireFeasibilityCategoryEnabled(results)
+
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col gap-4">
       <FireFeasibilityCategoryResultsSection
@@ -22,7 +25,9 @@ function FireFeasibilityResultsView({ results }: FireFeasibilityResultsViewProps
         title={FIRE_FEASIBILITY_CATEGORY_TITLES.concealment}
         results={results.concealment}
       />
-      <FireFeasibilityFlightPathResultsGrid results={results.flightPaths} />
+      {showHitProbability ? (
+        <FireFeasibilityFlightPathResultsGrid results={results.flightPaths} />
+      ) : null}
     </div>
   )
 }

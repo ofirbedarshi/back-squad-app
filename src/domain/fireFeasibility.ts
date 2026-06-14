@@ -11,6 +11,7 @@ import type {
   FireFeasibilityFormData,
   FireFeasibilityRecord,
   FireFeasibilityRecordInput,
+  FireFeasibilityResults,
 } from './fireFeasibility.types'
 
 export function createEmptyFireFeasibilityFormData(): FireFeasibilityFormData {
@@ -90,4 +91,11 @@ export function createNotImplementedHitProbabilityGenerationResult(): FireFeasib
     percentByFlightPath: createNotImplementedHitProbabilityPercentByPath(),
     logs: [],
   }
+}
+
+export function hasAnyFireFeasibilityCategoryEnabled(
+  results: Pick<FireFeasibilityResults, 'clouds' | 'obstacles' | 'concealment'>,
+): boolean {
+  const categories = [results.clouds, results.obstacles, results.concealment]
+  return categories.some((byGen) => byGen.a.enabled || byGen.b.enabled)
 }
