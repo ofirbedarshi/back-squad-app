@@ -17,17 +17,28 @@ function parseOptionalNumber(value: string): number | null {
 interface FireFeasibilityObstacleFieldsProps {
   position?: Position
   onObstacleChange: (obstacle: ObstaclesFeasibilityEvaluationInput | null) => void
+  initialObstacle?: ObstaclesFeasibilityEvaluationInput | null
 }
 
 function FireFeasibilityObstacleFields({
   position,
   onObstacleChange,
+  initialObstacle = null,
 }: FireFeasibilityObstacleFieldsProps) {
   const [obstacleHeight, setObstacleHeight] = useState<{
     rawHeightMeters: number | null
     reference: ObstacleHeightReference
-  }>({ rawHeightMeters: null, reference: 'amsl' })
-  const [positionToObstacleRangeInput, setPositionToObstacleRangeInput] = useState('')
+  }>(() =>
+    initialObstacle
+      ? {
+          rawHeightMeters: initialObstacle.positionToObstacleHeightDifferenceMeters,
+          reference: 'abovePosition',
+        }
+      : { rawHeightMeters: null, reference: 'amsl' },
+  )
+  const [positionToObstacleRangeInput, setPositionToObstacleRangeInput] = useState(
+    initialObstacle ? String(initialObstacle.positionToObstacleRangeMeters) : '',
+  )
 
   const obstacle = useMemo(() => {
     const positionToObstacleRangeMeters = parseOptionalNumber(positionToObstacleRangeInput)
@@ -49,12 +60,21 @@ function FireFeasibilityObstacleFields({
   }, [obstacleHeight, positionToObstacleRangeInput, position?.altitude])
 
   useEffect(() => {
+    if (
+      position?.altitude == null &&
+      obstacleHeight.rawHeightMeters != null &&
+      positionToObstacleRangeInput !== ''
+    ) {
+      return
+    }
     onObstacleChange(obstacle)
-  }, [obstacle, onObstacleChange])
+  }, [obstacle, onObstacleChange, position?.altitude, obstacleHeight.rawHeightMeters, positionToObstacleRangeInput])
 
   return (
     <>
       <FireFeasibilityObstacleHeightField
+        initialRawHeightMeters={obstacleHeight.rawHeightMeters}
+        initialReference={obstacleHeight.reference}
         onChange={(value: FireFeasibilityObstacleHeightFieldChange) => setObstacleHeight(value)}
       />
       <FormField label="טווח מכשול עמדה">

@@ -11,13 +11,21 @@ function parseOptionalNumber(value: string): number | null {
 
 interface FireFeasibilityTargetRangeSectionProps {
   onMetricsChange: (metrics: FireFeasibilityTargetMetrics) => void
+  initialRangeMeters?: number | null
+  initialHeightDifferenceMeters?: number | null
 }
 
 function FireFeasibilityTargetRangeSection({
   onMetricsChange,
+  initialRangeMeters = null,
+  initialHeightDifferenceMeters = null,
 }: FireFeasibilityTargetRangeSectionProps) {
-  const [rangeInput, setRangeInput] = useState('')
-  const [heightDiffInput, setHeightDiffInput] = useState('')
+  const [rangeInput, setRangeInput] = useState(
+    initialRangeMeters == null ? '' : String(initialRangeMeters),
+  )
+  const [heightDiffInput, setHeightDiffInput] = useState(
+    initialHeightDifferenceMeters == null ? '' : String(initialHeightDifferenceMeters),
+  )
 
   useEffect(() => {
     onMetricsChange({

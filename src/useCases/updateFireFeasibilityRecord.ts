@@ -1,8 +1,15 @@
-import { createFireFeasibilityRecord } from '../domain/fireFeasibility'
+import { applyFireFeasibilityRecordUpdate } from '../domain/fireFeasibility'
 import type { FireFeasibilityRecord, FireFeasibilityRecordInput } from '../domain/fireFeasibility.types'
-import { addFireFeasibilityRecord } from '../storage/fireFeasibilityStorage'
+import { getFireFeasibilityRecordById, updateFireFeasibilityRecord } from '../storage/fireFeasibilityStorage'
 
-export function saveFireFeasibilityRecordUseCase(input: FireFeasibilityRecordInput): FireFeasibilityRecord {
+export function updateFireFeasibilityRecordUseCase(
+  id: string,
+  input: FireFeasibilityRecordInput,
+): FireFeasibilityRecord {
+  const existing = getFireFeasibilityRecordById(id)
+  if (!existing) {
+    throw new Error('הרשומה לא נמצאה')
+  }
   if (!input.positionId.trim()) {
     throw new Error('לא נבחרה עמדה לשמירה')
   }
@@ -26,7 +33,7 @@ export function saveFireFeasibilityRecordUseCase(input: FireFeasibilityRecordInp
     }
   }
 
-  const record = createFireFeasibilityRecord(input)
-  addFireFeasibilityRecord(record)
+  const record = applyFireFeasibilityRecordUpdate(existing, input)
+  updateFireFeasibilityRecord(record)
   return record
 }

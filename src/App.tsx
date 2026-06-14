@@ -63,6 +63,7 @@ function AppRoutes() {
             <Route path="/current-position" element={<CurrentPositionScreen />} />
             <Route path="/fire-feasibility" element={<FireFeasibilityListScreen />} />
             <Route path="/fire-feasibility/new" element={<FireFeasibilityFlowScreen />} />
+            <Route path="/fire-feasibility/saved/:id/edit" element={<FireFeasibilityFlowScreen />} />
             <Route path="/fire-feasibility/saved/:id" element={<FireFeasibilitySavedDetailScreen />} />
             <Route path="/calculator" element={<CalculatorScreen />} />
             <Route path="/calculator/hit-penetration" element={<HitPenetrationCalculatorScreen />} />

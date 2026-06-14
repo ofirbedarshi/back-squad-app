@@ -34,6 +34,12 @@ export function removeFireFeasibilityRecord(id: string): void {
   writeRecords(readRecords().filter((record) => record.id !== id))
 }
 
+export function updateFireFeasibilityRecord(updated: FireFeasibilityRecord): void {
+  const records = readRecords()
+  const next = records.map((record) => (record.id === updated.id ? updated : record))
+  writeRecords(next)
+}
+
 export function removeAllFireFeasibilityRecords(): void {
   writeRecords([])
 }

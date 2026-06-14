@@ -1,3 +1,4 @@
+import { applyWithUpdatedAt } from './applyWithUpdatedAt'
 import { createWithUpdatedAt } from './createWithUpdatedAt'
 import {
   FIRE_FEASIBILITY_NOT_IMPLEMENTED_NOTE,
@@ -6,6 +7,7 @@ import type {
   FireFeasibilityCategoryResultsByGeneration,
   FireFeasibilityFlightPathGenerationResult,
   FireFeasibilityFlightPathPercentByPath,
+  FireFeasibilityFlowInit,
   FireFeasibilityFormData,
   FireFeasibilityRecord,
   FireFeasibilityRecordInput,
@@ -24,6 +26,47 @@ export function createEmptyFireFeasibilityFormData(): FireFeasibilityFormData {
 
 export function createFireFeasibilityRecord(input: FireFeasibilityRecordInput): FireFeasibilityRecord {
   return createWithUpdatedAt(input)
+}
+
+export function applyFireFeasibilityRecordUpdate(
+  existing: FireFeasibilityRecord,
+  input: FireFeasibilityRecordInput,
+): FireFeasibilityRecord {
+  return applyWithUpdatedAt(existing, input)
+}
+
+function resolveRecordFormData(record: FireFeasibilityRecord): FireFeasibilityFormData {
+  const savedFormData = 'formData' in record ? record.formData : undefined
+  const baseFormData = savedFormData ?? createEmptyFireFeasibilityFormData()
+
+  if (record.mode === 'distances-heights') {
+    return {
+      ...baseFormData,
+      positionToTargetRange: record.rangeMeters,
+      positionToTargetHeightDifference: record.heightDifferenceMeters,
+    }
+  }
+
+  return baseFormData
+}
+
+export function getFireFeasibilityFlowInitFromRecord(record: FireFeasibilityRecord): FireFeasibilityFlowInit {
+  const formData = resolveRecordFormData(record)
+
+  if (record.mode === 'coords') {
+    return {
+      mode: record.mode,
+      positionId: record.positionId,
+      targetId: record.targetId,
+      formData,
+    }
+  }
+
+  return {
+    mode: record.mode,
+    positionId: record.positionId,
+    formData,
+  }
 }
 
 export function createNotImplementedCategoryResultsByGeneration(): FireFeasibilityCategoryResultsByGeneration {

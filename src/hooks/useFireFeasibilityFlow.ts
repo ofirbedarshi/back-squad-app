@@ -1,14 +1,19 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import {
+  createEmptyFireFeasibilityFormData,
+  getFireFeasibilityFlowInitFromRecord,
+} from '../domain/fireFeasibility'
 import type {
   FireFeasibilityFormData,
   FireFeasibilityMode,
   FireFeasibilityResults,
 } from '../domain/fireFeasibility.types'
-import { createEmptyFireFeasibilityFormData } from '../domain/fireFeasibility'
 import { calculateFireFeasibility } from '../useCases/calculateFireFeasibility'
+import { getFireFeasibilityRecordByIdUseCase } from '../useCases/getFireFeasibilityRecordById'
 import { loadCurrentPositionUseCase } from '../useCases/loadCurrentPosition'
 import { saveFireFeasibilityRecordUseCase } from '../useCases/saveFireFeasibilityRecord'
+import { updateFireFeasibilityRecordUseCase } from '../useCases/updateFireFeasibilityRecord'
 import { useDomainError } from './useDomainError'
 import { useEntityLinkResources } from './useEntityLinkResources'
 import { getNextStepAfterForm } from './useFireFeasibilityFlow.types'
@@ -16,7 +21,7 @@ import type { FireFeasibilityStep } from './useFireFeasibilityFlow.types'
 import { useNotification } from './useNotification'
 import { useUIError } from './useUIError'
 
-export function useFireFeasibilityFlow() {
+export function useFireFeasibilityFlow(editRecordId?: string) {
   const navigate = useNavigate()
   const { triggerError } = useDomainError()
   const { reportUIError } = useUIError()
@@ -27,6 +32,7 @@ export function useFireFeasibilityFlow() {
   const [positionId, setPositionId] = useState<string | undefined>()
   const [results, setResults] = useState<FireFeasibilityResults | null>(null)
   const [formData, setFormData] = useState<FireFeasibilityFormData>(createEmptyFireFeasibilityFormData())
+  const [isEditReady, setIsEditReady] = useState(!editRecordId)
 
   const { position, target } = useEntityLinkResources({
     targetId,
@@ -34,16 +40,40 @@ export function useFireFeasibilityFlow() {
   })
 
   const hasAutoLoadedCurrentPositionRef = useRef(false)
+  const hasInitializedEditRef = useRef(false)
 
   useEffect(() => {
-    if (hasAutoLoadedCurrentPositionRef.current) return
+    if (!editRecordId || hasInitializedEditRef.current) {
+      return
+    }
+    hasInitializedEditRef.current = true
+
+    const record = getFireFeasibilityRecordByIdUseCase(editRecordId)
+    if (!record) {
+      reportUIError('הרשומה לא נמצאה')
+      navigate('/fire-feasibility')
+      return
+    }
+
+    const init = getFireFeasibilityFlowInitFromRecord(record)
+    setMode(init.mode)
+    setPositionId(init.positionId)
+    setTargetId(init.targetId)
+    setFormData(init.formData)
+    setIsEditReady(true)
+  }, [editRecordId, navigate, reportUIError])
+
+  useEffect(() => {
+    if (editRecordId || hasAutoLoadedCurrentPositionRef.current) {
+      return
+    }
     hasAutoLoadedCurrentPositionRef.current = true
 
     const current = loadCurrentPositionUseCase()
     if (current) {
       setPositionId(current.id)
     }
-  }, [])
+  }, [editRecordId])
 
   const handleCalculate = useCallback(() => {
     if (!position) {
@@ -80,33 +110,62 @@ export function useFireFeasibilityFlow() {
           reportUIError('לא ניתן לשמור — חסר טווח או הפרש גובה')
           return
         }
-        saveFireFeasibilityRecordUseCase({
+        const input = {
           mode,
           positionId,
           rangeMeters: range,
           heightDifferenceMeters: heightDiff,
+          formData,
           results,
-        })
+        } as const
+        if (editRecordId) {
+          updateFireFeasibilityRecordUseCase(editRecordId, input)
+        } else {
+          saveFireFeasibilityRecordUseCase(input)
+        }
       } else {
         if (!targetId) {
           reportUIError('לא ניתן לשמור — לא נבחרה מטרה')
           return
         }
-        saveFireFeasibilityRecordUseCase({
+        const input = {
           mode,
           targetId,
           positionId,
+          formData,
           results,
-        })
+        } as const
+        if (editRecordId) {
+          updateFireFeasibilityRecordUseCase(editRecordId, input)
+        } else {
+          saveFireFeasibilityRecordUseCase(input)
+        }
       }
-      notifySuccess('התוצאות נשמרו')
+      notifySuccess(editRecordId ? 'התוצאות עודכנו' : 'התוצאות נשמרו')
       navigate('/fire-feasibility')
     } catch (error) {
       triggerError(error instanceof Error ? error.message : 'שמירת התוצאות נכשלה')
     }
-  }, [results, targetId, positionId, mode, formData, notifySuccess, navigate, reportUIError, triggerError])
+  }, [
+    results,
+    targetId,
+    positionId,
+    mode,
+    formData,
+    editRecordId,
+    notifySuccess,
+    navigate,
+    reportUIError,
+    triggerError,
+  ])
+
+  const handleBackToForm = useCallback(() => {
+    setStep('form')
+  }, [])
 
   return {
+    editRecordId,
+    isEditReady,
     mode,
     setMode,
     step,
@@ -121,5 +180,6 @@ export function useFireFeasibilityFlow() {
     handleCalculate,
     handleUpdateData,
     handleSaveResults,
+    handleBackToForm,
   }
 }

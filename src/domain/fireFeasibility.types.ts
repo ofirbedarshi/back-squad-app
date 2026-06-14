@@ -49,19 +49,29 @@ export interface FireFeasibilityResults {
   flightPaths: FireFeasibilityFlightPathResultsByGeneration
 }
 
-export interface FireFeasibilityCoordsRecordInput {
-  mode: 'coords'
-  targetId: string
-  positionId: string
+export interface FireFeasibilityRecordFormFields {
+  formData: FireFeasibilityFormData
   results: FireFeasibilityResults
 }
 
-export interface FireFeasibilityDistancesHeightsRecordInput {
+export interface FireFeasibilityCoordsRecordInput extends FireFeasibilityRecordFormFields {
+  mode: 'coords'
+  targetId: string
+  positionId: string
+}
+
+export interface FireFeasibilityDistancesHeightsRecordInput extends FireFeasibilityRecordFormFields {
   mode: 'distances-heights'
   positionId: string
   rangeMeters: number
   heightDifferenceMeters: number
-  results: FireFeasibilityResults
+}
+
+export interface FireFeasibilityFlowInit {
+  mode: FireFeasibilityMode
+  positionId: string
+  targetId?: string
+  formData: FireFeasibilityFormData
 }
 
 export type FireFeasibilityRecordInput =

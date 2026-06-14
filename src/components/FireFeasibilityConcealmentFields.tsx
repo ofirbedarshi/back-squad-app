@@ -11,13 +11,19 @@ function parseOptionalNumber(value: string): number | null {
 
 interface FireFeasibilityConcealmentFieldsProps {
   onConcealmentChange: (concealment: ConcealmentFeasibilityEvaluationInput | null) => void
+  initialConcealment?: ConcealmentFeasibilityEvaluationInput | null
 }
 
 function FireFeasibilityConcealmentFields({
   onConcealmentChange,
+  initialConcealment = null,
 }: FireFeasibilityConcealmentFieldsProps) {
-  const [hide1DistanceInput, setHide1DistanceInput] = useState('')
-  const [hide1HeightDiffInput, setHide1HeightDiffInput] = useState('')
+  const [hide1DistanceInput, setHide1DistanceInput] = useState(
+    initialConcealment ? String(initialConcealment.targetToConcealmentRangeMeters) : '',
+  )
+  const [hide1HeightDiffInput, setHide1HeightDiffInput] = useState(
+    initialConcealment ? String(initialConcealment.targetToConcealmentHeightDifferenceMeters) : '',
+  )
   const [hide2Distance, setHide2Distance] = useState('')
   const [hide2HeightDiff, setHide2HeightDiff] = useState('')
 

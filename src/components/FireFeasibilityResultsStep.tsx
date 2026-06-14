@@ -5,9 +5,10 @@ import FireFeasibilityResultsView from './FireFeasibilityResultsView'
 interface FireFeasibilityResultsStepProps {
   results: FireFeasibilityResults
   onSave: () => void
+  onEdit: () => void
 }
 
-function FireFeasibilityResultsStep({ results, onSave }: FireFeasibilityResultsStepProps) {
+function FireFeasibilityResultsStep({ results, onSave, onEdit }: FireFeasibilityResultsStepProps) {
   return (
     <div dir="rtl" className="flex min-h-full flex-col bg-neutral-50">
       <header className="sticky top-0 z-10 shrink-0 border-b border-neutral-200 bg-white px-4 py-3">
@@ -15,6 +16,13 @@ function FireFeasibilityResultsStep({ results, onSave }: FireFeasibilityResultsS
           <span className="min-w-0 flex-1 truncate px-1 text-center text-lg font-bold text-neutral-800">
             {FIRE_FEASIBILITY_RESULTS_TITLE}
           </span>
+          <button
+            type="button"
+            onClick={onEdit}
+            className="shrink-0 touch-manipulation rounded-xl border border-neutral-300 bg-white px-3 py-1.5 text-sm font-bold text-neutral-700 active:bg-neutral-100"
+          >
+            ערוך
+          </button>
           <button
             type="button"
             onClick={onSave}

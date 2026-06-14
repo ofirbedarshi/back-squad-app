@@ -15,6 +15,8 @@ export interface FireFeasibilityObstacleHeightFieldChange {
 
 interface FireFeasibilityObstacleHeightFieldProps {
   onChange: (value: FireFeasibilityObstacleHeightFieldChange) => void
+  initialRawHeightMeters?: number | null
+  initialReference?: ObstacleHeightReference
 }
 
 function parseOptionalNumber(value: string): number | null {
@@ -25,9 +27,15 @@ function parseOptionalNumber(value: string): number | null {
   return Number.isNaN(parsed) ? null : parsed
 }
 
-function FireFeasibilityObstacleHeightField({ onChange }: FireFeasibilityObstacleHeightFieldProps) {
-  const [heightInput, setHeightInput] = useState('')
-  const [reference, setReference] = useState<ObstacleHeightReference>('amsl')
+function FireFeasibilityObstacleHeightField({
+  onChange,
+  initialRawHeightMeters = null,
+  initialReference = 'amsl',
+}: FireFeasibilityObstacleHeightFieldProps) {
+  const [heightInput, setHeightInput] = useState(
+    initialRawHeightMeters == null ? '' : String(initialRawHeightMeters),
+  )
+  const [reference, setReference] = useState<ObstacleHeightReference>(initialReference)
 
   function emitChange(nextHeightInput: string, nextReference: ObstacleHeightReference): void {
     onChange({

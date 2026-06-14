@@ -26,6 +26,7 @@ interface FireFeasibilityFormProps {
   onPositionChange: (positionId: string | null) => void
   onTargetChange: (targetId: string | null) => void
   onUpdateData: (data: FireFeasibilityFormData) => void
+  initialFormData?: FireFeasibilityFormData
 }
 
 function FireFeasibilityForm({
@@ -38,13 +39,20 @@ function FireFeasibilityForm({
   onPositionChange,
   onTargetChange,
   onUpdateData,
+  initialFormData,
 }: FireFeasibilityFormProps) {
-  const [flightPath, setFlightPath] = useState<FireFeasibilityFlightPath>('flat')
-  const [obstacle, setObstacle] = useState<ObstaclesFeasibilityEvaluationInput | null>(null)
-  const [concealment, setConcealment] = useState<FireFeasibilityFormData['concealment']>(null)
+  const [flightPath, setFlightPath] = useState<FireFeasibilityFlightPath>(
+    initialFormData?.flightPath ?? 'flat',
+  )
+  const [obstacle, setObstacle] = useState<ObstaclesFeasibilityEvaluationInput | null>(
+    initialFormData?.obstacle ?? null,
+  )
+  const [concealment, setConcealment] = useState<FireFeasibilityFormData['concealment']>(
+    initialFormData?.concealment ?? null,
+  )
   const [metrics, setMetrics] = useState<FireFeasibilityTargetMetrics>({
-    rangeMeters: null,
-    heightDifferenceMeters: null,
+    rangeMeters: initialFormData?.positionToTargetRange ?? null,
+    heightDifferenceMeters: initialFormData?.positionToTargetHeightDifference ?? null,
   })
 
   const handleMetricsChange = useCallback((next: FireFeasibilityTargetMetrics) => {
@@ -94,12 +102,23 @@ function FireFeasibilityForm({
           onMetricsChange={handleMetricsChange}
         />
       ) : (
-        <FireFeasibilityTargetRangeSection onMetricsChange={handleMetricsChange} />
+        <FireFeasibilityTargetRangeSection
+          initialRangeMeters={initialFormData?.positionToTargetRange}
+          initialHeightDifferenceMeters={initialFormData?.positionToTargetHeightDifference}
+          onMetricsChange={handleMetricsChange}
+        />
       )}
 
-      <FireFeasibilityObstacleFields position={position} onObstacleChange={setObstacle} />
+      <FireFeasibilityObstacleFields
+        position={position}
+        initialObstacle={initialFormData?.obstacle}
+        onObstacleChange={setObstacle}
+      />
 
-      <FireFeasibilityConcealmentFields onConcealmentChange={setConcealment} />
+      <FireFeasibilityConcealmentFields
+        initialConcealment={initialFormData?.concealment}
+        onConcealmentChange={setConcealment}
+      />
 
       <FireFeasibilityFormSharedTail
         flightPath={flightPath}
