@@ -23,7 +23,7 @@ function TargetSearchBar({
       <SearchInput
         value={searchQuery}
         onChange={onSearchQueryChange}
-        placeholder="חפש לפי שם, מזרח או צפון..."
+        placeholder="חפש לפי שם, מזרחיות או צפוניות..."
       />
 
       <button
